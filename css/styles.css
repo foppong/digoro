@@ -1,0 +1,149 @@
+html
+{
+	min-height:100%;
+	height:auto;
+}
+
+body
+{
+	line-height: 1;
+	font: normal 12px Verdana, sans-serif;
+	color: #2a2a2a;
+	background-color:#EEEEEE;
+	background-image:url('imgs/homepage-1.jpg');
+	background-repeat:no-repeat;
+}
+
+h1
+{
+	font-size:36pt;
+}
+
+h2
+{
+	color:#333333;
+}
+
+p
+{
+	margin-left:15px;
+}
+
+li
+{
+	display:inline;
+}
+
+input {
+	font-size: 12px;
+	border: solid 1px #aacfe4;
+	width: 200px;
+	margin: 3px;
+}
+
+#submit
+{
+	width:auto;
+	height: 20px;
+	text-align:center;
+	font-weight:bold;
+	background-color:#B0C4DE
+}
+
+.error { 
+	color:#FF0000;
+}
+
+.errorMessage { 
+	font-style: italic; 
+}
+
+
+/* Site Navigation Bar */
+
+#Navigation a:link, a:visited
+{
+	font-weight:bold;
+	color:#006699;
+	background-color:#CCCCCC;
+	width:100px;
+	text-align:center;
+	padding:8px;
+	text-decoration:none;
+	text-transform:uppercase;
+}
+
+#Navigation a:hover, a:active
+{
+	background-color:#EEEEEE;
+}
+
+#Navigation ul {
+	margin: 0;
+	padding:12px;
+	width:auto;
+	position:relative;
+	display:block;
+	height:12px;
+}
+
+#Navigation ul li {
+	display:block;
+	float:left;
+	margin:0;
+	padding:6px;
+	text-align:center;
+}
+
+#Navigation ul li a {
+	display:block;
+	float:left;
+	text-decoration:none;
+	text-align:center;
+	font-weight:bold;
+	height:6px;
+	padding:3px;
+}
+
+/* Zebra style for roster tables */
+.zebra {
+	background-color: #EEEEEE;
+	color: #666666;
+}
+
+/* Zebra hover style for roster tables */
+tr.zebraHover {
+	background-color: #FFFACD;
+}
+
+/* Style for form */
+
+label {
+  display: block;
+}
+label.valid {
+  width: 24px;
+  background: url('css/imgs/valid.png') center center no-repeat;
+  display: inline-block;
+  text-indent: -9999px;
+}
+
+label.error {
+  padding-left: 5px;
+  display: inline-block;
+}
+
+input {
+  display: inline-block;
+}
+
+form div {
+  padding: 5px;
+  float: left;
+  clear: left;
+  width: 100%;
+}
+
+button {
+  margin-top: 10px;
+}

@@ -1,0 +1,98 @@
+<?php
+	/** league_data.php
+	* This page queries a database, returnnig a list
+	* of leagues
+	*/
+	
+	ob_start();
+	session_start();
+			
+	require 'includes/config.php';
+
+	// Authorized Login Check
+	// If no session value is present, redirect the user. Also validate the HTTP_USER_AGENT	
+	if (!isset($_SESSION['agent']) OR ($_SESSION['agent'] != md5($_SERVER['HTTP_USER_AGENT'])))
+	{
+		session_unset();
+		session_destroy();
+		$url = BASE_URL . 'index.php';
+		ob_end_clean();
+		header("Location: $url");
+		exit();	
+	}
+
+	// Need the database connection:	
+	require_once MYSQL;
+
+	// Assume invalid values:
+	$st = FALSE;
+
+	// Assign state variable from add_team.php ajax post
+	if (!empty($_POST["state"])) 
+	{
+		$st = $_POST["state"];
+		
+	}
+	
+	// Checks if state is selected before querying database.
+	if ($st)
+	{
+		// Make the Query:
+		$q = "SELECT id_league, league_name FROM leagues WHERE state=?";
+	
+			
+		// Prepare the statement:
+		$stmt = $db->prepare($q);
+			
+		// Bind the inbound variable:
+		$stmt->bind_param('s', $st);
+				
+		// Execute the query:
+		$stmt->execute();		
+					
+		// Store results:
+		$stmt->store_result();
+				
+		// Bind the outbound variable:
+		$stmt->bind_result($idlgOB, $lgnmOB);
+				
+		// If there are results to show.
+		if ($stmt->num_rows > 0)
+		{
+			// Initialize an array:
+			$json = array();
+					
+			// Fetch and put results in the JSON array...
+			while ($stmt->fetch())
+			{		
+				$json[] = array(
+				'LeagueID' => $idlgOB,
+				'LeagueName' => $lgnmOB);
+	
+			}	// End of WHILE loop
+		
+			// Send the JSON data:
+			echo json_encode($json);
+					
+			// Close the statement:
+			$stmt->close();
+			unset($stmt);			
+		
+			// Close the connection:
+			$db->close();
+			unset($db);
+		}
+		else 
+		{	// No registered users
+	
+			$json[] = array(
+				'<p class="error">There are no leagues that match your query.</p><br />');
+				
+			// Send the JSON data:
+			echo json_encode($json);
+	
+		}
+	}
+
+
+?>
