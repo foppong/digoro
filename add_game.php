@@ -18,6 +18,7 @@
 		exit();
 	}
 
+	// Set up autoloading of classes
 	function __autoload($class) {
 		require_once('classes/' . $class . '.php');
 	}

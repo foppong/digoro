@@ -4,29 +4,31 @@
 	 * 	protected email
 	 * 	protected id_user
 	 * 	protected invite
-	 * 	protected q
-	 *  protected a 
-	 * 
+	 *  protected dbc
 	 * 	
 	 * Methods:
 	 * 	editGame()
 	 * 	displayGame()
 	 */
 	
-	require_once 'includes/config.php';	
 	require 'includes/PasswordHash.php';
 	
 	class UserAuth {
 	 	
 		// Declare the attributes
-		protected $email, $id_user, $invite, $q, $a;
+		protected $email, $id_user, $invite, $dbc;
 
 		// Constructor
 		function __construct() {
-			
-			// Need the database connection:	
-			require MYSQL;		
+
 		}
+
+		// Set database connection
+		function setDatabaseConnection($db)
+		{
+			$this->dbc = $db;
+		}
+
 		
 		// Method to check if username is avialable
 		function checkUser($userEmail) {
@@ -34,10 +36,10 @@
 			$this->email = $userEmail;	
 
 			// Make the query to make sure New User's email is available	
-			$this->q = 'SELECT id_user,invited FROM users WHERE email=? LIMIT 1';
+			$q = 'SELECT id_user,invited FROM users WHERE email=? LIMIT 1';
 
 			// Prepare the statement
-			$stmt = $db->prepare($q);
+			$stmt = $this->dbc->prepare($q);
 
 			// Bind the inbound variable:
 			$stmt->bind_param('s', $email);
@@ -81,7 +83,7 @@
 				VALUES (?,?,?,?,?,?,?,?,?,?,NOW())';
 
 			// Prepare the statement
-			$stmt = $db->prepare($q); 
+			$stmt = $this->dbc->prepare($this->q); 
 
 			// Bind the inbound variables:
 			$stmt->bind_param('sssssssssi', $e, $hash, $fn, $ln, $mstatus, $zp, $gd, $a, $bdfrmat, $iv);
