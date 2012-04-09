@@ -25,15 +25,10 @@
 		exit();	
 	}
 	
-	// Set up autoloading of classes
+	// autoloading of classes
 	function __autoload($class) {
 		require_once('classes/' . $class . '.php');
 	}
-	
-	$user = new UserAuth();
-	$user->setDatabaseConnection($db);	
-	$status = $user->checkUser('foppong@gmail.com');
-	echo $status;
 
 ?>
 

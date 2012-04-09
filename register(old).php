@@ -2,21 +2,17 @@
 	// register.php
 	// This page is used to create new users to the site.
 
-	require_once 'includes/config.php';
+	require 'includes/config.php';
+	require 'includes/PasswordHash.php';
 	$page_title = 'digoro : Register';	
 	include 'includes/iheader.html';
-
-	// autoloading of classes
-	function __autoload($class) {
-		require_once('classes/' . $class . '.php');
-	}
 
 	// Code to create a new user
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
 		// Need the database connection:	
 		require MYSQL;
-
+		
 		// Trim all the incoming data:
 		$trimmed = array_map('trim', $_POST);
 		
@@ -124,20 +120,151 @@
 		// Check if user entered values are valid before proceeding
 		if ($fn && $ln && $e && $p && $zp && $bd && $mstatus && $gd)
 		{
-			$user = new UserAuth();
-			$user->setDatabaseConnection($db);	
-			$user->createUser($e, $p, $fn, $ln, $mstatus, $zp, $gd, $bdfrmat, $iv);
+			$hasher = new PasswordHash($hash_cost_log2, $hash_portable);
+			
+			// Encrypt the new password by making a new hash.
+			$hash = $hasher->HashPassword($p);
+			if (strlen($hash) < 20)
+			{
+				fail('Failed to hash new password');
+				exit();
+			}
+			unset($hasher);
+	
+			// Make the query to make sure New User's email is available	
+			$q = 'SELECT id_user,invited FROM users WHERE email=? LIMIT 1';
+
+			// Prepare the statement
+			$stmt = $db->prepare($q);
+
+			// Bind the inbound variable:
+			$stmt->bind_param('s', $e);
+
+			// Execute the query:
+			$stmt->execute();
+			
+			// Store result
+			$stmt->store_result();
+			
+			// Bind the outbound variable:
+			$stmt->bind_result($id_user, $invited);
+
+			//Assign the outbound variables			
+			while ($stmt->fetch())
+			{
+				$id_fetch = $id_user;
+				$inv_fetch = $invited;
+			}
+
+			// User login available & not invited by manager
+			if ($stmt->num_rows == 0) 
+			{
+				// Create the activation code
+				$a = md5(uniqid(rand(), TRUE));			
+
+				// Make the query to add new user to database
+				$q = 'INSERT INTO users (email, pass, first_name, last_name, role, zipcode, gender, activation, birth_date, invited, registration_date) 
+					VALUES (?,?,?,?,?,?,?,?,?,?,NOW())';
+
+				// Prepare the statement
+				$stmt = $db->prepare($q); 
+
+				// Bind the inbound variables:
+				$stmt->bind_param('sssssssssi', $e, $hash, $fn, $ln, $mstatus, $zp, $gd, $a, $bdfrmat, $iv);
+				
+				// Execute the query:
+				$stmt->execute();
+
+				if ($stmt->affected_rows == 1) // It ran OK.
+				{
+					// Send the activation email
+					$body = "Welcome to digoro and thank you for registering!\n\nTo activate your account, please click on this link:";
+					$body .= "\n" . BASE_URL . 'activate.php?x=' . urlencode($e) . "&y=$a";
+					mail($e, 'digoro.com - Registration Confirmation', $body);
+					
+					echo '<h3>Thank you for registering! A confirmation email has been sent to your address. Please
+						click on the link in that email in order to activate your account. </h3>';
+
+					// Close the statement:
+					$stmt->close();
+					unset($stmt);
+					
+					// Close the connection:
+					$db->close();
+					unset($db);
+					
+					include 'includes/footer.html';
+					exit();	
+				}
+				else 
+				{	// Registration process did not run OK.
+					echo '<p class="error">You could not be registered due to a system error. We apologize
+						for any inconvenience.</p>';
+				}
+			}
+
+			// Manager has already entered skeleton information about new user & invited by manager
+			if ($stmt->num_rows == 1 && $inv_fetch == 1) 
+			{
+				// Create the activation code
+				$a = md5(uniqid(rand(), TRUE));			
+			
+				// Make the query to update user in database
+				$q = 'UPDATE users SET pass=?, first_name=?, last_name=?, role=?, zipcode=?, gender=?, activation=?, birth_date=?, registration_date=NOW() 
+					WHERE id_user=? LIMIT 1';
+
+				// Prepare the statement
+				$stmt = $db->prepare($q);
+
+				// Bind the inbound variables:
+				$stmt->bind_param('ssssisssi', $hash, $fn, $ln, $mstatus, $zp, $gd, $a, $bdfrmat, $id_fetch);
+				
+				// Execute the query:
+				$stmt->execute();
+	
+				if ($stmt->affected_rows == 1) // It ran OK.
+				{
+					// Send the activation email
+					$body = "Welcome to digoro and thank you for registering!\n\nTo activate your account, please click on this link:";
+					$body .= "\n" . BASE_URL . 'activate.php?x=' . urlencode($e) . "&y=$a";
+					mail($e, 'digoro.com - Registration Confirmation', $body);
+					
+					echo '<h3>Thank you for registering! A confirmation email has been sent to your address. Please
+						click on the link in that email in order to activate your account. </h3>';
+
+					// Close the statement:
+					$stmt->close();
+					unset($stmt);
+					
+					// Close the connection:
+					$db->close();
+					unset($db);
+					
+					include 'includes/footer.html';
+					exit();	
+				}
+				else 
+				{	// Registration process did not run OK.
+					echo '<p class="error">You could not be registered due to a system error. We apologize
+						for any inconvenience.</p>';
+				}				
+			}
+			
+			else
+			{	// The email address is not available and player was not previously invited
+				echo '<p class="error">That email address has already been registered. If you have forgotten your password,
+					use the link below to have your password sent to you.</p>';
+			}
 		}
 		else
 		{	// Form submitted information was not valid
 			echo '<p class="error">Please try again.</p>';
 		}
-
+					
 		// Close the connection:
 		$db->close();
 		unset($db);
-		
-	} // End of Form Submission
+	}
 ?>
 
 	<!-- New Member Create Form -->
