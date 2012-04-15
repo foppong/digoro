@@ -2,7 +2,6 @@
 	/* This page defines the UserAuth class.
 	 * Attributes:
 	 * 	protected id_user
-	 * 	protected invite
 	 *  protected dbc
 	 *  protected inv_case
 	 * 	
@@ -10,6 +9,7 @@
 	 *  setDatabaseConnection()
 	 * 	checkUser()
 	 * 	createUser()
+	 *  login()
 	 *  logout()
 	 */
 	
@@ -18,19 +18,16 @@
 	class UserAuth {
 	 	
 		// Declare the attributes
-		protected $id_user, $invite, $dbc, $inv_case;
+		protected $id_user, $dbc, $inv_case;
 
 		// Constructor
-		function __construct() {
-
-		}
+		function __construct() {}
 
 		// Set database connection
 		function setDatabaseConnection($db)
 		{
 			$this->dbc = $db;
 		}
-
 		
 		// Method to check User registration status
 		function checkUser($userEmail) {
@@ -56,14 +53,14 @@
 			//Assign the outbound variables			
 			while ($stmt->fetch()) {
 				$this->id_user = $idOB;
-				$this->invite = $inviteOB;
+				$invite = $inviteOB;
 			}
 
 			if ($stmt->num_rows == 0) {
 				$this->inv_case = 1; // User login available & not invited by manager
 			}
 
-			if (($stmt->num_rows == 1 && $this->invite == 1)) {
+			if (($stmt->num_rows == 1 && $invite == 1)) {
 				$this->inv_case = 2; // Manager has already entered skeleton information about new user & invited player
 			}
 
@@ -191,11 +188,119 @@
 						use the link below to have your password sent to you.</p>';
 					break;
 			} // End of switch
-
 		} // End of function
 
+		// Function to log in users
+		function login($e, $p)
+		{
+			// Assign variable in case no matches
+			$pass = '';
+
+			// Make the query	
+			$q = "SELECT pass, role, id_user, first_name, last_name, login_before, default_teamID FROM users 
+				WHERE (email=? AND activation='') LIMIT 1";
+
+			// Prepare the statement
+			$stmt = $this->dbc->prepare($q);
+
+			// Bind the inbound variable:
+			$stmt->bind_param('s', $e);
+
+			// Execute the query:
+			$stmt->execute();
+			
+			// Store result
+			$stmt->store_result();
+			
+			// Bind the outbound variable:
+			$stmt->bind_result($passOB, $roleOB, $idOB, $fnOB, $lnOB, $logbfOB, $deftmIDOB);
+
+			//Assign the outbound variables			
+			while ($stmt->fetch())
+			{
+				$pass = $passOB;
+				$role = $roleOB;
+				$userID = $idOB;
+				$fn = $fnOB;
+				$ln = $lnOB;
+				$lb = $logbfOB;
+				$deftmID = $deftmIDOB;
+			}
+
+			$hasher = new PasswordHash($hash_cost_log2, $hash_portable);					
+			
+			// If password matches database, then proceed to login user	
+			if ($hasher->CheckPassword($p, $pass))
+			{
+				session_regenerate_id(True);
+			
+				$_SESSION['LoggedIn'] = True;
+				$_SESSION['email'] = $e;
+				$_SESSION['role'] = $role;
+				$_SESSION['userID'] = $userID;
+				$_SESSION['firstName'] = $fn;
+				$_SESSION['lastName'] = $ln;
+				$_SESSION['deftmID'] = $deftmID;
+			
+				// Store the HTTP_USER_AGENT:
+				$_SESSION['agent'] = md5($_SERVER['HTTP_USER_AGENT']);			
+				
+				// If user hasn't logged in before and is a manager, take them to welcome page
+				if ($lb == FALSE && $role == 'M')
+				{
+					$url = BASE_URL . 'mg_welcome.php';
+					header("Location: $url");
+					exit();
+				}
+				
+				//Redirect User
+				switch ($role)
+				{
+					case 'A':
+						$url = BASE_URL . 'admin_home.php';
+						break;
+					case 'M':
+						$url = BASE_URL . 'manager_home.php';
+						break;
+					case 'P':
+						$url = BASE_URL . 'player_home.php';
+						break;
+					default:
+						$url = BASE_URL . 'index.php';
+						break;
+				}
+
+				ob_end_clean();
+				header("Location: $url");
+
+				// Close hasher
+				unset($hasher);
+				
+				// Close the statement:
+				$stmt->close();
+				unset($stmt);
+					
+				// Close the connection:
+				$this->dbc->close();
+				unset($this->dbc);
+					
+				include 'includes/footer.html';
+				exit();	
+			}
+			else
+			{
+				echo '<p class="error">Either the email address and password entered do not match those
+					those on file or you have not yet activated your account.</p>';
+			}
+			// Close hasher
+			unset($hasher);
+
+			// Close the statement:
+			$stmt->close();
+			unset($stmt);
+		}
 		
-		// Function to log off user
+		// Function to log off users
 		function logoff()
 		{
 			session_unset();

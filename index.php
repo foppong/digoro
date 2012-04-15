@@ -1,8 +1,12 @@
 <?php 
 
-	require 'includes/PasswordHash.php';
 	require 'includes/config.php';
 	include 'includes/iheader.html';
+
+	// autoloading of classes
+	function __autoload($class) {
+		require_once('classes/' . $class . '.php');
+	}
 	
 	// Authorized Login Check
 	// If session value is present, redirect the user. Also validate the HTTP_USER_AGENT	
@@ -61,6 +65,11 @@
 		// Check if email and password entered are valid before proceeding to login procedure.
 		if ($e && $p)
 		{
+			$user = new UserAuth();
+			$user->setDatabaseConnection($db);	
+			$user->login($e, $p);
+
+/*
 			// Assign variable in case no matches
 			$pass = '';
 
@@ -166,7 +175,7 @@
 			// Close the statement:
 			$stmt->close();
 			unset($stmt);
-		}
+*/		}
 		
 		$db->close();
 		unset($db);
