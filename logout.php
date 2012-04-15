@@ -6,6 +6,11 @@
 	$page_title = 'digoro : Logout';
 	include 'includes/iheader.html';
 
+	// autoloading of classes
+	function __autoload($class) {
+		require_once('classes/' . $class . '.php');
+	}
+
 	// Authorized Login Check
 	// If no session value is present, redirect the user. Also validate the HTTP_USER_AGENT	
 	if (!isset($_SESSION['agent']) OR ($_SESSION['agent'] != md5($_SERVER['HTTP_USER_AGENT'])))
@@ -18,11 +23,9 @@
 		exit();	
 	}
 
-	session_unset();
-	session_destroy();
-	
-	echo '<h3>You are now logged out.</h3>';
-	echo '<h3>Click <a href="index.php">here</a> to return to the main login screen.</h3>';
+	$user = new UserAuth();
+	$user->logoff();
+
 	include 'includes/ifooter.html'; 	
 	
 ?>

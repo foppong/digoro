@@ -7,8 +7,10 @@
 	 *  protected inv_case
 	 * 	
 	 * Methods:
-	 * 	editGame()
-	 * 	displayGame()
+	 *  setDatabaseConnection()
+	 * 	checkUser()
+	 * 	createUser()
+	 *  logout()
 	 */
 	
 	require_once 'includes/PasswordHash.php';
@@ -192,6 +194,16 @@
 
 		} // End of function
 
+		
+		// Function to log off user
+		function logoff()
+		{
+			session_unset();
+			session_destroy();
+	
+			echo '<h3>You are now logged out.</h3>';
+			echo '<h3>Click <a href="index.php">here</a> to return to the main login screen.</h3>';
+		}
 
 	} // End of Class
 ?>
