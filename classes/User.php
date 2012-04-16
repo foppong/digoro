@@ -8,9 +8,6 @@
 	 * Methods:
 	 *  addTeam()
 	 * 	createUser()
-	 *  login()
-	 *  logout()
-	 *  valid()
 	 */
 	
 	require_once 'includes/PasswordHash.php';
