@@ -15,6 +15,11 @@
 	 */
 	
 	require_once 'includes/PasswordHash.php';
+
+	// autoloading of classes
+	function __autoload($class) {
+		require_once('classes/' . $class . '.php');
+	}
 	
 	class UserAuth {
 	 	
@@ -236,6 +241,8 @@
 							$url = BASE_URL . 'admin_home.php';
 							break;
 						case 'M':
+							$user = new Manager();
+							$_SESSION['userObj'] = $user;
 							$url = BASE_URL . 'manager_home.php';
 							break;
 						case 'P':
