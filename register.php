@@ -125,7 +125,7 @@
 		if ($fn && $ln && $e && $p && $zp && $bd && $mstatus && $gd)
 		{
 			$user = new UserAuth();
-			$user->setDatabaseConnection($db);	
+			$user->setDB($db);	
 			$user->createUser($e, $p, $fn, $ln, $mstatus, $zp, $gd, $bdfrmat, $iv);
 		}
 		else

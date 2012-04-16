@@ -4,7 +4,7 @@
 	
 	require 'includes/config.php';
 	$page_title = 'Activate Your Account';
-	include 'includes/header.html';
+	include 'includes/iheader.html';
 	
 	// If $x and $y don't exist or aren't of the proper format, redirect the user
 	if (isset($_GET['x'], $_GET['y']) && filter_var($_GET['x'], FILTER_VALIDATE_EMAIL)
@@ -41,6 +41,6 @@
 		header("Location: $url");
 		exit();
 	}
-	include 'includes/footer.html';
+	include 'includes/ifooter.html';
 		
 ?>

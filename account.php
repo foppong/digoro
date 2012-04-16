@@ -426,6 +426,7 @@
 				</fieldset>
 				</form><br />';
 			echo '<a href="change_password.php">Change Password</a><br />';
+			echo '<a href="delete_acct.php">Delete Account</a><br />';
 		}
 	}
 	else 

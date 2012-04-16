@@ -1,9 +1,9 @@
 <?php
-	// logout.php
-	// This page logs the user out of the site
+	// delete_acct.php
+	// This page deletes a user's account
 	
 	require 'includes/config.php';
-	$page_title = 'digoro : Logout';
+	$page_title = 'digoro : Delete Account';
 	include 'includes/iheader.html';
 
 	// autoloading of classes
@@ -23,11 +23,18 @@
 		exit();	
 	}
 
-	$user = new UserAuth();
-	$user->logoff();
+	require_once MYSQL;
 
-	echo '<h3>You are now logged out.</h3>';
-	echo '<h4>Click <a href="index.php">here</a> to return to the main login screen.</h4>';
+	$userID = $_SESSION['userID'];
+	$user = new UserAuth();
+	$user->setDB($db);	
+	$user->deleteUser($userID);
+
+	// Close the connection:
+	$db->close();
+	unset($db);
+
+	echo '<p>This account has been deleted successfully.</p>';
 
 	include 'includes/ifooter.html'; 	
 	
