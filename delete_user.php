@@ -6,17 +6,28 @@
 	$page_title = 'digoro : Delete User';
 	include 'includes/header.html';
 
+	// autoloading of classes
+	function __autoload($class) {
+		require_once('classes/' . $class . '.php');
+	}
+
+	// Create user object
+	$user = new UserAuth();
+
+	// Site access level -> Administrator
+	$lvl = 'A'; 
+
 	// Authorized Login Check
-	// If not an administrator, or no session value is present, redirect the user. Also validate the HTTP_USER_AGENT	
-	if (($_SESSION['role'] != 'A') OR !isset($_SESSION['agent']) OR ($_SESSION['agent'] != md5($_SERVER['HTTP_USER_AGENT'])))
+	if (!$user->valid($lvl))
 	{
 		session_unset();
 		session_destroy();
 		$url = BASE_URL . 'index.php';
 		ob_end_clean();
 		header("Location: $url");
-		exit();
+		exit();	
 	}
+	
 	echo '<h1>Delete a User</h1>';
 
 	// Check for a valid user ID, through GET or POST:

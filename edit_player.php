@@ -6,16 +6,26 @@
 	$page_title = 'digoro : Edit Player';
 	include 'includes/header.html';
 
+	// autoloading of classes
+	function __autoload($class) {
+		require_once('classes/' . $class . '.php');
+	}
+
+	// Create user object
+	$user = new UserAuth();
+
+	// Site access level -> Manager
+	$lvl = 'M'; 
+
 	// Authorized Login Check
-	// If no session value is present, redirect the user. Also validate the HTTP_USER_AGENT	
-	if (!isset($_SESSION['agent']) OR ($_SESSION['agent'] != md5($_SERVER['HTTP_USER_AGENT'])))
+	if (!$user->valid($lvl))
 	{
 		session_unset();
 		session_destroy();
 		$url = BASE_URL . 'index.php';
 		ob_end_clean();
 		header("Location: $url");
-		exit();
+		exit();	
 	}
 
 	// Check for a valid user ID, through GET or POST:

@@ -7,16 +7,26 @@
 	$page_title = 'digoro : Manager Welcome';
 	include 'includes/header.html';
 
+	// autoloading of classes
+	function __autoload($class) {
+		require_once('classes/' . $class . '.php');
+	}
+
+	// Create user object
+	$user = new UserAuth();
+
+	// Site access level -> Manager
+	$lvl = 'M'; 
+
 	// Authorized Login Check
-	// If not an administrator or manager, or no session value is present, redirect the user. Also validate the HTTP_USER_AGENT
-	if (($_SESSION['role'] == 'P') OR !isset($_SESSION['agent']) OR ($_SESSION['agent'] != md5($_SERVER['HTTP_USER_AGENT'])))
+	if (!$user->valid($lvl))
 	{
 		session_unset();
 		session_destroy();
 		$url = BASE_URL . 'index.php';
 		ob_end_clean();
 		header("Location: $url");
-		exit();
+		exit();	
 	}
 	
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')

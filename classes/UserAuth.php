@@ -12,6 +12,7 @@
 	 * 	createUser()
 	 *  login()
 	 *  logout()
+	 *  valid()
 	 */
 	
 	require_once 'includes/PasswordHash.php';
@@ -402,5 +403,59 @@
 			session_destroy();
 		}
 
+		// Function to check if user is authorized for access
+		function valid($lvl)
+		{
+			switch ($lvl)
+			{
+				case 'G': // General level
+					if (!isset($_SESSION['agent']) OR ($_SESSION['agent'] != md5($_SERVER['HTTP_USER_AGENT'])))
+					{
+						return False;
+					}
+					else 
+					{
+						return True;
+					}
+					break;
+					
+				case 'A': // Administrator level
+					if (($_SESSION['role'] != 'A') OR !isset($_SESSION['agent']) OR ($_SESSION['agent'] != md5($_SERVER['HTTP_USER_AGENT'])))
+					{
+						return False;
+					}
+					else
+					{
+						return True;
+					}
+					break;
+					
+				case 'M': // Manager level minimum
+					if (($_SESSION['role'] == 'P') OR !isset($_SESSION['agent']) OR ($_SESSION['agent'] != md5($_SERVER['HTTP_USER_AGENT'])))
+					{
+						return False;
+					}
+					else
+					{
+						return True;
+					}
+					break;
+					
+				case 'P': // Player level minimum
+					if (($_SESSION['role'] == 'M') OR !isset($_SESSION['agent']) OR ($_SESSION['agent'] != md5($_SERVER['HTTP_USER_AGENT'])))
+					{
+						return False;
+					}
+					else
+					{
+						return True;
+					}
+					break;
+					
+				default:
+					return False;
+					break;
+			}
+		}
 	} // End of Class
 ?>
