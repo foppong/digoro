@@ -1,147 +1,259 @@
 <?php
-	/* This page defines the User class.
+	/* This page defines the User class and extends the UserAuth class.
 	 * Attributes:
-	 * 	protected id_user
-	 *  protected dbc
-	 *  protected inv_case
+	 *  protected fn (first name)
+	 *  protected ln (last name)
+	 *  protected role
+	 *  protected city
+	 *  protected state
+	 *  protected zp (zip code)
+	 *  protected gd (gender)
+	 * 	protected email
+	 *  protected pass
+	 *  protected rdate (registration date)
+	 *  protected bday (birthday)
+	 *  protected pnum (phone number)
+	 *  protected rating
+	 *  protected dftm (default team)
+	 *  protected lb (login in before)
+	 * 
 	 * 	
 	 * Methods:
 	 *  addTeam()
-	 * 	createUser()
+	 *  deleteTeam()
+	 *  viewTeams()
+	 *  setdefaultTeam()
+	 *  viewSchedule()
+	 *  isnewUser()
+	 *  editAccount()
+	 *  chgPassword()
+	 *  viewRoster()
+	 *  getuserData()
 	 */
-	
-	require_once 'includes/PasswordHash.php';
 	
 	class User extends UserAuth {
 	 	
 		// Declare the attributes
-		protected $id_user, $dbc, $inv_case;
+		protected $fn, $ln, $role, $city, $state, $zp, $gd, $email,
+			$pass, $rdate, $bday, $pnum, $rating, $dftm, $lb;
 
 		// Constructor
-		function __construct() {}
-
-		// Function to create users
-		function createUser($e, $p, $fn, $ln, $mstatus, $zp, $gd, $bdfrmat, $iv) 
+		function __construct($userID) 
 		{
-			// Call checkUser function	
-			parent::checkUser($e);
+			parent::setUserID($userID);
+		}
 
-			$hasher = new PasswordHash(8, FALSE);
-					
-			// Encrypt the new password by making a new hash.
-			$hash = $hasher->HashPassword($p);
-			if (strlen($hash) < 20)
+		function setUserAttributes($fnIN='', $lnIN='', $roleIN='', $cityIN='', $stIN='', $zpIN=0, $gdIN='', $emailIN='',
+			$passIN='', $rdateIN='', $bdayIN='', $pnumIN=0, $rateIN='', $dftmIN=0, $lbIN=0)
+		{
+			$this->fn = $fnIN;
+			$this->ln = $lnIN;
+			$this->role = $roleIN;
+			$this->city = $cityIN;
+			$this->state = $stIN;
+			$this->zp = $zpIN;
+			$this->gd = $gdIN;
+			$this->email = $emailIN;
+			$this->pass = $passIN;
+			$this->rdate = $rdateIN;
+			$this->bday = $bdayIN;
+			$this->pnum = $pnumIN;
+			$this->rating = $rateIN;
+			$this->dftm = $dftmIN;
+			$this->lb = $lbIN;
+		}
+
+		function getUserAttribute($attribute)
+		{
+			return $this->$attribute;
+		}
+		
+		// Function to add team
+		function addTeam($lg, $userID, $sp, $tn, $ct, $st, $abtm) 
+		{
+			// Make the query:
+			$q = 'INSERT INTO teams (id_league, id_manager, id_sport, team_name, city, state, about) VALUES (?,?,?,?,?,?,?)';
+
+			// Prepare the statement
+			$stmt = $this->dbc->prepare($q);
+			
+			// Bind the variables
+			$stmt->bind_param('iiissss', $lg, $userID, $sp, $tn, $ct, $st, $abtm);
+			
+			// Execute the query:
+			$stmt->execute();
+			
+			// Successfully added team
+			if ($stmt->affected_rows == 1)
 			{
-				fail('Failed to hash new password');
-				exit();
+				// Set the default team ID
+				$_SESSION['deftmID'] = $stmt->insert_id;
+				$tmID = $_SESSION['deftmID'];
+
+				// Make the new query to add manager to player table:
+				$q = 'INSERT INTO players (id_user, id_team) VALUES (?,?)';
+					
+				// Prepare the statement:
+				$stmt2 = $this->dbc->prepare($q);
+						
+				// Bind the inbound variables:
+				$stmt2->bind_param('ii', $userID, $tmID);
+					
+				// Execute the query:
+				$stmt2->execute();
+						
+				if ($stmt2->affected_rows !== 1) // It didn't run ok
+				{
+					echo '<p class="error">Manager was not added to roster. Please contact the service administrator.</p>';
+				}
+
+				// Redirect user to manager homepage after success
+				$url = BASE_URL . 'manager/manager_home.php';
+				header("Location: $url");
+				exit();	
+			
+				// Close the statement:
+				$stmt2->close();
+				unset($stmt2);
+				
+				echo '<p>Your team was added succesfully.</p>';
 			}
-			unset($hasher);
-
-			// Determine registration method
-			switch ($this->inv_case)
+			else
 			{
-				case 1: // User is new to the system & not invited by manager
-					
-					// Create the activation code
-					$a = md5(uniqid(rand(), TRUE));	
-		
-					// Make the query to add new user to database
-					$q = 'INSERT INTO users (email, pass, first_name, last_name, role, zipcode, gender, activation, birth_date, invited, registration_date) 
-						VALUES (?,?,?,?,?,?,?,?,?,?,NOW())';
-		
-					// Prepare the statement
-					$stmt = $this->dbc->prepare($q); 
-		
-					// Bind the inbound variables:
-					$stmt->bind_param('sssssssssi', $e, $hash, $fn, $ln, $mstatus, $zp, $gd, $a, $bdfrmat, $iv);
-						
-					// Execute the query:
-					$stmt->execute();
-						
-					if ($stmt->affected_rows == 1) // It ran OK.
-					{
-						// Send the activation email
-						$body = "Welcome to digoro and thank you for registering!\n\nTo activate your account, please click on this link:";
-						$body .= "\n" . BASE_URL . 'activate.php?x=' . urlencode($e) . "&y=$a";
-						mail($e, 'digoro.com - Registration Confirmation', $body);
-						
-						echo '<h3>Thank you for registering! A confirmation email has been sent to your address. Please
-							click on the link in that email in order to activate your account. </h3>';
-		
-						// Close the statement:
-						$stmt->close();
-						unset($stmt);
-						
-						// Close the connection:
-						$this->dbc->close();
-						unset($this->dbc);
-							
-						include 'includes/footer.html';
-						exit();	
-					}
-					else 
-					{	// Registration process did not run OK.
-						echo '<p class="error">You could not be registered due to a system error. We apologize
-							for any inconvenience.</p>';
-					}
-					break;
+				echo '<p class="error">Your team was not added. Please contact the service administrator.</p>';
+			}
 
-				case 2: // User invited by manager
+			// Close the statement:
+			$stmt->close();
+			unset($stmt);			
+		}
+		
+		// Function to delete team
+		function deleteTeam()
+		{
+			
+		}
+		
+		// Function to view associated teams
+		function viewTeams()
+		{
+			
+		}
+		
+		// Function to set default team
+		function setDefaultTeam()
+		{
+			
+		}
+
+		// Function to view schedule of team
+		function viewSchedule()
+		{
+			
+		}
+
+		// Function to check if new user
+		function isnewUser()
+		{
+			
+		}
+
+		// Function to edit account settings
+		function editAccount()
+		{
+			
+		}
+
+		// Function to change password
+		function chgPassword()
+		{
+			
+		}
+
+		// Function to view roster
+		function viewRoster()
+		{
+			
+		}
+
+		// Function to pull complete user data from database and set attributes
+		function pullUserData()
+		{
+			// Make the query
+			$q = 'SELECT first_name,last_name,role,city,state,zipcode,
+				gender,email,pass,registration_date,birth_date,phone_num,
+				rating,invited,default_teamID,login_before
+				FROM users WHERE id_user=? LIMIT 1';
+					
+			// Prepare the statement
+			$stmt = $this->dbc->prepare($q);
+			
+			// Bind the inbound variable:
+			$stmt->bind_param('i', $this->id_user);
+			
+			// Execute the query:
+			$stmt->execute();
+			
+			// Store result
+			$stmt->store_result();
+		
+			// Bind the outbound variable:
+			$stmt->bind_result($fnOB, $lnOB, $roleOB, $cityOB, $stOB, $zpOB, $gdOB, $emailOB,
+				$passOB, $rdateOB, $bdOB, $pnumOB, $ratingOB, $invOB, $dftmOB, $lbOB);	
 				
-					// Create the activation code
-					$a = md5(uniqid(rand(), TRUE));			
+			// Valid user ID
+			if ($stmt->num_rows == 1)
+			{	
+				while ($stmt->fetch())
+				{				
+					self::setuserAttributes($fnOB, $lnOB, $roleOB, $cityOB, $stOB, $zpOB, $gdOB, $emailOB,
+				$passOB, $rdateOB, $bdOB, $pnumOB, $ratingOB, $invOB, $dftmOB, $lbOB);
 				
-					// Make the query to update user in database
-					$q = 'UPDATE users SET pass=?, first_name=?, last_name=?, role=?, zipcode=?, gender=?, activation=?, birth_date=?, registration_date=NOW() 
-						WHERE id_user=? LIMIT 1';
-	
-					// Prepare the statement
-					$stmt = $this->dbc->prepare($q);
-	
-					// Bind the inbound variables:
-					$stmt->bind_param('ssssisssi', $hash, $fn, $ln, $mstatus, $zp, $gd, $a, $bdfrmat, $this->id_user);
+				}
+			}
+
+			// Close the statement:
+			$stmt->close();
+			unset($stmt);
+						
+		} // End of pullUserData function
+
+		// Function to pull specific user data from database
+		function pullSpecificData($datacolumn)
+		{
+			// Make the query
+			$q = "SELECT $datacolumn FROM users WHERE id_user=? LIMIT 1";
 					
-					// Execute the query:
-					$stmt->execute();
+			// Prepare the statement
+			$stmt = $this->dbc->prepare($q);
+			
+			// Bind the inbound variable:
+			$stmt->bind_param('i', $this->id_user);
+			
+			// Execute the query:
+			$stmt->execute();
+			
+			// Store result
+			$stmt->store_result();
+			
+			// Bind the outbound variable:
+			$stmt->bind_result($OB);	
+
+			// Valid user ID
+			if ($stmt->num_rows == 1)
+			{
+				while ($stmt->fetch())
+				{				
+					return $OB;
+				}
+				
+			}
+			
+			// Close the statement:
+			$stmt->close();
+			unset($stmt);			
+		} // End of pullSpecificData function
+
 		
-					if ($stmt->affected_rows == 1) // It ran OK.
-					{
-						// Send the activation email
-						$body = "Welcome to digoro and thank you for registering!\n\nTo activate your account, please click on this link:";
-						$body .= "\n" . BASE_URL . 'activate.php?x=' . urlencode($e) . "&y=$a";
-						mail($e, 'digoro.com - Registration Confirmation', $body);
-						
-						echo '<h3>Thank you for registering! A confirmation email has been sent to your address. Please
-							click on the link in that email in order to activate your account. </h3>';
-	
-						// Close the statement:
-						$stmt->close();
-						unset($stmt);
-						
-						// Close the connection:
-						$this->dbc->close();
-						unset($this->dbc);
-						
-						include 'includes/footer.html';
-						exit();	
-					}
-					else 
-					{	// Registration process did not run OK.
-						echo '<p class="error">You could not be registered due to a system error. We apologize
-							for any inconvenience.</p>';
-					}
-					break;
-					
-				default:
-					// The email address is not available and player was not previously invited
-					echo '<p class="error">That email address has already been registered. If you have forgotten your password,
-						use the link below to have your password sent to you.</p>';
-					break;
-			} // End of switch
-		} // End of function
-
-
-
-
 	} // End of Class
 ?>

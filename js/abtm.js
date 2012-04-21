@@ -12,7 +12,7 @@ $.ajaxSetup({"error":function(XMLHttpRequest,textStatus, errorThrown) {
 $(document).ready(function() {
 	$.ajax({
 		dataType: 'json',
-		url: "about_data.php",
+		url: "../data/about_data.php",
 		success: function(data) {
 			printAbout(data);
 		},

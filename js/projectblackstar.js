@@ -55,7 +55,7 @@ $(document).ready(function()
 	// Ajax call to retreive list of teams assigned to user	
 	$.ajax({
 		dataType: 'json',
-		url: "team_data.php",
+		url: "../data/team_data.php",
 		success: function(data) {
 			buildTeamMenu(data);
 		},
@@ -84,7 +84,7 @@ function showLeagues(data)
 	$.ajax({
 		type: 'POST',
 		dataType: 'json',
-		url: "league_data.php",
+		url: "../data/eague_data.php",
 		data: {state: data},
 		success: function(data) {
 			buildLeagueMenu(data);

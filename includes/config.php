@@ -16,8 +16,11 @@
 	// Site URL (base for all redirections):
 	define('BASE_URL', 'http://www.digoro.com/');
 	
-	// Location of the MySQL connection script:
-	define('MYSQL', '../nonWeb/mysqli_connect.php');
+	// Relative location of the MySQL connection script:
+	define('MYSQL1', '../nonWeb/mysqli_connect.php');
+	
+	// Relative location of the MySQL connection script:
+	define('MYSQL2', '../../nonWeb/mysqli_connect.php');
 	
 	// Adjust the time zone
 	date_default_timezone_set('America/Los_Angeles');

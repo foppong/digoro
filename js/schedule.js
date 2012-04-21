@@ -12,7 +12,7 @@ $.ajaxSetup({"error":function(XMLHttpRequest,textStatus, errorThrown) {
 $(document).ready(function() {
 	$.ajax({
 		dataType: 'json',
-		url: "schedule_data.php",
+		url: "../data/schedule_data.php",
 		success: function(data) {
 			buildTable(data);
 		},

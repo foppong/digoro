@@ -13,7 +13,7 @@ $.ajaxSetup({"error":function(XMLHttpRequest,textStatus, errorThrown) {
 $(document).ready(function() {
 	$.ajax({
 		dataType: 'json',
-		url: "team_data.php",
+		url: "../data/team_data.php",
 		success: function(data) {
 			buildTeamMenu(data);
 		},

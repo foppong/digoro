@@ -11,8 +11,7 @@
 	 * 	editGame()
 	 * 	displayGame()
 	 */
-	
-	require_once 'includes/config.php';	
+		
 
 	class Game {
 	 	

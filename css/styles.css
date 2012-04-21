@@ -123,7 +123,7 @@ label {
 }
 label.valid {
   width: 24px;
-  background: url('css/imgs/valid.png') center center no-repeat;
+  background: url('imgs/valid.png') center center no-repeat;
   display: inline-block;
   text-indent: -9999px;
 }

@@ -38,7 +38,7 @@
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
 		// Need the database connection:
-		require MYSQL;
+		require MYSQL1;
 
 		// Validate email address
 		if (filter_var($_POST['email'], FILTER_VALIDATE_EMAIL))
