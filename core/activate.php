@@ -23,7 +23,7 @@
 		// Print a customized message:
 		if ($db->affected_rows == 1) // It ran OK.
 		{
-			echo "<h3>Your account is now active. You may now log in. </h3>";
+			echo '<h3>Your account is now active. You may now log in by clicking <a href="../index.php">here</a></h3>';
 		}
 		else 
 		{

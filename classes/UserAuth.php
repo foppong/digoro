@@ -7,8 +7,15 @@
 	 * 	
 	 * Methods:
 	 *  setDB()
+	 *  setUserID()
+	 *  setinvCase()
+	 *  getDB()
+	 *  getUserID()
+	 *  getinvCase()
 	 * 	checkPass()
 	 * 	checkUser()
+	 *  createUser()
+	 *  deleteUser()
 	 *  login()
 	 *  logout()
 	 *  valid()
@@ -199,7 +206,7 @@
 						$stmt->close();
 						unset($stmt);
 							
-						include '../includes/footer.html';
+						include '../includes/ifooter.html';
 						exit();	
 					}
 					else 
@@ -241,7 +248,7 @@
 						$stmt->close();
 						unset($stmt);
 						
-						include '../includes/footer.html';
+						include '../includes/ifooter.html';
 						exit();	
 					}
 					else 
@@ -303,7 +310,7 @@
 				echo '<h3>Are you sure you want to delete your account? We will miss you!</h3>';
 					
 				// Create the form:
-				echo '<form action ="core/delete_acct.php" method="post" id="DelAcctForm">
+				echo '<form action ="delete_acct.php" method="post" id="DelAcctForm">
 					<input type="radio" name="sure" value="Yes" />Yes<br />
 					<input type="radio" name="sure" value="No" checked="checked" />No<br />
 					<input type="submit" name="submit" value="Delete" />
@@ -361,6 +368,8 @@
 					// If user hasn't logged in before and is a manager, take them to welcome page
 					if ($lb == FALSE && $role == 'M')
 					{
+						$user = new Manager($userID);						
+						$_SESSION['userObj'] = $user;
 						$url = BASE_URL . 'manager/mg_welcome.php';
 						header("Location: $url");
 						exit();
@@ -375,7 +384,7 @@
 							$url = BASE_URL . 'admin/admin_home.php';
 							break;
 						case 'M':
-							$user = new Manager($userID);							
+							$user = new Manager($userID);						
 							$_SESSION['userObj'] = $user;
 							$url = BASE_URL . 'manager/manager_home.php';
 							break;

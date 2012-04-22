@@ -14,12 +14,12 @@
 	$lvl = 'M'; 
 	
 	// Need the database connection:
-	require MYSQL2;
+	require_once MYSQL2;
 
 	// Assign user object from session variable
 	if (isset($_SESSION['userObj']))
 	{
-		$user = $_SESSION['userObj'];
+		$manager = $_SESSION['userObj'];
 	}
 	else 
 	{
@@ -31,24 +31,24 @@
 		exit();	
 	}
 
-	// Assign Database Resource to object
-	$user->setDB($db);
-
 	// Authorized Login Check
-	if (!$user->valid($lvl))
+	if (!$manager->valid($lvl))
 	{
-		$user->logoff();
+		$manager->logoff();
 		$url = BASE_URL . 'index.php';
 		ob_end_clean();
 		header("Location: $url");
 		exit();	
 	}
 
+	// Assign Database Resource to object
+	$manager->setDB($db);
+	
 	// Pull user data from database
-	$user->pullUserData();
+	$manager->pullUserData();
 
 	// Get user ID
-	$userID = $user->getUserID();
+	$userID = $manager->getUserID();
 	
 	// Assign userID to session variable
 	$_SESSION['userID'] = $userID;

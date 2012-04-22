@@ -2,11 +2,15 @@
 	// forgot_password.php
 	// This page allows a user to reset their password if forgotten.
 
-	require '../includes/PasswordHash.php';	
 	require '../includes/config.php';
 	$page_title = 'digoro : Password Reset';
 	include '../includes/iheader.html';
-	
+
+	// autoloading of classes
+	function __autoload($class) {
+		require_once('../classes/' . $class . '.php');
+	}
+		
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
 		require MYSQL2;

@@ -46,8 +46,8 @@
 	// Assign Database Resource to object
 	$user->setDB($db);
 
-	// Retrieve user ID
-	$userID = $user->getUserAttribute('id_user');
+	// Get user ID
+	$userID = $user->getUserID();
 
 	// Delete user from database
 	$user->deleteUser($userID);

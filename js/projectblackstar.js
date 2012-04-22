@@ -84,7 +84,7 @@ function showLeagues(data)
 	$.ajax({
 		type: 'POST',
 		dataType: 'json',
-		url: "../data/eague_data.php",
+		url: "../data/league_data.php",
 		data: {state: data},
 		success: function(data) {
 			buildLeagueMenu(data);

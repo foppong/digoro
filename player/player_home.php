@@ -10,8 +10,20 @@
 		require_once('../classes/' . $class . '.php');
 	}
 
-	// Create user object
-	$user = new UserAuth();
+	// Assign user object from session variable
+	if (isset($_SESSION['userObj']))
+	{
+		$user = $_SESSION['userObj'];
+	}
+	else 
+	{
+		session_unset();
+		session_destroy();
+		$url = BASE_URL . 'index.php';
+		ob_end_clean();
+		header("Location: $url");
+		exit();	
+	}
 
 	// Site access level -> Player
 	$lvl = 'P'; 

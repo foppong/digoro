@@ -18,13 +18,13 @@
 		switch ($role)
 		{
 			case 'A':
-				$url = BASE_URL . 'admin_home.php';
+				$url = BASE_URL . 'admin/admin_home.php';
 				break;
 			case 'M':
-				$url = BASE_URL . 'manager_home.php';
+				$url = BASE_URL . 'manager/manager_home.php';
 				break;
 			case 'P':
-				$url = BASE_URL . 'player_home.php';
+				$url = BASE_URL . 'player/player_home.php';
 				break;
 			default:
 				$url = BASE_URL . 'index.php';
@@ -64,10 +64,11 @@
 
 		// Check if email and password entered are valid before proceeding to login procedure.
 		if ($e && $p)
-		{
+		{ 
 			$user = new UserAuth();
 			$user->setDB($db);	
 			$user->login($e, $p);
+			unset($user);
 		}
 		
 		$db->close();
@@ -101,8 +102,8 @@
 		</fieldset>
 	</form>
 
-	<p>Click <a href="register.php">here</a> to create an account.</p>
-	<p><a href="forgot_password.php">Forgot your password?</a></p>
+	<p>Click <a href="core/register.php">here</a> to create an account.</p>
+	<p><a href="core/forgot_password.php">Forgot your password?</a></p>
 
 
 <?php include 'includes/ifooter.html'; ?>

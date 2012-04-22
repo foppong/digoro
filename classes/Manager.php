@@ -15,11 +15,7 @@
 			
 		}
 
-		// Function to create team
-		function createTeam()
-		{
-			
-		}
+		
 
 	} // End of Class
 ?>

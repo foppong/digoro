@@ -15,12 +15,12 @@
 	$lvl = 'M';
 	
 	// Need the database connection:
-	require MYSQL2;
+	require_once MYSQL2;
 
 	// Assign user object from session variable
 	if (isset($_SESSION['userObj']))
 	{
-		$user = $_SESSION['userObj'];
+		$manager = $_SESSION['userObj'];
 	}
 	else 
 	{
@@ -32,11 +32,8 @@
 		exit();	
 	}
 
-	// Assign Database Resource to object
-	$user->setDB($db);
-	
 	// Authorized Login Check
-	if (!$user->valid($lvl))
+	if (!$manager->valid($lvl))
 	{
 		session_unset();
 		session_destroy();
@@ -46,8 +43,11 @@
 		exit();	
 	}
 
+	// Assign Database Resource to object
+	$manager->setDB($db);
+
 	// Get user ID
-	$userID = $user->getUserID();
+	$userID = $manager->getUserID();
 	
 	// Assign userID to session variable
 	$_SESSION['userID'] = $userID;
@@ -125,84 +125,7 @@
 		// Checks if team name, userID, sport, team city, state, and league are valid before adding team to database.
 		if ($lg && $userID && $sp && $tn && $ct && $st)
 		{
-
-			// Make the query:
-			$q = 'INSERT INTO teams (id_league, id_manager, id_sport, team_name, city, state, about) VALUES (?,?,?,?,?,?,?)';
-
-			// Prepare the statement
-			$stmt = $db->prepare($q);
-			
-			// Bind the variables
-			$stmt->bind_param('iiissss', $lg, $userID, $sp, $tn, $ct, $st, $abtm);
-			
-			// Execute the query:
-			$stmt->execute();
-			
-			// Successfully added team
-			if ($stmt->affected_rows == 1)
-			{
-				// Set the default team ID
-				$_SESSION['deftmID'] = $stmt->insert_id;
-				$tmID = $_SESSION['deftmID'];
-
-				// Make the new query to add manager to player table:
-				$q = 'INSERT INTO players (id_user, id_team) VALUES (?,?)';
-					
-				// Prepare the statement:
-				$stmt2 = $db->prepare($q);
-						
-				// Bind the inbound variables:
-				$stmt2->bind_param('ii', $userID, $tmID);
-					
-				// Execute the query:
-				$stmt2->execute();
-						
-				if ($stmt2->affected_rows !== 1) // It didn't run ok
-				{
-					echo '<p class="error">Manager was not added to roster. Please contact the service administrator.</p>';
-				}
-			
-				// Close the statement:
-				$stmt2->close();
-				unset($stmt2);				
-				
-				// Set boolean logic to true
-				$bl = 1;
-				
-				// Update the user's info in the database
-				$q = 'UPDATE users SET default_teamID=?, login_before=? WHERE id_user=? LIMIT 1';
-	
-				// Prepare the statement
-				$stmt2 = $db->prepare($q); 
-	
-				// Bind the inbound variables:
-				$stmt2->bind_param('iii', $tmID, $bl, $userID);
-					
-				// Execute the query:
-				$stmt2->execute();
-					
-				if ($stmt2->affected_rows !== 1) // It didn't run ok
-				{
-					echo '<p class="error">Please contact the service administrator.</p>';
-				}
-
-				// Redirect user to manager homepage after success
-				$url = BASE_URL . 'managers/manager_home.php';
-				header("Location: $url");
-				exit();	
-					
-				// Close the statement:
-				$stmt2->close();
-				unset($stmt2);
-			}
-			else
-			{
-				echo '<p class="error">Your team was not added. Please contact the service administrator.</p>';
-			}
-
-			// Close the statement:
-			$stmt->close();
-			unset($stmt);
+			$manager->addTeam($lg, $sp, $userID, $tn, $ct, $st, $abtm);
 			
 			// Close the connection:
 			$db->close();
@@ -292,4 +215,4 @@
 	<div align="center"><input type="submit" name="submit" value="Add Team" />
 </form>
 
-<?php include 'includes/footer.html'; ?>
+<?php include '../includes/footer.html'; ?>

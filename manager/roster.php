@@ -17,7 +17,7 @@
 	// Assign user object from session variable
 	if (isset($_SESSION['userObj']))
 	{
-		$user = $_SESSION['userObj'];
+		$manager = $_SESSION['userObj'];
 	}
 	else 
 	{
@@ -30,7 +30,7 @@
 	}
 
 	// Authorized Login Check
-	if (!$user->valid($lvl))
+	if (!$manager->valid($lvl))
 	{
 		session_unset();
 		session_destroy();

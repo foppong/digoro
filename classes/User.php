@@ -19,16 +19,17 @@
 	 * 
 	 * 	
 	 * Methods:
-	 *  addTeam()
-	 *  deleteTeam()
+	 *  setUserAttributes()
+	 *  getUserAttribute()
 	 *  viewTeams()
-	 *  setdefaultTeam()
+	 *  setDefaultTeam()
 	 *  viewSchedule()
-	 *  isnewUser()
+	 *  isNewUser()
 	 *  editAccount()
 	 *  chgPassword()
 	 *  viewRoster()
-	 *  getuserData()
+	 *  pullUserData()
+	 *  pullSpecificData()
 	 */
 	
 	class User extends UserAuth {
@@ -41,8 +42,10 @@
 		function __construct($userID) 
 		{
 			parent::setUserID($userID);
+			//self::pullUserData(); // Pull current database information and set attributes
 		}
 
+		// Function to set the User attributes
 		function setUserAttributes($fnIN='', $lnIN='', $roleIN='', $cityIN='', $stIN='', $zpIN=0, $gdIN='', $emailIN='',
 			$passIN='', $rdateIN='', $bdayIN='', $pnumIN=0, $rateIN='', $dftmIN=0, $lbIN=0)
 		{
@@ -68,78 +71,12 @@
 			return $this->$attribute;
 		}
 		
-		// Function to add team
-		function addTeam($lg, $userID, $sp, $tn, $ct, $st, $abtm) 
-		{
-			// Make the query:
-			$q = 'INSERT INTO teams (id_league, id_manager, id_sport, team_name, city, state, about) VALUES (?,?,?,?,?,?,?)';
-
-			// Prepare the statement
-			$stmt = $this->dbc->prepare($q);
-			
-			// Bind the variables
-			$stmt->bind_param('iiissss', $lg, $userID, $sp, $tn, $ct, $st, $abtm);
-			
-			// Execute the query:
-			$stmt->execute();
-			
-			// Successfully added team
-			if ($stmt->affected_rows == 1)
-			{
-				// Set the default team ID
-				$_SESSION['deftmID'] = $stmt->insert_id;
-				$tmID = $_SESSION['deftmID'];
-
-				// Make the new query to add manager to player table:
-				$q = 'INSERT INTO players (id_user, id_team) VALUES (?,?)';
-					
-				// Prepare the statement:
-				$stmt2 = $this->dbc->prepare($q);
-						
-				// Bind the inbound variables:
-				$stmt2->bind_param('ii', $userID, $tmID);
-					
-				// Execute the query:
-				$stmt2->execute();
-						
-				if ($stmt2->affected_rows !== 1) // It didn't run ok
-				{
-					echo '<p class="error">Manager was not added to roster. Please contact the service administrator.</p>';
-				}
-
-				// Redirect user to manager homepage after success
-				$url = BASE_URL . 'manager/manager_home.php';
-				header("Location: $url");
-				exit();	
-			
-				// Close the statement:
-				$stmt2->close();
-				unset($stmt2);
-				
-				echo '<p>Your team was added succesfully.</p>';
-			}
-			else
-			{
-				echo '<p class="error">Your team was not added. Please contact the service administrator.</p>';
-			}
-
-			// Close the statement:
-			$stmt->close();
-			unset($stmt);			
-		}
-		
-		// Function to delete team
-		function deleteTeam()
-		{
-			
-		}
-		
 		// Function to view associated teams
 		function viewTeams()
 		{
 			
 		}
-		
+
 		// Function to set default team
 		function setDefaultTeam()
 		{
@@ -176,7 +113,7 @@
 			
 		}
 
-		// Function to pull complete user data from database and set attributes
+		// Function to pull complete user data from database and set all attributes
 		function pullUserData()
 		{
 			// Make the query
@@ -201,7 +138,7 @@
 			$stmt->bind_result($fnOB, $lnOB, $roleOB, $cityOB, $stOB, $zpOB, $gdOB, $emailOB,
 				$passOB, $rdateOB, $bdOB, $pnumOB, $ratingOB, $invOB, $dftmOB, $lbOB);	
 				
-			// Valid user ID
+			// Found result
 			if ($stmt->num_rows == 1)
 			{	
 				while ($stmt->fetch())
@@ -251,7 +188,8 @@
 			
 			// Close the statement:
 			$stmt->close();
-			unset($stmt);			
+			unset($stmt);	
+					
 		} // End of pullSpecificData function
 
 		

@@ -17,7 +17,7 @@
 	// Assign user object from session variable
 	if (isset($_SESSION['userObj']))
 	{
-		$user = $_SESSION['userObj'];
+		$manager = $_SESSION['userObj'];
 	}
 	else 
 	{
@@ -29,8 +29,14 @@
 		exit();	
 	}
 
+	// Establish database connection
+	require_once MYSQL2;
+
+	// Assign Database Resource to object
+	$manager->setDB($db);
+
 	// Authorized Login Check
-	if (!$user->valid($lvl))
+	if (!$manager->valid($lvl))
 	{
 		session_unset();
 		session_destroy();
@@ -60,9 +66,6 @@
 		include '../includes/footer.html';
 		exit();
 	}
-
-	// Establish database connection
-	require_once MYSQL2;
 
 	// Confirmation that form has been submitted:	
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
@@ -94,32 +97,17 @@
 		// Check if user entered information is valid before continuing to edit game
 		if ($tname)
 		{
-			// Update the user's info in the players' table in database
-			$q = 'UPDATE teams SET team_name=?, about=?
-				WHERE id_team=? LIMIT 1';
-
-			// Prepare the statement
-			$stmt = $db->prepare($q); 
-
-			// Bind the inbound variables:
-			$stmt->bind_param('ssi', $tname, $abtm, $id);
-				
-			// Execute the query:
-			$stmt->execute();
-
-			if ($stmt->affected_rows == 1) // And update to the database was made
-			{				
-				echo '<p>The team has been edited.</p>';
-			}
-			else 
-			{	// Either did not run ok or no updates were made
-				echo '<p>No changes were made.</p>';
-			}
+			$team = new ManagerTeam();
+			$team->setDB($db);
+			$team->setTeamID($id);
+			$team->editTeam($tname, $abtm);
+			unset($team);
 		}
 		else
 		{	// Errors in the user entered information
 			echo '<p class="error">Please try again.</p>';
 		}
+ 
 	}	// End of submit conditional.
 
 	// Point B in Code Flow

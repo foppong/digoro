@@ -17,7 +17,7 @@
 	// Assign user object from session variable
 	if (isset($_SESSION['userObj']))
 	{
-		$user = $_SESSION['userObj'];
+		$manager = $_SESSION['userObj'];
 	}
 	else 
 	{
@@ -33,10 +33,10 @@
 	require MYSQL2;
 
 	// Assign Database Resource to object
-	$user->setDB($db);
+	$manager->setDB($db);
 
 	// Authorized Login Check
-	if (!$user->valid($lvl))
+	if (!$manager->valid($lvl))
 	{
 		session_unset();
 		session_destroy();
@@ -47,10 +47,10 @@
 	}
 
 	// Pull user data from database
-	//$user->pullUserData();
+	//$manager->pullUserData();
 
 	// Get user ID
-	$userID = $user->getUserID();
+	$userID = $manager->getUserID();
 	
 	// Assign userID to session variable
 	$_SESSION['userID'] = $userID;
@@ -130,7 +130,10 @@
 		// Checks if team name, userID, sport, team city, state, and league are valid before adding team to database.
 		if ($lg && $userID && $sp && $tn && $ct && $st)
 		{
-			$user->addTeam($lg, $userID, $sp, $tn, $ct, $st, $abtm);
+			$team = new ManagerTeam();
+			$team->setDB($db);
+			$team->createTeam($lg, $sp, $userID, $tn, $ct, $st, $abtm);
+			unset($team);	
 
 			// Close the connection:
 			$db->close();
