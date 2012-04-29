@@ -32,6 +32,9 @@
 		exit();	
 	}
 
+	// Need the database connection:	
+	require_once MYSQL2;
+
 	// Authorized Login Check
 	if (!$user->valid($lvl))
 	{
@@ -42,9 +45,6 @@
 		header("Location: $url");
 		exit();	
 	}
-
-	// Need the database connection:	
-	require_once MYSQL2;
 
 	// Assume invalid values:
 	$st = FALSE;

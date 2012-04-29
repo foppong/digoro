@@ -30,7 +30,7 @@
 	}
 
 	// Need the database connection:
-	require MYSQL2;
+	require_once MYSQL2;
 
 	// Assign Database Resource to object
 	$manager->setDB($db);
@@ -45,9 +45,6 @@
 		header("Location: $url");
 		exit();	
 	}
-
-	// Pull user data from database
-	//$manager->pullUserData();
 
 	// Get user ID
 	$userID = $manager->getUserID();
@@ -130,10 +127,7 @@
 		// Checks if team name, userID, sport, team city, state, and league are valid before adding team to database.
 		if ($lg && $userID && $sp && $tn && $ct && $st)
 		{
-			$team = new ManagerTeam();
-			$team->setDB($db);
-			$team->createTeam($lg, $sp, $userID, $tn, $ct, $st, $abtm);
-			unset($team);	
+			$manager->addTeam($lg, $sp, $userID, $tn, $ct, $st, $abtm);	
 
 			// Close the connection:
 			$db->close();

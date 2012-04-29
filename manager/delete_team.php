@@ -29,6 +29,9 @@
 		exit();	
 	}
 
+	// Need the database connection:
+	require_once MYSQL2;
+
 	// Authorized Login Check
 	if (!$user->valid($lvl))
 	{
@@ -39,6 +42,7 @@
 		header("Location: $url");
 		exit();	
 	}
+	
 	// Check for a valid user ID, through GET or POST:
 	if ( (isset($_GET['z'])) && (is_numeric($_GET['z'])) )
 	{
@@ -60,8 +64,11 @@
 		exit();
 	}
 
-	// Need the database connection:
-	require_once MYSQL2;
+	// Create team object with current team selection
+	$team = new ManagerTeam();
+	$team->setDB($db);
+	$team->setTeamID($id);
+	$team->pullTeamData();
 
 	// Confirmation that form has been submitted:	
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
@@ -69,29 +76,8 @@
 
 		if ($_POST['sure'] == 'Yes')
 		{	// If form submitted is yes, delete the record
-		
-			// Make the query	
-			$q = "DELETE FROM teams WHERE id_team=? LIMIT 1";
 
-			// Prepare the statement:
-			$stmt = $db->prepare($q);
-
-			// Bind the inbound variable:
-			$stmt->bind_param('i', $id);
-
-			// Execute the query:
-			$stmt->execute();
-			
-			// If the query ran ok.
-			if ($stmt->affected_rows == 1) 
-			{	// Print a message
-				echo '<p>This team has been deleted successfully.</p>';
-			}
-			else 
-			{	// If the query did not run ok.
-				echo '<p class="error">The team could not be deleted due to a system errror.</p>';
-				exit();
-			}
+			$team->deleteTeam();		
 		}
 		else
 		{	// No confirmation of deletion.
@@ -101,53 +87,32 @@
 	else
 	{	// Point B in Code Flow. Show the form
 
-		// Make the query to retreive user information:		
-		$q = "SELECT team_name FROM teams WHERE id_team=?";		
+		// Get team name attribute for page display purposes
+		$teamname = $team->getTeamAttribute('tmname');
 
-		// Prepare the statement:
-		$stmt = $db->prepare($q);
-
-		// Bind the inbound variable:
-		$stmt->bind_param('i', $id);
-		
-		// Execute the query:
-		$stmt->execute();		
-		
-		// Store results:
-		$stmt->store_result();
-	
-		// Bind the outbound variable:
-		$stmt->bind_result($tnameOB);	
-		
-		// Valid user ID, show the form.
-		if ($stmt->num_rows == 1)
-		{
-			while ($stmt->fetch())
-			{	
-				//Display the record being deleted:
-				echo '<h3>Are you sure you want to delete Team ' . $tnameOB . ' from your profile?</h3>';
-			}
+		if ($teamname != '') // Indicates valid user to page
+		{		
+		//Display the record being deleted:
+		echo '<h3>Are you sure you want to delete Team ' . $teamname . ' from your profile?</h3>';
 			
-			// Create the form:
-			echo '<form action ="delete_team.php" method="post" id="DelTeamForm">
-				<input type="hidden" name="z" value="' . $id . '" />
-				<input type="radio" name="sure" value="Yes" />Yes<br />
-				<input type="radio" name="sure" value="No" checked="checked" />No<br />
-				<input type="submit" name="submit" value="Delete" />
-				</form>';
+		// Create the form:
+		echo '<form action ="delete_team.php" method="post" id="DelTeamForm">
+			<input type="hidden" name="z" value="' . $id . '" />
+			<input type="radio" name="sure" value="Yes" />Yes<br />
+			<input type="radio" name="sure" value="No" checked="checked" />No<br />
+			<input type="submit" name="submit" value="Delete" />
+			</form>';		
 		}
 		else 
 		{	//Not a valid user ID.
 			echo '<p class="error">This page has been accessed in error.</p>';
 			exit();
-		}
-		
-		// Close the statement:
-		$stmt->close();
-		unset($stmt);
-	
+		}		
+
 	} // End of the main submission conditional.
-			
+
+	unset($team);
+				
 	// Close the connection:
 	$db->close();
 	unset($db);

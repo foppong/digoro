@@ -32,6 +32,9 @@
 		exit();	
 	}
 
+	// Need the database connection:	
+	require_once MYSQL2;
+
 	// Authorized Login Check
 	if (!$user->valid($lvl))
 	{
@@ -43,8 +46,7 @@
 		exit();	
 	}
 
-	// Need the database connection:	
-	require_once MYSQL2;
+
 /**
 // Confirmation that form has been submitted:	
 //if ($_SERVER['REQUEST_METHOD'] == 'POST')
@@ -100,8 +102,11 @@
 		ORDER BY $order_by"; 
 
 **/	
-	// Retrieve default team ID
-	$tm = $user->getUserAttribute('dftm');
+	// Retrieve team object from session variable
+	//$team = $_SESSION['teamObj'];
+
+	// Retrieve current team ID from session variable
+	$tm = $_SESSION['ctmID'];	
 
 	// Make the Query:
 	$q = "SELECT CONCAT(u.first_name, ' ', u.last_name) AS name, u.gender, u.email, p.id_player, p.position
@@ -109,7 +114,6 @@
 		USING (id_user)
 		WHERE p.id_team=?";
 
-		
 	// Prepare the statement:
 	$stmt = $db->prepare($q);
 		

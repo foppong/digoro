@@ -32,6 +32,9 @@
 		exit();	
 	}
 
+	// Need the database connection:	
+	require_once MYSQL2;
+
 	// Authorized Login Check
 	if (!$user->valid($lvl))
 	{
@@ -42,20 +45,15 @@
 		header("Location: $url");
 		exit();	
 	}
+	
+	// Retrieve team object from session variable
+	//$team = $_SESSION['teamObj'];
 
-	// Need the database connection:	
-	require_once MYSQL2;
-	
-	// Get user ID
-	$userID = $user->getUserID();
-	
-	// Retrieve default team ID
-	$tm = $user->getUserAttribute('dftm');	
+	// Retrieve current team ID from session variable
+	$tm = $_SESSION['ctmID'];
 
 	// Make the Query to find all teams associated with user via a union of the players and teams table:
-	$q = "SELECT about
-		FROM teams
-		WHERE id_team=?";
+	$q = "SELECT about FROM teams WHERE id_team=?";
 
 	// Prepare the statement:
 	$stmt = $db->prepare($q);

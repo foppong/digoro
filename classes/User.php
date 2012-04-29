@@ -14,7 +14,8 @@
 	 *  protected bday (birthday)
 	 *  protected pnum (phone number)
 	 *  protected rating
-	 *  protected dftm (default team)
+	 *  protected invited
+	 *  protected dftmID (default team id)
 	 *  protected lb (login in before)
 	 * 
 	 * 	
@@ -36,7 +37,7 @@
 	 	
 		// Declare the attributes
 		protected $fn, $ln, $role, $city, $state, $zp, $gd, $email,
-			$pass, $rdate, $bday, $pnum, $rating, $dftm, $lb;
+			$pass, $rdate, $bday, $pnum, $rating, $invited, $dftmID, $lb;
 
 		// Constructor
 		function __construct($userID) 
@@ -47,7 +48,7 @@
 
 		// Function to set the User attributes
 		function setUserAttributes($fnIN='', $lnIN='', $roleIN='', $cityIN='', $stIN='', $zpIN=0, $gdIN='', $emailIN='',
-			$passIN='', $rdateIN='', $bdayIN='', $pnumIN=0, $rateIN='', $dftmIN=0, $lbIN=0)
+			$passIN='', $rdateIN='', $bdayIN='', $pnumIN=0, $rateIN='', $invIN=0, $dftmIN=0, $lbIN=0)
 		{
 			$this->fn = $fnIN;
 			$this->ln = $lnIN;
@@ -62,9 +63,11 @@
 			$this->bday = $bdayIN;
 			$this->pnum = $pnumIN;
 			$this->rating = $rateIN;
-			$this->dftm = $dftmIN;
+			$this->invited = $invIN;
+			$this->dftmID = $dftmIN;
 			$this->lb = $lbIN;
 		}
+
 
 		function getUserAttribute($attribute)
 		{

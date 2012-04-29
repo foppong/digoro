@@ -17,7 +17,7 @@
 	// Assign user object from session variable
 	if (isset($_SESSION['userObj']))
 	{
-		$user = $_SESSION['userObj'];
+		$manager = $_SESSION['userObj'];
 	}
 	else 
 	{
@@ -29,8 +29,14 @@
 		exit();	
 	}
 
+	// Establish database connection
+	require_once MYSQL2;
+
+	// Assign Database Resource to object
+	$manager->setDB($db);
+
 	// Authorized Login Check
-	if (!$user->valid($lvl))
+	if (!$manager->valid($lvl))
 	{
 		session_unset();
 		session_destroy();
@@ -41,11 +47,10 @@
 	}
 
 	// Retrieve default team ID
-	$tm = $user->getUserAttribute('dftm');
+	$tm = $manager->getUserAttribute('dftmID');
 	
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
-		require MYSQL2;
 
 		// Trim all the incoming data:
 		$trimmed = array_map('trim', $_POST);

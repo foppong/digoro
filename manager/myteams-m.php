@@ -11,9 +11,6 @@
 		require_once('../classes/' . $class . '.php');
 	}
 
-	// Need the database connection:	
-	require_once MYSQL2;
-
 	// Site access level -> General
 	$lvl = 'G'; 
 
@@ -31,6 +28,9 @@
 		header("Location: $url");
 		exit();	
 	}
+
+	// Need the database connection:	
+	require_once MYSQL2;
 
 	// Authorized Login Check
 	if (!$manager->valid($lvl))
@@ -56,7 +56,7 @@
 		$teamID = $_POST['y'];
 		
 		// Set the new global session variable to new team ID
-		$_SESSION['deftmID'] = $teamID;
+		$_SESSION['ctmID'] = $teamID;
 					
 		// Update the user's info in the database
 		$q = 'UPDATE users SET default_teamID=? WHERE id_user=? LIMIT 1';
@@ -83,8 +83,7 @@
 		$stmt->close();
 		unset($stmt);		
 	}
-
-
+	
 	// Number of records to show per page:
 	$display = 3;
 	

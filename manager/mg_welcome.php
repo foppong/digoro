@@ -13,9 +13,6 @@
 
 	// Site access level -> Manager
 	$lvl = 'M';
-	
-	// Need the database connection:
-	require_once MYSQL2;
 
 	// Assign user object from session variable
 	if (isset($_SESSION['userObj']))
@@ -32,6 +29,12 @@
 		exit();	
 	}
 
+	// Need the database connection:
+	require_once MYSQL2;
+
+	// Assign Database Resource to object
+	$manager->setDB($db);
+
 	// Authorized Login Check
 	if (!$manager->valid($lvl))
 	{
@@ -42,9 +45,6 @@
 		header("Location: $url");
 		exit();	
 	}
-
-	// Assign Database Resource to object
-	$manager->setDB($db);
 
 	// Get user ID
 	$userID = $manager->getUserID();
@@ -116,11 +116,10 @@
 		{
 			$abtm = trim($_POST['abouttm']);
 		}
-		else 
+		else
 		{
 			$abtm = '';
 		}	
-
 
 		// Checks if team name, userID, sport, team city, state, and league are valid before adding team to database.
 		if ($lg && $userID && $sp && $tn && $ct && $st)

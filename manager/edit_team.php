@@ -67,6 +67,11 @@
 		exit();
 	}
 
+	$team = new ManagerTeam();
+	$team->setDB($db);
+	$team->setTeamID($id);
+	$team->pullTeamData();
+
 	// Confirmation that form has been submitted:	
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{	// Point D in Code Flow
@@ -97,11 +102,8 @@
 		// Check if user entered information is valid before continuing to edit game
 		if ($tname)
 		{
-			$team = new ManagerTeam();
-			$team->setDB($db);
-			$team->setTeamID($id);
-			$team->editTeam($tname, $abtm);
-			unset($team);
+
+			$team->editTeam($tname, $abtm);		
 		}
 		else
 		{	// Errors in the user entered information
@@ -113,6 +115,43 @@
 	// Point B in Code Flow
 	// Always show the form...
 	
+	// Get team name attribute
+	$teamname = $team->getTeamAttribute('tmname');
+	$about = $team->getTeamAttribute('about');
+
+	if ($teamname != '' && $about != '') // Valid user ID, show the form.	
+	{
+		// Headliner
+		echo '<h2>Edit Team</h2>';
+				
+		// Create the form:
+		echo '<form action ="edit_team.php" method="post" id="EditTeamForm">
+			<fieldset>
+			<input type="hidden" name="z" value="' . $id . '" />
+	
+			<div>
+				<label for="tname"><b>New Team Name:</b></label>
+				<input type="text" name="tname" id="tname" size="10" maxlength="45"
+				value="' . $teamname . '" />
+			</div>
+					
+			<div>
+				<label for="abouttm"><b>Team Information:</b></p>
+				<textarea id="abouttm" name="abouttm" cols="30" rows="2">"' . $about . '"</textarea><br />
+				<small>Enter something cool about your team.</small>
+			</div>
+					
+			<input type="submit" name="submit" value="Save"/>
+			</fieldset>
+			</form><br />';	
+	}
+	else 
+	{	//Not a valid user ID, kill the script
+		echo '<p class="error">This page has been accessed in error.</p>';
+		include '../includes/footer.html';
+		exit();
+	}	
+/*	
 	// Make the query to retreive team information from teams table in database:		
 	$q = "SELECT team_name, about
 		FROM teams
@@ -175,7 +214,7 @@
 	// Close the statement:
 	$stmt->close();
 	unset($stmt);
-			
+*/			
 	// Close the connection:
 	$db->close();
 	unset($db);

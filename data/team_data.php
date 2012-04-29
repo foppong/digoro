@@ -32,6 +32,9 @@
 		exit();	
 	}
 
+	// Need the database connection:	
+	require_once MYSQL2;
+
 	// Authorized Login Check
 	if (!$user->valid($lvl))
 	{
@@ -43,22 +46,15 @@
 		exit();	
 	}
 
-	// Need the database connection:	
-	require_once MYSQL2;
-
 	// Get user ID
 	$userID = $user->getUserID();
-	
-	// Retrieve default team ID
-	$tm = $user->getUserAttribute('dftm');	
 
 	// Make the Query to find all teams associated with user via a union of the players and teams table:
 	$q = "SELECT p.id_team, t.team_name
 		FROM players AS p INNER JOIN teams AS t
 		USING (id_team)
 		WHERE p.id_user=?";
-
-		
+	
 	// Prepare the statement:
 	$stmt = $db->prepare($q);
 		

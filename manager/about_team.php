@@ -12,8 +12,8 @@
 		require_once('../classes/' . $class . '.php');
 	}
 
-	// Site access level -> General
-	$lvl = 'G'; 
+	// Site access level -> Manager
+	$lvl = 'M'; 
 	
 	// Assign user object from session variable
 	if (isset($_SESSION['userObj']))
@@ -47,7 +47,7 @@
 		$page_title = 'digoro';
 	}
 
-	$page_title = 'digoro : Roster';
+	$page_title = 'digoro : About Team';
 
 ?>
 

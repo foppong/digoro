@@ -13,9 +13,6 @@
 	// Site access level -> Manager
 	$lvl = 'M'; 
 	
-	// Need the database connection:
-	require_once MYSQL2;
-
 	// Assign user object from session variable
 	if (isset($_SESSION['userObj']))
 	{
@@ -31,6 +28,12 @@
 		exit();	
 	}
 
+	// Need the database connection:
+	require_once MYSQL2;
+
+	// Assign Database Resource to object
+	$manager->setDB($db);
+
 	// Authorized Login Check
 	if (!$manager->valid($lvl))
 	{
@@ -40,130 +43,83 @@
 		header("Location: $url");
 		exit();	
 	}
-
-	// Assign Database Resource to object
-	$manager->setDB($db);
 	
-	// Pull user data from database
+	// Pull current user data from database and set object attributes
 	$manager->pullUserData();
+	
+	// Assign updated user object session variable
+	$_SESSION['userObj'] = $manager;
 
 	// Get user ID
 	$userID = $manager->getUserID();
 	
-	// Assign userID to session variable
-	$_SESSION['userID'] = $userID;
-	
+	// Get user's default team ID
+	$dftmID = $manager->getUserAttribute('dftmID');
+
+	// Update team object session variable as user selects different teams
 	if ( (isset($_POST['y'])) && (is_numeric($_POST['y'])) )
 	{
-		$_SESSION['deftmID'] = $_POST['y'];
-	}	
+		$_SESSION['ctmID'] = $_POST['y'];
+		$ctmID = $_SESSION['ctmID'];
+	
+		// Create team object with current team selection
+		$team = new ManagerTeam();
+		$team->setDB($db);
+		$team->setTeamID($ctmID);
+		$team->pullTeamData();
 
-	if ($_SESSION['deftmID'])
-	{
+		// Assign updated team object session variable
+		//$_SESSION['teamObj'] = $team;
 
-		// Assign team ID to retreive data with
-		$tm = $_SESSION['deftmID'];
-	
-		// Make the query	
-		$q = "SELECT team_name FROM teams WHERE id_team=? LIMIT 1";
-	
-		// Prepare the statement
-		$stmt = $db->prepare($q);
-	
-		// Bind the inbound variable:
-		$stmt->bind_param('i', $tm);
-	
-		// Execute the query:
-		$stmt->execute();
-				
-		// Store result
-		$stmt->store_result();
-				
-		// Bind the outbound variable:
-		$stmt->bind_result($tmnmOB);
-	
-		// If there are results to show.
-		if ($stmt->num_rows > 0)
-		{
-			//Assign the outbound variables			
-			while ($stmt->fetch())
-			{
-				$tmnm = $tmnmOB;
-			}	
-		}
-		else 
-		{	// No team exists with that team ID so find alternative team and make default
-			
-			// Make the Query to find all teams associated with user via a union of the players and teams table:
-			$q = "SELECT p.id_team, t.team_name
-				FROM players AS p INNER JOIN teams AS t
-				USING (id_team)
-				WHERE p.id_user=? LIMIT 1";
-			
-			// Prepare the statement:
-			$stmt2 = $db->prepare($q);
-				
-			// Bind the inbound variable:
-			$stmt2->bind_param('i', $userID);
-					
-			// Execute the query:
-			$stmt2->execute();		
-						
-			// Store results:
-			$stmt2->store_result();
-					
-			// Bind the outbound variable:
-			$stmt2->bind_result($idtmOB, $tmnmOB);
-					
-			// If there are results to show.
-			if ($stmt2->num_rows > 0)
-			{
-				//Assign the outbound variables			
-				while ($stmt2->fetch())
-				{
-					$tmnm = $tmnmOB;
-					$_SESSION['deftmID'] = $idtmOB;
-					
-					// Update the user's info in the database
-					$q = 'UPDATE users SET default_teamID=? WHERE id_user=? LIMIT 1';
-	
-					// Prepare the statement
-					$stmt3 = $db->prepare($q); 
-	
-					// Bind the inbound variables:
-					$stmt3->bind_param('ii', $idtmOB, $userID);
-					
-					// Execute the query:
-					$stmt3->execute();
-					
-					if ($stmt3->affected_rows !== 1) // It didn't run ok
-					{
-						echo '<p class="error">Please contact the service administrator.</p>';
-					}
-					
-					// Close the statement:
-					$stmt3->close();
-					unset($stmt3);	
-				}	
-			}
-			else 
-			{
-				// If user has no teams added, take them to welcome page
-				$url = BASE_URL . 'manager/mg_welcome.php';
-				header("Location: $url");
-				exit();
-			}
-			
-			// Close the statement:
-			$stmt2->close();
-			unset($stmt2);
-		}
-
-		// Close the statement:
-		$stmt->close();
-		unset($stmt);
+		// Get team name attribute for page display purposes
+		$teamname = $team->getTeamAttribute('tmname');
+		
+		unset($team);
 	}
+	else 
+	{
+		// Create team object
+		$team = new ManagerTeam();
+		$team->setDB($db);
+		$team->setTeamID($dftmID);
+		$team->pullTeamData();
+		
+		// Assign default team ID to current team ID session variable
+		$_SESSION['ctmID']  = $dftmID;
+		
+		// Get team name attribute for page display purposes
+		$teamname = $team->getTeamAttribute('tmname');
+		
+		unset($team);	
+	}
+/*
+	// Assign team object to session variable if doesn't exist
+	if (!isset($_SESSION['teamObj']))
+	{
+		// Create team object
+		$team = new ManagerTeam();
+		$team->setDB($db);
+		$team->setTeamID($dftmID);
+		$team->pullTeamData();
 
+		// Assign team object session variable
+		$_SESSION['teamObj'] = $team;
+		
+		// Assign default team ID to current team ID session variable
+		$_SESSION['ctmID']  = $dftmID;
+
+		// Get team name attribute for page display purposes
+		$teamname = $team->getTeamAttribute('tmname');
+	}
+	else
+	{
+		// Assign team object from session variable
+		$team = $_SESSION['teamObj'];
+	
+		// Get team name attribute for page display purposes
+		$teamname = $team->getTeamAttribute('tmname');
+	}
+*/		
 	// Close the connection:
 	$db->close();
 	unset($db);	
@@ -180,7 +136,7 @@
 	</form>
 </div>
 
-<h2><?php echo stripslashes($tmnm); ?></h2>
+<h2><?php echo stripslashes($teamname); ?></h2>
 <div id="tabmenu" class="ui-tabs">
 	<ul>
 		<li><a href="about_team.php"><span>About</span></a></li>

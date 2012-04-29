@@ -1,8 +1,7 @@
 <?php
-	// schedule_data.php
-	// 
-	/** roster_data.php
+	/* schedule_data.php
 	* For managers: This script retrieves all the records from the schedule table.
+	* 
 	*/
 	
 	ob_start();
@@ -32,6 +31,9 @@
 		header("Location: $url");
 		exit();	
 	}
+
+	// Need the database connection:	
+	require_once MYSQL2;
 	
 	// Authorized Login Check
 	if (!$user->valid($lvl))
@@ -44,8 +46,7 @@
 		exit();	
 	}
 
-	// Need the database connection:	
-	require_once MYSQL2;
+
 	
 /** Update this to reflect how the request is made - if AJAX call, may not need
 	// Checks for a valid team roster request, through GET or POST:
@@ -92,8 +93,11 @@
 			break;
 	}
 */
-	// Retrieve default team ID
-	$tm = $user->getUserAttribute('dftm');
+	// Retrieve team object from session variable
+	//$team = $_SESSION['teamObj'];
+
+	// Retrieve current team ID from session variable
+	$tm = $_SESSION['ctmID'];
 
 	// Make the Query:
 	$q = "SELECT id_sch, date, time, opponent, venue, result
