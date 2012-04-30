@@ -6,24 +6,59 @@
 	 */
 	
 	// SETTINGS
-	
-	// Flag variable for site status:
-	define('LIVE', FALSE);
-	
+
 	// Admin contact address:
-	define('EMAIL', 'foppong@gmail.com');
+	define('EMAIL', 'foppong@gmail.com');	
 	
-	// Site URL (base for all redirections):
-	define('BASE_URL', 'http://www.digoro.com/');
+	// Determine whether we're working on a local server or on the real server
+	if (stristr($_SERVER['HTTP_HOST'], 'local') || (substr($_SERVER['HTTP_HOST'], 0, 7) == '192.168'))
+	{
+		$local = TRUE;
+		
+		// Flag variable for site status:
+		define('LIVE', FALSE);
+		
+	} else {
+		$local = FALSE;
+		
+		// Flag variable for site status:
+		define('LIVE', TRUE);		
+	}
 	
-	// Relative location of the MySQL connection script:
-	define('MYSQL1', '../nonWeb/mysqli_connect.php');
+	// Determine location of files and the URL of the site:
+	// Allow for the development on different servers.
+	if ($local) {
+		
+		// Always debug when running locally:
+		//$debug = TRUE;
+		
+		// Define the constants
+		define ('BASE_URI', '/C:/xampp/htdocs');
+		define ('BASE_URL', 'https://localhost');
+		define ('MYSQL1', '../nonWeb/mysqli_connect.php');
+		define ('MYSQL2', '../../nonWeb/mysqli_connect.php');
+
+		// Adjust the time zone
+		date_default_timezone_set('America/Los_Angeles');
+
+		
+	} else {
+		
+		// Site URL (base for all redirections):
+		define('BASE_URL', 'http://www.digoro.com/');
+		
+		// Relative location of the MySQL connection script:
+		define('MYSQL1', '../nonWeb/mysqli_connect.php');
+		
+		// Relative location of the MySQL connection script:
+		define('MYSQL2', '../../nonWeb/mysqli_connect.php');
+		
+		// Adjust the time zone
+		date_default_timezone_set('America/Los_Angeles');		
+	}
 	
-	// Relative location of the MySQL connection script:
-	define('MYSQL2', '../../nonWeb/mysqli_connect.php');
 	
-	// Adjust the time zone
-	date_default_timezone_set('America/Los_Angeles');
+
 	
 	//Constants for PasswordHash.php
 	// Base-2 logarithm of the iteration count used for password stretching
