@@ -33,10 +33,10 @@
 		//$debug = TRUE;
 		
 		// Define the constants
-		define ('BASE_URI', '/C:/xampp/htdocs');
+		define ('BASE_URI', 'C:/xampp/htdocs');
 		define ('BASE_URL', 'https://localhost');
-		define ('MYSQL1', '../nonWeb/mysqli_connect.php');
-		define ('MYSQL2', '../../nonWeb/mysqli_connect.php');
+		define ('MYSQL1', 'nonWeb/mysqli_connect_dev.php');
+		define ('MYSQL2', '../nonWeb/mysqli_connect_dev.php');
 
 		// Adjust the time zone
 		date_default_timezone_set('America/Los_Angeles');
