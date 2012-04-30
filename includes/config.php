@@ -24,7 +24,7 @@
 		// Flag variable for site status:
 		define('LIVE', TRUE);		
 	}
-	
+
 	// Determine location of files and the URL of the site:
 	// Allow for the development on different servers.
 	if ($local) {
