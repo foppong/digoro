@@ -151,35 +151,70 @@
 		include '../includes/footer.html';
 		exit();
 	}	
-?>
+/*	
+	// Make the query to retreive team information from teams table in database:		
+	$q = "SELECT team_name, about
+		FROM teams
+		WHERE id_team=?";
 
-	<div id="EditTeam"></div>
-	<div id="photos">
-		<fieldset id="TeamDetails">
-			<legend>Edit Team</legend>
-			<form id="information">
-				<p id="status"></p>
-				<p>
-					<label for="tname">New Team Name:</label><br/>
-					<input type="text" name="tname" id="tname" size="10" maxlength="45" />
-				</p>
-				<p>
-					<label for="abouttm">Team Information:</label><br/>
-					<textarea id="abouttm" name="abouttm" cols="30" rows="2"></textarea><br />
+	// Prepare the statement:
+	$stmt = $db->prepare($q);
+
+	// Bind the inbound variable:
+	$stmt->bind_param('i', $id);
+		
+	// Execute the query:
+	$stmt->execute();		
+		
+	// Store results:
+	$stmt->store_result();
+	
+	// Bind the outbound variable:
+	$stmt->bind_result($tnameOB, $abtmOB);	
+	
+	// Valid user ID, show the form.
+	if ($stmt->num_rows == 1)
+	{
+		while ($stmt->fetch())
+		{
+			$abtmSP = stripcslashes($abtmOB);
+
+			// Headliner
+			echo '<h2>Edit Team</h2>';
+			
+			// Create the form:
+			echo '<form action ="edit_team.php" method="post" id="EditTeamForm">
+				<fieldset>
+				<input type="hidden" name="z" value="' . $id . '" />
+				
+				<div>
+					<label for="tname"><b>New Team Name:</b></label>
+					<input type="text" name="tname" id="tname" size="10" maxlength="45"
+					value="' . $tnameOB . '" />
+				</div>
+				
+				<div>
+					<label for="abouttm"><b>Team Information:</b></p>
+					<textarea id="abouttm" name="abouttm" cols="30" rows="2">"' . $abtmSP . '"</textarea><br />
 					<small>Enter something cool about your team.</small>
-				</p>
-				<p>
-					<input type="hidden" name="id" id="id">
-					<input type="button" value="update" id="update" />
-				</p>
-			</form>
-		</fieldset>
-	</div>
-
-
-
-
-<?php
+				<div>
+				
+				<input type="submit" name="submit" value="Save"/>
+				</fieldset>
+				</form><br />';
+		}
+	}
+	else 
+	{	//Not a valid user ID, kill the script
+		echo '<p class="error">This page has been accessed in error.</p>';
+		include '../includes/footer.html';
+		exit();
+	}
+		
+	// Close the statement:
+	$stmt->close();
+	unset($stmt);
+*/			
 	// Close the connection:
 	$db->close();
 	unset($db);

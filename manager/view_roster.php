@@ -62,6 +62,7 @@
 		<!-- External javascript call -->
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" charset="utf-8"></script>
 		<script type="text/javascript" src="../js/roster.js"></script>
+		<script type='text/javascript' src='knockout-2.0.0.js'></script>
 		<!-- CSS Style Sheet -->
 		<link rel="stylesheet" type="text/css" href="../css/styles.css" />
 	</head>

@@ -8,49 +8,7 @@ $.ajaxSetup({"error":function(XMLHttpRequest,textStatus, errorThrown) {
       alert(errorThrown);
       alert(XMLHttpRequest.responseText);
   }});
-  
-var TEAM = {
-	dataType: 'json',
-	url: "../data/team_data.php",
-  
-  	load: function(image_id) {
-    	var _celeb = this;
-    	$('#details input').attr('disabled', 'disabled');
-    	$.getJSON(
-      	this.url,
 
-      	function(data) {
-        	$('#details input').removeAttr('disabled');
-        	_celeb.display(data);
-      	});
-  	},
-  
-  	display: function(data) {
-    	$('#id').val(data.id);
-    	$('#name').val(data.name);
-    	$('#tags').val(data.tags.join(" "));
-  	},
-  
-  	update: function() {
-    	var form_data = $('form').serialize();
-	    	$.ajax({
-	      	type: "POST",
-	      	url: this.url,
-	      	data: form_data,
-	      	error: function() {
-	        	$('#status').text('Update failed. Try again.').slideDown('slow');
-	     	},
-	      	success: function() {
-	        	$('#status').text('Update successful!');        
-	      	},
-	      	complete: function() {
-	        	setTimeout(function() {
-	          		$('#status').slideUp('slow');
-	        		}, 3000);
-	      	}
-    	});
-  	}
-}
 // jQuery Code for when page is loaded
 $(document).ready(function()
 {
@@ -105,20 +63,6 @@ $(document).ready(function()
 			alert('an error occured!');
 		}
 	});	
-
-	// Indicate when ajax call starts and stops
-  	$('#EditTeam')
-	  	.ajaxStart(function() { 
-	    	$(this).addClass('progress'); 
-	  	})
-	  	.ajaxStop( function(){ 
-	    	$(this).removeClass('progress'); 
-  	});
-  
-  
-  	$('#update').click(function(){
-    	CELEB.update();
-  	});
 	
 });
 
