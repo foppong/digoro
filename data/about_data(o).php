@@ -53,7 +53,7 @@
 	$tm = $_SESSION['ctmID'];
 
 	// Make the Query to find all teams associated with user via a union of the players and teams table:
-	$q = "SELECT about, team_name FROM teams WHERE id_team=? LIMIT 1";
+	$q = "SELECT about FROM teams WHERE id_team=?";
 
 	// Prepare the statement:
 	$stmt = $db->prepare($q);
@@ -68,7 +68,7 @@
 	$stmt->store_result();
 			
 	// Bind the outbound variable:
-	$stmt->bind_result($abtOB, $tmnmOB);
+	$stmt->bind_result($abtOB);
 			
 	// If there are results to show.
 	if ($stmt->num_rows > 0)
@@ -80,9 +80,8 @@
 		while ($stmt->fetch())
 		{		
 			$json[] = array(
-			'TeamAbout' => stripslashes($abtOB), // If I get PHP >5.3 I believe I can use optional parameter in json_encode
-			'TeamName' => stripslashes($tmnmOB));
-			
+			'TeamAbout' => stripslashes($abtOB)); // If I get PHP >5.3 I believe I can use optional parameter in json_encode
+
 		}	// End of WHILE loop
 	
 		// Send the JSON data:
@@ -91,9 +90,9 @@
 		// Close the statement:
 		$stmt->close();
 		unset($stmt);			
-	}
 	
-	// Close the connection:
-	$db->close();
-	unset($db);	
+		// Close the connection:
+		$db->close();
+		unset($db);
+	}
 ?>

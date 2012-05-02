@@ -10,32 +10,32 @@ $.ajaxSetup({"error":function(XMLHttpRequest,textStatus, errorThrown) {
   }});
   
 var TEAM = {
-	dataType: 'json',
-	url: "../data/team_data.php",
+	inURL: "../data/about_data.php",
+	sendURL: "../manager/edit_team.php",
   
   	load: function(image_id) {
-    	var _celeb = this;
-    	$('#details input').attr('disabled', 'disabled');
+    	var _team = this;
+    	$('#information input').attr('disabled', 'disabled');
     	$.getJSON(
-      	this.url,
+      		this.inURL,
 
-      	function(data) {
-        	$('#details input').removeAttr('disabled');
-        	_celeb.display(data);
+      		function(data) {
+        		$('#information input').removeAttr('disabled');
+        		_team.display(data);
       	});
   	},
   
   	display: function(data) {
-    	$('#id').val(data.id);
-    	$('#name').val(data.name);
-    	$('#tags').val(data.tags.join(" "));
+  		$('#id').val(data.id);
+    	$('#tname').val(data.TeamName);
+    	$('#abouttm').val(data.TeamAbout);
   	},
   
   	update: function() {
     	var form_data = $('form').serialize();
-	    	$.ajax({
+	    $.ajax({
 	      	type: "POST",
-	      	url: this.url,
+	      	url: this.sendURL,
 	      	data: form_data,
 	      	error: function() {
 	        	$('#status').text('Update failed. Try again.').slideDown('slow');
@@ -115,9 +115,8 @@ $(document).ready(function()
 	    	$(this).removeClass('progress'); 
   	});
   
-  
   	$('#update').click(function(){
-    	CELEB.update();
+    	TEAM.update();
   	});
 	
 });
