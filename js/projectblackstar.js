@@ -8,21 +8,33 @@ $.ajaxSetup({"error":function(XMLHttpRequest,textStatus, errorThrown) {
       alert(errorThrown);
       alert(XMLHttpRequest.responseText);
   }});
+
+var id = $('input#id').val();
+var tname = $('input#tname').val();
+var abouttm = $('input#abouttm').val();
   
 var TEAM = {
+
+	id: id,
+	tname: tname,
+	abouttm: abouttm,
+
 	inURL: "../data/about_data.php",
 	sendURL: "../manager/edit_team.php",
   
-  	load: function(image_id) {
+  	load: function() {
     	var _team = this;
-    	$('#information input').attr('disabled', 'disabled');
-    	$.getJSON(
-      		this.inURL,
-
-      		function(data) {
-        		$('#information input').removeAttr('disabled');
-        		_team.display(data);
-      	});
+		// Ajax call to retreive list of teams assigned to user	
+		$.ajax({
+			dataType: 'json',
+			url: "../data/team_data.php",
+			success: function(data) {
+				_team.buildTeamMenu(data);
+			},
+			error: function() {
+				alert('an error occured!');
+			}
+		});	
   	},
   
   	display: function(data) {
@@ -43,14 +55,63 @@ var TEAM = {
 	      	success: function() {
 	        	$('#status').text('Update successful!');        
 	      	},
-	      	complete: function() {
+	      	complete: function() {  // LATER ON I COULD PASS THE DATA BACK AND POSSIBLY USE IT TO BUILD THE STICKY FORM, have to put jsonencode on php end
 	        	setTimeout(function() {
 	          		$('#status').slideUp('slow');
 	        		}, 3000);
 	      	}
     	});
-  	}
+  	},
+  	
+	buildTeamMenu: function(data) {    
+		var tmp = '';
+		var menu = $("#y");
+		menu.html(""); // clear out slection menu if it was previously populated
+		menu.append("<option value=''>-Select Team-</options>");
+	
+		$(data).each(function(key, val) {
+			tmp += "<option value=" + val.TeamID + ">" + val.TeamName + "</options>";
+		});
+		
+		menu.append(tmp);
+	}
+
 }
+
+var LEAGUE = {
+	
+	showLeagues: function(data)	{
+		var _league = this;
+		// AJAX call to retreive all leagues based on entered state
+		$.ajax({
+			type: 'POST',
+			dataType: 'json',
+			url: "../data/league_data.php",
+			data: {state: data},
+			success: function(data) {
+				_league.buildLeagueMenu(data);
+			},
+			error: function() {
+				alert('an error occured!');
+			}
+		});
+	},
+	
+	buildLeagueMenu: function(data) {
+		var tmp = '';
+		var menu = $("#league");
+		menu.html(""); // clear out slection menu if it was previously populated
+		menu.append("<option value=''>-Select League-</options>");
+		$(data).each(function(key, val) {
+			tmp += "<option value=" + val.LeagueID + ">" + val.LeagueName + "</option>";
+		});
+		
+		menu.append(tmp);
+	}
+}
+
+
+
 // jQuery Code for when page is loaded
 $(document).ready(function()
 {
@@ -82,85 +143,16 @@ $(document).ready(function()
 			}
 		}
 	});
-	
-	/** Load tab menu contents within same page
-	$('#tabmenu').tabs({ 
-	    load: function(event, ui) { 
-			$('a', ui.panel).live('click', function() {
-				$(ui.panel).load(this.href);
-			    return false;
-			});
-		 }
-	}); 
-	*/
 
-	// Ajax call to retreive list of teams assigned to user	
-	$.ajax({
-		dataType: 'json',
-		url: "../data/team_data.php",
-		success: function(data) {
-			buildTeamMenu(data);
-		},
-		error: function() {
-			alert('an error occured!');
-		}
-	});	
-
-	// Indicate when ajax call starts and stops
-  	$('#EditTeam')
-	  	.ajaxStart(function() { 
-	    	$(this).addClass('progress'); 
-	  	})
-	  	.ajaxStop( function(){ 
-	    	$(this).removeClass('progress'); 
-  	});
+	// Load teams associated with user into select menu
+	TEAM.load();
   
+  	// Send form data for editing team
   	$('#update').click(function(){
     	TEAM.update();
   	});
 	
 });
-
-function buildTeamMenu(data) {    
-	var tmp = '';
-	var menu = $("#y");
-	menu.html(""); // clear out slection menu if it was previously populated
-	menu.append("<option value=''>-Select Team-</options>");
-
-	$(data).each(function(key, val) {
-		tmp += "<option value=" + val.TeamID + ">" + val.TeamName + "</options>";
-	});
-	
-	menu.append(tmp);
-}
-
-function showLeagues(data)
-{ 
-	$.ajax({
-		type: 'POST',
-		dataType: 'json',
-		url: "../data/league_data.php",
-		data: {state: data},
-		success: function(data) {
-			buildLeagueMenu(data);
-		},
-		error: function() {
-			alert('an error occured!');
-		}
-	});
-}
-	
-function buildLeagueMenu(data) {    
-	var tmp = '';
-	var menu = $("#league");
-	menu.html(""); // clear out slection menu if it was previously populated
-	menu.append("<option value=''>-Select League-</options>");
-	$(data).each(function(key, val) {
-		tmp += "<option value=" + val.LeagueID + ">" + val.LeagueName + "</option>";
-	});
-	
-	menu.append(tmp);
-}	
 
 
 	

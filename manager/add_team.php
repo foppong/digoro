@@ -180,7 +180,7 @@
 
 	<div>
 		<label for="state"><b>Enter Team's Home State:</b></label>
-		<select name="state" id="state" onchange="showLeagues(this.value)">
+		<select name="state" id="state" onchange="LEAGUE.showLeagues(this.value)">
 			<option value="">-Select State-</option>
 			<option value="AL">AL</option><option value="AK">AK</option>
 			<option value="AZ">AZ</option><option value="AR">AR</option>

@@ -72,14 +72,6 @@
 	$team->setTeamID($id);
 	$team->pullTeamData();
 
-if (isset($_POST['abouttm'])){
-    echo $_POST['abouttm'] . "<br />";
-	echo $_POST['tname'] . "<br />";
-	echo $_POST['z'] . "<br />";   
-}else{
-    echo 'False <br />';
-}
-
 	// Confirmation that form has been submitted:	
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{	// Point D in Code Flow
@@ -90,8 +82,8 @@ if (isset($_POST['abouttm'])){
 		// Validate team name
 		if ($_POST['tname'])
 		{
-			$tname = htmlspecialchars($_POST['tname']);
-echo $tname . "<br />";			
+			$tname = $_POST['tname'];
+		
 		}
 		else 
 		{
@@ -101,8 +93,8 @@ echo $tname . "<br />";
 		// Validate about team information
 		if ($_POST['abouttm'])
 		{
-			$abtm = htmlspecialchars(trim($_POST['abouttm']));
-echo $abtm . "<br />";	
+			$abtm = trim($_POST['abouttm']);
+
 		}
 		else 
 		{
@@ -113,12 +105,13 @@ echo $abtm . "<br />";
 		if ($tname)
 		{
 
-			$team->editTeam($tname, $abtm);		
+			$team->editTeam($tname, $abtm);
 		}
 		else
 		{	// Errors in the user entered information
 			echo '<p class="error">Please try again.</p>';
 		}
+ 
  
 	}	// End of submit conditional.
 
@@ -126,12 +119,11 @@ echo $abtm . "<br />";
 	// Always show the form...
 	
 	// Get team name attribute
+	$team->pullTeamData();
 	$teamname = $team->getTeamAttribute('tmname');
 	$about = $team->getTeamAttribute('about');
-echo $teamname . "<br />";
-echo $about . "<br />";
-echo $id; 
-	if ($teamname != '' && $about != '') // Valid user ID, show the form.	
+
+	if ($teamname != '') // Valid user ID, show the form.	
 	{
 		// Headliner
 		echo '<h2>Edit Team</h2>';
@@ -156,7 +148,7 @@ echo $id;
 				</p>
 				<p>
 					<input type="hidden" name="id" id="id">
-					<input type="submit" value="update" id="update" />
+					<input type="button" value="update" id="update" />
 				</p>
 			</form>
 			</fieldset>

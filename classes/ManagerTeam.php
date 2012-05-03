@@ -114,9 +114,9 @@
 
 			// Prepare the statement
 			$stmt = $this->dbc->prepare($q); 
-
+			
 			// Bind the inbound variables:
-			$stmt->bind_param('ssi', $tmname, $abtm, $this->teamID);
+			$stmt->bind_param('ssi', $tmname, $abtm, $this->id_team);
 				
 			// Execute the query:
 			$stmt->execute();
