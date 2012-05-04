@@ -19,10 +19,9 @@ var TEAM = {
 	tname: tname,
 	abouttm: abouttm,
 
-	inURL: "../data/about_data.php",
-	sendURL: "../manager/edit_team.php",
+	fromURL: "../data/about_data.php",
   
-  	load: function() {
+  	loadTeams: function() {
     	var _team = this;
 		// Ajax call to retreive list of teams assigned to user	
 		$.ajax({
@@ -44,22 +43,25 @@ var TEAM = {
   	},
   
   	update: function() {
+ 
     	var form_data = $('form').serialize();
 	    $.ajax({
 	      	type: "POST",
-	      	url: this.sendURL,
+	      	url: "../manager/edit_team.php",
 	      	data: form_data,
 	      	error: function() {
 	        	$('#status').text('Update failed. Try again.').slideDown('slow');
 	     	},
 	      	success: function() {
-	        	$('#status').text('Update successful!');        
+	        	$('#status').text('Update successful!');
+	        	$('#status').slideDown('slow');
 	      	},
 	      	complete: function() {  // LATER ON I COULD PASS THE DATA BACK AND POSSIBLY USE IT TO BUILD THE STICKY FORM, have to put jsonencode on php end
 	        	setTimeout(function() {
 	          		$('#status').slideUp('slow');
 	        		}, 3000);
-	      	}
+	      	},
+	      	cache: false
     	});
   	},
   	
@@ -145,12 +147,17 @@ $(document).ready(function()
 	});
 
 	// Load teams associated with user into select menu
-	TEAM.load();
+	TEAM.loadTeams();
   
-  	// Send form data for editing team
+  	/* Send form data for editing team
   	$('#update').click(function(){
     	TEAM.update();
   	});
+*/
+
+	$("#update").on("click", function() {
+		TEAM.update();
+	});
 	
 });
 

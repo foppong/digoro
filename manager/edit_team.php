@@ -72,6 +72,8 @@
 	$team->setTeamID($id);
 	$team->pullTeamData();
 
+	$flag = 0;
+	echo $flag . "<br />";
 	// Confirmation that form has been submitted:	
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{	// Point D in Code Flow
@@ -100,21 +102,28 @@
 		{
 			$abtm = '';
 		}
-		
+	
 		// Check if user entered information is valid before continuing to edit game
 		if ($tname)
 		{
-
-			$team->editTeam($tname, $abtm);
+			if($team->editTeam($tname, $abtm) == True)
+			{
+				echo '<p>Team was successfully updated</p>';
+				$flag = 1;
+			}
+			else 
+			{
+				echo '<p>No changes were made</p>';
+				$flag = 2;
+			}
 		}
 		else
 		{	// Errors in the user entered information
 			echo '<p class="error">Please try again.</p>';
 		}
  
- 
 	}	// End of submit conditional.
-
+	echo $flag . "<br />";
 	// Point B in Code Flow
 	// Always show the form...
 	
