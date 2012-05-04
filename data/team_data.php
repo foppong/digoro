@@ -8,6 +8,7 @@
 	session_start();
 			
 	require '../includes/config.php';
+	include '../includes/php-functions.php';
 	
 	// autoloading of classes
 	function __autoload($class) {
@@ -24,12 +25,7 @@
 	}
 	else 
 	{
-		session_unset();
-		session_destroy();
-		$url = BASE_URL . 'index.php';
-		ob_end_clean();
-		header("Location: $url");
-		exit();	
+		redirect_to('index.php');
 	}
 
 	// Need the database connection:	
@@ -38,12 +34,7 @@
 	// Authorized Login Check
 	if (!$user->valid($lvl))
 	{
-		session_unset();
-		session_destroy();
-		$url = BASE_URL . 'index.php';
-		ob_end_clean();
-		header("Location: $url");
-		exit();	
+		redirect_to('index.php');
 	}
 
 	// Get user ID

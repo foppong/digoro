@@ -8,7 +8,8 @@
 	session_start();
 			
 	require '../includes/config.php';
-
+	include '../includes/php-functions.php';
+	
 	// autoloading of classes
 	function __autoload($class) {
 		require_once('../classes/' . $class . '.php');
@@ -24,12 +25,7 @@
 	}
 	else 
 	{
-		session_unset();
-		session_destroy();
-		$url = BASE_URL . 'index.php';
-		ob_end_clean();
-		header("Location: $url");
-		exit();	
+		redirect_to('index.php');
 	}
 
 	// Need the database connection:	
@@ -38,12 +34,7 @@
 	// Authorized Login Check
 	if (!$user->valid($lvl))
 	{
-		session_unset();
-		session_destroy();
-		$url = BASE_URL . 'index.php';
-		ob_end_clean();
-		header("Location: $url");
-		exit();	
+		redirect_to('index.php');
 	}
 
 
@@ -145,7 +136,30 @@
 			'<b><a href="roster_data.php?x=pos&y=' . $tm . '">Position</a></b>' => $posOB,
 			'Edit' => '<a href="edit_player.php?z=' . $idOB . '">Edit</a>',
 			'Delete' => '<a href="delete_player.php?z=' . $idOB . '">Delete</a>');
-
+		// Table Header
+		echo '<form action="null" method="post">     
+			 	<table id="roster" class="roster_data" align="left" ellspacing="0" cellpadding="2" width="50%>
+          			<thead>
+            			<tr>
+              			<th>Name</th>
+              			<th>Email</th>
+              			<th>Gender</th>
+              			<th>Position</th>
+            			</tr>
+          			</thead>
+          			<tbody>';			
+		// Fetch and print all records...
+		while ($stmt->fetch())
+		{		
+			echo '<tr bgcolor="#eeeeee">
+				<td align="left">' . $nOB . '</td>
+				<td align="left">' . $eOB . '</td>
+				<td align="left">' . $genOB . '</td>
+				<td align="left">' . $posOB . '</td>
+				</td></tr>';	
+		}	// End of WHILE loop
+			
+		echo '</tbody></table></form><br />';
 		}	// End of WHILE loop
 	
 		// Send the JSON data:

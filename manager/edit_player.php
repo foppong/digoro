@@ -5,10 +5,11 @@
 	require '../includes/config.php';
 	$page_title = 'digoro : Edit Player';
 	include '../includes/header.html';
+	include '../includes/php-functions.php';
 
 	// autoloading of classes
 	function __autoload($class) {
-		require_once('classes/' . $class . '.php');
+		require_once('../classes/' . $class . '.php');
 	}
 
 	// Site access level -> Manager
@@ -21,23 +22,13 @@
 	}
 	else 
 	{
-		session_unset();
-		session_destroy();
-		$url = BASE_URL . 'index.php';
-		ob_end_clean();
-		header("Location: $url");
-		exit();	
+		redirect_to('index.php');
 	}
 
 	// Authorized Login Check
 	if (!$user->valid($lvl))
 	{
-		session_unset();
-		session_destroy();
-		$url = BASE_URL . 'index.php';
-		ob_end_clean();
-		header("Location: $url");
-		exit();	
+		redirect_to('index.php');
 	}
 
 	// Check for a valid user ID, through GET or POST:

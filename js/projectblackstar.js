@@ -18,8 +18,6 @@ var TEAM = {
 	id: id,
 	tname: tname,
 	abouttm: abouttm,
-
-	fromURL: "../data/about_data.php",
   
   	loadTeams: function() {
     	var _team = this;
@@ -36,12 +34,6 @@ var TEAM = {
 		});	
   	},
   
-  	display: function(data) {
-  		$('#id').val(data.id);
-    	$('#tname').val(data.TeamName);
-    	$('#abouttm').val(data.TeamAbout);
-  	},
-  
   	update: function() {
  
     	var form_data = $('form').serialize();
@@ -53,13 +45,12 @@ var TEAM = {
 	        	$('#status').text('Update failed. Try again.').slideDown('slow');
 	     	},
 	      	success: function() {
-	        	$('#status').text('Update successful!');
-	        	$('#status').slideDown('slow');
+	        	$('#status').text('Update successful!').slideDown('slow');
 	      	},
 	      	complete: function() {  // LATER ON I COULD PASS THE DATA BACK AND POSSIBLY USE IT TO BUILD THE STICKY FORM, have to put jsonencode on php end
 	        	setTimeout(function() {
 	          		$('#status').slideUp('slow');
-	        		}, 3000);
+	        		}, 2000);
 	      	},
 	      	cache: false
     	});
@@ -112,7 +103,55 @@ var LEAGUE = {
 	}
 }
 
+var TABLE = {};
 
+TABLE.formwork = function(table){
+  var $tables = $(table);
+  
+  $tables.each(function () {
+    var _table = $(this);
+    _table.find('thead tr').append($('<th class="edit">&nbsp;</th>'));
+    _table.find('tbody tr').append($('<td class="edit"><input type="button" value="Edit"/></td>'))
+  });
+  
+  $tables.find('.edit :button').on('click', function() {
+    TABLE.editable(this);
+  });
+  
+}
+
+TABLE.editable = function(button) {
+  var $button = $(button);
+  var $row = $button.parents('tbody tr');
+  var $cells = $row.children('td').not('.edit');
+  
+  if($row.data('flag')) { // in edit mode, move back to table
+    // cell methods
+    $cells.each(function () {
+      var _cell = $(this);
+      _cell.html(_cell.find('input').val());
+    })
+    
+    $row.data('flag',false);
+    $button.val('Edit');
+  } 
+  else { // in table mode, move to edit mode 
+    // cell methods
+    $cells.each(function() {
+      var _cell = $(this);
+      _cell.data('text', _cell.html()).html('');
+      
+      var $input = $('<input type="text" />')
+        .val(_cell.data('text'))
+        .width(_cell.width() - 16);
+        
+      _cell.append($input);
+    })
+    
+    $row.data('flag', true);
+    $button.val('Save');
+  }
+}
 
 // jQuery Code for when page is loaded
 $(document).ready(function()
@@ -123,16 +162,6 @@ $(document).ready(function()
 
 	// Calls jquery UI datepicker selection plugin - used in add_game and edit_game pages
 	$("#date").datepicker();
-
-	// Script alternate the background color of a roster table
-	$('#roster tbody tr:even').addClass('zebra');
-
-	// Script to highlight roster table when mouse runs over the table
-	$('#roster tr').hover(function() {
-		$(this).addClass('zebraHover');
-	}, function() {
-		$(this).removeClass('zebraHover');
-	});
 
 	// jQuery UI Tabs
 	$('#tabmenu').tabs({
@@ -148,17 +177,17 @@ $(document).ready(function()
 
 	// Load teams associated with user into select menu
 	TEAM.loadTeams();
-  
-  	/* Send form data for editing team
-  	$('#update').click(function(){
-    	TEAM.update();
-  	});
-*/
 
+	// Update team edits in database
 	$("#update").on("click", function() {
 		TEAM.update();
 	});
 	
+	// Create editable table of my teams
+  	TABLE.formwork('#myTeams');
+  	
+ 	// Create editable table of roster
+ 	TABLE.formwork('#roster');
 });
 
 

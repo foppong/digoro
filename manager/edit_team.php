@@ -5,6 +5,7 @@
 	require '../includes/config.php';
 	$page_title = 'digoro : Edit Team';
 	include '../includes/header.html';
+	include '../includes/php-functions.php';
 
 	// autoloading of classes
 	function __autoload($class) {
@@ -21,12 +22,7 @@
 	}
 	else 
 	{
-		session_unset();
-		session_destroy();
-		$url = BASE_URL . 'index.php';
-		ob_end_clean();
-		header("Location: $url");
-		exit();	
+		redirect_to('index.php');	
 	}
 
 	// Establish database connection
@@ -38,12 +34,7 @@
 	// Authorized Login Check
 	if (!$manager->valid($lvl))
 	{
-		session_unset();
-		session_destroy();
-		$url = BASE_URL . 'index.php';
-		ob_end_clean();
-		header("Location: $url");
-		exit();	
+		redirect_to('index.php');	
 	}
 
 	// Check for a valid game sch ID, through GET or POST:
@@ -72,8 +63,6 @@
 	$team->setTeamID($id);
 	$team->pullTeamData();
 
-	$flag = 0;
-	echo $flag . "<br />";
 	// Confirmation that form has been submitted:	
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{	// Point D in Code Flow
@@ -123,7 +112,7 @@
 		}
  
 	}	// End of submit conditional.
-	echo $flag . "<br />";
+
 	// Point B in Code Flow
 	// Always show the form...
 	
