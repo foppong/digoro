@@ -32,7 +32,7 @@
 	}
 	
 	// Retrieve default team ID * THIS IS NOT CORRECT b/c we may not be working with the default team
-	$idtm = $user->getUserAttribute('dftm');	
+	$idtm = $user->getUserAttribute('dftmID');	
 	
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{

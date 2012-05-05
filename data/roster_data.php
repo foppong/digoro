@@ -9,7 +9,7 @@
 			
 	require '../includes/config.php';
 	include '../includes/php-functions.php';
-	
+
 	// autoloading of classes
 	function __autoload($class) {
 		require_once('../classes/' . $class . '.php');
@@ -124,11 +124,11 @@
 	if ($stmt->num_rows > 0)
 	{
 		// Initialize an array:
-		$json = array();
-				
+		$json = array();	
+						
 		// Fetch and put results in the JSON array...
 		while ($stmt->fetch())
-		{		
+		{								
 			$json[] = array(
 			'<b><a href="roster_data.php?x=nm&y=' . $tm . '">Name</a></b>' => $nOB,
 			'<b><a href="roster_data.php?x=em&y=' . $tm . '">Email</a></b>' => $eOB,
@@ -136,53 +136,28 @@
 			'<b><a href="roster_data.php?x=pos&y=' . $tm . '">Position</a></b>' => $posOB,
 			'Edit' => '<a href="edit_player.php?z=' . $idOB . '">Edit</a>',
 			'Delete' => '<a href="delete_player.php?z=' . $idOB . '">Delete</a>');
-		// Table Header
-		echo '<form action="null" method="post">     
-			 	<table id="roster" class="roster_data" align="left" ellspacing="0" cellpadding="2" width="50%>
-          			<thead>
-            			<tr>
-              			<th>Name</th>
-              			<th>Email</th>
-              			<th>Gender</th>
-              			<th>Position</th>
-            			</tr>
-          			</thead>
-          			<tbody>';			
-		// Fetch and print all records...
-		while ($stmt->fetch())
-		{		
-			echo '<tr bgcolor="#eeeeee">
-				<td align="left">' . $nOB . '</td>
-				<td align="left">' . $eOB . '</td>
-				<td align="left">' . $genOB . '</td>
-				<td align="left">' . $posOB . '</td>
-				</td></tr>';	
-		}	// End of WHILE loop
-			
-		echo '</tbody></table></form><br />';
+
 		}	// End of WHILE loop
 	
 		// Send the JSON data:
-		echo json_encode($json);
-				
-		// Close the statement:
-		$stmt->close();
-		unset($stmt);			
-	
-		// Close the connection:
-		$db->close();
-		unset($db);
+		echo json_encode($json);		
 	}
 	else 
 	{	// No registered users
-
 		$json[] = array(
 			'<p class="error">You have no players on your roster.
 			<a href="../manager/add_player.php">Click Here</a> to add players.<br /></p><br /><br />');
 			
 		// Send the JSON data:
 		echo json_encode($json);
-
 	}
+
+	// Close the statement:
+	$stmt->close();
+	unset($stmt);			
+	
+	// Close the connection:
+	$db->close();
+	unset($db);
 
 ?>

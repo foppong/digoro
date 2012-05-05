@@ -103,6 +103,7 @@ var LEAGUE = {
 	}
 }
 
+/*
 var TABLE = {};
 
 TABLE.formwork = function(table){
@@ -152,6 +153,8 @@ TABLE.editable = function(button) {
     $button.val('Save');
   }
 }
+*/
+
 
 // jQuery Code for when page is loaded
 $(document).ready(function()
@@ -184,10 +187,8 @@ $(document).ready(function()
 	});
 	
 	// Create editable table of my teams
-  	TABLE.formwork('#myTeams');
+  	//TABLE.formwork('#myTeams');
   	
- 	// Create editable table of roster
- 	TABLE.formwork('#roster');
 });
 
 
