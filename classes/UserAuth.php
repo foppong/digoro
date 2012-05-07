@@ -408,7 +408,6 @@
 					$stmt->close();
 					unset($stmt);
 						
-					include '../includes/footer.html';
 					exit();
 				}
 				else 
