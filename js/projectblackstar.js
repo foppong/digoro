@@ -21,8 +21,10 @@ var TEAM = {
   
   	loadTeams: function() {
     	var _team = this;
+
 		// Ajax call to retreive list of teams assigned to user	
 		$.ajax({
+	      	type: "POST",
 			dataType: 'json',
 			url: "../data/team_data.php",
 			success: function(data) {
@@ -40,12 +42,12 @@ var TEAM = {
 	    $.ajax({
 	      	type: "POST",
 	      	url: "../manager/edit_team.php",
-	      	data: form_data,
+	      	data: form_data, // Data that I'm sending
 	      	error: function() {
 	        	$('#status').text('Update failed. Try again.').slideDown('slow');
 	     	},
 	      	success: function() {
-	        	$('#status').text('Update successful!').slideDown('slow');
+	        	$('#status').text('Update successful!').slideDown('slow'); // DEBUG NOTE: THis happends even if no changes
 	      	},
 	      	complete: function() {  // LATER ON I COULD PASS THE DATA BACK AND POSSIBLY USE IT TO BUILD THE STICKY FORM, have to put jsonencode on php end
 	        	setTimeout(function() {

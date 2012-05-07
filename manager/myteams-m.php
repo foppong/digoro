@@ -63,11 +63,11 @@
 					
 		if ($stmt->affected_rows == 1) // It ran ok
 		{
-			echo '<p>Default team successfully changed!</p>';
+			echo '<p>Default team successfully changed!</p>'; // DEBUG NOTE: THis is not showing up
 		}
 		else 
 		{	// Either did not run ok or no updates were made
-			echo '<p>Default team not changed.</p>';
+			echo '<p>Default team not changed.</p>'; // DEBUG NOTE: THis is not showing up
 		}
 					
 		// Close the statement:
