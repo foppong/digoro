@@ -34,18 +34,37 @@
 		redirect_to('index.php');
 	}
 	
-	// Check for a valid user ID, through GET or POST:
-	if ( (isset($_GET['z'])) && (is_numeric($_GET['z'])) )
+	if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['x'])) // Confirmation that form has been submitted from myteams page
 	{
-		// Point A in Code Flow
-		// Assign variable from view_roster.php using GET method
-		$id = $_GET['z'];
+		$id = $_POST['x'];
+
+		// Create team object for use & pull latest data from database
+		$team = new ManagerTeam();
+		$team->setDB($db);
+		$team->setTeamID($id);
+		$team->pullTeamData();
 	}
-	elseif ( (isset($_POST['z'])) && (is_numeric($_POST['z'])) )
+	elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z'])) // Confirmation that form has been submitted from delete_team page	
 	{
-		// Point C in Code Flow
-		// Assign variable from delete_player.php FORM submission (hidden id field)
 		$id = $_POST['z'];
+
+		// Create team object for use & pull latest data from database
+		$team = new ManagerTeam();
+		$team->setDB($db);
+		$team->setTeamID($id);
+		$team->pullTeamData();
+
+		if ($_POST['sure'] == 'Yes')
+		{	// If form submitted is yes, delete the record
+
+			$team->deleteTeam();		
+			include '../includes/footer.html';
+			exit();
+		}
+		else
+		{	// No confirmation of deletion.
+			echo '<p>The team has NOT been deleted.</p>';
+		}
 	}
 	else 
 	{
@@ -53,39 +72,16 @@
 		echo '<p class="error">This page has been accessed in error.</p>';
 		include '../includes/footer.html';
 		exit();
-	}
+	}	
+	
+	// Get team name attribute for page display purposes
+	$teamname = $team->getTeamAttribute('tmname');
 
-	// Create team object with current team selection
-	$team = new ManagerTeam();
-	$team->setDB($db);
-	$team->setTeamID($id);
-	$team->pullTeamData();
-
-	// Confirmation that form has been submitted:	
-	if ($_SERVER['REQUEST_METHOD'] == 'POST')
-	{	// Point D in Code Flow
-
-		if ($_POST['sure'] == 'Yes')
-		{	// If form submitted is yes, delete the record
-
-			$team->deleteTeam();		
-		}
-		else
-		{	// No confirmation of deletion.
-			echo '<p>The team has NOT been deleted.</p>';
-		}
-	}
-	else
-	{	// Point B in Code Flow. Show the form
-
-		// Get team name attribute for page display purposes
-		$teamname = $team->getTeamAttribute('tmname');
-
-		if ($teamname != '') // Indicates valid user to page
-		{		
+	if ($teamname != '') // Indicates valid user to page
+	{		
 		//Display the record being deleted:
 		echo '<h3>Are you sure you want to delete Team ' . $teamname . ' from your profile?</h3>';
-			
+				
 		// Create the form:
 		echo '<form action ="delete_team.php" method="post" id="DelTeamForm">
 			<input type="hidden" name="z" value="' . $id . '" />
@@ -93,15 +89,14 @@
 			<input type="radio" name="sure" value="No" checked="checked" />No<br />
 			<input type="submit" name="submit" value="Delete" />
 			</form>';		
-		}
-		else 
-		{	//Not a valid user ID.
-			echo '<p class="error">This page has been accessed in error.</p>';
-			exit();
-		}		
+	}
+	else 
+	{	//Not a valid user ID.
+		echo '<p class="error">This page has been accessed in error.</p>';
+		exit();
+	}		
 
-	} // End of the main submission conditional.
-
+	// Delete objects
 	unset($team);
 				
 	// Close the connection:

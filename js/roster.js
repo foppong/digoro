@@ -28,6 +28,22 @@ var ROSTER = {
 		});	
   	},
 
+	edit: function() {
+    	var form_data = $('form').serialize();
+	    $.ajax({
+	      	type: "POST",
+	      	url: "../manager/edit_player.php",
+	      	data: form_data, // Data that I'm sending
+	      	error: function() {
+	        	alert("Error");
+	     	},
+	      	success: function() {
+				window.location.replace("#");
+	      	},
+	      	cache: false
+    	});		
+	},
+
 	buildTable: function(data) {
 	    var table = $("#roster");
 	    table.html("");  //clear out the table if it was previously populated

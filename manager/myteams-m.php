@@ -201,9 +201,14 @@
 				<td align="left">' . $tmnm . '</td>
 				<td align="left">' . $tctyOB . '</td>
 				<td align="left">' . $tstOB . '</td>
-				<td align="left"><a href="edit_team.php?z=' . $idtmOB . '">Edit</a></td>
-				<td align="left"><a href="delete_team.php?z=' .$idtmOB . '">Delete</a></td>
-				</td></tr>';	
+				<td align="left"><form action="edit_team.php" method="post">
+					<input type="hidden" name="x" value="' . $idtmOB . '" />
+					<input type="submit" name="submit" value="Edit"/></form></td>
+				<td align="left"><form action="delete_team.php" method="post">
+					<input type="hidden" name="x" value="' . $idtmOB . '" />
+					<input type="submit" name="submit" value="Delete"/></form></td>
+				</tr>';	
+
 		}	// End of WHILE loop
 	
 		echo '</table><br />';

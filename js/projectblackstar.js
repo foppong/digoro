@@ -36,8 +36,7 @@ var TEAM = {
 		});	
   	},
   
-  	update: function() {
- 
+  	update: function() { 
     	var form_data = $('form').serialize();
 	    $.ajax({
 	      	type: "POST",

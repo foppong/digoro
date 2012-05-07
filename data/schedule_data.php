@@ -126,9 +126,13 @@
 			'Time' => $timeOB,
 			'Opponent' => stripslashes($oppOB),
 			'Venue' => stripslashes($venOB),
-			'Result' => $resOB,
-			'Edit' => '<a href="edit_game.php?z=' . $idOB . '">Edit</a>',
-			'Delete' => '<a href="delete_game.php?z=' . $idOB . '">Delete</a>');	
+			'Result' => $resOB,	
+			'Edit' => '<form action="edit_game.php" method="post">
+				<input type="hidden" name="x" value="' . $idOB . '" />
+				<input type="submit" name="submit" value="Edit"/></form>',
+			'Delete' => '<form action="delete_game.php" method="post">
+				<input type="hidden" name="x" value="' . $idOB . '" />
+				<input type="submit" name="submit" value="Delete"/></form>');
 		}	// End of WHILE loop
 			
 		// Send the JSON data:

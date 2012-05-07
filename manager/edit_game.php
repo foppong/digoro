@@ -31,33 +31,16 @@
 		redirect_to('index.php');
 	}
 
-	// Check for a valid game sch ID, through GET or POST:
-	if ( (isset($_GET['z'])) && (is_numeric($_GET['z'])) )
-	{
-		// Point A in Code Flow
-		// Assign variable from view_sch.php using GET method
-		$id = $_GET['z'];
-	}
-	elseif ( (isset($_POST['z'])) && (is_numeric($_POST['z'])) )
-	{
-		// Point C in Code Flow
-		// Assign variable from edit_game.php FORM submission (hidden id field)
-		$id = $_POST['z'];
-	}
-	else 
-	{
-		// No valid ID, kill the script.
-		echo '<p class="error">This page has been accessed in error.</p>';
-		include '../includes/footer.html';
-		exit();
-	}
-
 	// Establish database connection
 	require_once MYSQL2;
 
-	// Confirmation that form has been submitted:	
-	if ($_SERVER['REQUEST_METHOD'] == 'POST')
-	{	// Point D in Code Flow
+	if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['x'])) // Confirmation that form has been submitted from schedule page
+	{
+		$id = $_POST['x'];
+	}
+	elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z'])) // Confirmation that form has been submitted from edit_player page	
+	{
+		$id = $_POST['z'];
 
 		// Assume invalid values:
 		$bdfrmat = $tm = FALSE;
@@ -143,9 +126,15 @@
 		{	// Errors in the user entered information
 			echo '<p class="error">Please try again.</p>';
 		}
-	}	// End of submit conditional.
+	}
+	else 
+	{
+		// No valid ID, kill the script.
+		echo '<p class="error">This page has been accessed in error.</p>';
+		include '../includes/footer.html';
+		exit();		
+	}
 
-	// Point B in Code Flow
 	// Always show the form...
 	
 	// Make the query to retreive game information from schedules table in database:		

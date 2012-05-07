@@ -130,13 +130,16 @@
 		while ($stmt->fetch())
 		{								
 			$json[] = array(
-			'<b><a href="roster_data.php?x=nm&y=' . $tm . '">Name</a></b>' => $nOB,
-			'<b><a href="roster_data.php?x=em&y=' . $tm . '">Email</a></b>' => $eOB,
-			'<b><a href="roster_data.php?x=gd&y=' . $tm . '">Gender</a></b>' => $genOB,
-			'<b><a href="roster_data.php?x=pos&y=' . $tm . '">Position</a></b>' => $posOB,
-			'Edit' => '<a href="edit_player.php?z=' . $idOB . '">Edit</a>',
-			'Delete' => '<a href="delete_player.php?z=' . $idOB . '">Delete</a>');
-
+			'Name' => $nOB,
+			'Email' => $eOB,
+			'Gender' => $genOB,
+			'Position' => $posOB,
+			'Edit' => '<form action="edit_player.php" method="post">
+				<input type="hidden" name="x" value="' . $idOB . '" />
+				<input type="submit" name="submit" value="Edit"/></form>',
+			'Delete' => '<form action="delete_player.php" method="post">
+				<input type="hidden" name="x" value="' . $idOB . '" />
+				<input type="submit" name="submit" value="Delete"/></form>');
 		}	// End of WHILE loop
 	
 		// Send the JSON data:

@@ -65,7 +65,7 @@
 
 		// Get team name attribute for page display purposes
 		$teamname = $team->getTeamAttribute('tmname');
-		
+
 		unset($team);
 	}
 	else 
@@ -81,7 +81,7 @@
 		
 		// Get team name attribute for page display purposes
 		$teamname = $team->getTeamAttribute('tmname');
-		
+
 		unset($team);	
 	}
 /*

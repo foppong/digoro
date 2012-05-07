@@ -15,6 +15,9 @@
 	// Site access level -> Manager
 	$lvl = 'M'; 
 
+	// Establish database connection
+	require_once MYSQL2;
+
 	// Assign user object from session variable
 	if (isset($_SESSION['userObj']))
 	{
@@ -25,9 +28,6 @@
 		redirect_to('index.php');	
 	}
 
-	// Establish database connection
-	require_once MYSQL2;
-
 	// Assign Database Resource to object
 	$manager->setDB($db);
 
@@ -37,35 +37,25 @@
 		redirect_to('index.php');	
 	}
 
-	// Check for a valid game sch ID, through GET or POST:
-	if ( (isset($_GET['z'])) && (is_numeric($_GET['z'])) )
+	if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['x'])) // Confirmation that form has been submitted from myteams page
 	{
-		// Point A in Code Flow
-		// Assign variable from myteams-m.php using GET method
-		$id = $_GET['z'];
+		$id = $_POST['x'];
+		
+		// Create team object for use & pull latest data from database
+		$team = new ManagerTeam();
+		$team->setDB($db);
+		$team->setTeamID($id);
+		$team->pullTeamData();
 	}
-	elseif ( (isset($_POST['z'])) && (is_numeric($_POST['z'])) )
+	elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z'])) // Confirmation that form has been submitted from edit_team page	
 	{
-		// Point C in Code Flow
-		// Assign variable from edit_team.php FORM submission (hidden id field)
 		$id = $_POST['z'];
-	}
-	else 
-	{
-		// No valid ID, kill the script.
-		echo '<p class="error">This page has been accessed in error.</p>';
-		include '../includes/footer.html';
-		exit();
-	}
 
-	$team = new ManagerTeam();
-	$team->setDB($db);
-	$team->setTeamID($id);
-	$team->pullTeamData();
-
-	// Confirmation that form has been submitted:	
-	if ($_SERVER['REQUEST_METHOD'] == 'POST')
-	{	// Point D in Code Flow
+		// Create team object for use & pull latest data from database
+		$team = new ManagerTeam();
+		$team->setDB($db);
+		$team->setTeamID($id);
+		$team->pullTeamData();
 
 		// Assume invalid values:
 		$tname = FALSE;
@@ -98,12 +88,10 @@
 			if($team->editTeam($tname, $abtm) == True)
 			{
 				echo '<p>Team was successfully updated</p>';
-				$flag = 1;
 			}
 			else 
 			{
 				echo '<p>No changes were made</p>';
-				$flag = 2;
 			}
 		}
 		else
@@ -111,13 +99,16 @@
 			echo '<p class="error">Please try again.</p>';
 		}
  
-	}	// End of submit conditional.
+	}
+	else 
+	{
+		// No valid ID, kill the script.
+		echo '<p class="error">This page has been accessed in error.</p>';
+		include '../includes/footer.html';
+		exit();		
+	}
 
-	// Point B in Code Flow
-	// Always show the form...
-	
-	// Get team name attribute
-	$team->pullTeamData();
+	// Set attributes from team object
 	$teamname = $team->getTeamAttribute('tmname');
 	$about = $team->getTeamAttribute('about');
 
@@ -126,7 +117,7 @@
 		// Headliner
 		echo '<h2>Edit Team</h2>';
 				
-		// Create the form:
+		// Create the form (AJAX is used here to post to database)
 		echo '
 		<div id="EditTeam"></div>
 		<div id="Team">
@@ -145,13 +136,11 @@
 					<small>Enter something cool about your team.</small>
 				</p>
 				<p>
-					<input type="hidden" name="id" id="id">
 					<input type="button" value="update" id="update" />
 				</p>
 			</form>
 			</fieldset>
 		</div>';				
-
 	}
 	else 
 	{	//Not a valid user ID, kill the script
@@ -159,6 +148,10 @@
 		include '../includes/footer.html';
 		exit();
 	}	
+
+	// Delete objects
+	unset($team);
+	unset($manager);
 
 	// Close the connection:
 	$db->close();
