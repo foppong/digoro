@@ -5,10 +5,11 @@
 	require '../includes/config.php';
 	$page_title = 'digoro : Edit Player';
 	include '../includes/header.html';
+	include '../includes/php-functions.php';
 
 	// autoloading of classes
 	function __autoload($class) {
-		require_once('classes/' . $class . '.php');
+		require_once('../classes/' . $class . '.php');
 	}
 
 	// Site access level -> Manager
@@ -21,25 +22,15 @@
 	}
 	else 
 	{
-		session_unset();
-		session_destroy();
-		$url = BASE_URL . 'index.php';
-		ob_end_clean();
-		header("Location: $url");
-		exit();	
+		redirect_to('index.php');
 	}
 
 	// Authorized Login Check
 	if (!$user->valid($lvl))
 	{
-		session_unset();
-		session_destroy();
-		$url = BASE_URL . 'index.php';
-		ob_end_clean();
-		header("Location: $url");
-		exit();	
+		redirect_to('index.php');
 	}
-
+/*
 	// Check for a valid user ID, through GET or POST:
 	if ( (isset($_GET['z'])) && (is_numeric($_GET['z'])) )
 	{
@@ -60,13 +51,18 @@
 		include '../includes/footer.html';
 		exit();
 	}
-
+*/
 	// Establish database connection
 	require_once MYSQL2;
 
-	// Confirmation that form has been submitted:	
-	if ($_SERVER['REQUEST_METHOD'] == 'POST')
-	{	// Point D in Code Flow
+
+	if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['x'])) // Confirmation that form has been submitted from roster page
+	{
+		$id = $_POST['x'];
+	}
+	elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z'])) // Confirmation that form has been submitted from edit_player page	
+	{
+		$id = $_POST['z'];
 
 		// Trim all the incoming data:
 		$trimmed = array_map('trim', $_POST);
@@ -124,7 +120,14 @@
 		{	// Errors in the user entered information
 			echo '<p class="error">Please try again.</p>';
 		}
-	}	// End of submit conditional.
+	}
+	else 
+	{
+		// No valid ID, kill the script.
+		echo '<p class="error">This page has been accessed in error.</p>';
+		include '../includes/footer.html';
+		exit();		
+	}
 
 	// Point B in Code Flow
 	// Always show the form...

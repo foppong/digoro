@@ -8,6 +8,7 @@
 	session_start();
 			
 	require '../includes/config.php';
+	include '../includes/php-functions.php';
 
 	// autoloading of classes
 	function __autoload($class) {
@@ -24,12 +25,7 @@
 	}
 	else 
 	{
-		session_unset();
-		session_destroy();
-		$url = BASE_URL . 'index.php';
-		ob_end_clean();
-		header("Location: $url");
-		exit();	
+		redirect_to('index.php');
 	}
 
 	// Need the database connection:	
@@ -38,12 +34,7 @@
 	// Authorized Login Check
 	if (!$user->valid($lvl))
 	{
-		session_unset();
-		session_destroy();
-		$url = BASE_URL . 'index.php';
-		ob_end_clean();
-		header("Location: $url");
-		exit();	
+		redirect_to('index.php');
 	}
 
 
@@ -133,42 +124,43 @@
 	if ($stmt->num_rows > 0)
 	{
 		// Initialize an array:
-		$json = array();
-				
+		$json = array();	
+						
 		// Fetch and put results in the JSON array...
 		while ($stmt->fetch())
-		{		
+		{								
 			$json[] = array(
-			'<b><a href="roster_data.php?x=nm&y=' . $tm . '">Name</a></b>' => $nOB,
-			'<b><a href="roster_data.php?x=em&y=' . $tm . '">Email</a></b>' => $eOB,
-			'<b><a href="roster_data.php?x=gd&y=' . $tm . '">Gender</a></b>' => $genOB,
-			'<b><a href="roster_data.php?x=pos&y=' . $tm . '">Position</a></b>' => $posOB,
-			'Edit' => '<a href="edit_player.php?z=' . $idOB . '">Edit</a>',
-			'Delete' => '<a href="delete_player.php?z=' . $idOB . '">Delete</a>');
-
+			'Name' => $nOB,
+			'Email' => $eOB,
+			'Gender' => $genOB,
+			'Position' => $posOB,
+			'Edit' => '<form action="edit_player.php" method="post">
+				<input type="hidden" name="x" value="' . $idOB . '" />
+				<input type="submit" name="submit" value="Edit"/></form>',
+			'Delete' => '<form action="delete_player.php" method="post">
+				<input type="hidden" name="x" value="' . $idOB . '" />
+				<input type="submit" name="submit" value="Delete"/></form>');
 		}	// End of WHILE loop
 	
 		// Send the JSON data:
-		echo json_encode($json);
-				
-		// Close the statement:
-		$stmt->close();
-		unset($stmt);			
-	
-		// Close the connection:
-		$db->close();
-		unset($db);
+		echo json_encode($json);		
 	}
 	else 
 	{	// No registered users
-
 		$json[] = array(
 			'<p class="error">You have no players on your roster.
 			<a href="../manager/add_player.php">Click Here</a> to add players.<br /></p><br /><br />');
 			
 		// Send the JSON data:
 		echo json_encode($json);
-
 	}
+
+	// Close the statement:
+	$stmt->close();
+	unset($stmt);			
+	
+	// Close the connection:
+	$db->close();
+	unset($db);
 
 ?>

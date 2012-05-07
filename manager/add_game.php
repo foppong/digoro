@@ -5,6 +5,7 @@
 	require '../includes/config.php';
 	$page_title = 'digoro : Add Game';
 	include '../includes/header.html';
+	include '../includes/php-functions.php';
 
 	// autoloading of classes
 	function __autoload($class) {
@@ -21,27 +22,17 @@
 	}
 	else 
 	{
-		session_unset();
-		session_destroy();
-		$url = BASE_URL . 'index.php';
-		ob_end_clean();
-		header("Location: $url");
-		exit();	
+		redirect_to('index.php');
 	}
 
 	// Authorized Login Check
 	if (!$user->valid($lvl))
 	{
-		session_unset();
-		session_destroy();
-		$url = BASE_URL . 'index.php';
-		ob_end_clean();
-		header("Location: $url");
-		exit();	
+		redirect_to('index.php');
 	}
 	
 	// Retrieve default team ID * THIS IS NOT CORRECT b/c we may not be working with the default team
-	$idtm = $user->getUserAttribute('dftm');	
+	$idtm = $user->getUserAttribute('dftmID');	
 	
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{

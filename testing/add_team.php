@@ -5,7 +5,6 @@
 	require '../includes/config.php';
 	$page_title = 'digoro : Add Team';
 	include '../includes/header.html';
-	include '../includes/php-functions.php';
 
 	// autoloading of classes
 	function __autoload($class) {
@@ -22,7 +21,12 @@
 	}
 	else 
 	{
-		redirect_to('index.php');
+		session_unset();
+		session_destroy();
+		$url = BASE_URL . 'index.php';
+		ob_end_clean();
+		header("Location: $url");
+		exit();	
 	}
 
 	// Need the database connection:
@@ -34,7 +38,12 @@
 	// Authorized Login Check
 	if (!$manager->valid($lvl))
 	{
-		redirect_to('index.php');
+		session_unset();
+		session_destroy();
+		$url = BASE_URL . 'index.php';
+		ob_end_clean();
+		header("Location: $url");
+		exit();	
 	}
 
 	// Get user ID
@@ -171,7 +180,7 @@
 
 	<div>
 		<label for="state"><b>Enter Team's Home State:</b></label>
-		<select name="state" id="state" onchange="LEAGUE.showLeagues(this.value)">
+		<select name="state" id="state" onchange="showLeagues(this.value)">
 			<option value="">-Select State-</option>
 			<option value="AL">AL</option><option value="AK">AK</option>
 			<option value="AZ">AZ</option><option value="AR">AR</option>

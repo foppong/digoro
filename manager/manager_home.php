@@ -4,6 +4,7 @@
 	require '../includes/config.php';
 	$page_title = 'Welcome to digoro!';
 	include '../includes/header.html';
+	include '../includes/php-functions.php';
 
 	// autoloading of classes
 	function __autoload($class) {
@@ -20,12 +21,7 @@
 	}
 	else 
 	{
-		session_unset();
-		session_destroy();
-		$url = BASE_URL . 'index.php';
-		ob_end_clean();
-		header("Location: $url");
-		exit();	
+		redirect_to('index.php');
 	}
 
 	// Need the database connection:
@@ -37,11 +33,7 @@
 	// Authorized Login Check
 	if (!$manager->valid($lvl))
 	{
-		$manager->logoff();
-		$url = BASE_URL . 'index.php';
-		ob_end_clean();
-		header("Location: $url");
-		exit();	
+		redirect_to('index.php');
 	}
 	
 	// Pull current user data from database and set object attributes
@@ -73,7 +65,7 @@
 
 		// Get team name attribute for page display purposes
 		$teamname = $team->getTeamAttribute('tmname');
-		
+
 		unset($team);
 	}
 	else 
@@ -89,7 +81,7 @@
 		
 		// Get team name attribute for page display purposes
 		$teamname = $team->getTeamAttribute('tmname');
-		
+
 		unset($team);	
 	}
 /*
@@ -139,13 +131,13 @@
 <h2><?php echo stripslashes($teamname); ?></h2>
 <div id="tabmenu" class="ui-tabs">
 	<ul>
-		<li><a href="about_team.php"><span>About</span></a></li>
+		<li><a href="view_abteam.php"><span>About</span></a></li>
 		<li><a href="view_roster.php"><span>Roster</span></a></li>
 	    <li><a href="view_sch.php"><span>Schedule</span></a></li>
 	    <li><a href="#"><span>SquadFill</span></a></li>
 	    <li><a href="#"><span>Bulletin</span></a></li>
 	</ul>
-		<div id="about_team.php" class="ui-tabs-hide">About</div>
+		<div id="view_abteam.php" class="ui-tabs-hide">About</div>
 		<div id="view_roster.php" class="ui-tabs-hide">Roster</div>
 		<div id="view_sch.php" class="ui-tabs-hide">Schedule</div>
 		<div id="#" class="ui-tabs-hide">SquadFill</div>

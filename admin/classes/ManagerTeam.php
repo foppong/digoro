@@ -124,14 +124,12 @@
 			if ($stmt->affected_rows == 1) // And update to the database was made
 			{				
 				//The team has been edited
-				$result = True;
+				return True;
 			}
 			else 
 			{	// Either did not run ok or no updates were made
-				$result = False;
+				return False;
 			}
-echo $result;
-			return $result;
 
 		} // End of editTeam function
 
