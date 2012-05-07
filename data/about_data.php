@@ -8,6 +8,7 @@
 	session_start();
 			
 	require '../includes/config.php';
+	include '../includes/php-functions.php';	
 
 	// autoloading of classes
 	function __autoload($class) {
@@ -24,12 +25,7 @@
 	}
 	else 
 	{
-		session_unset();
-		session_destroy();
-		$url = BASE_URL . 'index.php';
-		ob_end_clean();
-		header("Location: $url");
-		exit();	
+		redirect_to('index.php');
 	}
 
 	// Need the database connection:	
@@ -38,12 +34,7 @@
 	// Authorized Login Check
 	if (!$user->valid($lvl))
 	{
-		session_unset();
-		session_destroy();
-		$url = BASE_URL . 'index.php';
-		ob_end_clean();
-		header("Location: $url");
-		exit();	
+		redirect_to('index.php');
 	}
 	
 	// Retrieve team object from session variable
@@ -53,7 +44,7 @@
 	$tm = $_SESSION['ctmID'];
 
 	// Make the Query to find all teams associated with user via a union of the players and teams table:
-	$q = "SELECT about FROM teams WHERE id_team=?";
+	$q = "SELECT about, team_name FROM teams WHERE id_team=? LIMIT 1";
 
 	// Prepare the statement:
 	$stmt = $db->prepare($q);
@@ -68,7 +59,7 @@
 	$stmt->store_result();
 			
 	// Bind the outbound variable:
-	$stmt->bind_result($abtOB);
+	$stmt->bind_result($abtOB, $tmnmOB);
 			
 	// If there are results to show.
 	if ($stmt->num_rows > 0)
@@ -80,8 +71,9 @@
 		while ($stmt->fetch())
 		{		
 			$json[] = array(
-			'TeamAbout' => stripslashes($abtOB)); // If I get PHP >5.3 I believe I can use optional parameter in json_encode
-
+			'TeamAbout' => stripslashes($abtOB), // If I get PHP >5.3 I believe I can use optional parameter in json_encode
+			'TeamName' => stripslashes($tmnmOB));
+			
 		}	// End of WHILE loop
 	
 		// Send the JSON data:
@@ -90,9 +82,9 @@
 		// Close the statement:
 		$stmt->close();
 		unset($stmt);			
-	
-		// Close the connection:
-		$db->close();
-		unset($db);
 	}
+	
+	// Close the connection:
+	$db->close();
+	unset($db);	
 ?>

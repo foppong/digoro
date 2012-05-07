@@ -5,6 +5,7 @@
 	require '../includes/config.php';
 	$page_title = 'digoro : My Teams';
 	include '../includes/header.html';	
+	include '../includes/php-functions.php';
 
 	// autoloading of classes
 	function __autoload($class) {
@@ -21,12 +22,7 @@
 	}
 	else 
 	{
-		session_unset();
-		session_destroy();
-		$url = BASE_URL . 'index.php';
-		ob_end_clean();
-		header("Location: $url");
-		exit();	
+		redirect_to('index.php');
 	}
 
 	// Need the database connection:	
@@ -35,12 +31,7 @@
 	// Authorized Login Check
 	if (!$manager->valid($lvl))
 	{
-		session_unset();
-		session_destroy();
-		$url = BASE_URL . 'index.php';
-		ob_end_clean();
-		header("Location: $url");
-		exit();	
+		redirect_to('index.php');
 	}
 
 	// Get user ID
@@ -72,11 +63,11 @@
 					
 		if ($stmt->affected_rows == 1) // It ran ok
 		{
-			echo '<p>Default team successfully changed!</p>';
+			echo '<p>Default team successfully changed!</p>'; // DEBUG NOTE: THis is not showing up
 		}
 		else 
 		{	// Either did not run ok or no updates were made
-			echo '<p>Default team not changed.</p>';
+			echo '<p>Default team not changed.</p>'; // DEBUG NOTE: THis is not showing up
 		}
 					
 		// Close the statement:
@@ -210,9 +201,14 @@
 				<td align="left">' . $tmnm . '</td>
 				<td align="left">' . $tctyOB . '</td>
 				<td align="left">' . $tstOB . '</td>
-				<td align="left"><a href="edit_team.php?z=' . $idtmOB . '">Edit</a></td>
-				<td align="left"><a href="delete_team.php?z=' .$idtmOB . '">Delete</a></td>
-				</td></tr>';	
+				<td align="left"><form action="edit_team.php" method="post">
+					<input type="hidden" name="x" value="' . $idtmOB . '" />
+					<input type="submit" name="submit" value="Edit"/></form></td>
+				<td align="left"><form action="delete_team.php" method="post">
+					<input type="hidden" name="x" value="' . $idtmOB . '" />
+					<input type="submit" name="submit" value="Delete"/></form></td>
+				</tr>';	
+
 		}	// End of WHILE loop
 	
 		echo '</table><br />';
