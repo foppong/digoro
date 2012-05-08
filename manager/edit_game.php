@@ -120,9 +120,7 @@
 		}
 	}
 	else 
-	{
-echo "test point A";
-		// No valid ID, kill the script.
+	{	// No valid ID, kill the script.
 		echo '<p class="error">This page has been accessed in error.</p>';
 		include '../includes/footer.html';
 		exit();		
@@ -183,7 +181,8 @@ echo "test point A";
 			</form><br />';
 	}
 	else 
-	{	//Not a valid user ID, kill the script
+	{		
+		//Not a valid user ID, kill the script
 		echo '<p class="error">This page has been accessed in error.</p>';
 		include '../includes/footer.html';
 		exit();

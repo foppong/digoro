@@ -100,6 +100,7 @@
 			// Close the statement:
 			$stmt->close();
 			unset($stmt);
+
 		} // End of createTeam function
 		
 		// Function to edit team
@@ -155,6 +156,11 @@
 			{	
 				return False; // Either did not run ok or no updates were made
 			}
+
+			// Close the statement:
+			$stmt->close();
+			unset($stmt);
+
 		}
 
 		// Functon to delete team from database
@@ -182,6 +188,10 @@
 				echo '<p class="error">The team could not be deleted due to a system error.</p>';
 				exit();
 			}
+
+			// Close the statement:
+			$stmt->close();
+			unset($stmt);
 		}
 
 	} // End of Class

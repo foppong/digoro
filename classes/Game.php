@@ -61,7 +61,7 @@
 			$stmt = $this->dbc->prepare($q);
 		
 			// Bind the inbound variable:
-			$stmt->bind_param('i', $id);
+			$stmt->bind_param('i', $this->id_game);
 				
 			// Execute the query:
 			$stmt->execute();		
