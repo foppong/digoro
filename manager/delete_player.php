@@ -34,9 +34,9 @@
 	// Need the database connection:
 	require_once MYSQL2;
 
-	if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['x'])) // Confirmation that form has been submitted from roster page
+	if ( (isset($_GET['x'])) && (is_numeric($_GET['x'])) ) // From view roster page
 	{
-		$id = $_POST['x'];
+		$id = $_GET['x'];
 	}
 	elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z'])) // Confirmation that form has been submitted from delete_player page	
 	{

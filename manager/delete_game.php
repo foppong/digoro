@@ -34,9 +34,9 @@
 	// Need the database connection:
 	require_once MYSQL2;
 
-	if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['x'])) // Confirmation that form has been submitted from roster page
+	if ( (isset($_GET['x'])) && (is_numeric($_GET['x'])) ) // From view schedule page
 	{
-		$id = $_POST['x'];
+		$id = $_GET['x'];
 	}
 	elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z'])) // Confirmation that form has been submitted from delete_player page	
 	{
@@ -47,7 +47,7 @@
 		{	// If form submitted is yes, delete the record
 		
 			// Make the query	
-			$q = "DELETE FROM schedules WHERE id_sch=? LIMIT 1";
+			$q = "DELETE FROM games WHERE id_game=? LIMIT 1";
 
 			// Prepare the statement:
 			$stmt = $db->prepare($q);
@@ -88,7 +88,7 @@
 	// Point B in Code Flow. Show the form
 
 	// Make the query to retreive user information:		
-	$q = "SELECT date FROM schedules WHERE id_sch=?";		
+	$q = "SELECT date FROM games WHERE id_game=?";		
 
 	// Prepare the statement:
 	$stmt = $db->prepare($q);

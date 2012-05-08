@@ -98,7 +98,7 @@
 			//$game = new Game($idtm, $bdfrmat, $tm, $db);
 			
 			// Make the query:
-			$q = 'INSERT INTO schedules (id_team, date, time, opponent, venue, result) VALUES (?,?,?,?,?,?)';
+			$q = 'INSERT INTO games (id_team, date, time, opponent, venue, result) VALUES (?,?,?,?,?,?)';
 
 			// Prepare the statement
 			$stmt = $db->prepare($q);

@@ -197,16 +197,14 @@
 			// Strip the escaped addon from database
 			$tmnm = stripslashes($tmnmOB);
 			
-			echo '<tr bgcolor="' . $bg . '">
+			// CODING NOTE: I would change this to JSON if I was having this on a viewing pane 
+			// 	on the manager home page if I was utilizing AJAX
+			echo '<tr bgcolor="' . $bg . '"> 
 				<td align="left">' . $tmnm . '</td>
 				<td align="left">' . $tctyOB . '</td>
 				<td align="left">' . $tstOB . '</td>
-				<td align="left"><form action="edit_team.php" method="post">
-					<input type="hidden" name="x" value="' . $idtmOB . '" />
-					<input type="submit" name="submit" value="Edit"/></form></td>
-				<td align="left"><form action="delete_team.php" method="post">
-					<input type="hidden" name="x" value="' . $idtmOB . '" />
-					<input type="submit" name="submit" value="Delete"/></form></td>
+				<td align="left"><a href=edit_team.php?x=' . $idtmOB . '>Edit</a></td>
+				<td align="left"><a href=delete_team.php?x=' . $idtmOB . '>Delete</a></td>
 				</tr>';	
 
 		}	// End of WHILE loop

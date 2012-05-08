@@ -18,7 +18,7 @@
 	// Assign user object from session variable
 	if (isset($_SESSION['userObj']))
 	{
-		$user = $_SESSION['userObj'];
+		$manager = $_SESSION['userObj'];
 	}
 	else 
 	{
@@ -26,39 +26,18 @@
 	}
 
 	// Authorized Login Check
-	if (!$user->valid($lvl))
+	if (!$manager->valid($lvl))
 	{
 		redirect_to('index.php');
 	}
-/*
-	// Check for a valid user ID, through GET or POST:
-	if ( (isset($_GET['z'])) && (is_numeric($_GET['z'])) )
-	{
-		// Point A in Code Flow
-		// Assign variable from view_roster.php using GET method
-		$id = $_GET['z'];
-	}
-	elseif ( (isset($_POST['z'])) && (is_numeric($_POST['z'])) )
-	{
-		// Point C in Code Flow
-		// Assign variable from edit_player.php FORM submission (hidden id field)
-		$id = $_POST['z'];
-	}
-	else 
-	{
-		// No valid ID, kill the script.
-		echo '<p class="error">This page has been accessed in error.</p>';
-		include '../includes/footer.html';
-		exit();
-	}
-*/
+
 	// Establish database connection
 	require_once MYSQL2;
 
 
-	if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['x'])) // Confirmation that form has been submitted from roster page
+	if ( (isset($_GET['x'])) && (is_numeric($_GET['x'])) ) // From view roster page
 	{
-		$id = $_POST['x'];
+		$id = $_GET['x'];
 	}
 	elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z'])) // Confirmation that form has been submitted from edit_player page	
 	{
@@ -136,7 +115,7 @@
 	$q = "SELECT CONCAT(u.first_name, ' ', u.last_name) AS name, p.position, p.jersey_number
 		FROM players AS p INNER JOIN users AS u
 		USING (id_user)
-		WHERE p.id_player=?";
+		WHERE p.id_player=? LIMIT 1";
 
 	// Prepare the statement:
 	$stmt = $db->prepare($q);

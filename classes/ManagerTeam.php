@@ -12,11 +12,7 @@
 	class ManagerTeam extends Team {
 
 		// Constructor
-		function __construct() 
-		{
-			//parent::setTeamID($teamID);
-			//parent::pullTeamData(); // Pull current database information and set attributes
-		}
+		function __construct() {}
 			
 		// Function to create team
 		function createTeam($lgID, $sprtID, $manID, $tmname, $cty, $st, $abtm)
@@ -98,6 +94,7 @@
 			else
 			{
 				echo '<p class="error">Your team was not added. Please contact the service administrator.</p>';
+				exit();
 			}
 
 			// Close the statement:
@@ -130,7 +127,7 @@
 			{	// Either did not run ok or no updates were made
 				$result = False;
 			}
-echo $result;
+
 			return $result;
 
 		} // End of editTeam function
