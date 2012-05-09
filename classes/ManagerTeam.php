@@ -129,6 +129,9 @@
 				$result = False;
 			}
 
+			parent::setTeamNM($tmname);
+			parent::setTeamABT($abtm);
+
 			return $result;
 
 		} // End of editTeam function

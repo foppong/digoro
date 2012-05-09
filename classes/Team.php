@@ -42,6 +42,18 @@
 		{
 			$this->id_team = $teamID;
 		}
+
+		// Function to set team name
+		function setTeamNM($attribute)
+		{
+			$this->tmname = $attribute;
+		}
+
+		// Function to set team about me
+		function setTeamABT($attribute)
+		{
+			$this->about = $attribute;
+		}
 		
 		// Function to set Team attributes
 		function setTeamAttributes($lgID = 0, $sprtID = 0, $manID = 0, $tmname ='', $cty = '', 

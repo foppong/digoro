@@ -53,7 +53,7 @@
 		function pullGameData()
 		{
 			// Make the query to retreive game information from games table in database:		
-			$q = "SELECT date, time, opponent, venue, result
+			$q = "SELECT id_team, DATE_FORMAT(date, '%m-%d-%Y'), time, opponent, venue, result
 				FROM games
 				WHERE id_game=? LIMIT 1";
 		
@@ -70,14 +70,14 @@
 			$stmt->store_result();
 			
 			// Bind the outbound variable:
-			$stmt->bind_result($bdfrmatOB, $tmOB, $oppOB, $venOB, $resOB);
+			$stmt->bind_result($id_teamOB, $gdateOB, $gtmOB, $oppOB, $venOB, $resOB);
 
 			// Found result
 			if ($stmt->num_rows == 1)
 			{	
 				while ($stmt->fetch())
 				{				
-					self::setGameAttributes($bdfrmatOB, $tmOB, $oppOB, $venOB, $resOB);
+					self::setGameAttributes($id_teamOB, $gdateOB, $gtmOB, $oppOB, $venOB, $resOB);
 				}
 			}			
 			
@@ -100,11 +100,12 @@
 				$stmt = $this->dbc->prepare($q); 
 	
 				// Bind the inbound variables:
-				$stmt->bind_param('sssssi', $gdate, $gmdate, $gtime, $opponent, $venue, $result, $this->id_game);
+				$stmt->bind_param('sssssi', $gmdate, $gtime, $opponent, $venue, $result, $this->id_game);
 					
 				// Execute the query:
 				$stmt->execute();
 	
+				// MAY NOT WANT THESE MESSAGES LATER ON
 				if ($stmt->affected_rows == 1) // And update to the database was made
 				{				
 					echo '<p>The game has been edited.</p>';
@@ -113,6 +114,9 @@
 				{	// Either did not run ok or no updates were made
 					echo '<p>No changes were made.</p>';
 				}
+				
+				// Update attributes
+				self::setGameAttributes($this->id_team, $gmdate, $gtime, $opponent, $venue, $result);
 
 				// Close the statement:
 				$stmt->close();
@@ -126,53 +130,97 @@
 			}
 		} // End of editGame function
 		
-	
-	// Function to check if user is authorized to make any changes
-	function checkAuth($gameID, $userID)
-	{
-		// Make the query to retreive game and team info:		
-		$q = "SELECT tm.id_manager
-			FROM teams AS tm INNER JOIN games AS g
-			USING (id_team)
-			WHERE g.id_game=? LIMIT 1";
-			
-		// Prepare the statement
-		$stmt = $this->dbc->prepare($q);
-		
-		// Bind the inbound variables:
-		$stmt->bind_param('i', $gameID);
-		
-		// Exeecute the query
-		$stmt->execute();
-		
-		// Store results:
-		$stmt->store_result();
-		
-		// Bind the outbound variables:
-		$stmt->bind_result($manIDOB);
-		
-		// user ID found
-		if ($stmt->num_rows == 1)
+
+		// Function to delete game
+		function deleteGame($userID)
 		{
-			if ($manIDOB == $userID) 
+			if (self::checkAuth($this->id_game, $userID))
 			{
-				return True;
+				// Make the query	
+				$q = "DELETE FROM games WHERE id_game=? LIMIT 1";
+	
+				// Prepare the statement:
+				$stmt = $this->dbc->prepare($q);
+	
+				// Bind the inbound variable:
+				$stmt->bind_param('i', $this->id_game);
+	
+				// Execute the query:
+				$stmt->execute();
+				
+				// If the query ran ok.
+				if ($stmt->affected_rows == 1) 
+				{
+					// Print a message
+					echo '<p>The game has been deleted successfully.</p>';
+					include '../includes/footer.html';
+					exit();
+				}
+				else 
+				{	// If the query did not run ok.
+					echo '<p class="error">The game could not be deleted due to a system errror.</p>';
+					exit();
+				}
+				
+				// Close the statement:
+				$stmt->close();
+				unset($stmt);
+
+			}
+			else 
+			{
+				echo '<p class="error">This page has been accessed in error.</p>';
+				include '../includes/footer.html';
+				exit();				
+			}			
+		} // End of deleteGame function
+			
+		// Function to check if user is authorized to make any changes
+		function checkAuth($gameID, $userID)
+		{
+			// Make the query to retreive game and team info:		
+			$q = "SELECT tm.id_manager
+				FROM teams AS tm INNER JOIN games AS g
+				USING (id_team)
+				WHERE g.id_game=? LIMIT 1";
+				
+			// Prepare the statement
+			$stmt = $this->dbc->prepare($q);
+			
+			// Bind the inbound variables:
+			$stmt->bind_param('i', $gameID);
+			
+			// Exeecute the query
+			$stmt->execute();
+			
+			// Store results:
+			$stmt->store_result();
+			
+			// Bind the outbound variables:
+			$stmt->bind_result($manIDOB);
+			
+			// user ID found
+			if ($stmt->num_rows == 1)
+			{
+				if ($manIDOB = $userID) 
+				{
+					return True;
+				}
+				else 
+				{
+					return False;
+				}
 			}
 			else 
 			{
 				return False;
 			}
-		}
-		else 
-		{
-			return False;
-		}
-		
-		// Close the statement:
-		$stmt->close();
-		unset($stmt);
-
-	} // End of checkAuth function
+			
+			// Close the statement:
+			$stmt->close();
+			unset($stmt);
+	
+		} // End of checkAuth function
 	
 } // End of Class
 	 

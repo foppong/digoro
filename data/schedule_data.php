@@ -42,7 +42,7 @@
 	$tm = $_SESSION['ctmID'];
 
 	// Make the Query:
-	$q = "SELECT id_game, date, time, opponent, venue, result
+	$q = "SELECT id_game, DATE_FORMAT(date, '%a, %b-%e-%Y'), time, opponent, venue, result
 		FROM games
 		WHERE id_team=?
 		ORDER BY date ASC";
@@ -65,15 +65,11 @@
 	// If there are results to show.
 	if ($stmt->num_rows > 0)
 	{		
-		// Reformat date
-		$gdt = new DateTime($dateOB);
-		$bdfrmat = $gdt->format('m-d-Y');
-
 		// Fetch and print all records...
 		while ($stmt->fetch())
 		{		
 			$json[] = array(
-			'Date' => $bdfrmat,
+			'Date' => $dateOB,
 			'Time' => $timeOB,
 			'Opponent' => stripslashes($oppOB),
 			'Venue' => stripslashes($venOB),
@@ -84,14 +80,7 @@
 			
 		// Send the JSON data:
 		echo json_encode($json);
-			
-		// Close the statement:
-		$stmt->close();
-		unset($stmt);			
 
-		// Close the connection:
-		$db->close();
-		unset($db);
 	}
 	else 
 	{	// No games or events scheduled
@@ -103,5 +92,17 @@
 		// Send the JSON data:
 		echo json_encode($json);
 	}	
+
+	// Close the statement:
+	$stmt->close();
+	unset($stmt);			
+
+	// Delete objects
+	unset($gdt);
+	unset($user);
+
+	// Close the connection:
+	$db->close();
+	unset($db);
 
 ?>

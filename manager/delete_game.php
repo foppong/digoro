@@ -18,7 +18,8 @@
 	// Assign user object from session variable
 	if (isset($_SESSION['userObj']))
 	{
-		$user = $_SESSION['userObj'];
+		$manager = $_SESSION['userObj'];
+		$userID = $manager->getUserID();
 	}
 	else 
 	{
@@ -26,7 +27,7 @@
 	}
 
 	// Authorized Login Check
-	if (!$user->valid($lvl))
+	if (!$manager->valid($lvl))
 	{
 		redirect_to('index.php');
 	}
@@ -37,40 +38,28 @@
 	if ( (isset($_GET['x'])) && (is_numeric($_GET['x'])) ) // From view schedule page
 	{
 		$id = $_GET['x'];
+
+		// Create game object for use & pull latest data from database & initially set attributes
+		$game = new Game();
+		$game->setDB($db);
+		$game->setGameID($id);
+		$game->pullGameData();
+
 	}
 	elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z'])) // Confirmation that form has been submitted from delete_player page	
 	{
 		// Assign variable from delete_player.php FORM submission (hidden id field)
 		$id = $_POST['z'];
 
+		// Create game object for use & pull latest data from database & initially set attributes
+		$game = new Game();
+		$game->setDB($db);
+		$game->setGameID($id);
+		$game->pullGameData();
+
 		if ($_POST['sure'] == 'Yes')
 		{	// If form submitted is yes, delete the record
-		
-			// Make the query	
-			$q = "DELETE FROM games WHERE id_game=? LIMIT 1";
-
-			// Prepare the statement:
-			$stmt = $db->prepare($q);
-
-			// Bind the inbound variable:
-			$stmt->bind_param('i', $id);
-
-			// Execute the query:
-			$stmt->execute();
-			
-			// If the query ran ok.
-			if ($stmt->affected_rows == 1) 
-			{
-				// Print a message
-				echo '<p>The game has been deleted successfully.</p>';
-				include '../includes/footer.html';
-				exit();
-			}
-			else 
-			{	// If the query did not run ok.
-				echo '<p class="error">The game could not be deleted due to a system errror.</p>';
-				exit();
-			}
+			$game->deleteGame($userID);
 		}
 		else
 		{	// No confirmation of deletion.
@@ -85,38 +74,12 @@
 		exit();		
 	}	
 		
-	// Point B in Code Flow. Show the form
+	// Get attributes from game object
+	$dateOB = $game->getGameAttribute('gdate');
 
-	// Make the query to retreive user information:		
-	$q = "SELECT date FROM games WHERE id_game=?";		
-
-	// Prepare the statement:
-	$stmt = $db->prepare($q);
-
-	// Bind the inbound variable:
-	$stmt->bind_param('i', $id);
-		
-	// Execute the query:
-	$stmt->execute();		
-		
-	// Store results:
-	$stmt->store_result();
-	
-	// Bind the outbound variable:
-	$stmt->bind_result($dateOB);	
-		
-	// Valid user ID, show the form.
-	if ($stmt->num_rows == 1)
-	{
-		while ($stmt->fetch())
-		{	
-			// Reformat date	
-			$gdt = new DateTime($dateOB);
-			$gdtnw = $gdt->format('m-d-Y');
-
-			//Display the record being deleted:
-			echo '<h3>Are you sure you want to delete this game on ' . $gdtnw . ' from your schedule?</h3>';
-		}
+	if ($dateOB != '')
+	{	
+		echo '<h3>Are you sure you want to delete this game on ' . $dateOB . ' from your schedule?</h3>';
 			
 		// Create the form:
 		echo '<form action ="delete_game.php" method="post" id="DelGameForm">
@@ -131,10 +94,10 @@
 		echo '<p class="error">This page has been accessed in error.</p>';
 		exit();
 	}
-		
-	// Close the statement:
-	$stmt->close();
-	unset($stmt);
+
+	// Delete objects
+	unset($game);
+	unset($manager);
 			
 	// Close the connection:
 	$db->close();

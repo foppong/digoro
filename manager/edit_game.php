@@ -19,6 +19,7 @@
 	if (isset($_SESSION['userObj']))
 	{
 		$manager = $_SESSION['userObj'];
+		$userID = $manager->getUserID();
 	}
 	else 
 	{
@@ -62,7 +63,7 @@
 		if ($_POST['date'])
 		{
 			$bd = new DateTime($_POST['date']);
-			$bdfrmat = $bd->format('Y-m-d');
+			$gdfrmat = $bd->format('Y-m-d');
 		}
 		else 
 		{
@@ -112,7 +113,8 @@
 		// Check if user entered information is valid before continuing to edit game
 		if ($bdfrmat && $tm)
 		{
-			$game->editGame($bdfrmat, $tm, $opp, $ven, $res, $id);
+			$game->editGame($userID, $gdfrmat, $tm, $opp, $ven, $res, $id);
+			// NEED CODE HERE TO TAKE USER BACK TO HOME PAGE
 		}
 		else
 		{	// Errors in the user entered information
@@ -125,8 +127,6 @@
 		include '../includes/footer.html';
 		exit();		
 	}
-
-	// Always show the form...
 	
 	// Get attributes from game object
 	$bdfrmatOB = $game->getGameAttribute('gdate');
