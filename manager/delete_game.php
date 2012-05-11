@@ -44,6 +44,7 @@
 		$game->setDB($db);
 		$game->setGameID($id);
 		$game->pullGameData();
+		$game->checkAuth($userID);
 
 	}
 	elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z'])) // Confirmation that form has been submitted from delete_player page	
@@ -56,6 +57,7 @@
 		$game->setDB($db);
 		$game->setGameID($id);
 		$game->pullGameData();
+		$game->checkAuth($userID);
 
 		if ($_POST['sure'] == 'Yes')
 		{	// If form submitted is yes, delete the record
@@ -77,9 +79,13 @@
 	// Get attributes from game object
 	$dateOB = $game->getGameAttribute('gdate');
 
+	// Format date from database into more common format to display in page
+	$gd = new DateTime($dateOB);
+	$gdfrmt = $gd->format('m/d/Y');
+
 	if ($dateOB != '')
 	{	
-		echo '<h3>Are you sure you want to delete this game on ' . $dateOB . ' from your schedule?</h3>';
+		echo '<h3>Are you sure you want to delete this game on ' . $gdfrmt . ' from your schedule?</h3>';
 			
 		// Create the form:
 		echo '<form action ="delete_game.php" method="post" id="DelGameForm">

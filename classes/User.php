@@ -32,7 +32,7 @@
 	 *  pullUserData()
 	 *  pullSpecificData()
 	 */
-	
+
 	class User extends UserAuth {
 	 	
 		// Declare the attributes

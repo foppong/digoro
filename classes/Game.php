@@ -7,6 +7,7 @@
 	 * 	protected venue
 	 *  protected result
 	 * 	protected id_game
+	 *  protected dbc
 	 * Methods:
 	 * 	editGame()
 	 * 	displayGame()
@@ -53,11 +54,11 @@
 		function pullGameData()
 		{
 			// Make the query to retreive game information from games table in database:		
-			$q = "SELECT id_team, DATE_FORMAT(date, '%m-%d-%Y'), time, opponent, venue, result
+			$q = "SELECT id_team, date, time, opponent, venue, result
 				FROM games
 				WHERE id_game=? LIMIT 1";
 		
-			// Prepare the statement:
+			// Prepare the statement: DATE_FORMAT(date, '%Y-%m-%d')
 			$stmt = $this->dbc->prepare($q);
 		
 			// Bind the inbound variable:
@@ -89,96 +90,90 @@
 					
 		// Edit Game Method
 		function editGame($userID, $gmdate, $gtime, $opponent, $venue, $result) 
-		{
-			if (self::checkAuth($this->id_game, $userID))
-			{		
-				// Update the user's info in the players' table in database
-				$q = 'UPDATE games SET date=?, time=?, opponent=?, venue=?, result=?
-					WHERE id_game=? LIMIT 1';
+		{		
+			// Update the user's info in the players' table in database
+			$q = 'UPDATE games SET date=?, time=?, opponent=?, venue=?, result=?
+				WHERE id_game=? LIMIT 1';
 	
-				// Prepare the statement
-				$stmt = $this->dbc->prepare($q); 
+			// Prepare the statement
+			$stmt = $this->dbc->prepare($q); 
 	
-				// Bind the inbound variables:
-				$stmt->bind_param('sssssi', $gmdate, $gtime, $opponent, $venue, $result, $this->id_game);
+			// Bind the inbound variables:
+			$stmt->bind_param('sssssi', $gmdate, $gtime, $opponent, $venue, $result, $this->id_game);
 					
-				// Execute the query:
-				$stmt->execute();
+			// Execute the query:
+			$stmt->execute();
 	
-				// MAY NOT WANT THESE MESSAGES LATER ON
-				if ($stmt->affected_rows == 1) // And update to the database was made
-				{				
-					echo '<p>The game has been edited.</p>';
-				}
-				else 
-				{	// Either did not run ok or no updates were made
-					echo '<p>No changes were made.</p>';
-				}
-				
-				// Update attributes
-				self::setGameAttributes($this->id_team, $gmdate, $gtime, $opponent, $venue, $result);
-
-				// Close the statement:
-				$stmt->close();
-				unset($stmt);
+			// MAY NOT WANT THESE MESSAGES LATER ON
+			if ($stmt->affected_rows == 1) // And update to the database was made
+			{				
+				echo '<p>The game has been edited.</p>';
 			}
 			else 
-			{
-				echo '<p class="error">This page has been accessed in error.</p>';
-				include '../includes/footer.html';
-				exit();				
+			{	// Either did not run ok or no updates were made
+				echo '<p>No changes were made.</p>';
 			}
+				
+			// Update attributes
+			self::setGameAttributes($this->id_team, $gmdate, $gtime, $opponent, $venue, $result);
+
+			// Close the statement:
+			$stmt->close();
+			unset($stmt);
+
 		} // End of editGame function
 		
 
 		// Function to delete game
 		function deleteGame($userID)
 		{
-			if (self::checkAuth($this->id_game, $userID))
+			// Make the query	
+			$q = "DELETE FROM games WHERE id_game=? LIMIT 1";
+	
+			// Prepare the statement:
+			$stmt = $this->dbc->prepare($q);
+	
+			// Bind the inbound variable:
+			$stmt->bind_param('i', $this->id_game);
+	
+			// Execute the query:
+			$stmt->execute();
+				
+			// If the query ran ok.
+			if ($stmt->affected_rows == 1) 
 			{
-				// Make the query	
-				$q = "DELETE FROM games WHERE id_game=? LIMIT 1";
-	
-				// Prepare the statement:
-				$stmt = $this->dbc->prepare($q);
-	
-				// Bind the inbound variable:
-				$stmt->bind_param('i', $this->id_game);
-	
-				// Execute the query:
-				$stmt->execute();
-				
-				// If the query ran ok.
-				if ($stmt->affected_rows == 1) 
-				{
-					// Print a message
-					echo '<p>The game has been deleted successfully.</p>';
-					include '../includes/footer.html';
-					exit();
-				}
-				else 
-				{	// If the query did not run ok.
-					echo '<p class="error">The game could not be deleted due to a system errror.</p>';
-					exit();
-				}
-				
-				// Close the statement:
-				$stmt->close();
-				unset($stmt);
-
+				// Print a message
+				echo '<p>The game has been deleted successfully.</p>';
+				include '../includes/footer.html';
+				exit();
 			}
 			else 
-			{
-				echo '<p class="error">This page has been accessed in error.</p>';
-				include '../includes/footer.html';
-				exit();				
-			}			
+			{	// If the query did not run ok.
+				echo '<p class="error">The game could not be deleted due to a system errror.</p>';
+				exit();
+			}
+				
+			// Close the statement:
+			$stmt->close();
+			unset($stmt);
+		
 		} // End of deleteGame function
-			
-		// Function to check if user is authorized to make any changes
-		function checkAuth($gameID, $userID)
+
+		// Function to check if user is authroized to view page
+		function checkAuth($userID)
 		{
-			// Make the query to retreive game and team info:		
+			if (self::isManager($this->id_game, $userID) == False)
+			{
+				$url = BASE_URL . 'manager/manager_home.php';
+				header("Location: $url");
+				exit();
+			}		
+		}			
+			
+		// Function to check if user is manager
+		function isManager($gameID, $userID)
+		{
+			// Make the query to retreive manager id associated with game:		
 			$q = "SELECT tm.id_manager
 				FROM teams AS tm INNER JOIN games AS g
 				USING (id_team)
@@ -202,13 +197,16 @@
 			// user ID found
 			if ($stmt->num_rows == 1)
 			{
-				if ($manIDOB = $userID) 
-				{
-					return True;
-				}
-				else 
-				{
-					return False;
+				while ($stmt->fetch())
+				{				
+					if ($manIDOB == $userID) 
+					{
+						return True;
+					}
+					else 
+					{
+						return False;
+					}
 				}
 			}
 			else 
@@ -220,7 +218,7 @@
 			$stmt->close();
 			unset($stmt);
 	
-		} // End of checkAuth function
+		} // End of isManager function
 	
 } // End of Class
 	 

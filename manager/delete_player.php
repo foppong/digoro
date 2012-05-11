@@ -18,7 +18,8 @@
 	// Assign user object from session variable
 	if (isset($_SESSION['userObj']))
 	{
-		$user = $_SESSION['userObj'];
+		$manager = $_SESSION['userObj'];
+		$userID = $manager->getUserID();
 	}
 	else 
 	{
@@ -26,7 +27,7 @@
 	}
 
 	// Authorized Login Check
-	if (!$user->valid($lvl))
+	if (!$manager->valid($lvl))
 	{
 		redirect_to('index.php');
 	}
@@ -37,43 +38,31 @@
 	if ( (isset($_GET['x'])) && (is_numeric($_GET['x'])) ) // From view roster page
 	{
 		$id = $_GET['x'];
+
+		// Create member object for use & pull latest data from database & initially set attributes
+		$member = new Member($id);
+		$member->setDB($db);
+		$member->pullMemberData();
+		$member->checkAuth($userID);
+
 	}
 	elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z'])) // Confirmation that form has been submitted from delete_player page	
 	{
 		$id = $_POST['z'];
 
+		// Create member object for use & pull latest data from database & initially set attributes
+		$member = new Member($id);
+		$member->setDB($db);
+		$member->pullMemberData();
+		$member->checkAuth($userID);
+
 		if ($_POST['sure'] == 'Yes')
 		{	// If form submitted is yes, delete the record
-		
-			// Make the query	
-			$q = "DELETE FROM players WHERE id_player=? LIMIT 1";
-
-			// Prepare the statement:
-			$stmt = $db->prepare($q);
-
-			// Bind the inbound variable:
-			$stmt->bind_param('i', $id);
-
-			// Execute the query:
-			$stmt->execute();
-			
-			// If the query ran ok.
-			if ($stmt->affected_rows == 1) 
-			{	
-				// Print a message
-				echo '<p>The player has been deleted successfully.</p>';
-				include '../includes/footer.html';
-				exit();				
-			}
-			else 
-			{	// If the query did not run ok.
-				echo '<p class="error">The player could not be deleted due to a system errror.</p>';
-				exit();
-			}
+			$member->deleteMember($userID);
 		}
 		else
 		{	// No confirmation of deletion.
-			echo '<p>The player has NOT been deleted.</p>';
+			echo '<p>The member has NOT been deleted.</p>';
 		}
 	}
 	else 
@@ -84,35 +73,14 @@
 		exit();		
 	}
 
-	// Make the query to retreive user information:		
-	$q = "SELECT CONCAT(u.first_name, ' ', u.last_name) AS name
-		FROM players AS p INNER JOIN users AS u
-		USING (id_user)
-		WHERE p.id_player=?";		
-
-	// Prepare the statement:
-	$stmt = $db->prepare($q);
-
-	// Bind the inbound variable:
-	$stmt->bind_param('i', $id);
-		
-	// Execute the query:
-	$stmt->execute();		
-		
-	// Store results:
-	$stmt->store_result();
-	
-	// Bind the outbound variable:
-	$stmt->bind_result($nameOB);	
+	// Get attributes from member object
+	$name = $member->getMemberAttribute('mname');	
 		
 	// Valid user ID, show the form.
-	if ($stmt->num_rows == 1)
+	if ($name != '')
 	{
-		while ($stmt->fetch())
-		{
-			//Display the record being deleted:
-			echo '<h3>Are you sure you want to delete the player ' . $nameOB . ' from your roster?</h3>';
-		}
+		//Display the record being deleted:
+		echo '<h3>Are you sure you want to delete the player ' . $name . ' from your roster?</h3>';
 		
 		// Create the form:
 		echo '<form action ="delete_player.php" method="post" id="DelPlayerForm">
@@ -127,12 +95,11 @@
 		echo '<p class="error">This page has been accessed in error.</p>';
 		exit();
 	}
-		
-	// Close the statement:
-	$stmt->close();
-	unset($stmt);
 
-			
+	// Delete objects
+	unset($member);
+	unset($manager);
+				
 	// Close the connection:
 	$db->close();
 	unset($db);

@@ -44,6 +44,7 @@
 		$game->setDB($db);
 		$game->setGameID($id);
 		$game->pullGameData();
+		$game->checkAuth($userID);
 
 	}
 	elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z'])) // Confirmation that form has been submitted from edit_player page	
@@ -55,14 +56,15 @@
 		$game->setDB($db);
 		$game->setGameID($id);
 		$game->pullGameData();
+		$game->checkAuth($userID);
 
 		// Assume invalid values:
-		$bdfrmat = $tm = FALSE;
+		$gdfrmat = $tm = FALSE;
 		
 		// Validate game date
 		if ($_POST['date'])
 		{
-			$bd = new DateTime($_POST['date']);
+			$bd = new DateTime($_POST['date']); // Convert js datepicker entry into format database accepts
 			$gdfrmat = $bd->format('Y-m-d');
 		}
 		else 
@@ -111,7 +113,7 @@
 		}
 		
 		// Check if user entered information is valid before continuing to edit game
-		if ($bdfrmat && $tm)
+		if ($gdfrmat && $tm)
 		{
 			$game->editGame($userID, $gdfrmat, $tm, $opp, $ven, $res, $id);
 			// NEED CODE HERE TO TAKE USER BACK TO HOME PAGE
@@ -130,6 +132,11 @@
 	
 	// Get attributes from game object
 	$bdfrmatOB = $game->getGameAttribute('gdate');
+
+	// Format date from database into more common format to display in form
+	$gd = new DateTime($bdfrmatOB);
+	$gdfrmt = $gd->format('m/d/Y');
+
 	$tmOB = $game->getGameAttribute('gtime');
 	$oppOB = $game->getGameAttribute('opponent');
 	$venOB = $game->getGameAttribute('venue');
@@ -147,7 +154,7 @@
 			<div>
 				<label for="date"><b>Select Game Date:</b></label>
 				<input type="text" name="date" id="date" size="10" maxlength="10"
-				value="' . $bdfrmatOB . '" />
+				value="' . $gdfrmt . '" />
 			</div>
 				
 			<div>
