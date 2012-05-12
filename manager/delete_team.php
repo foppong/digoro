@@ -40,9 +40,8 @@
 		$id = $_GET['x'];
 
 		// Create team object for use & pull latest data from database & initially set attributes
-		$team = new ManagerTeam();
+		$team = new ManagerTeam($id);
 		$team->setDB($db);
-		$team->setTeamID($id);
 		$team->pullTeamData();
 		$team->checkAuth($userID);
 	}
@@ -51,9 +50,8 @@
 		$id = $_POST['z'];
 
 		// Create team object for use & pull latest data from database & initially set attributes
-		$team = new ManagerTeam();
+		$team = new ManagerTeam($id);
 		$team->setDB($db);
-		$team->setTeamID($id);
 		$team->pullTeamData();
 		$team->checkAuth($userID);
 

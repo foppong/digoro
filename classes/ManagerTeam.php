@@ -12,7 +12,10 @@
 	class ManagerTeam extends Team {
 
 		// Constructor
-		function __construct() {}
+		function __construct($teamID) 
+		{
+			parent::setTeamID($teamID);
+		}
 			
 		// Function to create team
 		function createTeam($lgID, $sprtID, $manID, $tmname, $cty, $st, $abtm)

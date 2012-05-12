@@ -20,7 +20,10 @@
 		protected $gdate, $gtime, $opponent, $venue, $result, $id_team, $id_game, $dbc;
 
 		// Constructor
-		function __construct() {}
+		function __construct($gameID) 
+		{
+			self::setGameID($gameID);
+		}
 
 		// Function to set game ID attribute
 		function setGameID($gameID)

@@ -21,9 +21,15 @@
 		// Constructor
 		function __construct($memberID) 
 		{
-			$this->id_player = $memberID;			
+			self::setMembID($memberID);			
 		}
 		
+		// Function to set member ID attribute
+		function setMembID($memberID)
+		{
+			$this->id_player = $memberID;
+		}
+
 		function setDB($db)
 		{
 			$this->dbc = $db;
