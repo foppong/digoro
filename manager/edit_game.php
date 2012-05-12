@@ -40,8 +40,9 @@
 		$id = $_GET['x'];
 		
 		// Create game object for use & pull latest data from database & initially set attributes
-		$game = new Game($id);
+		$game = new Game();
 		$game->setDB($db);
+		$game->setGameID($id);
 		$game->pullGameData();
 		$game->checkAuth($userID);
 
@@ -51,8 +52,9 @@
 		$id = $_POST['z'];
 
 		// Create game object for use & pull latest data from database & initially set attributes
-		$game = new Game($id);
+		$game = new Game();
 		$game->setDB($db);
+		$game->setGameID($id);
 		$game->pullGameData();
 		$game->checkAuth($userID);
 

@@ -18,7 +18,7 @@
 	// Assign user object from session variable
 	if (isset($_SESSION['userObj']))
 	{
-		$user = $_SESSION['userObj'];
+		$manager = $_SESSION['userObj'];
 	}
 	else 
 	{
@@ -26,13 +26,13 @@
 	}
 
 	// Authorized Login Check
-	if (!$user->valid($lvl))
+	if (!$manager->valid($lvl))
 	{
 		redirect_to('index.php');
 	}
 	
 	// Retrieve default team ID * THIS IS NOT CORRECT b/c we may not be working with the default team
-	$idtm = $user->getUserAttribute('dftmID');	
+	$idtm = $manager->getUserAttribute('dftmID');	
 	
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
@@ -44,8 +44,8 @@
 		// Validate game date
 		if ($_POST['date'])
 		{
-			$bd = new DateTime($_POST['date']);
-			$bdfrmat = $bd->format('Y-m-d');
+			$bd = new DateTime($_POST['date']); // Convert js datepicker entry into format database accepts
+			$gdfrmat = $bd->format('Y-m-d');
 		}
 		else 
 		{
@@ -92,36 +92,14 @@
 			$res = ''; 
 		}
 
-		// Checks if team is selected and date format and entered time are valid before adding game to database.
-		if ($idtm && $bdfrmat && $tm)
+		// Checks if team is selected and date format and entered time are valid before adding game to team.
+		if ($idtm && $gdfrmat && $tm)
 		{
-			//$game = new Game($idtm, $bdfrmat, $tm, $db);
 			
-			// Make the query:
-			$q = 'INSERT INTO games (id_team, date, time, opponent, venue, result) VALUES (?,?,?,?,?,?)';
-
-			// Prepare the statement
-			$stmt = $db->prepare($q);
-			
-			// Bind the variables
-			$stmt->bind_param('isssss', $idtm, $bdfrmat, $tm, $opp, $ven, $res);
-			
-			// Execute the query:
-			$stmt->execute();
-			
-			// Print a message based upon result:
-			if ($stmt->affected_rows == 1)
-			{
-				echo '<p>Your game was added succesfully.</p>';
-			}
-			else
-			{
-				echo '<p class="error">Your game was not added. Please contact the service administrator.</p>';
-			}
-
-			// Close the statement:
-			$stmt->close();
-			unset($stmt);
+			// Create game object for use & push game to database for specified team
+			$game = new Game();
+			$game->setDB($db);
+			$game->createGame($idtm, $gdfrmat, $tm, $opp, $ven, $res);
 			
 			// Close the connection:
 			$db->close();
@@ -135,6 +113,10 @@
 			echo '<p class="error">Please try again.</p>';
 		}
 	
+	// Delete objects
+	unset($game);
+	unset($manager);
+
 	// Close the connection:
 	$db->close();
 	unset($db);		

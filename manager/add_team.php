@@ -133,6 +133,10 @@
 		}	
 	}
 
+	// Delete objects
+	unset($team);
+	unset($manager);
+
 	// Close the connection:
 	$db->close();
 	unset($db);	

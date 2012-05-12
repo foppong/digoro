@@ -40,8 +40,9 @@
 		$id = $_GET['x'];
 
 		// Create member object for use & pull latest data from database & initially set attributes
-		$member = new Member($id);
+		$member = new Member();
 		$member->setDB($db);
+		$member->setMembID($id);
 		$member->pullMemberData();
 		$member->checkAuth($userID);
 
@@ -51,8 +52,9 @@
 		$id = $_POST['z'];
 
 		// Create member object for use & pull latest data from database & initially set attributes
-		$member = new Member($id);
+		$member = new Member();
 		$member->setDB($db);
+		$member->setMembID($id);
 		$member->pullMemberData();
 		$member->checkAuth($userID);
 

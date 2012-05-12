@@ -20,10 +20,7 @@
 		protected $gdate, $gtime, $opponent, $venue, $result, $id_team, $id_game, $dbc;
 
 		// Constructor
-		function __construct($gameID) 
-		{
-			self::setGameID($gameID);
-		}
+		function __construct() {}
 
 		// Function to set game ID attribute
 		function setGameID($gameID)
@@ -90,7 +87,38 @@
 			unset($stmt);			
 
 		} // End of pullGameData function
-					
+
+		// Function to add game to team schedule
+		function createGame($teamID, $gmdate, $gtime, $opponent, $venue, $result)
+		{
+			// Make the query:
+			$q = 'INSERT INTO games (id_team, date, time, opponent, venue, result) VALUES (?,?,?,?,?,?)';
+
+			// Prepare the statement
+			$stmt = $this->dbc->prepare($q);
+			
+			// Bind the variables
+			$stmt->bind_param('isssss', $teamID, $gmdate, $gtime, $opponent, $venue, $result);
+			
+			// Execute the query:
+			$stmt->execute();
+			
+			// Print a message based upon result:
+			if ($stmt->affected_rows == 1)
+			{
+				echo '<p>Your game was added succesfully.</p>';
+			}
+			else
+			{
+				echo '<p class="error">Your game was not added. Please contact the service administrator.</p>';
+			}
+
+			// Close the statement:
+			$stmt->close();
+			unset($stmt);			
+		}
+		
+							
 		// Edit Game Method
 		function editGame($userID, $gmdate, $gtime, $opponent, $venue, $result) 
 		{		

@@ -55,8 +55,9 @@
 		$ctmID = $_SESSION['ctmID'];
 	
 		// Create team object with current team selection
-		$team = new ManagerTeam($ctmID);
+		$team = new ManagerTeam();
 		$team->setDB($db);
+		$team->setTeamID($ctmID);
 		$team->pullTeamData();
 
 		// Assign updated team object session variable
@@ -70,8 +71,9 @@
 	else 
 	{
 		// Create team object
-		$team = new ManagerTeam($dftmID);
+		$team = new ManagerTeam();
 		$team->setDB($db);
+		$team->setTeamID($dftmID);
 		$team->pullTeamData();
 		
 		// Assign default team ID to current team ID session variable
