@@ -195,7 +195,66 @@
 			// Close the statement:
 			$stmt->close();
 			unset($stmt);
-		}
+		} // End of deleteTeam function
+
+		// Function to check if user is authroized to view page
+		function checkAuth($userID)
+		{
+			if (self::isManager($this->id_team, $userID) == False)
+			{
+				$url = BASE_URL . 'manager/manager_home.php';
+				header("Location: $url");
+				exit();
+			}		
+		}		
+		
+		// Function to check if user is manager
+		function isManager($teamID, $userID)
+		{
+			// Make the query to retreive manager id associated with team:		
+			$q = "SELECT id_manager FROM teams
+				WHERE id_team=? LIMIT 1";
+				
+			// Prepare the statement
+			$stmt = $this->dbc->prepare($q);
+			
+			// Bind the inbound variables:
+			$stmt->bind_param('i', $teamID);
+			
+			// Exeecute the query
+			$stmt->execute();
+			
+			// Store results:
+			$stmt->store_result();
+			
+			// Bind the outbound variables:
+			$stmt->bind_result($manIDOB);
+			
+			// user ID found
+			if ($stmt->num_rows == 1)
+			{
+				while ($stmt->fetch())
+				{				
+					if ($manIDOB == $userID) 
+					{
+						return True;
+					}
+					else 
+					{
+						return False;
+					}
+				}
+			}
+			else 
+			{
+				return False;
+			}
+			
+			// Close the statement:
+			$stmt->close();
+			unset($stmt);
+	
+		} // End of isManager function
 
 	} // End of Class
 ?>

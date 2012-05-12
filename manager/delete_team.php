@@ -19,6 +19,7 @@
 	if (isset($_SESSION['userObj']))
 	{
 		$manager = $_SESSION['userObj'];
+		$userID = $manager->getUserID();
 	}
 	else 
 	{
@@ -43,6 +44,7 @@
 		$team->setDB($db);
 		$team->setTeamID($id);
 		$team->pullTeamData();
+		$team->checkAuth($userID);
 	}
 	elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z'])) // Confirmation that form has been submitted from delete_team page	
 	{
@@ -53,6 +55,7 @@
 		$team->setDB($db);
 		$team->setTeamID($id);
 		$team->pullTeamData();
+		$team->checkAuth($userID);
 
 		if ($_POST['sure'] == 'Yes')
 		{	// If form submitted is yes, delete the record
