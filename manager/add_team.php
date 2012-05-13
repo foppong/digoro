@@ -19,6 +19,7 @@
 	if (isset($_SESSION['userObj']))
 	{
 		$manager = $_SESSION['userObj'];
+		$userID = $manager->getUserID();
 	}
 	else 
 	{
@@ -38,16 +39,16 @@
 	}
 
 	// Get user ID
-	$userID = $manager->getUserID();
+	//$userID = $manager->getUserID();
 	
 	// Assign userID to session variable
-	$_SESSION['userID'] = $userID;
+	//$_SESSION['userID'] = $userID;
 	
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
 				
 		// Assign user ID from session variable
-		$userID = $_SESSION['userID'];
+		//$userID = $_SESSION['userID'];
 				
 		// Trim all the incoming data:
 		$trimmed = array_map('trim', $_POST);
@@ -118,7 +119,11 @@
 		// Checks if team name, userID, sport, team city, state, and league are valid before adding team to database.
 		if ($lg && $userID && $sp && $tn && $ct && $st)
 		{
-			$manager->addTeam($lg, $sp, $userID, $tn, $ct, $st, $abtm);	
+
+			// Create team object for use & create team for database
+			$team = new ManagerTeam();
+			$team->setDB($db);
+			$team->createTeam($lg, $sp, $userID, $tn, $ct, $st, $abtm);	
 
 			// Close the connection:
 			$db->close();

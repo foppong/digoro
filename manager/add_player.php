@@ -37,9 +37,9 @@
 		redirect_to('index.php');
 	}
 
-	// Retrieve default team ID
-	$tm = $manager->getUserAttribute('dftmID');
-	
+	// Retrieve current team ID in session
+	$ctmID = $_SESSION['ctmID'];
+		
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
 
@@ -80,11 +80,11 @@
 		}
 
 		// Checks if name, email, and league are valid before proceeding.
-		if ($tm && $fn && $ln && $e)
+		if ($ctmID && $fn && $ln && $e)
 		{
 			$member = new Member();
 			$member->setDB($db);
-			$member->createMember($e, $tm, $fn, $ln);
+			$member->createMember($e, $ctmID, $fn, $ln);
 
 			// Close the connection:
 			$db->close();

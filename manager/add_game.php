@@ -31,8 +31,8 @@
 		redirect_to('index.php');
 	}
 	
-	// Retrieve default team ID * THIS IS NOT CORRECT b/c we may not be working with the default team
-	$idtm = $manager->getUserAttribute('dftmID');	
+	// Retrieve current team ID in session
+	$ctmID = $_SESSION['ctmID'];
 	
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
@@ -93,13 +93,13 @@
 		}
 
 		// Checks if team is selected and date format and entered time are valid before adding game to team.
-		if ($idtm && $gdfrmat && $tm)
+		if ($ctmID && $gdfrmat && $tm)
 		{
 			
 			// Create game object for use & push game to database for specified team
 			$game = new Game();
 			$game->setDB($db);
-			$game->createGame($idtm, $gdfrmat, $tm, $opp, $ven, $res);
+			$game->createGame($ctmID, $gdfrmat, $tm, $opp, $ven, $res);
 			
 			// Close the connection:
 			$db->close();
