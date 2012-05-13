@@ -22,6 +22,7 @@
 	if (isset($_SESSION['userObj']))
 	{
 		$manager = $_SESSION['userObj'];
+		$userID = $manager->getUserID();
 	}
 	else 
 	{
@@ -37,25 +38,27 @@
 		redirect_to('index.php');	
 	}
 
-	if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['x'])) // Confirmation that form has been submitted from myteams page
+	if ( (isset($_GET['x'])) && (is_numeric($_GET['x'])) ) // From view teams page
 	{
-		$id = $_POST['x'];
+		$id = $_GET['x'];
 		
-		// Create team object for use & pull latest data from database
+		// Create team object for use & pull latest data from database & initially set attributes
 		$team = new ManagerTeam();
 		$team->setDB($db);
 		$team->setTeamID($id);
 		$team->pullTeamData();
+		$team->checkAuth($userID);
 	}
 	elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z'])) // Confirmation that form has been submitted from edit_team page	
 	{
 		$id = $_POST['z'];
 
-		// Create team object for use & pull latest data from database
+		// Create team object for use & pull latest data from database & initially set attributes
 		$team = new ManagerTeam();
 		$team->setDB($db);
 		$team->setTeamID($id);
 		$team->pullTeamData();
+		$team->checkAuth($userID);
 
 		// Assume invalid values:
 		$tname = FALSE;
@@ -108,7 +111,7 @@
 		exit();		
 	}
 
-	// Set attributes from team object
+	// Get attributes from team object
 	$teamname = $team->getTeamAttribute('tmname');
 	$about = $team->getTeamAttribute('about');
 

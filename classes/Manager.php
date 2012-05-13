@@ -32,20 +32,6 @@
 			unset($team);			
 		}
 
-		// Function to add team to profile
-		function addTeam($lg, $sp, $userID, $tn, $ct, $st, $abtm)
-		{
-			$team = new ManagerTeam();
-			$team->setDB($this->dbc);
-			$team->createTeam($lg, $sp, $userID, $tn, $ct, $st, $abtm);
-			unset($team);	
-		}
-		
-		// Function to remove team from profile
-		function removeTeam()
-		{
-			
-		}
 
 	} // End of Class
 ?>

@@ -18,7 +18,8 @@
 	// Assign user object from session variable
 	if (isset($_SESSION['userObj']))
 	{
-		$user = $_SESSION['userObj'];
+		$manager = $_SESSION['userObj'];
+		$userID = $manager->getUserID();
 	}
 	else 
 	{
@@ -26,43 +27,37 @@
 	}
 
 	// Authorized Login Check
-	if (!$user->valid($lvl))
+	if (!$manager->valid($lvl))
 	{
 		redirect_to('index.php');
 	}
-/*
-	// Check for a valid user ID, through GET or POST:
-	if ( (isset($_GET['z'])) && (is_numeric($_GET['z'])) )
-	{
-		// Point A in Code Flow
-		// Assign variable from view_roster.php using GET method
-		$id = $_GET['z'];
-	}
-	elseif ( (isset($_POST['z'])) && (is_numeric($_POST['z'])) )
-	{
-		// Point C in Code Flow
-		// Assign variable from edit_player.php FORM submission (hidden id field)
-		$id = $_POST['z'];
-	}
-	else 
-	{
-		// No valid ID, kill the script.
-		echo '<p class="error">This page has been accessed in error.</p>';
-		include '../includes/footer.html';
-		exit();
-	}
-*/
+
 	// Establish database connection
 	require_once MYSQL2;
 
 
-	if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['x'])) // Confirmation that form has been submitted from roster page
+	if ( (isset($_GET['x'])) && (is_numeric($_GET['x'])) ) // From view roster page
 	{
-		$id = $_POST['x'];
+		$id = $_GET['x'];
+
+		// Create member object for use & pull latest data from database & initially set attributes
+		$member = new Member();
+		$member->setDB($db);
+		$member->setMembID($id);
+		$member->pullMemberData();
+		$member->checkAuth($userID);
+
 	}
 	elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z'])) // Confirmation that form has been submitted from edit_player page	
 	{
 		$id = $_POST['z'];
+
+		// Create member object for use & pull latest data from database & initially set attributes
+		$member = new Member();
+		$member->setDB($db);
+		$member->setMembID($id);
+		$member->pullMemberData();
+		$member->checkAuth($userID);
 
 		// Trim all the incoming data:
 		$trimmed = array_map('trim', $_POST);
@@ -94,27 +89,7 @@
 		// Check if user entered information is valid before continuing to edit player
 		if ($pos && $jnumb)
 		{
-			// Update the user's info in the database
-			$q = 'UPDATE players SET position=?, jersey_number=? 
-				WHERE id_player=? LIMIT 1';
-
-			// Prepare the statement
-			$stmt = $db->prepare($q); 
-
-			// Bind the inbound variables:
-			$stmt->bind_param('ssi', $pos, $jnumb, $id);
-				
-			// Execute the query:
-			$stmt->execute();
-
-			if ($stmt->affected_rows == 1) // And update to the database was made
-			{				
-				echo '<p>The players profile has been edited.</p>';
-			}
-			else 
-			{	// Either did not run ok or no updates were made
-				echo '<p>No changes were made.</p>';
-			}
+			$member->editMember($userID, $pos, $jnumb);
 		}
 		else
 		{	// Errors in the user entered information
@@ -129,59 +104,38 @@
 		exit();		
 	}
 
-	// Point B in Code Flow
-	// Always show the form...
+	// Get attributes from member object
+	$name = $member->getMemberAttribute('mname');
+	$pos = $member->getMemberAttribute('position');
+	$jnumb = $member->getMemberAttribute('jersey_numb');
 	
-	// Make the query to retreive user information:		
-	$q = "SELECT CONCAT(u.first_name, ' ', u.last_name) AS name, p.position, p.jersey_number
-		FROM players AS p INNER JOIN users AS u
-		USING (id_user)
-		WHERE p.id_player=?";
-
-	// Prepare the statement:
-	$stmt = $db->prepare($q);
-
-	// Bind the inbound variable:
-	$stmt->bind_param('i', $id);
 		
-	// Execute the query:
-	$stmt->execute();		
-		
-	// Store results:
-	$stmt->store_result();
-	
-	// Bind the outbound variable:
-	$stmt->bind_result($nameOB, $posOB, $jnumbOB);	
-		
-	// Valid user ID, show the form.
-	if ($stmt->num_rows == 1)
+	// Valid user name, show the form.
+	if ($name != '')
 	{
-		while ($stmt->fetch())
-		{
-			// Headliner
-			echo '<h2>Edit ' . $nameOB . '\'s Player Profile</h2>';
+		// Headliner
+		echo '<h2>Edit ' . $name . '\'s Player Profile</h2>';
 			
-			// Create the form:
-			echo '<form action ="edit_player.php" method="post" id="EditPlayerForm">
-				<fieldset>
-				<input type="hidden" name="z" value="' . $id . '" />
+		// Create the form:
+		echo '<form action ="edit_player.php" method="post" id="EditPlayerForm">
+			<fieldset>
+			<input type="hidden" name="z" value="' . $id . '" />
 				
-				<div>
-					<label for="position"><b>Position:</b></label>
-					<input type="text" name="position" id="position" 
-					size="20" maxlength="20" value="' . $posOB . '" />				
-				</div>
+			<div>
+				<label for="position"><b>Position:</b></label>
+				<input type="text" name="position" id="position" 
+				size="20" maxlength="20" value="' . $pos . '" />				
+			</div>
 				
-				<div>
-					<label for="jersey_num"><b>Jersey Number:</b></label>
-					<input type="text" name="jersey_num" id="jersey_num" 
-					size="4" maxlength="4" value="' . $jnumbOB . '" />
-				</div>
+			<div>
+				<label for="jersey_num"><b>Jersey Number:</b></label>
+				<input type="text" name="jersey_num" id="jersey_num" 
+				size="4" maxlength="4" value="' . $jnumb . '" />
+			</div>
 				
-				<input type="submit" name="submit" value="Save"/>
-				</fieldset>
-				</form><br />';
-		}
+			<input type="submit" name="submit" value="Save"/>
+			</fieldset>
+			</form><br />';
 	}
 	else 
 	{	//Not a valid user ID, kill the script
@@ -190,9 +144,9 @@
 		exit();
 	}
 		
-	// Close the statement:
-	$stmt->close();
-	unset($stmt);
+	// Delete objects
+	unset($member);
+	unset($manager);
 			
 	// Close the connection:
 	$db->close();

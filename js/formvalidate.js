@@ -194,7 +194,7 @@ $(document).ready(function()
 		messages: {
 			position: "Please enter the position of the player.",
 			jersey_num: {
-				required: "Please confirm your email address.",
+				required: "Please confirm your jersey number.",
 				digits: "Please enter a numerical value."
 			}
 		},

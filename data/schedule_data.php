@@ -38,61 +38,12 @@
 	}
 
 
-	
-/** Update this to reflect how the request is made - if AJAX call, may not need
-	// Checks for a valid team roster request, through GET or POST:
-	if ( (isset($_GET['y'])) && (is_numeric($_GET['y'])) )
-	{
-		// Assign variable from view_roster.php using GET method
-		$tm = $_GET['y'];
-	}
-	elseif ( (isset($_POST['y'])) && (is_numeric($_POST['y'])) )
-	{
-		// Assign variable from manager_home.php FORM submission
-		$tm = $_POST['y'];
-	}
-	else 
-	{
-		// No valid ID, kill the script.
-		echo '<p class="error">This page has been accessed in error.</p>';
-		include 'includes/footer.html';
-		exit();
-	}
-
-	// Determine the sort from view_roster.php click...
-	// Default is by registration date.
-	$sort = (isset($_GET['x'])) ? $_GET['x'] : 'nm'; // Ternary operator style syntax
-
-	// Determine the sorting order:
-	switch ($sort)
-	{
-		case 'nm':
-			$order_by = 'name ASC';
-			break;
-		case 'gd':
-			$order_by = 'u.gender ASC';
-			break;
-		case 'em':
-			$order_by = 'u.email ASC';
-			break;
-		case 'pos':
-			$order_by = 'sp.position ASC';
-			break;
-		default:
-			$order_by = 'name ASC';
-			$sort = 'nm';
-			break;
-	}
-*/
-	// Retrieve team object from session variable
-	//$team = $_SESSION['teamObj'];
-
 	// Retrieve current team ID from session variable
 	$tm = $_SESSION['ctmID'];
 
 	// Make the Query:
-	$q = "SELECT id_sch, date, time, opponent, venue, result
-		FROM schedules
+	$q = "SELECT id_game, DATE_FORMAT(date, '%a: %b %e, %Y'), time, opponent, venue, result
+		FROM games
 		WHERE id_team=?
 		ORDER BY date ASC";
 		
@@ -114,37 +65,22 @@
 	// If there are results to show.
 	if ($stmt->num_rows > 0)
 	{		
-		// Reformat date
-		$gdt = new DateTime($dateOB);
-		$bdfrmat = $gdt->format('m-d-Y');
-
 		// Fetch and print all records...
 		while ($stmt->fetch())
 		{		
 			$json[] = array(
-			'Date' => $bdfrmat,
+			'Date' => $dateOB,
 			'Time' => $timeOB,
 			'Opponent' => stripslashes($oppOB),
 			'Venue' => stripslashes($venOB),
 			'Result' => $resOB,	
-			'Edit' => '<form action="edit_game.php" method="post">
-				<input type="hidden" name="x" value="' . $idOB . '" />
-				<input type="submit" name="submit" value="Edit"/></form>',
-			'Delete' => '<form action="delete_game.php" method="post">
-				<input type="hidden" name="x" value="' . $idOB . '" />
-				<input type="submit" name="submit" value="Delete"/></form>');
+			'Edit' => '<a href=edit_game.php?x=' . $idOB . '>Edit</a>',
+			'Delete' => '<a href=delete_game.php?x=' . $idOB . '>Delete</a>');
 		}	// End of WHILE loop
 			
 		// Send the JSON data:
 		echo json_encode($json);
-			
-		// Close the statement:
-		$stmt->close();
-		unset($stmt);			
 
-		// Close the connection:
-		$db->close();
-		unset($db);
 	}
 	else 
 	{	// No games or events scheduled
@@ -156,5 +92,17 @@
 		// Send the JSON data:
 		echo json_encode($json);
 	}	
+
+	// Close the statement:
+	$stmt->close();
+	unset($stmt);			
+
+	// Delete objects
+	unset($gdt);
+	unset($user);
+
+	// Close the connection:
+	$db->close();
+	unset($db);
 
 ?>

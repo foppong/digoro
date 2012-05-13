@@ -12,11 +12,7 @@
 	class ManagerTeam extends Team {
 
 		// Constructor
-		function __construct() 
-		{
-			//parent::setTeamID($teamID);
-			//parent::pullTeamData(); // Pull current database information and set attributes
-		}
+		function __construct() {}
 			
 		// Function to create team
 		function createTeam($lgID, $sprtID, $manID, $tmname, $cty, $st, $abtm)
@@ -98,11 +94,13 @@
 			else
 			{
 				echo '<p class="error">Your team was not added. Please contact the service administrator.</p>';
+				exit();
 			}
 
 			// Close the statement:
 			$stmt->close();
 			unset($stmt);
+
 		} // End of createTeam function
 		
 		// Function to edit team
@@ -130,7 +128,10 @@
 			{	// Either did not run ok or no updates were made
 				$result = False;
 			}
-echo $result;
+
+			parent::setTeamNM($tmname);
+			parent::setTeamABT($abtm);
+
 			return $result;
 
 		} // End of editTeam function
@@ -158,6 +159,11 @@ echo $result;
 			{	
 				return False; // Either did not run ok or no updates were made
 			}
+
+			// Close the statement:
+			$stmt->close();
+			unset($stmt);
+
 		}
 
 		// Functon to delete team from database
@@ -185,7 +191,70 @@ echo $result;
 				echo '<p class="error">The team could not be deleted due to a system error.</p>';
 				exit();
 			}
-		}
+
+			// Close the statement:
+			$stmt->close();
+			unset($stmt);
+		} // End of deleteTeam function
+
+		// Function to check if user is authroized to view page
+		function checkAuth($userID)
+		{
+			if (self::isManager($this->id_team, $userID) == False)
+			{
+				$url = BASE_URL . 'manager/manager_home.php';
+				header("Location: $url");
+				exit();
+			}		
+		}		
+		
+		// Function to check if user is manager
+		function isManager($teamID, $userID)
+		{
+			// Make the query to retreive manager id associated with team:		
+			$q = "SELECT id_manager FROM teams
+				WHERE id_team=? LIMIT 1";
+				
+			// Prepare the statement
+			$stmt = $this->dbc->prepare($q);
+			
+			// Bind the inbound variables:
+			$stmt->bind_param('i', $teamID);
+			
+			// Exeecute the query
+			$stmt->execute();
+			
+			// Store results:
+			$stmt->store_result();
+			
+			// Bind the outbound variables:
+			$stmt->bind_result($manIDOB);
+			
+			// user ID found
+			if ($stmt->num_rows == 1)
+			{
+				while ($stmt->fetch())
+				{				
+					if ($manIDOB == $userID) 
+					{
+						return True;
+					}
+					else 
+					{
+						return False;
+					}
+				}
+			}
+			else 
+			{
+				return False;
+			}
+			
+			// Close the statement:
+			$stmt->close();
+			unset($stmt);
+	
+		} // End of isManager function
 
 	} // End of Class
 ?>

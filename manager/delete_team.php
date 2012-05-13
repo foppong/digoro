@@ -18,7 +18,8 @@
 	// Assign user object from session variable
 	if (isset($_SESSION['userObj']))
 	{
-		$user = $_SESSION['userObj'];
+		$manager = $_SESSION['userObj'];
+		$userID = $manager->getUserID();
 	}
 	else 
 	{
@@ -29,30 +30,32 @@
 	require_once MYSQL2;
 
 	// Authorized Login Check
-	if (!$user->valid($lvl))
+	if (!$manager->valid($lvl))
 	{
 		redirect_to('index.php');
 	}
 	
-	if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['x'])) // Confirmation that form has been submitted from myteams page
+	if ( (isset($_GET['x'])) && (is_numeric($_GET['x'])) ) // From view teams page
 	{
-		$id = $_POST['x'];
+		$id = $_GET['x'];
 
-		// Create team object for use & pull latest data from database
+		// Create team object for use & pull latest data from database & initially set attributes
 		$team = new ManagerTeam();
 		$team->setDB($db);
-		$team->setTeamID($id);
+		$team->setTeamID($id);		
 		$team->pullTeamData();
+		$team->checkAuth($userID);
 	}
 	elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z'])) // Confirmation that form has been submitted from delete_team page	
 	{
 		$id = $_POST['z'];
 
-		// Create team object for use & pull latest data from database
+		// Create team object for use & pull latest data from database & initially set attributes
 		$team = new ManagerTeam();
 		$team->setDB($db);
-		$team->setTeamID($id);
+		$team->setTeamID($id);	
 		$team->pullTeamData();
+		$team->checkAuth($userID);
 
 		if ($_POST['sure'] == 'Yes')
 		{	// If form submitted is yes, delete the record
@@ -98,6 +101,7 @@
 
 	// Delete objects
 	unset($team);
+	unset($manager);
 				
 	// Close the connection:
 	$db->close();
