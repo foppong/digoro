@@ -2,10 +2,10 @@
 	// change_password.php
 	// This page allows a logged-in user to change their password
 	
-	require '../includes/PasswordHash.php';	
 	require '../includes/config.php';
 	$page_title = 'digoro : Change Your Password';
 	include '../includes/header.html';
+	include '../includes/php-functions.php';
 
 	// autoloading of classes
 	function __autoload($class) {
@@ -22,30 +22,23 @@
 	}
 	else 
 	{
-		session_unset();
-		session_destroy();
-		$url = BASE_URL . 'index.php';
-		ob_end_clean();
-		header("Location: $url");
-		exit();	
+		redirect_to('index.php');
 	}
 
 	// Authorized Login Check
 	if (!$user->valid($lvl))
 	{
-		session_unset();
-		session_destroy();
-		$url = BASE_URL . 'index.php';
-		ob_end_clean();
-		header("Location: $url");
-		exit();	
+		redirect_to('index.php');
 	}
+
+	// Need the database connection:
+	require MYSQL2;
+
+	// Assign Database Resource to object
+	$user->setDB($db);
 	
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
-		// Need the database connection:
-		require MYSQL2;
-		
 		// Validate email address
 		if (filter_var($_POST['email'], FILTER_VALIDATE_EMAIL))
 		{
@@ -68,125 +61,24 @@
 			echo '<p class="error">You forgot to enter your old password!</p>';
 		}
 
+		$pass1 = $_POST['pass1'];
+		$pass2 = $_POST['pass2'];		
+
 		// Checks if email and old password entered are valid before proceeding to change password.
-		if ($e && $oldp)
-		{
-			// Assign variable in case no matches
-			$pass = '';
-
-			// Make the query	
-			$q = "SELECT pass FROM users WHERE (email=? AND activation='') LIMIT 1";
-
-			// Prepare the statement
-			$stmt = $db->prepare($q);
-
-			// Bind the inbound variable:
-			$stmt->bind_param('s', $e);
-
-			// Execute the query:
-			$stmt->execute();
-			
-			// Store result
-			$stmt->store_result();
-			
-			// Bind the outbound variable:
-			$stmt->bind_result($outbdp);
-
-			//Assign the outbound variables			
-			while ($stmt->fetch())
-			{
-				$pass = $outbdp;
-			}
-			
-			$hasher = new PasswordHash($hash_cost_log2, $hash_portable);					
-				
-			// Checks if old password matches current password in database. If so proceed to change password.
-			if ($hasher->CheckPassword($oldp, $pass)) 
-			{		
-				// Checks if new password matches confirm new password and also validates.
-				$p = FALSE;
-				if (strlen($_POST['pass1']) > 5)
-				{
-					if ($_POST['pass1'] == $_POST['pass2'])
-					{
-						$p = $_POST['pass1'];
-					}	
-					else 
-					{
-						echo '<p class="error">Your password did not match the confirmed password!</p>';
-					}
-				}
-				else 
-				{
-					echo '<p class="error"> Please enter a valid new password!</p>';
-				}		
-		
-				// Encrypt the new password by making a new hash.
-				$hash = $hasher->HashPassword($p);				
-				if (strlen($hash) < 20)
-				{
-					fail('Failed to hash new password');
-					exit();
-				}
-				unset($hasher);
-				
-				// If new password is valid, proceed to update database with new password.
-				if ($p)
-				{
-					// Make the query
-					$q = "UPDATE users SET pass=? WHERE email=? LIMIT 1";
-		
-					// Prepare the statement
-					$stmt = $db->prepare($q);
-		
-					// Bind the inbound variable:
-					$stmt->bind_param('ss', $hash, $e);
-		
-					// Execute the query:
-					$stmt->execute();
-		
-					if ($stmt->affected_rows == 1) // It ran OK.
-					{
-						$body = "Your password has been changed. If you feel you got this email in error please contact the system administrator.";
-						$body = wordwrap($body, 70);
-						mail ($e, 'digoro.com - Password Changed', $body);
-										
-						echo '<h3>Your password has been changed.</h3>';
-
-						// Close the statement:
-						$stmt->close();
-						unset($stmt);
-						
-						// Close the connection:
-						$db->close();
-						unset($db);
-						
-						include '../includes/footer.html';
-						exit();	
-					}
-					else 
-					{
-						echo '<p class="error">Your password was not changed. Make sure your new password
-							is different than the current password. Contact the system administrator if you think
-							and error occured.</p>';
-					}
-				}
-				else
-				{
-					echo '<p class="error">Please try again.</p>';
-				}
-			}
-			else
-			{
-				echo '<p class="error">Either the email address and password entered do not match those
-					those on file or you have not yet activated your account.</p>';
-			}
-			// Close hasher
-			unset($hasher);
+		if ($e && $oldp) {
+			$user->chgPassword($e, $oldp, $pass1, $pass2);
+		} else {
+			echo '<p class="error">Please enter a valid password</p>';
 		}
-		$db->close();
-		unset($db);
 	}
+	
+	// Delete objects
+	unset($user);
+			
+	// Close the connection:
+	$db->close();
+	unset($db);		
+
 ?>
 
 

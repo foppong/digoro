@@ -27,10 +27,10 @@
 	 *  viewSchedule()
 	 *  isNewUser()
 	 *  editAccount()
-	 *  chgPassword()
 	 *  viewRoster()
 	 *  pullUserData()
 	 *  pullSpecificData()
+	 *  updateUserAcct()
 	 */
 
 	class User extends UserAuth {
@@ -100,12 +100,6 @@
 
 		// Function to edit account settings
 		function editAccount()
-		{
-			
-		}
-
-		// Function to change password
-		function chgPassword()
 		{
 			
 		}
@@ -195,6 +189,32 @@
 					
 		} // End of pullSpecificData function
 
+		// Function to update user informatin in database
+		function updateUserAcct($e, $fn, $ln, $cty, $st, $zp, $gd, $bdfrmat, $pnumb) {
+			// Update the user's info in the database
+			$q = 'UPDATE users SET email=?, first_name=?, last_name=?, city=?, state=?, zipcode=?, gender=?, birth_date=?, phone_num=?
+				WHERE id_user=? LIMIT 1';
+
+			// Prepare the statement
+			$stmt = $this->dbc->prepare($q); 
+
+			// Bind the inbound variables:
+			$stmt->bind_param('sssssissii', $e, $fn, $ln, $cty, $st, $zp, $gd, $bdfrmat, $pnumb, $this->id_user);
+				
+			// Execute the query:
+			$stmt->execute();
+
+			if ($stmt->affected_rows == 1) // And update to the database was made
+			{				
+				echo '<p>The users account has been edited.</p>';
+				self::pullUserData(); // Update object attributes
+			}
+			else 
+			{	// Either did not run ok or no updates were made
+				echo '<p>No changes were made.</p>';
+			}
+		} // End of updateUserAcct function
+		
 		
 	} // End of Class
 ?>
