@@ -19,6 +19,7 @@
 	if (isset($_SESSION['userObj']))
 	{
 		$manager = $_SESSION['userObj'];
+		$userID = $manager->getUserID();
 	}
 	else 
 	{

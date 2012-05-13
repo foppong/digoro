@@ -14,6 +14,8 @@
 	 * Methods:
 	 *  setDB()
 	 *  setTeamID()
+	 *  setTeamNM()
+	 * 	setTeamABT()
 	 *  setTeamAttributes()
 	 *  getTeamAttribute()
 	 *  pullTeamData()
@@ -22,9 +24,8 @@
 	 *  editTeam()
 	 *  transferTeam()
 	 *  deleteTeam()
-	 *	addTeam()
-	 *  removeTeam()
-	 *  setnewManager()
+	 *  checkAuth()
+	 *  isManager()
 	 */
 	
 	class Team {
@@ -393,22 +394,6 @@
 			unset($stmt);
 	
 		} // End of isManager function
-
-
-
-
-		// Function to add team to user
-		function addTeam($teamID)
-		{
-			
-		}
-
-		// Function to remove team from user (for players)
-		function removeTeam($teamID)
-		{
-			
-		}
-
 
 	} // End of Class
 ?>

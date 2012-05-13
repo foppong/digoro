@@ -6,10 +6,19 @@
 	 * 	protected jersey_numb
 	 * 	protected id_player
 	 *  protected dbc
-	 * Methods:
-	 * 	
 	 * 
-	 *  
+	 * Methods:
+	 * 	setMembID()
+	 *  setDB()
+	 *  setMemberAttributes()
+	 * 	getMemberAttribute()
+	 *  pullMemberData()
+	 * 	createMember()
+	 *  isRegistered()
+	 *  editMember()
+	 *  deleteMember()
+	 *  checkAuth()
+	 *  isManager()
 	 */
 		
 

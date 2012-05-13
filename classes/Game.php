@@ -6,11 +6,21 @@
 	 * 	ptotected opponent
 	 * 	protected venue
 	 *  protected result
+	 *  protected id_team
 	 * 	protected id_game
 	 *  protected dbc
+	 * 
 	 * Methods:
-	 * 	editGame()
-	 * 	displayGame()
+	 *  setGameID()
+	 *  setDB()
+	 *	setGameAttributes()
+	 *  getGameAttribute()
+	 *  pullGameData()
+	 *  createGame()
+	 *  editGame()
+	 *  deleteGame()
+	 *	checkAuth()
+	 *  isManager()
 	 */
 		
 
@@ -201,7 +211,7 @@
 			}		
 		}			
 			
-		// Function to check if user is manager
+		// Function to check if user is manager of game
 		function isManager($gameID, $userID)
 		{
 			// Make the query to retreive manager id associated with game:		
