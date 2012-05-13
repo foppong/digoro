@@ -121,7 +121,7 @@
 		{
 
 			// Create team object for use & create team for database
-			$team = new ManagerTeam();
+			$team = new Team();
 			$team->setDB($db);
 			$team->createTeam($lg, $sp, $userID, $tn, $ct, $st, $abtm);	
 
