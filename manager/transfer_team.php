@@ -1,5 +1,5 @@
 <?php
-	// This page is for deleting a team record
+	// This page is for transfering ownership of a team
 	// This page is accessed through myteams-m.php
 	
 	require '../includes/config.php';
@@ -57,16 +57,29 @@
 		$team->pullTeamData();
 		$team->checkAuth($userID);
 
-		if ($_POST['sure'] == 'Yes')
+		// Trim all the incoming data:
+		$trimmed = array_map('trim', $_POST);
+
+		// Validate email
+		if (filter_var($trimmed['email'], FILTER_VALIDATE_EMAIL))
+		{
+			$e = $trimmed['email'];
+		}
+		else 
+		{
+			$e = '';
+		}
+
+		if ($_POST['transfer'] == 'Yes')
 		{	// If form submitted is yes, delete the record
 
-			$team->deleteTeam();		
+			$team->transferTeam($e);				
 			include '../includes/footer.html';
 			exit();
 		}
 		else
-		{	// No confirmation of deletion.
-			echo '<p>The team has NOT been deleted.</p>';
+		{	// No confirmation of transfer.
+			echo '<p>The team has NOT been transferred.</p>';
 		}
 	}
 	else 
@@ -83,14 +96,18 @@
 	if ($teamname != '') // Indicates valid user to page
 	{		
 		//Display the record being deleted:
-		echo '<h3>Are you sure you want to delete Team ' . $teamname . ' from your profile?</h3>';
+		echo '<h3>Are you sure you want to transfer ownership of ' . $teamname . '?</h3>';
 				
 		// Create the form:
-		echo '<form action ="delete_team.php" method="post" id="DelTeamForm">
+		echo '<form action ="transfer_team.php" method="post" id="TransfTeamForm">
 			<input type="hidden" name="z" value="' . $id . '" />
-			<input type="radio" name="sure" value="Yes" />Yes<br />
-			<input type="radio" name="sure" value="No" checked="checked" />No<br />
-			<input type="submit" name="submit" value="Delete" />
+			<input type="radio" name="transfer" value="Yes" />Yes<br />
+			<input type="radio" name="transfer" value="No" checked="checked" />No<br />
+			<div>
+				<label for="email"><b>If Yes, please enter new manager email address:</b></label>
+				<input type="text" name="email" id="email" size="30" maxlength="60" />
+			</div>
+			<input type="submit" name="submit" value="Transfer" />
 			</form>';		
 	}
 	else 

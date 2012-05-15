@@ -18,7 +18,8 @@
 	// Assign user object from session variable
 	if (isset($_SESSION['userObj']))
 	{
-		$manager = $_SESSION['userObj'];
+		$user = $_SESSION['userObj'];
+		$userID = $user->getUserID();
 	}
 	else 
 	{
@@ -28,14 +29,14 @@
 	// Need the database connection:	
 	require_once MYSQL2;
 
+	// Assign Database Resource to object
+	$user->setDB($db);
+
 	// Authorized Login Check
-	if (!$manager->valid($lvl))
+	if (!$user->valid($lvl))
 	{
 		redirect_to('index.php');
 	}
-
-	// Get user ID
-	$userID = $manager->getUserID();
 
 	// Page header:
 	echo '<h2>My Teams</h2>';
@@ -48,35 +49,12 @@
 		
 		// Set the new global session variable to new team ID
 		$_SESSION['ctmID'] = $teamID;
-					
-		// Update the user's info in the database
-		$q = 'UPDATE users SET default_teamID=? WHERE id_user=? LIMIT 1';
-		
-		// Prepare the statement
-		$stmt = $db->prepare($q); 
-	
-		// Bind the inbound variables:
-		$stmt->bind_param('ii', $teamID, $userID);
-					
-		// Execute the query:
-		$stmt->execute();
-					
-		if ($stmt->affected_rows == 1) // It ran ok
-		{
-			echo '<p>Default team successfully changed!</p>'; // DEBUG NOTE: THis is not showing up
-		}
-		else 
-		{	// Either did not run ok or no updates were made
-			echo '<p>Default team not changed.</p>'; // DEBUG NOTE: THis is not showing up
-		}
-					
-		// Close the statement:
-		$stmt->close();
-		unset($stmt);		
+
+		$user->setDefaultTeam($teamID);
 	}
 	
 	// Number of records to show per page:
-	$display = 3;
+	$display = 4;
 	
 	// Determine how many pages there are...
 	if (isset($_GET['p']) && is_numeric($_GET['p']))
@@ -85,28 +63,7 @@
 	}
 	else 
 	{	
-		// Make the query to count the number of teams ssociated with user via a union of the players and teams table
-		$q = "SELECT COUNT(id_team) FROM players WHERE id_user=?";
-
-		// Prepare the statement:
-		$stmt = $db->prepare($q);
-
-		// Bind the inbound variable:
-		$stmt->bind_param('i', $userID);
-
-		// Execute the query:
-		$stmt->execute();
-
-		//Store results:
-		$stmt->store_result();
-
-		// Bind the outbound variable:
-		$stmt->bind_result($recOB);
-
-		while ($stmt->fetch())
-		{
-			$records = $recOB;
-		}
+		$records = $user->countTeams();
 
 		// Calculate the number of pages...
 		if ($records > $display)

@@ -5,6 +5,7 @@
 	require '../includes/config.php';
 	$page_title = 'digoro : Delete Account';
 	include '../includes/iheader.html';
+	include '../includes/php-functions.php';
 
 	// autoloading of classes
 	function __autoload($class) {
@@ -18,26 +19,17 @@
 	if (isset($_SESSION['userObj']))
 	{
 		$user = $_SESSION['userObj'];
+		$userID = $user->getUserID();
 	}
 	else 
 	{
-		session_unset();
-		session_destroy();
-		$url = BASE_URL . 'index.php';
-		ob_end_clean();
-		header("Location: $url");
-		exit();	
+		redirect_to('index.php');
 	}
 
 	// Authorized Login Check
 	if (!$user->valid($lvl))
 	{
-		session_unset();
-		session_destroy();
-		$url = BASE_URL . 'index.php';
-		ob_end_clean();
-		header("Location: $url");
-		exit();	
+		redirect_to('index.php');
 	}
 
 	// Need the database connection:
@@ -46,18 +38,36 @@
 	// Assign Database Resource to object
 	$user->setDB($db);
 
-	// Get user ID
-	$userID = $user->getUserID();
+	// Confirmation that form has been submitted:	
+	if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-	// Delete user from database
-	$user->deleteUser($userID);
+		if ($_POST['sure'] == 'Yes') { // If form submitted is yes, delete the record
+			$user->deleteUser($userID);
+			redirect_to('index.php');
+		}
+		else { // No confirmation of deletion.
+			echo '<p>This account has NOT been deleted.</p>';
+		}
+	}	
+	else {
+		//Confirmation message:
+		echo '<h3>Are you sure you want to delete your account? We will miss you!</h3>';
+					
+		// Create the form:
+		echo '<form action ="delete_acct.php" method="post" id="DelAcctForm">
+			<input type="radio" name="sure" value="Yes" />Yes<br />
+			<input type="radio" name="sure" value="No" checked="checked" />No<br />
+			<input type="submit" name="submit" value="Delete" />
+			</form>';
+	}	
 
+	// Delete objects
+	unset($user);
+				
 	// Close the connection:
 	$db->close();
 	unset($db);
-
-	echo '<p>This account has been deleted successfully.</p>';
-
-	include '../includes/ifooter.html'; 	
+					
+	include '../includes/footer.html';	
 	
 ?>

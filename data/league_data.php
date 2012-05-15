@@ -53,7 +53,6 @@
 		// Make the Query:
 		$q = "SELECT id_league, league_name FROM leagues WHERE state=?";
 	
-			
 		// Prepare the statement:
 		$stmt = $db->prepare($q);
 			

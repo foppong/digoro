@@ -12,6 +12,7 @@
 	 *  getDB()
 	 *  getUserID()
 	 *  getinvCase()
+	 *  isEmailAvailable()
 	 * 	checkPass()
 	 * 	checkUser()
 	 *  createUser()
@@ -19,6 +20,7 @@
 	 *  login()
 	 *  logout()
 	 *  valid()
+	 *  chgPassword()
 	 */
 	
 	
@@ -63,6 +65,33 @@
 		function getinvCase()
 		{
 			return $this->inv_case;
+		}
+
+		// Function to check if user email is available
+		function isEmailAvailable($e)
+		{
+			// Make the query to make sure User's new email is available	
+			$q = 'SELECT id_user,email FROM users WHERE email=? AND id_user !=? LIMIT 1';
+
+			// Prepare the statement
+			$stmt = $this->dbc->prepare($q);
+
+			// Bind the inbound variable:
+			$stmt->bind_param('si', $e, $this->id_user);
+
+			// Execute the query:
+			$stmt->execute();
+			
+			// Store result
+			$stmt->store_result();
+
+			// User login available, i.e. querey found nothing
+			if ($stmt->num_rows == 0) {
+				return True;
+			}
+			else {
+				return False;
+			}
 		}
 
 		// Method to check user against password entered
@@ -113,7 +142,7 @@
 			
 		} // End of checkPass function
 		
-		// Method to set User registration status
+		// Method to check and set User registration status
 		function checkUser($userEmail) {
 
 			// Make the query to make sure New User's email is available	
@@ -269,54 +298,31 @@
 
 		// Function to delete user
 		function deleteUser($id)
-		{
-			// Confirmation that form has been submitted:	
-			if ($_SERVER['REQUEST_METHOD'] == 'POST')
-			{
-				if ($_POST['sure'] == 'Yes')
-				{	// If form submitted is yes, delete the record
-				
-					// Make the query	
-					$q = "DELETE FROM users WHERE id_user=? LIMIT 1";
+		{	
+			// Make the query	
+			$q = "DELETE FROM users WHERE id_user=? LIMIT 1";
 		
-					// Prepare the statement:
-					$stmt = $this->dbc->prepare($q);
+			// Prepare the statement:
+			$stmt = $this->dbc->prepare($q);
 		
-					// Bind the in bound variable:
-					$stmt->bind_param('i', $id);
+			// Bind the in bound variable:
+			$stmt->bind_param('i', $id);
 		
-					// Execute the query:
-					$stmt->execute();
+			// Execute the query:
+			$stmt->execute();
 					
-					// If the query ran ok.
-					if ($stmt->affected_rows == 1) 
-					{
-						session_unset();
-						session_destroy();
-					}
-					else 
-					{	// If the query did not run ok.
-						echo '<p class="error">This account could not be deleted due to a system errror.</p>';
-					}
-				}
-				else
-				{	// No confirmation of deletion.
-					echo '<p>This account has NOT been deleted.</p>';
-				}
+			// If the query ran ok.
+			if ($stmt->affected_rows == 1) {
+				session_unset();
+				session_destroy();
 			}
-			else
-			{
-				//Confirmation message:
-				echo '<h3>Are you sure you want to delete your account? We will miss you!</h3>';
-					
-				// Create the form:
-				echo '<form action ="delete_acct.php" method="post" id="DelAcctForm">
-					<input type="radio" name="sure" value="Yes" />Yes<br />
-					<input type="radio" name="sure" value="No" checked="checked" />No<br />
-					<input type="submit" name="submit" value="Delete" />
-					</form>';
-			
-			}		
+			else {	// If the query did not run ok.
+				echo '<p class="error">This account could not be deleted due to a system errror.</p>';
+			}
+
+			// Close the statement
+			$stmt->close();
+			unset($stmt);
 		} // End of deleteUser function
 
 		// Function to log in users
@@ -482,10 +488,104 @@
 					
 				default:
 					return False;
-					break;
-					
+					break;				
 			}
 		} // End of valid function
 
+		// Function to change password
+		function chgPassword($e, $oldp, $pass1, $pass2)
+		{
+			// Make the query	
+			$q = "SELECT pass FROM users WHERE (email=? AND activation='') LIMIT 1";
+
+			// Prepare the statement
+			$stmt = $this->dbc->prepare($q);
+
+			// Bind the inbound variable:
+			$stmt->bind_param('s', $e);
+
+			// Execute the query:
+			$stmt->execute();
+			
+			// Store result
+			$stmt->store_result();
+			
+			// Bind the outbound variable:
+			$stmt->bind_result($outbdp);
+
+			//Assign the outbound variables			
+			while ($stmt->fetch())
+			{
+				$pass = $outbdp;
+			}
+			
+			$hasher = new PasswordHash(8, FALSE);					
+				
+			// Checks if old password matches current password in database. If so proceed to change password.
+			if ($hasher->CheckPassword($oldp, $pass)) {
+				
+				// Checks if new password matches confirm new password and also validates.
+				$p = FALSE;
+				if (strlen($pass1) > 5)
+				{
+					if ($pass1 == $pass2)
+					{
+						$p = $pass1;
+					}	
+					else 
+					{
+						echo '<p class="error">Your password did not match the confirmed password!</p>';
+					}
+				}
+				else 
+				{
+					echo '<p class="error"> Please enter a valid new password!</p>';
+				}		
+		
+				// Encrypt the new password by making a new hash.
+				$hash = $hasher->HashPassword($p);				
+				if (strlen($hash) < 20)
+				{
+					fail('Failed to hash new password');
+					exit();
+				}
+				unset($hasher);
+				
+				// If new password is valid, proceed to update database with new password.
+				if ($p) {
+					
+					// Make the query
+					$q = "UPDATE users SET pass=? WHERE email=? LIMIT 1";
+		
+					// Prepare the statement
+					$stmt = $this->dbc->prepare($q);
+		
+					// Bind the inbound variable:
+					$stmt->bind_param('ss', $hash, $e);
+		
+					// Execute the query:
+					$stmt->execute();
+		
+					if ($stmt->affected_rows == 1) { // It ran OK.
+						$body = "Your password has been changed. If you feel you got this email in error please contact the system administrator.";
+						$body = wordwrap($body, 70);
+						mail ($e, 'digoro.com - Password Changed', $body);
+										
+						echo '<h3>Your password has been changed.</h3>';
+
+						// Close the statement:
+						$stmt->close();
+						unset($stmt);					
+					}
+					else {
+						echo '<p class="error">Your password was not changed. Make sure your new password
+							is different than the current password. Contact the system administrator if you think
+							and error occured.</p>';
+					}
+				}
+			}
+		} // End of chgPassword function
+		
+		
 	} // End of Class
 ?>

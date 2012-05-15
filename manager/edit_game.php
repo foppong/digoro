@@ -131,11 +131,10 @@
 	}
 	
 	// Get attributes from game object
+	
 	$bdfrmatOB = $game->getGameAttribute('gdate');
-
-	// Format date from database into more common format to display in form
 	$gd = new DateTime($bdfrmatOB);
-	$gdfrmt = $gd->format('m/d/Y');
+	$gdfrmt = $gd->format('m/d/Y'); // Format date from database into more common format to display in form
 
 	$tmOB = $game->getGameAttribute('gtime');
 	$oppOB = $game->getGameAttribute('opponent');

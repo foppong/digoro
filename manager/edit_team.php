@@ -43,7 +43,7 @@
 		$id = $_GET['x'];
 		
 		// Create team object for use & pull latest data from database & initially set attributes
-		$team = new ManagerTeam();
+		$team = new Team();
 		$team->setDB($db);
 		$team->setTeamID($id);
 		$team->pullTeamData();
@@ -54,7 +54,7 @@
 		$id = $_POST['z'];
 
 		// Create team object for use & pull latest data from database & initially set attributes
-		$team = new ManagerTeam();
+		$team = new Team();
 		$team->setDB($db);
 		$team->setTeamID($id);
 		$team->pullTeamData();
@@ -143,7 +143,8 @@
 				</p>
 			</form>
 			</fieldset>
-		</div>';				
+		</div>
+		<div id="link"><a href=transfer_team.php?x=' . $id . '>Transfer Team</a>';				
 	}
 	else 
 	{	//Not a valid user ID, kill the script
