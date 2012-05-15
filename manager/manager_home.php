@@ -36,8 +36,8 @@
 		redirect_to('index.php');
 	}
 	
-	// Pull current user data from database and set object attributes (needed if add any manager object uses)
-	//$manager->pullUserData();
+	// Pull current user data from database and set object attributes
+	$manager->pullUserData();
 	
 	// Get user's default team ID
 	$dftmID = $manager->getUserAttribute('dftmID');
@@ -74,7 +74,6 @@
 		
 		// Get team name attribute for page display purposes
 		$teamname = $team->getTeamAttribute('tmname');
-	
 	}
 
 	// Delete objects
