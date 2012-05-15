@@ -40,6 +40,9 @@
 	// Assign Database Resource to object
 	$user->setDB($db);
 
+	// Function to pull complete user data from database and set object attributes
+	$user->pullUserData();
+
 	// Confirmation that form has been submitted:	
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
@@ -155,7 +158,7 @@
 			if ($user->isEmailAvailable($e)) 
 			{
 				$user->updateUserAcct($e, $fn, $ln, $cty, $st, $zp, $gd, $bdfrmat, $pnumb);
-				$_SESSION['userObj'] = $user;				
+				$_SESSION['userObj'] = $user; // Set user object session variable with latest info
 			}
 			else
 			{	// Email is already registered
@@ -176,7 +179,7 @@
 	$stOB = $user->getUserAttribute('state');
 	$zpOB = $user->getUserAttribute('zp');
 	$gdOB = $user->getUserAttribute('gd');
-	
+
 	$bdOB = $user->getUserAttribute('bday');
 	//$bdfrmatOB = $user->getUserAttribute('bday');
 	//$bd = new DateTime($bdfrmatOB);

@@ -36,14 +36,8 @@
 		redirect_to('index.php');
 	}
 	
-	// Pull current user data from database and set object attributes
-	$manager->pullUserData();
-	
-	// Assign updated user object session variable
-	$_SESSION['userObj'] = $manager;
-
-	// Get user ID
-	$userID = $manager->getUserID();
+	// Pull current user data from database and set object attributes (needed if add any manager object uses)
+	//$manager->pullUserData();
 	
 	// Get user's default team ID
 	$dftmID = $manager->getUserAttribute('dftmID');
@@ -66,7 +60,6 @@
 		// Get team name attribute for page display purposes
 		$teamname = $team->getTeamAttribute('tmname');
 
-		unset($team);
 	}
 	else 
 	{
@@ -81,37 +74,13 @@
 		
 		// Get team name attribute for page display purposes
 		$teamname = $team->getTeamAttribute('tmname');
-
-		unset($team);	
-	}
-/*
-	// Assign team object to session variable if doesn't exist
-	if (!isset($_SESSION['teamObj']))
-	{
-		// Create team object
-		$team = new ManagerTeam();
-		$team->setDB($db);
-		$team->setTeamID($dftmID);
-		$team->pullTeamData();
-
-		// Assign team object session variable
-		$_SESSION['teamObj'] = $team;
-		
-		// Assign default team ID to current team ID session variable
-		$_SESSION['ctmID']  = $dftmID;
-
-		// Get team name attribute for page display purposes
-		$teamname = $team->getTeamAttribute('tmname');
-	}
-	else
-	{
-		// Assign team object from session variable
-		$team = $_SESSION['teamObj'];
 	
-		// Get team name attribute for page display purposes
-		$teamname = $team->getTeamAttribute('tmname');
 	}
-*/		
+
+	// Delete objects
+	unset($team);
+	unset($manager);
+		
 	// Close the connection:
 	$db->close();
 	unset($db);	

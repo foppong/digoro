@@ -276,27 +276,68 @@
 		} // End of editTeam function
 
 		// Function to transfer Manager role
-		function transferTeam($newManID)
+		function transferTeam($newMangEmail)
 		{
-			// Make the query to update the team record with another manager ID
-			$q = 'UPDATE teams SET id_manager=? WHERE id_team=? LIMIT 1';
-			
+
+			// Make the query:
+			$q = 'SELECT p.id_user
+				FROM users AS u INNER JOIN players AS p
+				USING (id_user) 
+				WHERE u.email=? AND p.id_team=? LIMIT 1';
+
 			// Prepare the statement
 			$stmt = $this->dbc->prepare($q);
 			
-			// Bind the inbound variables:
-			$stmt->bind_param('ii', $newManID, $this->teamID);
+			// Bind the inbound variable:
+			$stmt->bind_param('si', $newMangEmail, $this->id_team);
 			
 			// Execute the query:
 			$stmt->execute();
 			
-			if ($stmt->affected_rows == 1) // Update to database was made
-			{
-				return True; // Team was successfully updated with new manager ID
-			}
-			else 
-			{	
-				return False; // Either did not run ok or no updates were made
+			// Store results:
+			$stmt->store_result();
+			
+			// Bind the outbound variable:
+			$stmt->bind_result($iduserOB);
+			
+			// If there are results to show.
+			if ($stmt->num_rows > 0) {
+				
+				while ($stmt->fetch()) {
+
+					// Make the query to update the team record with another manager ID
+					$q = 'UPDATE teams SET id_manager=? WHERE id_team=? LIMIT 1';
+					
+					// Prepare the statement
+					$stmt2 = $this->dbc->prepare($q);
+					
+					// Bind the inbound variables:
+					$stmt2->bind_param('ii', $iduserOB, $this->id_team);
+					
+					// Execute the query:
+					$stmt2->execute();
+					
+					if ($stmt2->affected_rows == 1) // Update to database was made
+					{
+						echo '<p>The team has been transferred.</p>';
+					}
+					else 
+					{	
+						echo '<p class="error">The team could not be transferred due to a system error.</p>';
+						include '../includes/footer.html';
+						exit();
+					}
+					
+					// Close the statement:
+					$stmt2->close();
+					unset($stmt2);
+  
+ 				}
+			}	
+			else {
+				echo '<p class="error">Could not transfer because player is not on team roster.</p>';
+				include '../includes/footer.html';
+				exit();
 			}
 
 			// Close the statement:
@@ -328,6 +369,7 @@
 			else 
 			{	// If the query did not run ok.
 				echo '<p class="error">The team could not be deleted due to a system error.</p>';
+				include '../includes/footer.html';
 				exit();
 			}
 

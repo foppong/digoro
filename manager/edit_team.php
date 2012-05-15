@@ -143,7 +143,8 @@
 				</p>
 			</form>
 			</fieldset>
-		</div>';				
+		</div>
+		<div id="link"><a href=transfer_team.php?x=' . $id . '>Transfer Team</a>';				
 	}
 	else 
 	{	//Not a valid user ID, kill the script

@@ -319,6 +319,10 @@
 			else {	// If the query did not run ok.
 				echo '<p class="error">This account could not be deleted due to a system errror.</p>';
 			}
+
+			// Close the statement
+			$stmt->close();
+			unset($stmt);
 		} // End of deleteUser function
 
 		// Function to log in users

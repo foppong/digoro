@@ -241,6 +241,27 @@ $(document).ready(function()
 		}
 	});	
 
+	// Transfer Team Form validation using jquery
+	$('#TransfTeamForm').validate( {
+		rules: {
+			transfer: {
+				required: true
+			}, 
+			email: {
+				email: true
+			}
+		},
+		messages: {
+			email: {
+				required: "Please enter your email address.",
+				email:  "Please enter a valid email address."
+			}
+		},
+		success: function(label) {
+			label.text('Ok!').addClass('valid');
+		}
+	});	
+
 	// Change Password Form validation using jquery
 	$('#ChgPassForm').validate( {
 		rules: {

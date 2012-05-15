@@ -23,6 +23,7 @@
 	 *  setUserAttributes()
 	 *  getUserAttribute()
 	 *  viewTeams()
+	 *  countTeams()
 	 *  setDefaultTeam()
 	 *  viewSchedule()
 	 *  isNewUser()
@@ -80,11 +81,63 @@
 			
 		}
 
-		// Function to set default team
-		function setDefaultTeam()
+		// Function to count number of teams associated with user
+		function countTeams()
 		{
+			// Make query to count the number of teams associated with user
+			$q = 'SELECT COUNT(id_team) FROM players WHERE id_user=?';
 			
+			// Preprea the statement:
+			$stmt = $this->dbc->prepare($q);
+			
+			// Bind the inbound variable:
+			$stmt->bind_param('i', $this->id_user);
+			
+			// Execute the query:
+			$stmt->execute();
+			
+			// Store results:
+			$stmt->store_result();
+			
+			// Bind the outbound variable:
+			$stmt->bind_result($recOB);
+			
+			while ($stmt->fetch())
+			{
+				$records = $recOB;
+			}
+			
+			return $records;
 		}
+
+		// Function to set default team
+		function setDefaultTeam($teamID)
+		{
+			// Update the user's info in the database
+			$q = 'UPDATE users SET default_teamID=? WHERE id_user=? LIMIT 1';
+			
+			// Prepare the statement
+			$stmt = $this->dbc->prepare($q); 
+		
+			// Bind the inbound variables:
+			$stmt->bind_param('ii', $teamID, $this->id_user);
+						
+			// Execute the query:
+			$stmt->execute();
+						
+			if ($stmt->affected_rows == 1) { // It ran ok
+				echo '<p>Default team successfully changed!</p>';
+				self::pullUserData(); // Update object attributes
+			}
+			else {	// Either did not run ok or no updates were made
+				echo '<p>Default team not changed.</p>';
+			}
+						
+			// Close the statement:
+			$stmt->close();
+			unset($stmt);		
+						
+		} // End of setDefaultTeam function
 
 		// Function to view schedule of team
 		function viewSchedule()
