@@ -12,6 +12,31 @@ $.ajaxSetup({"error":function(XMLHttpRequest,textStatus, errorThrown) {
 var id = $('input#id').val();
 var tname = $('input#tname').val();
 var abouttm = $('input#abouttm').val();
+ 
+ 
+var GAME = {
+	
+  	add: function() { 
+    	var form_data = $('form').serialize();
+	    $.ajax({
+	      	type: "POST",
+	      	url: "../manager/add_game.php",
+	      	data: form_data, // Data that I'm sending
+	      	error: function() {
+	        	$('#status').text('Update failed. Try again.').slideDown('slow');
+	     	},
+	      	success: function() {
+	        	$('#status').text('Update successful!').slideDown('slow'); // DEBUG NOTE: THis happends even if no changes
+	      	},
+	      	complete: function() {  // LATER ON I COULD PASS THE DATA BACK AND POSSIBLY USE IT TO BUILD THE STICKY FORM, have to put jsonencode on php end
+	        	setTimeout(function() {
+	          		$('#status').slideUp('slow');
+	        		}, 2000);
+	      	},
+	      	cache: false
+    	});
+    }
+} 
   
 var TEAM = {
 
@@ -104,58 +129,6 @@ var LEAGUE = {
 	}
 }
 
-/*
-var TABLE = {};
-
-TABLE.formwork = function(table){
-  var $tables = $(table);
-  
-  $tables.each(function () {
-    var _table = $(this);
-    _table.find('thead tr').append($('<th class="edit">&nbsp;</th>'));
-    _table.find('tbody tr').append($('<td class="edit"><input type="button" value="Edit"/></td>'))
-  });
-  
-  $tables.find('.edit :button').on('click', function() {
-    TABLE.editable(this);
-  });
-  
-}
-
-TABLE.editable = function(button) {
-  var $button = $(button);
-  var $row = $button.parents('tbody tr');
-  var $cells = $row.children('td').not('.edit');
-  
-  if($row.data('flag')) { // in edit mode, move back to table
-    // cell methods
-    $cells.each(function () {
-      var _cell = $(this);
-      _cell.html(_cell.find('input').val());
-    })
-    
-    $row.data('flag',false);
-    $button.val('Edit');
-  } 
-  else { // in table mode, move to edit mode 
-    // cell methods
-    $cells.each(function() {
-      var _cell = $(this);
-      _cell.data('text', _cell.html()).html('');
-      
-      var $input = $('<input type="text" />')
-        .val(_cell.data('text'))
-        .width(_cell.width() - 16);
-        
-      _cell.append($input);
-    })
-    
-    $row.data('flag', true);
-    $button.val('Save');
-  }
-}
-*/
-
 
 // jQuery Code for when page is loaded
 $(document).ready(function()
@@ -169,7 +142,7 @@ $(document).ready(function()
 
 	// jQuery UI Tabs
 	$('#tabmenu').tabs({
-		//spinner: '<img src="/css/imgs/ajax-loader.gif" />',
+		//spinner: '<img src="../css/imgs/ajax-loader.gif" />', [NEED A SMALLER SPINNER]
 		ajaxOptions: {
 			error: function( xhr, status, index, anchor ) {
 				$(anchor.hash).html(
@@ -186,9 +159,42 @@ $(document).ready(function()
 	$("#update").on("click", function() {
 		TEAM.update();
 	});
+
+
+
+var date = $( "#date" ),
+		time = $( "#time" ),
+		opp = $( "#opp" ),
+		ven = $( "#ven" ),
+		note = $( "#note" ),
+		res = $( "#res"),
+		allFields = $( [] ).add( date ).add( time ).add( opp ).add( ven ).add( note ).add( res );
+
+		$( "#AddGameForm" ).dialog({
+			autoOpen: false,
+			height: 400,
+			width: 400,
+			modal: true,
+			buttons: {
+				"Add New Game": function() {
+					// Add game to database
+					GAME.add();						
+					$( this ).dialog( "close" );
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			},
+			close: function( event, ui ) {
+				allFields.val( "" ).removeClass( "ui-state-error" );
+			}
+		});
 	
-	// Create editable table of my teams
-  	//TABLE.formwork('#myTeams');
+	$( "#add-game" )
+		.button()
+		.click(function() {
+			$( "#AddGameForm" ).dialog( "open" );
+	});
   	
 });
 

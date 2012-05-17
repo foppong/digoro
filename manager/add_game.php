@@ -19,6 +19,8 @@
 	if (isset($_SESSION['userObj']))
 	{
 		$manager = $_SESSION['userObj'];
+		$userID = $manager->getUserID();
+		$ctmID = $_SESSION['ctmID']; //Retrieve current team in session variable
 	}
 	else 
 	{
@@ -30,16 +32,26 @@
 	{
 		redirect_to('index.php');
 	}
+
+	// Establish database connection
+	require_once MYSQL2;
 	
 	// Retrieve current team ID in session
 	$ctmID = $_SESSION['ctmID'];
-	
+
+	// Create team object to help determine if manager can add a game to this team
+	// NOTE: ISSUE HERE MIGHT BE IF I MOVE ADD GAME FEATURE TO HOME PAGE
+	$team = new Team();
+	$team->setDB($db);
+	$team->setTeamID($ctmID);
+	$team->pullTeamData();
+	$team->checkAuth($userID);
+
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
-		require_once MYSQL2;
 		
 		// Assume invalid values:
-		$bdfrmat = $tm = FALSE;
+		$gdfrmat = $tm = FALSE;
 		
 		// Validate game date
 		if ($_POST['date'])
@@ -82,7 +94,7 @@
 			$ven = ''; 
 		}
 
-		// Validate a result is selected
+		// Validate a result is enetered
 		if ($_POST['res'])
 		{
 			$res = $_POST['res'];
@@ -92,15 +104,30 @@
 			$res = ''; 
 		}
 
+		// Validate a note is enetered
+		if ($_POST['note'])
+		{
+			$note = $_POST['note'];
+		}
+		else 
+		{
+			$note = ''; 
+		}
+
 		// Checks if team is selected and date format and entered time are valid before adding game to team.
 		if ($ctmID && $gdfrmat && $tm)
 		{
-			
+
 			// Create game object for use & push game to database for specified team
 			$game = new Game();
 			$game->setDB($db);
-			$game->createGame($ctmID, $gdfrmat, $tm, $opp, $ven, $res);
-			
+			$game->createGame($ctmID, $gdfrmat, $tm, $opp, $ven, $res, $note);
+	
+			$json[] = array('<p>Game was successfully added.</p><br />');
+
+			// Send the JSON data:
+			echo json_encode($json);
+
 			// Close the connection:
 			$db->close();
 			unset($db);
@@ -124,43 +151,42 @@
 ?>
 
 <h2>Add Game</h2>
-<form action="add_game.php" method="post" id="AddGameForm">
+<p id="status"></p>
+<div id="AddGameForm" title="Add New Game">
+	
+	<form method="post">
 	<fieldset>
-	
-	<div>
-		<label for="date"><b>Select Game Date:</b></label>
-		<input type="text" name="date" id="date" size="10" maxlength="10"
-		value="<?php if (isset($_POST['date'])) echo $_POST['date']; ?>" />
-	</div>
 
-	<div>
-		<label for="time"><b>Enter Game Time:</b></label>
-		<input type="text" name="time" id="time" size="9" maxlength="9"
+		<label for="date">Select Game Date:</label>
+		<input type="text" name="date" id="date" tabindex="-1" size="10" maxlength="10" class="text ui-widget-content ui-corner-all" 
+		value="<?php if (isset($_POST['date'])) echo $_POST['date']; ?>" />
+
+		<label for="time">Enter Game Time:</label>
+		<input type="text" name="time" id="time" size="9" maxlength="9" class="text ui-widget-content ui-corner-all" 
 		value="<?php if (isset($_POST['time'])) echo $_POST['time']; ?>" />
-		<small>Ex. 6:30 PM</small>
-	</div>
-	
-	<div>
-		<label for="opp"><b>Enter Opponent:</b></label>
-		<input type="text" name="opp" id="opp" size="30" maxlength="45" 
+
+		<label for="opp">Enter Opponent:</label>
+		<input type="text" name="opp" id="opp" size="30" maxlength="45" class="text ui-widget-content ui-corner-all" 
 		value="<?php if (isset($_POST['opp'])) echo $_POST['opp']; ?>" />
-	</div>
-	
-	<div>
-		<label for="ven"><b>Enter Venue:</b></label>
-		<input type="text" name="ven" id="ven" size="30" maxlength="45" 
+
+		<label for="ven">Enter Venue:</label>
+		<input type="text" name="ven" id="ven" size="30" maxlength="45" class="text ui-widget-content ui-corner-all" 
 		value="<?php if (isset($_POST['ven'])) echo $_POST['ven']; ?>" />
-	</div>
-	
-	<div>
-		<label for="res"><b>Enter Results:</b></label>
-		<input type="text" name="res" id="res" size="13" maxlength="13" 
+
+		<label for="note">Enter Game Notes:</label>
+		<textarea id="note" name="note" cols="30" rows="2" class="text ui-widget-content ui-corner-all"> 
+		<?php if (isset($_POST['note'])) echo $_POST['note']; ?></textarea><br />
+		<small>Enter any notes about the game.</small><br />
+
+		<label for="res">Enter Results:</label>
+		<input type="text" name="res" id="res" size="13" maxlength="13" class="text ui-widget-content ui-corner-all" 
 		value="<?php if (isset($_POST['res'])) echo $_POST['res']; ?>" />
 		<small>Ex. W 4-3</small>
-	</div>
-	
-	<div align="center"><input type="submit" name="submit" value="Add Game" />
+		
 	</fieldset>
-</form>
+	</form>
+</div>
+
+<button id="add-game">Add Game</button>
 
 <?php include '../includes/footer.html'; ?>

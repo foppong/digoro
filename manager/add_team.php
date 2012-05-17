@@ -38,17 +38,8 @@
 		redirect_to('index.php');
 	}
 
-	// Get user ID
-	//$userID = $manager->getUserID();
-	
-	// Assign userID to session variable
-	//$_SESSION['userID'] = $userID;
-	
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
-				
-		// Assign user ID from session variable
-		//$userID = $_SESSION['userID'];
 				
 		// Trim all the incoming data:
 		$trimmed = array_map('trim', $_POST);

@@ -43,8 +43,7 @@
 	$dftmID = $manager->getUserAttribute('dftmID');
 
 	// Update team object session variable as user selects different teams
-	if ( (isset($_POST['y'])) && (is_numeric($_POST['y'])) )
-	{
+	if ( (isset($_POST['y'])) && (is_numeric($_POST['y'])) ) {
 		$_SESSION['ctmID'] = $_POST['y'];
 		$ctmID = $_SESSION['ctmID'];
 	
@@ -54,15 +53,18 @@
 		$team->setTeamID($ctmID);
 		$team->pullTeamData();
 
-		// Assign updated team object session variable
-		//$_SESSION['teamObj'] = $team;
-
-		// Get team name attribute for page display purposes
-		$teamname = $team->getTeamAttribute('tmname');
-
 	}
-	else 
-	{
+	elseif (isset($_SESSION['ctmID'])) {
+		$ctmID = $_SESSION['ctmID'];
+
+		// Create team object
+		$team = new Team();
+		$team->setDB($db);
+		$team->setTeamID($ctmID);
+		$team->pullTeamData();
+		
+	}
+	else {
 		// Create team object
 		$team = new Team();
 		$team->setDB($db);
@@ -70,11 +72,11 @@
 		$team->pullTeamData();
 		
 		// Assign default team ID to current team ID session variable
-		$_SESSION['ctmID']  = $dftmID;
-		
-		// Get team name attribute for page display purposes
-		$teamname = $team->getTeamAttribute('tmname');
+		$_SESSION['ctmID']  = $dftmID;		
 	}
+
+	// Get team name attribute for page display purposes
+	$teamname = $team->getTeamAttribute('tmname');	
 
 	// Delete objects
 	unset($team);

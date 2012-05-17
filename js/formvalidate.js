@@ -74,7 +74,7 @@ $(document).ready(function()
 			label.text('Ok!').addClass('valid');
 		}
 	});
-	
+/*	
 	// Add Game to Schedule Form validation using jquery
 	$('#AddGameForm').validate( {
 		rules: {
@@ -93,7 +93,7 @@ $(document).ready(function()
 			label.text('Ok!').addClass('valid');
 		}
 	});	
-	
+*/	
 
 	// Add method to jquery validator plugin. This method checks that all dates are selected
 	$.validator.addMethod("fulldate", function() {

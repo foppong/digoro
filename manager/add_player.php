@@ -20,6 +20,7 @@
 	{
 		$manager = $_SESSION['userObj'];
 		$userID = $manager->getUserID();
+		$ctmID = $_SESSION['ctmID']; //Retrieve current team in session variable
 	}
 	else 
 	{
@@ -38,8 +39,13 @@
 		redirect_to('index.php');
 	}
 
-	// Retrieve current team ID in session
-	$ctmID = $_SESSION['ctmID'];
+	// Create team object to help determine if manager can add a game to this team
+	// NOTE: ISSUE HERE MIGHT BE IF I MOVE ADD GAME FEATURE TO HOME PAGE
+	$team = new Team();
+	$team->setDB($db);
+	$team->setTeamID($ctmID);
+	$team->pullTeamData();
+	$team->checkAuth($userID);
 		
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{

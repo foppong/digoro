@@ -9,6 +9,7 @@
 	 *  protected id_team
 	 * 	protected id_game
 	 *  protected dbc
+	 *  protected note
 	 * 
 	 * Methods:
 	 *  setGameID()
@@ -27,7 +28,7 @@
 	class Game {
 	 	
 		// Declare the attributes
-		protected $gdate, $gtime, $opponent, $venue, $result, $id_team, $id_game, $dbc;
+		protected $gdate, $gtime, $opponent, $venue, $result, $id_team, $id_game, $dbc, $note;
 
 		// Constructor
 		function __construct() {}
@@ -45,7 +46,7 @@
 		}		
 		
 		// Function to set Game attributes
-		function setGameAttributes($tmID = 0, $gmdate = '', $gmtime = '', $opp ='', $ven = '', $res = '')
+		function setGameAttributes($tmID = 0, $gmdate = '', $gmtime = '', $opp ='', $ven = '', $res = '', $gnote = '')
 		{
 			$this->id_team = $tmID;	
 			$this->gdate = $gmdate;
@@ -53,6 +54,7 @@
 			$this->opponent = $opp;
 			$this->venue = $ven;
 			$this->result = $res;
+			$this->note = $gnote;
 		}		
 
 		function getGameAttribute($attribute)
@@ -64,7 +66,7 @@
 		function pullGameData()
 		{
 			// Make the query to retreive game information from games table in database:		
-			$q = "SELECT id_team, date, time, opponent, venue, result
+			$q = "SELECT id_team, date, time, opponent, venue, result, note
 				FROM games
 				WHERE id_game=? LIMIT 1";
 		
@@ -81,14 +83,14 @@
 			$stmt->store_result();
 			
 			// Bind the outbound variable:
-			$stmt->bind_result($id_teamOB, $gdateOB, $gtmOB, $oppOB, $venOB, $resOB);
+			$stmt->bind_result($id_teamOB, $gdateOB, $gtmOB, $oppOB, $venOB, $resOB, $noteOB);
 
 			// Found result
 			if ($stmt->num_rows == 1)
 			{	
 				while ($stmt->fetch())
 				{				
-					self::setGameAttributes($id_teamOB, $gdateOB, $gtmOB, $oppOB, $venOB, $resOB);
+					self::setGameAttributes($id_teamOB, $gdateOB, $gtmOB, $oppOB, $venOB, $resOB, $noteOB);
 				}
 			}			
 			
@@ -99,20 +101,21 @@
 		} // End of pullGameData function
 
 		// Function to add game to team schedule
-		function createGame($teamID, $gmdate, $gtime, $opponent, $venue, $result)
+		function createGame($teamID, $gmdate, $gtime, $opponent, $venue, $result, $note)
 		{
 			// Make the query:
-			$q = 'INSERT INTO games (id_team, date, time, opponent, venue, result) VALUES (?,?,?,?,?,?)';
+			$q = 'INSERT INTO games (id_team, date, time, opponent, venue, result, note) 
+				VALUES (?,?,?,?,?,?,?)';
 
 			// Prepare the statement
 			$stmt = $this->dbc->prepare($q);
 			
 			// Bind the variables
-			$stmt->bind_param('isssss', $teamID, $gmdate, $gtime, $opponent, $venue, $result);
+			$stmt->bind_param('issssss', $teamID, $gmdate, $gtime, $opponent, $venue, $result, $note);
 			
 			// Execute the query:
 			$stmt->execute();
-			
+/*			
 			// Print a message based upon result:
 			if ($stmt->affected_rows == 1)
 			{
@@ -122,7 +125,7 @@
 			{
 				echo '<p class="error">Your game was not added. Please contact the service administrator.</p>';
 			}
-
+*/
 			// Close the statement:
 			$stmt->close();
 			unset($stmt);			
@@ -130,17 +133,17 @@
 		
 							
 		// Edit Game Method
-		function editGame($userID, $gmdate, $gtime, $opponent, $venue, $result) 
+		function editGame($userID, $gmdate, $gtime, $opponent, $venue, $result, $note) 
 		{		
 			// Update the user's info in the players' table in database
-			$q = 'UPDATE games SET date=?, time=?, opponent=?, venue=?, result=?
+			$q = 'UPDATE games SET date=?, time=?, opponent=?, venue=?, result=?, note=?
 				WHERE id_game=? LIMIT 1';
 	
 			// Prepare the statement
 			$stmt = $this->dbc->prepare($q); 
 	
 			// Bind the inbound variables:
-			$stmt->bind_param('sssssi', $gmdate, $gtime, $opponent, $venue, $result, $this->id_game);
+			$stmt->bind_param('ssssssi', $gmdate, $gtime, $opponent, $venue, $result, $note, $this->id_game);
 					
 			// Execute the query:
 			$stmt->execute();
@@ -156,7 +159,7 @@
 			}
 				
 			// Update attributes
-			self::setGameAttributes($this->id_team, $gmdate, $gtime, $opponent, $venue, $result);
+			self::setGameAttributes($this->id_team, $gmdate, $gtime, $opponent, $venue, $result, $note);
 
 			// Close the statement:
 			$stmt->close();
@@ -200,7 +203,7 @@
 		
 		} // End of deleteGame function
 
-		// Function to check if user is authroized to view page
+		// Function to check if user is authroized to view page (need to have a game created first)
 		function checkAuth($userID)
 		{
 			if (self::isManager($this->id_game, $userID) == False)

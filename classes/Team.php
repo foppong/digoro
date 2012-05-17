@@ -386,7 +386,7 @@
 				$url = BASE_URL . 'manager/manager_home.php';
 				header("Location: $url");
 				exit();
-			}		
+			}
 		}		
 		
 		// Function to check if user is manager
