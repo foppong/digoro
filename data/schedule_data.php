@@ -106,3 +106,41 @@
 	unset($db);
 
 ?>
+
+<p id="status"></p>
+<div id="AddGameForm" title="Add New Game">
+	
+	<form method="post">
+	<fieldset>
+
+		<label for="date">Select Game Date:</label>
+		<input type="text" name="date" id="date" tabindex="-1" size="10" maxlength="10" class="text ui-widget-content ui-corner-all" 
+		value="<?php if (isset($_POST['date'])) echo $_POST['date']; ?>" />
+
+		<label for="time">Enter Game Time:</label>
+		<input type="text" name="time" id="time" size="9" maxlength="9" class="text ui-widget-content ui-corner-all" 
+		value="<?php if (isset($_POST['time'])) echo $_POST['time']; ?>" />
+
+		<label for="opp">Enter Opponent:</label>
+		<input type="text" name="opp" id="opp" size="30" maxlength="45" class="text ui-widget-content ui-corner-all" 
+		value="<?php if (isset($_POST['opp'])) echo $_POST['opp']; ?>" />
+
+		<label for="ven">Enter Venue:</label>
+		<input type="text" name="ven" id="ven" size="30" maxlength="45" class="text ui-widget-content ui-corner-all" 
+		value="<?php if (isset($_POST['ven'])) echo $_POST['ven']; ?>" />
+
+		<label for="note">Enter Game Notes:</label>
+		<textarea id="note" name="note" cols="30" rows="2" class="text ui-widget-content ui-corner-all"> 
+		<?php if (isset($_POST['note'])) echo $_POST['note']; ?></textarea><br />
+		<small>Enter any notes about the game.</small><br />
+
+		<label for="res">Enter Results:</label>
+		<input type="text" name="res" id="res" size="13" maxlength="13" class="text ui-widget-content ui-corner-all" 
+		value="<?php if (isset($_POST['res'])) echo $_POST['res']; ?>" />
+		<small>Ex. W 4-3</small>
+		
+	</fieldset>
+	</form>
+</div>
+
+<button id="add-game">Add Game</button>
