@@ -54,9 +54,10 @@
 		<meta name="author" content="Frank" />
 		<!-- External javascript call -->
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" charset="utf-8"></script>
-		<script type="text/javascript" src="../js/projectblackstar.js"></script>
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js" charset="utf-8"></script>
 		<script type="text/javascript" src="../js/schedule.js"></script>
 		<!-- CSS Style Sheet -->
+		<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
 		<link rel="stylesheet" type="text/css" href="../css/styles.css" />
 	</head>
 	<body>
@@ -103,7 +104,7 @@
 		<button id="add-game">Add Game</button>
 
 		
-		<a href="add_game.php" id="add-game">Add Game</a><br />
+		<a href="add_game.php" id="add-newgame">Add Game</a><br />
 		
 		<table id="schedule"></table>
 	</body>

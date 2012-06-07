@@ -9,6 +9,30 @@ $.ajaxSetup({"error":function(XMLHttpRequest,textStatus, errorThrown) {
       alert(XMLHttpRequest.responseText);
   }});
 
+var GAME = {
+	
+  	add: function() { 
+    	var form_data = $('form').serialize();
+	    $.ajax({
+	      	type: "POST",
+	      	url: "../manager/add_game.php",
+	      	data: form_data, // Data that I'm sending
+	      	error: function() {
+	        	$('#status').text('Update failed. Try again.').slideDown('slow');
+	     	},
+	      	success: function() {
+	        	$('#status').text('Update successful!').slideDown('slow'); // DEBUG NOTE: THis happends even if no changes
+	      	},
+	      	complete: function() {  // LATER ON I COULD PASS THE DATA BACK AND POSSIBLY USE IT TO BUILD THE STICKY FORM, have to put jsonencode on php end
+	        	setTimeout(function() {
+	          		$('#status').slideUp('slow');
+	        		}, 2000);
+	      	},
+	      	cache: false
+    	});
+    }
+} 
+
 var SCHEDULE = {
 	
 	loadSchedule: function() {
@@ -55,5 +79,41 @@ $(document).ready(function() {
 
 	// Load schedule associated with team
 	SCHEDULE.loadSchedule();
+
+	$("#date").datepicker();
+
+var date = $( "#date" ),
+		time = $( "#time" ),
+		opp = $( "#opp" ),
+		ven = $( "#ven" ),
+		note = $( "#note" ),
+		res = $( "#res"),
+		allFields = $( [] ).add( date ).add( time ).add( opp ).add( ven ).add( note ).add( res );
+
+		$( "#AddGameForm" ).dialog({
+			autoOpen: false,
+			height: 400,
+			width: 400,
+			modal: true,
+			buttons: {
+				"Add New Game": function() {
+					// Add game to database
+					GAME.add();						
+					$( this ).dialog( "close" );
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			},
+			close: function( event, ui ) {
+				allFields.val( "" ).removeClass( "ui-state-error" );
+			}
+		});
+	
+	$( "#add-game" )
+		.button()
+		.click(function() {
+			$( "#AddGameForm" ).dialog( "open" );
+	});
 
 });
