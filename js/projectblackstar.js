@@ -9,13 +9,29 @@ $.ajaxSetup({"error":function(XMLHttpRequest,textStatus, errorThrown) {
       alert(XMLHttpRequest.responseText);
   }});
 
-var id = $('input#id').val();
-var tname = $('input#tname').val();
-var abouttm = $('input#abouttm').val();
- 
- 
+
 var GAME = {
-	
+
+	loadDialog: function() {
+		$("#date").datepicker();
+		$( "#AddGameForm" ).dialog({
+			autoOpen: false,
+			height: 400,
+			width: 400,
+			modal: true,
+			buttons: {
+				"Add New Game": function() {
+					// Add game to database
+					GAME.add();						
+					$( this ).dialog( "close" );
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			}
+		});		
+	},
+
   	add: function() { 
     	var form_data = $('form').serialize();
 	    $.ajax({
@@ -37,6 +53,10 @@ var GAME = {
     	});
     }
 } 
+
+var id = $('input#id').val();
+var tname = $('input#tname').val();
+var abouttm = $('input#abouttm').val();
   
 var TEAM = {
 
@@ -137,8 +157,8 @@ $(document).ready(function()
 	// Warning recommendation for those who do not have javascript enabled
 	$('#no-script').remove();
 
-	// Calls jquery UI datepicker selection plugin - used in add_game and edit_game pages
-	$("#date").datepicker();
+	// Load teams associated with user into select menu
+	TEAM.loadTeams();
 
 	// jQuery UI Tabs
 	$('#tabmenu').tabs({
@@ -147,13 +167,20 @@ $(document).ready(function()
 			error: function( xhr, status, index, anchor ) {
 				$(anchor.hash).html(
 					"Couldn't load this tab. We'll try to fix this as soon as possible. "
-				);
+				);				
+			}
+		},
+		load: function ( event, ui ) {
+			if (ui.index == 2) {
+				// Load game dialog
+				GAME.loadDialog();
+	
+				$( "#add-game" ).on("click", function() {
+					$( "#AddGameForm" ).dialog( "open" ); 
+				});	
 			}
 		}
 	});
-
-	// Load teams associated with user into select menu
-	TEAM.loadTeams();
 
 	// Update team edits in database
 	$("#update").on("click", function() {
@@ -161,40 +188,6 @@ $(document).ready(function()
 	});
 
 
-
-var date = $( "#date" ),
-		time = $( "#time" ),
-		opp = $( "#opp" ),
-		ven = $( "#ven" ),
-		note = $( "#note" ),
-		res = $( "#res"),
-		allFields = $( [] ).add( date ).add( time ).add( opp ).add( ven ).add( note ).add( res );
-
-		$( "#AddGameForm" ).dialog({
-			autoOpen: false,
-			height: 400,
-			width: 400,
-			modal: true,
-			buttons: {
-				"Add New Game": function() {
-					// Add game to database
-					GAME.add();						
-					$( this ).dialog( "close" );
-				},
-				Cancel: function() {
-					$( this ).dialog( "close" );
-				}
-			},
-			close: function( event, ui ) {
-				allFields.val( "" ).removeClass( "ui-state-error" );
-			}
-		});
-	
-	$( "#add-game" )
-		.button()
-		.click(function() {
-			$( "#AddGameForm" ).dialog( "open" );
-	});
   	
 });
 

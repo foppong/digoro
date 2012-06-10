@@ -57,8 +57,8 @@
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js" charset="utf-8"></script>
 -->		<script type="text/javascript" src="../js/schedule.js"></script>
 		<!-- CSS Style Sheet -->
-<!--		<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
-	-->	<link rel="stylesheet" type="text/css" href="../css/styles.css" />
+		<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+		<link rel="stylesheet" type="text/css" href="../css/styles.css" />
 	</head>
 	<body>
 

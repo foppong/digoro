@@ -9,8 +9,35 @@ $.ajaxSetup({"error":function(XMLHttpRequest,textStatus, errorThrown) {
       alert(XMLHttpRequest.responseText);
   }});
 
+
 var GAME = {
-	
+
+	loadDialog: function() {
+		$( "#date" ).datepicker();
+		$( "#AddGameForm" ).dialog({
+			autoOpen: false,
+			height: 400,
+			width: 400,
+			modal: true,
+			buttons: {
+				"Add New Game": function() {
+					// Add game to database
+					GAME.add();						
+					$( this ).dialog( "close" );
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			}
+		});
+		
+		$( "#add-game" )
+			.button()
+			.click(function() {
+				$( "#AddGameForm" ).dialog( "open" );
+		});		
+	},
+
   	add: function() { 
     	var form_data = $('form').serialize();
 	    $.ajax({
@@ -75,45 +102,10 @@ var SCHEDULE = {
 	}
 }
 
+
 $(document).ready(function() {
 
 	// Load schedule associated with team
 	SCHEDULE.loadSchedule();
-
-	$("#date").datepicker();
-
-var date = $( "#date" ),
-		time = $( "#time" ),
-		opp = $( "#opp" ),
-		ven = $( "#ven" ),
-		note = $( "#note" ),
-		res = $( "#res"),
-		allFields = $( [] ).add( date ).add( time ).add( opp ).add( ven ).add( note ).add( res );
-
-		$( "#AddGameForm" ).dialog({
-			autoOpen: false,
-			height: 400,
-			width: 400,
-			modal: true,
-			buttons: {
-				"Add New Game": function() {
-					// Add game to database
-					GAME.add();						
-					$( this ).dialog( "close" );
-				},
-				Cancel: function() {
-					$( this ).dialog( "close" );
-				}
-			},
-			close: function( event, ui ) {
-				allFields.val( "" ).removeClass( "ui-state-error" );
-			}
-		});
-	
-	$( "#add-game" )
-		.button()
-		.click(function() {
-			$( "#AddGameForm" ).dialog( "open" );
-	});
 
 });
