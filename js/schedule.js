@@ -10,56 +10,6 @@ $.ajaxSetup({"error":function(XMLHttpRequest,textStatus, errorThrown) {
   }});
 
 
-var GAME = {
-
-	loadDialog: function() {
-		$( "#date" ).datepicker();
-		$( "#AddGameForm" ).dialog({
-			autoOpen: false,
-			height: 400,
-			width: 400,
-			modal: true,
-			buttons: {
-				"Add New Game": function() {
-					// Add game to database
-					GAME.add();						
-					$( this ).dialog( "close" );
-				},
-				Cancel: function() {
-					$( this ).dialog( "close" );
-				}
-			}
-		});
-		
-		$( "#add-game" )
-			.button()
-			.click(function() {
-				$( "#AddGameForm" ).dialog( "open" );
-		});		
-	},
-
-  	add: function() { 
-    	var form_data = $('form').serialize();
-	    $.ajax({
-	      	type: "POST",
-	      	url: "../manager/add_game.php",
-	      	data: form_data, // Data that I'm sending
-	      	error: function() {
-	        	$('#status').text('Update failed. Try again.').slideDown('slow');
-	     	},
-	      	success: function() {
-	        	$('#status').text('Update successful!').slideDown('slow'); // DEBUG NOTE: THis happends even if no changes
-	      	},
-	      	complete: function() {  // LATER ON I COULD PASS THE DATA BACK AND POSSIBLY USE IT TO BUILD THE STICKY FORM, have to put jsonencode on php end
-	        	setTimeout(function() {
-	          		$('#status').slideUp('slow');
-	        		}, 2000);
-	      	},
-	      	cache: false
-    	});
-    }
-} 
-
 var SCHEDULE = {
 	
 	loadSchedule: function() {
@@ -101,7 +51,6 @@ var SCHEDULE = {
 	    });		
 	}
 }
-
 
 $(document).ready(function() {
 

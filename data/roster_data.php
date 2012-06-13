@@ -144,8 +144,7 @@
 	else 
 	{	// No registered users
 		$json[] = array(
-			'<p class="error">You have no players on your roster.
-			<a href="../manager/add_player.php">Click Here</a> to add players.<br /></p><br /><br />');
+			'<p class="error">You have no players on your roster.</p><br />');
 			
 		// Send the JSON data:
 		echo json_encode($json);

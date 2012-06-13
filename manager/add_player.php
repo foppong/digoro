@@ -115,30 +115,6 @@
 	$db->close();
 	unset($db);	
 
+include '../includes/footer.html'; 
+
 ?>
-
-<h2>Add Player to Team</h2>
-<form action="add_player.php" method="post" id="AddPlayerForm">
-	<fieldset>		
-	<div>	
-		<label for="first_name"><b>Enter Player's First Name:</b></label>
-		<input type="text" name="first_name" id="first_name" size="20" maxlength="20"
-		value="<?php if (isset($trimmed['first_name'])) echo $trimmed['first_name']; ?>" />
-	</div>
-
-	<div>
-		<label for="last_name"><b>Enter Player's Last Name:</b></label>
-		<input type="text" name="last_name" id="last_name" size="20" maxlength="40"
-		value="<?php if (isset($trimmed['last_name'])) echo $trimmed['last_name']; ?>" />
-	</div>
-
-	<div>
-		<label for="email"><b>Enter Player's Email Address:</b></label>
-		<input type="text" name="email" id="email" size="30" maxlength="60"
-		value="<?php if (isset($trimmed['email'])) echo $trimmed['email']; ?>" />
-	</div>
-	</fieldset>
-	<div align="center"><input type="submit" name="submit" value="Add Player" />
-</form>
-
-<?php include '../includes/footer.html'; ?>

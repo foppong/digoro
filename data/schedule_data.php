@@ -85,9 +85,7 @@
 	else 
 	{	// No games or events scheduled
 		
-		$json[] = array(
-			'<p class="error">You have no games scheduled.
-			<a href="add_game.php">Click Here</a> to a game or event.<br /></p><br /><br />');
+		$json[] = array('<p class="error">You have no games scheduled.  Click the add game button to add a game.');
 			
 		// Send the JSON data:
 		echo json_encode($json);

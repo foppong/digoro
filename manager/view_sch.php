@@ -52,13 +52,10 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title><?php echo $page_title; ?></title>
 		<meta name="author" content="Frank" />
-		<!-- External javascript call 
-		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" charset="utf-8"></script>
-		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js" charset="utf-8"></script>
--->		<script type="text/javascript" src="../js/schedule.js"></script>
+		<!-- External javascript call-->		
+		<script type="text/javascript" src="../js/schedule.js"></script>
 		<!-- CSS Style Sheet -->
-<!--		<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
-	-->	<link rel="stylesheet" type="text/css" href="../css/styles.css" />
+		<link rel="stylesheet" type="text/css" href="../css/styles.css" />
 	</head>
 	<body>
 
@@ -68,8 +65,7 @@
 		</div><br />
 
 		<p id="status"></p>
-		<div id="AddGameForm" title="Add New Game">
-			
+		<div id="AddGameForm" title="Add New Game">	
 			<form method="post">
 			<fieldset>
 		
@@ -98,15 +94,12 @@
 				<input type="text" name="res" id="res" size="13" maxlength="13" class="text ui-widget-content ui-corner-all" 
 				value="<?php if (isset($_POST['res'])) echo $_POST['res']; ?>" />
 				<small>Ex. W 4-3</small>
-				
+					
 			</fieldset>
 			</form>
 		</div>
 	
 		<button id="add-game">Add Game</button>
-
-		
-		<a href="add_game.php" id="add-newgame">Add Game</a><br />
 		
 		<table id="schedule"></table>
 		

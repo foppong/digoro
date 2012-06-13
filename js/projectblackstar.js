@@ -10,6 +10,54 @@ $.ajaxSetup({"error":function(XMLHttpRequest,textStatus, errorThrown) {
   }});
 
 
+var PLAYER = {
+
+	loadDialog: function() {
+		$( "#AddPlayerForm" ).dialog({
+			autoOpen: false,
+			height: 250,
+			width: 275,
+			modal: true,
+			buttons: {
+				"Add Player": function() {
+					// Add game to database
+					PLAYER.add();					
+					$( this ).dialog( "destroy" ).remove();
+				},
+				Cancel: function() {
+					$( this ).dialog( "destroy" ).remove();
+				}
+			}
+		});		
+	},
+
+	// add player information to database from dialog form
+  	add: function() { 
+    	var form_data = $( 'form' ).serialize();
+	    $.ajax({
+	      	type: "POST",
+	      	url: "../manager/add_player.php",
+	      	data: form_data, // Data that I'm sending
+	      	error: function() {
+	        	$( '#status' ).text( 'Update failed. Try again.' ).slideDown( 'slow' );
+	     	},
+	      	success: function() {   
+	        	$( '#status' ).text( 'Update successful!' ).slideDown( 'slow' ); // DEBUG NOTE: THis happends even if no changes  	
+	      	},
+	      	complete: function() {
+	        	setTimeout(function() {
+	          		$( '#status' ).slideUp( 'slow' );
+	        	}, 1000);
+	        	setTimeout(function() {  
+	        		$( '#tabmenu' ).tabs( 'load', 1 ); // Reloads the tab so that new change can be displayed instanly
+	        	}, 1005);
+	      	},
+	      	cache: false
+    	});
+    }
+} 
+
+
 var GAME = {
 
 	loadDialog: function() {
@@ -22,32 +70,36 @@ var GAME = {
 			buttons: {
 				"Add New Game": function() {
 					// Add game to database
-					GAME.add();						
-					$( this ).dialog( "close" );
+					GAME.add();					
+					$( this ).dialog( "destroy" ).remove();
 				},
 				Cancel: function() {
-					$( this ).dialog( "close" );
+					$( this ).dialog( "destroy" ).remove();
 				}
 			}
 		});		
 	},
 
+	// add game information to database from dialog form
   	add: function() { 
-    	var form_data = $('form').serialize();
+    	var form_data = $( 'form' ).serialize();
 	    $.ajax({
 	      	type: "POST",
 	      	url: "../manager/add_game.php",
 	      	data: form_data, // Data that I'm sending
 	      	error: function() {
-	        	$('#status').text('Update failed. Try again.').slideDown('slow');
+	        	$( '#status' ).text( 'Update failed. Try again.' ).slideDown( 'slow' );
 	     	},
-	      	success: function() {
-	        	$('#status').text('Update successful!').slideDown('slow'); // DEBUG NOTE: THis happends even if no changes
+	      	success: function() {   
+	        	$( '#status' ).text( 'Update successful!' ).slideDown( 'slow' ); // DEBUG NOTE: THis happends even if no changes  	
 	      	},
-	      	complete: function() {  // LATER ON I COULD PASS THE DATA BACK AND POSSIBLY USE IT TO BUILD THE STICKY FORM, have to put jsonencode on php end
+	      	complete: function() {
 	        	setTimeout(function() {
-	          		$('#status').slideUp('slow');
-	        		}, 2000);
+	          		$( '#status' ).slideUp( 'slow' );
+	        	}, 1000);
+	        	setTimeout(function() {
+	        		$( '#tabmenu' ).tabs( 'load', 2 ); // Reloads the tab so that new change can be displayed instanly
+	        	}, 1005);
 	      	},
 	      	cache: false
     	});
@@ -171,13 +223,24 @@ $(document).ready(function()
 			}
 		},
 		load: function ( event, ui ) {
-			if (ui.index == 2) {
-				// Load game dialog
-				GAME.loadDialog();
+			switch (ui.index) {
+				case 1:
+					// Load player dialog
+					PLAYER.loadDialog();
 	
-				$( "#add-game" ).on("click", function() {
-					$( "#AddGameForm" ).dialog( "open" ); 
-				});	
+					$( "#add-player" ).on("click", function() {
+						$( "#AddPlayerForm" ).dialog( "open" );
+					});
+					break;
+				case 2:
+					// Load game dialog
+					GAME.loadDialog();
+	
+					$( "#add-game" ).on("click", function() {
+						$( "#AddGameForm" ).dialog( "open" );
+					});
+					break;
+				default:		
 			}
 		}
 	});
