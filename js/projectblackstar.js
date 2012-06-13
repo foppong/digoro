@@ -25,15 +25,32 @@ var PLAYER = {
 					$( this ).dialog( "destroy" ).remove();
 				},
 				Cancel: function() {
-					$( this ).dialog( "destroy" ).remove();
+					$( this ).dialog( "close" );
 				}
 			}
-		});		
+		});
+		
+		$( "#EditPlayerForm" ).dialog({
+			autoOpen: false,
+			height: 250,
+			width: 275,
+			modal: true,
+			buttons: {
+				"Edit Player": function() {
+					// Add game to database
+					PLAYER.edit();					
+					$( this ).dialog( "close" );
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			}			
+		});	
 	},
 
 	// add player information to database from dialog form
   	add: function() { 
-    	var form_data = $( 'form' ).serialize();
+    	var form_data = $( '#AddPlayerForm form' ).serialize();
 	    $.ajax({
 	      	type: "POST",
 	      	url: "../manager/add_player.php",
@@ -43,6 +60,31 @@ var PLAYER = {
 	     	},
 	      	success: function() {   
 	        	$( '#status' ).text( 'Update successful!' ).slideDown( 'slow' ); // DEBUG NOTE: THis happends even if no changes  	
+	      	},
+	      	complete: function() {
+	        	setTimeout(function() {
+	          		$( '#status' ).slideUp( 'slow' );
+	        	}, 1000);
+	        	setTimeout(function() {  
+	        		$( '#tabmenu' ).tabs( 'load', 1 ); // Reloads the tab so that new change can be displayed instanly
+	        	}, 1005);
+	      	},
+	      	cache: false
+    	});
+    },
+    
+	// edit player information to database from dialog form
+  	edit: function() { 
+    	var form_data = $( '#EditPlayerForm form' ).serialize();
+	    $.ajax({
+	      	type: "POST",
+	      	url: "../manager/edit_player.php",
+	      	data: form_data, // Data that I'm sending
+	      	error: function() {
+	        	$( '#status' ).text( 'Edit failed. Try again.' ).slideDown( 'slow' );
+	     	},
+	      	success: function() {   
+	        	$( '#status' ).text( 'Edit successful!' ).slideDown( 'slow' ); // DEBUG NOTE: THis happends even if no changes  	
 	      	},
 	      	complete: function() {
 	        	setTimeout(function() {
@@ -74,7 +116,7 @@ var GAME = {
 					$( this ).dialog( "destroy" ).remove();
 				},
 				Cancel: function() {
-					$( this ).dialog( "destroy" ).remove();
+					$( this ).dialog( "close" );
 				}
 			}
 		});		
@@ -230,6 +272,10 @@ $(document).ready(function()
 	
 					$( "#add-player" ).on("click", function() {
 						$( "#AddPlayerForm" ).dialog( "open" );
+					});
+					
+					$( ".edit-player" ).on("click", function() {
+						$( "#EditPlayerForm" ).dialog( "open" );
 					});
 					break;
 				case 2:

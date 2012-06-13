@@ -114,7 +114,6 @@
 		<div id="#" class="ui-tabs-hide">Bulletin</div>
 </div><br />
 
-<a href="add_player.php">Add Player</a><br />
 <a href="add_team.php">Add Team</a><br />	
 
 <?php include '../includes/footer.html'; ?>

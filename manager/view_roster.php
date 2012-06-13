@@ -63,10 +63,9 @@
 		</div>
 
 		<p id="status"></p>
-		<h2>Add Player to Team</h2>
+		
 		<div id="AddPlayerForm" title="Add New Player">		
-			<form method="post">
-							
+			<form method="post">			
 				<label for="first_name"><b>Enter Player's First Name:</b></label>
 				<input type="text" name="first_name" id="first_name" size="20" maxlength="20"
 				value="<?php if (isset($trimmed['first_name'])) echo $trimmed['first_name']; ?>" />
@@ -78,10 +77,23 @@
 				<label for="email"><b>Enter Player's Email Address:</b></label>
 				<input type="text" name="email" id="email" size="30" maxlength="60"
 				value="<?php if (isset($trimmed['email'])) echo $trimmed['email']; ?>" />
-				
 			</form>
 		</div>
 
+		<div id="EditPlayerForm" title="Edit Player">	
+			<form method="post">
+				<input type="hidden" name="z" value="' . $id . '" />
+
+				<label for="position"><b>Position:</b></label>
+				<input type="text" name="position" id="position" 
+				size="20" maxlength="20"/>				
+				
+				<label for="jersey_num"><b>Jersey Number:</b></label>
+				<input type="text" name="jersey_num" id="jersey_num" 
+				size="4" maxlength="4" />
+			</form>
+		</div>
+		<button class="edit-player">Edit Player</button>
 		<button id="add-player">Add Player</button>
 
 		<table id="roster"></table>
