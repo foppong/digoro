@@ -63,6 +63,8 @@
 		</div>
 
 		<p id="status"></p>
+
+		<button id="add-player">Add Player</button>
 		
 		<div id="AddPlayerForm" title="Add New Player">		
 			<form method="post">			
@@ -82,8 +84,6 @@
 
 		<div id="EditPlayerForm" title="Edit Player">	
 			<form method="post">
-				<input type="hidden" name="z" value="' . $id . '" />
-
 				<label for="position"><b>Position:</b></label>
 				<input type="text" name="position" id="position" 
 				size="20" maxlength="20"/>				
@@ -93,9 +93,16 @@
 				size="4" maxlength="4" />
 			</form>
 		</div>
-		<button class="edit-player">Edit Player</button>
-		<button id="add-player">Add Player</button>
 
+		<div id="DelPlayerForm" title="Delete Player">
+			<form method="post">
+				<input type="hidden" name="z" value="' . $id . '" />
+				<input type="radio" name="sure" value="Yes" />Yes<br />
+				<input type="radio" name="sure" value="No" checked="checked" />No<br />
+			</form>
+		</div>
+
+		<!-- Load ajax roster data here -->
 		<table id="roster"></table>
 	</body>
 </html>

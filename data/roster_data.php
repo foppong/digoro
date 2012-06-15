@@ -134,9 +134,8 @@
 			'Email' => $eOB,
 			'Gender' => $genOB,
 			'Position' => $posOB,
-			//'Edit' => '<a href=edit_player.php?x=' . $idOB . '>Edit</a>',
-			'Edit' => '<button class="edit-player" value='. $idOB . '>Edit Player</button>',
-			'Delete' => '<a href=delete_player.php?x=' . $idOB . '>Delete</a>');
+			'Edit' => '<button class="edit-player" value=' . $idOB . '>Edit Player</button>',
+			'Delete' => '<button class="delete-player" value=' . $idOB . '>Delete Player</button>');
 		}	// End of WHILE loop
 	
 		// Send the JSON data:

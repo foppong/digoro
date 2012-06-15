@@ -1,10 +1,11 @@
 <?php
 	// This page is for editing a player
 	// This page is accessed through view_roster.php
-	
+
+	ob_start();
+	session_start();	
+		
 	require '../includes/config.php';
-	$page_title = 'digoro : Edit Player';
-	include '../includes/header.html';
 	include '../includes/php-functions.php';
 
 	// autoloading of classes
@@ -48,9 +49,16 @@
 		$member->checkAuth($userID);
 
 	}
-	elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z'])) // Confirmation that form has been submitted from edit_player page	
-	{
+	//elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z'])) // Confirmation that form has been submitted from edit_player page	
+	elseif ($_SERVER['REQUEST_METHOD'] == 'POST')
+		{
 		$id = $_POST['z'];
+		
+		$json[] = array(
+			'Id' => $id);
+			
+		// Send the JSON data:
+		echo json_encode($json);		
 
 		// Create member object for use & pull latest data from database & initially set attributes
 		$member = new Member();
@@ -72,7 +80,12 @@
 		}
 		else 
 		{
-			echo '<p class="error">Please enter your position.</p>';
+			$json[] = array(
+				'Error' => 'Please enter your position');
+			
+			// Send the JSON data:
+			echo json_encode($json);
+			
 		}
 
 		// Validate jersey number input
@@ -82,7 +95,12 @@
 		}
 		else 
 		{
-			echo '<p class="error">Please enter your jersey number.</p>';
+			$json[] = array(
+				'Error' => 'Please enter your jersey number');
+			
+			// Send the JSON data:
+			echo json_encode($json);
+			
 		}
 		
 
@@ -93,7 +111,12 @@
 		}
 		else
 		{	// Errors in the user entered information
-			echo '<p class="error">Please try again.</p>';
+
+			$json[] = array(
+				'Error' => 'Please try again.');
+			
+			// Send the JSON data:
+			echo json_encode($json);
 		}
 	}
 	else 
@@ -109,7 +132,7 @@
 	$pos = $member->getMemberAttribute('position');
 	$jnumb = $member->getMemberAttribute('jersey_numb');
 	
-		
+/**		
 	// Valid user name, show the form.
 	if ($name != '')
 	{
@@ -143,7 +166,7 @@
 		include '../includes/footer.html';
 		exit();
 	}
-		
+**/		
 	// Delete objects
 	unset($member);
 	unset($manager);
@@ -152,5 +175,4 @@
 	$db->close();
 	unset($db);
 					
-	include '../includes/footer.html';
 ?>

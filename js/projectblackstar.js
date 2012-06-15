@@ -9,6 +9,8 @@ $.ajaxSetup({"error":function(XMLHttpRequest,textStatus, errorThrown) {
       alert(XMLHttpRequest.responseText);
   }});
 
+// Global variables
+var idplayer;
 
 var PLAYER = {
 
@@ -20,7 +22,7 @@ var PLAYER = {
 			modal: true,
 			buttons: {
 				"Add Player": function() {
-					// Add game to database
+					// Add player to database
 					PLAYER.add();					
 					$( this ).dialog( "destroy" ).remove();
 				},
@@ -37,15 +39,32 @@ var PLAYER = {
 			modal: true,
 			buttons: {
 				"Edit Player": function() {
-					// Add game to database
+					// Edit player in database
 					PLAYER.edit();					
-					$( this ).dialog( "close" );
+					$( this ).dialog( "destroy" ).remove();
 				},
 				Cancel: function() {
 					$( this ).dialog( "close" );
 				}
 			}			
-		});	
+		});
+		
+		$( "#DelPlayerForm" ).dialog({
+			autoOpen: false,
+			height: 150,
+			width: 275,
+			modal: true,
+			buttons: {
+				"Delete Player": function() {
+					// Delete player from database
+					PLAYER.del();					
+					$( this ).dialog( "destroy" ).remove();
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			}			
+		});		
 	},
 
 	// add player information to database from dialog form
@@ -75,6 +94,10 @@ var PLAYER = {
     
 	// edit player information to database from dialog form
   	edit: function() { 
+		//var idplayer = $( '.edit-player' ).attr("value");
+alert(idplayer);
+		$( '#EditPlayerForm form' ).append( '<input type="hidden" id="z" name="z" value="' + idplayer + '"/>' );
+
     	var form_data = $( '#EditPlayerForm form' ).serialize();
 	    $.ajax({
 	      	type: "POST",
@@ -83,8 +106,36 @@ var PLAYER = {
 	      	error: function() {
 	        	$( '#status' ).text( 'Edit failed. Try again.' ).slideDown( 'slow' );
 	     	},
+	      	success: function(data) {
+	      		alert(data);   
+	        	$( '#status' ).text( 'Edit worked.' ).slideDown( 'slow' ); // DEBUG NOTE: THis happends even if no changes  	
+	      	},
+	      	complete: function() {
+	        	setTimeout(function() {
+	          		$( '#status' ).slideUp( 'slow' );
+	        	}, 1000);
+	        	setTimeout(function() {  
+	        		$( '#tabmenu' ).tabs( 'load', 1 ); // Reloads the tab so that new change can be displayed instanly
+	        	}, 1005);
+	      	},
+	      	cache: false
+    	});
+    	
+    	//$( '#EditPlayerForm form #z' ).remove();
+    },
+
+	// delete player information to database from dialog form
+  	del: function() { 
+    	var form_data = $( '#DelPlayerForm form' ).serialize();
+	    $.ajax({
+	      	type: "POST",
+	      	url: "../manager/delete_player.php",
+	      	data: form_data, // Data that I'm sending
+	      	error: function() {
+	        	$( '#status' ).text( 'Delete failed. Try again.' ).slideDown( 'slow' );
+	     	},
 	      	success: function() {   
-	        	$( '#status' ).text( 'Edit successful!' ).slideDown( 'slow' ); // DEBUG NOTE: THis happends even if no changes  	
+	        	$( '#status' ).text( 'Delete successful!' ).slideDown( 'slow' ); // DEBUG NOTE: THis happends even if no changes  	
 	      	},
 	      	complete: function() {
 	        	setTimeout(function() {
@@ -274,8 +325,15 @@ $(document).ready(function()
 						$( "#AddPlayerForm" ).dialog( "open" );
 					});
 					
-					$( ".edit-player" ).on("click", function() {
+					// Binds click to ajax loaded edit button
+					$( "#roster" ).on("click", ".edit-player", function() {
+						idplayer = this.value;
 						$( "#EditPlayerForm" ).dialog( "open" );
+					});
+
+					// Binds click to ajax loaded delete button
+					$( "#roster" ).on("click", ".delete-player", function() {
+						$( "#DelPlayerForm" ).dialog( "open" );
 					});
 					break;
 				case 2:
@@ -295,7 +353,6 @@ $(document).ready(function()
 	$("#update").on("click", function() {
 		TEAM.update();
 	});
-
 
   	
 });
