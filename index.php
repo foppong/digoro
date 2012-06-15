@@ -102,8 +102,5 @@
 		</fieldset>
 	</form>
 
-	<p>Click <a href="core/register.php">here</a> to create an account.</p>
-	<p><a href="core/forgot_password.php">Forgot your password?</a></p>
-
 
 <?php include 'includes/ifooter.html'; ?>
