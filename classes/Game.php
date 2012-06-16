@@ -115,17 +115,17 @@
 			
 			// Execute the query:
 			$stmt->execute();
-/*			
+			
 			// Print a message based upon result:
 			if ($stmt->affected_rows == 1)
 			{
-				echo '<p>Your game was added succesfully.</p>';
+				echo 'Your game was added succesfully';
 			}
 			else
 			{
-				echo '<p class="error">Your game was not added. Please contact the service administrator.</p>';
+				echo 'Your game was not added. Please contact the service administrator';
 			}
-*/
+
 			// Close the statement:
 			$stmt->close();
 			unset($stmt);			
@@ -151,11 +151,11 @@
 			// MAY NOT WANT THESE MESSAGES LATER ON
 			if ($stmt->affected_rows == 1) // And update to the database was made
 			{				
-				echo '<p>The game has been edited.</p>';
+				echo 'This game has been edited';
 			}
 			else 
 			{	// Either did not run ok or no updates were made
-				echo '<p>No changes were made.</p>';
+				echo 'No changes were made';
 			}
 				
 			// Update attributes
@@ -187,13 +187,13 @@
 			if ($stmt->affected_rows == 1) 
 			{
 				// Print a message
-				echo '<p>The game has been deleted successfully.</p>';
+				echo 'This game has been deleted successfully';
 				include '../includes/footer.html';
 				exit();
 			}
 			else 
 			{	// If the query did not run ok.
-				echo '<p class="error">The game could not be deleted due to a system errror.</p>';
+				echo 'The game could not be deleted due to a system errror';
 				exit();
 			}
 				

@@ -1,10 +1,11 @@
 <?php
 	// add_game.php
 	// This page allows a logged-in user to add a game to the schedule
-		
+
+	ob_start();
+	session_start();	
+			
 	require '../includes/config.php';
-	$page_title = 'digoro : Add Game';
-	include '../includes/header.html';
 	include '../includes/php-functions.php';
 
 	// autoloading of classes
@@ -61,7 +62,8 @@
 		}
 		else 
 		{
-			echo '<p class="error"> Please enter a date.</p>';
+			echo 'Please enter a date';
+			exit();
 		}		
 		
 		// Validate game time is entered
@@ -71,7 +73,8 @@
 		}
 		else 
 		{
-			echo '<p class="error"> Please enter a time.</p>';
+			echo 'Please enter a time';
+			exit();
 		}
 	
 		// Validate opponent is entered
@@ -117,29 +120,17 @@
 		// Checks if team is selected and date format and entered time are valid before adding game to team.
 		if ($ctmID && $gdfrmat && $tm)
 		{
-
 			// Create game object for use & push game to database for specified team
 			$game = new Game();
 			$game->setDB($db);
-			$game->createGame($ctmID, $gdfrmat, $tm, $opp, $ven, $res, $note);
-	
-			$json[] = array('<p>Game was successfully added.</p><br />');
-
-			// Send the JSON data:
-			echo json_encode($json);
-
-			// Close the connection:
-			$db->close();
-			unset($db);
-			
-			include '../includes/footer.html';
-			exit();			
+			$game->createGame($ctmID, $gdfrmat, $tm, $opp, $ven, $res, $note);		
 		}
 		else 
 		{									
-			echo '<p class="error">Please try again.</p>';
+			echo 'Please try again';
 		}
-	
+	}
+
 	// Delete objects
 	unset($game);
 	unset($manager);
@@ -147,8 +138,5 @@
 	// Close the connection:
 	$db->close();
 	unset($db);		
-	}
 
-	include '../includes/footer.html'; 
-	
 ?>

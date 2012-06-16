@@ -2,9 +2,10 @@
 	// This page is for editing a game
 	// This page is accessed through view_sch.php
 	
+	ob_start();
+	session_start();	
+		
 	require '../includes/config.php';
-	$page_title = 'digoro : Edit Game';
-	include '../includes/header.html';
 	include '../includes/php-functions.php';
 
 	// autoloading of classes
@@ -35,19 +36,7 @@
 	// Establish database connection
 	require_once MYSQL2;
 
-	if ( (isset($_GET['x'])) && (is_numeric($_GET['x'])) ) // From view schedule page
-	{
-		$id = $_GET['x'];
-		
-		// Create game object for use & pull latest data from database & initially set attributes
-		$game = new Game();
-		$game->setDB($db);
-		$game->setGameID($id);
-		$game->pullGameData();
-		$game->checkAuth($userID);
-
-	}
-	elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z'])) // Confirmation that form has been submitted from edit_player page	
+	if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z'])) // Confirmation that form has been submitted from edit_player page	
 	{
 		$id = $_POST['z'];
 
@@ -69,7 +58,8 @@
 		}
 		else 
 		{
-			echo '<p class="error"> Please enter a date.</p>';
+			echo 'Please enter a date';
+			exit();
 		}		
 		
 		// Validate game time is entered
@@ -79,7 +69,8 @@
 		}
 		else 
 		{
-			echo '<p class="error"> Please enter a time.</p>';
+			echo 'Please enter a time';
+			exit();
 		}
 	
 		// Validate opponent is entered
@@ -116,11 +107,11 @@
 		if ($gdfrmat && $tm)
 		{
 			$game->editGame($userID, $gdfrmat, $tm, $opp, $ven, $res, $id);
-			// NEED CODE HERE TO TAKE USER BACK TO HOME PAGE
 		}
 		else
 		{	// Errors in the user entered information
-			echo '<p class="error">Please try again.</p>';
+			echo 'Please try again';
+			exit();
 		}
 	}
 	else 
@@ -128,70 +119,6 @@
 		echo '<p class="error">This page has been accessed in error.</p>';
 		include '../includes/footer.html';
 		exit();		
-	}
-	
-	// Get attributes from game object
-	
-	$bdfrmatOB = $game->getGameAttribute('gdate');
-	$gd = new DateTime($bdfrmatOB);
-	$gdfrmt = $gd->format('m/d/Y'); // Format date from database into more common format to display in form
-
-	$tmOB = $game->getGameAttribute('gtime');
-	$oppOB = $game->getGameAttribute('opponent');
-	$venOB = $game->getGameAttribute('venue');
-	$resOB = $game->getGameAttribute('result');
-
-	if ($bdfrmatOB != '') // Valid user ID, show the form.	
-	{		
-		echo '<h2>Edit Game</h2>';
-				
-		// Create the form:
-		echo '<form action ="edit_game.php" method="post" id="EditGameForm">
-			<fieldset>
-			<input type="hidden" name="z" value="' . $id . '" />
-					
-			<div>
-				<label for="date"><b>Select Game Date:</b></label>
-				<input type="text" name="date" id="date" size="10" maxlength="10"
-				value="' . $gdfrmt . '" />
-			</div>
-				
-			<div>
-				<label for="time"><b>Enter Game Time:</b></label>
-				<input type="text" name="time" id="time" size="9" maxlength="9"
-				value="' . $tmOB . '" />
-				<small>Ex. 6:30 PM</small>
-			</div>
-					
-			<div>
-				<label for="text"><b>Enter Opponent:</b></label>
-				<input type="text" name="opp" id="opp" size="30" maxlength="45" 
-				value="' . $oppOB . '" />
-			</div>
-					
-			<div>
-				<label for="text"><b>Enter Venue:</b></label>
-				<input type="text" name="ven" id="ven" size="30" maxlength="45" 
-				value="' . $venOB . '" />
-			</div>
-					
-			<div>
-				<label for="resP"><b>Enter Results:</b></label>
-				<input type="text" name="res" id="res" size="13" maxlength="13" 
-				value="' . $resOB . '" />
-				<small>Ex. W 4-3</small>
-			</div>	
-				
-			<input type="submit" name="submit" value="Save"/>
-			</fieldset>
-			</form><br />';
-	}
-	else 
-	{		
-		//Not a valid user ID, kill the script
-		echo '<p class="error">This page has been accessed in error.</p>';
-		include '../includes/footer.html';
-		exit();
 	}
 		
 	// Delete objects
@@ -201,6 +128,5 @@
 	// Close the connection:
 	$db->close();
 	unset($db);
-					
-	include '../includes/footer.html';
+
 ?>

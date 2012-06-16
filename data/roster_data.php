@@ -135,8 +135,8 @@
 			'Gender' => $genOB,
 			'Position' => $posOB,
 			'Jersey' => $jnOB,
-			'Edit' => '<button class="edit-player" value=' . $idOB . '>Edit Player</button>',
-			'Delete' => '<button class="delete-player" value=' . $idOB . '>Delete Player</button>');
+			'Edit' => '<button class="edit_player" value=' . $idOB . '>Edit</button>',
+			'Delete' => '<button class="delete_player" value=' . $idOB . '>Delete</button>');
 		}	// End of WHILE loop
 	
 		// Send the JSON data:
@@ -145,7 +145,7 @@
 	else 
 	{	// No registered users
 		$json[] = array(
-			'<p class="error">You have no players on your roster.</p><br />');
+			'<p class="error">You have no players on your roster. Click add player to add a player.</p><br />');
 			
 		// Send the JSON data:
 		echo json_encode($json);
