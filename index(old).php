@@ -1,11 +1,11 @@
 <?php 
 
-	require '../includes/config.php';
-	include '../includes/iheader.html';
+	require 'includes/config.php';
+	include 'includes/iheader.html';
 
 	// autoloading of classes
 	function __autoload($class) {
-		require_once('../classes/' . $class . '.php');
+		require_once('classes/' . $class . '.php');
 	}
 	
 	// Authorized Login Check
@@ -18,16 +18,16 @@
 		switch ($role)
 		{
 			case 'A':
-				$url = BASE_URL . '../admin/admin_home.php'; 
+				$url = BASE_URL . 'admin/admin_home.php';
 				break;
 			case 'M':
-				$url = BASE_URL . '../manager/manager_home.php';
+				$url = BASE_URL . 'manager/manager_home.php';
 				break;
 			case 'P':
-				$url = BASE_URL . '../player/player_home.php';
+				$url = BASE_URL . 'player/player_home.php';
 				break;
 			default:
-				$url = BASE_URL . 'fatbar.php';
+				$url = BASE_URL . 'index.php';
 				break;
 		}
 		
@@ -38,7 +38,7 @@
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
 		// Need the database connection:
-		require MYSQL2;
+		require MYSQL1;
 
 		// Validate email address
 		if (filter_var($_POST['email'], FILTER_VALIDATE_EMAIL))
@@ -88,7 +88,7 @@
 	<h2>Log In</h2>
 	<p id="no-script">You must have JavaScript enabled!</p>
 	<p>Your browser must allow cookies in order to log in.</p>
-	<form action="fatbar.php" method="post" id="loginform">
+	<form action="index.php" method="post" id="loginform">
 		<fieldset>
 		<div>
 			<label for="email"><b>Email Address:</b></label>
@@ -102,8 +102,9 @@
 		</fieldset>
 	</form>
 
-	<p>Click <a href="../core/register.php">here</a> to create an account.</p>
-	<p><a href="../core/forgot_password.php">Forgot your password?</a></p>
+	<p>Click <a href="core/register.php">here</a> to create an account.</p>
+	<p><a href="core/forgot_password.php">Forgot your password?</a></p>
 
 
 <?php include '../includes/ifooter.html'; ?>
+
