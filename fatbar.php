@@ -88,7 +88,7 @@
 	<h2>Log In</h2>
 	<p id="no-script">You must have JavaScript enabled!</p>
 	<p>Your browser must allow cookies in order to log in.</p>
-	<form action="index.php" method="post" id="loginform">
+	<form action="fatbar.php" method="post" id="loginform">
 		<fieldset>
 		<div>
 			<label for="email"><b>Email Address:</b></label>
