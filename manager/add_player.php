@@ -1,10 +1,11 @@
 <?php
 	// add_player.php
 	// This page allows a logged-in user to add a player to a team
-	
+
+	ob_start();
+	session_start();
+		
 	require '../includes/config.php';
-	$page_title = 'digoro : Add Player';
-	include '../includes/header.html';
 	include '../includes/php-functions.php';
 
 	// autoloading of classes
@@ -63,7 +64,8 @@
 		}
 		else 
 		{
-			echo '<p class="error"> Please enter valid first name.</p>';
+			echo "Please enter a valid first name";	
+			exit();
 		}
 	
 		// Validate lastname
@@ -73,7 +75,8 @@
 		}
 		else 
 		{
-			echo '<p class="error"> Please enter valid last name.</p>';
+			echo "Please enter a valid last name";
+			exit();
 		}
 	
 		// Validate email
@@ -83,7 +86,8 @@
 		}
 		else 
 		{
-			echo '<p class="error"> Please enter valid email address.</p>';
+			echo "Please enter a valid email";
+			exit();
 		}
 
 		// Checks if name, email, and league are valid before proceeding.
@@ -92,29 +96,26 @@
 			$member = new Member();
 			$member->setDB($db);
 			$member->createMember($e, $ctmID, $fn, $ln);
-
-			// Close the connection:
-			$db->close();
-			unset($db);
-				
-			include '../includes/footer.html';
-			exit();	
-
 		}
 		else 
 		{									
-			echo '<p class="error">Please try again.</p>';
+			echo "Please try again";
 		}
 	}
-
+	else 
+	{
+		// No valid ID, kill the script.
+		echo '<p class="error">This page has been accessed in error.</p>';
+		include '../includes/footer.html';
+		exit();		
+	}
+	
 	// Delete objects
 	unset($member);
 	unset($manager);
 
 	// Close the connection:
 	$db->close();
-	unset($db);	
-
-include '../includes/footer.html'; 
+	unset($db);	 
 
 ?>

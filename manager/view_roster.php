@@ -96,9 +96,7 @@
 
 		<div id="DelPlayerForm" title="Delete Player">
 			<form method="post">
-				<input type="hidden" name="z" value="' . $id . '" />
-				<input type="radio" name="sure" value="Yes" />Yes<br />
-				<input type="radio" name="sure" value="No" checked="checked" />No<br />
+				<p>Are you sure you want to remove this player?</p>
 			</form>
 		</div>
 

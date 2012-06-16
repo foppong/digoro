@@ -100,7 +100,7 @@
 	$tm = $_SESSION['ctmID'];	
 
 	// Make the Query:
-	$q = "SELECT CONCAT(u.first_name, ' ', u.last_name) AS name, u.gender, u.email, p.id_player, p.position
+	$q = "SELECT CONCAT(u.first_name, ' ', u.last_name) AS name, u.gender, u.email, p.id_player, p.position, p.jersey_number
 		FROM players AS p INNER JOIN users AS u
 		USING (id_user)
 		WHERE p.id_team=?";
@@ -118,7 +118,7 @@
 	$stmt->store_result();
 			
 	// Bind the outbound variable:
-	$stmt->bind_result($nOB, $genOB, $eOB, $idOB, $posOB);
+	$stmt->bind_result($nOB, $genOB, $eOB, $idOB, $posOB, $jnOB);
 			
 	// If there are results to show.
 	if ($stmt->num_rows > 0)
@@ -134,6 +134,7 @@
 			'Email' => $eOB,
 			'Gender' => $genOB,
 			'Position' => $posOB,
+			'Jersey' => $jnOB,
 			'Edit' => '<button class="edit-player" value=' . $idOB . '>Edit Player</button>',
 			'Delete' => '<button class="delete-player" value=' . $idOB . '>Delete Player</button>');
 		}	// End of WHILE loop
