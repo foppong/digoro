@@ -5,7 +5,7 @@
 
 	// autoloading of classes
 	function __autoload($class) {
-		require_once('classes/' . $class . '.php');
+		require_once('../classes/' . $class . '.php');
 	}
 	
 	// Authorized Login Check
@@ -38,7 +38,7 @@
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
 		// Need the database connection:
-		require MYSQL1;
+		require MYSQL2;
 
 		// Validate email address
 		if (filter_var($_POST['email'], FILTER_VALIDATE_EMAIL))
