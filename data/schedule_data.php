@@ -73,9 +73,9 @@
 			'Time' => $timeOB,
 			'Opponent' => stripslashes($oppOB),
 			'Venue' => stripslashes($venOB),
-			'Result' => $resOB,	
-			'Edit' => '<a href=edit_game.php?x=' . $idOB . '>Edit</a>',
-			'Delete' => '<a href=delete_game.php?x=' . $idOB . '>Delete</a>');
+			'Result' => $resOB,
+			'Edit' => '<button class="edit_game" value=' . $idOB . '>Edit</button>',
+			'Delete' => '<button class="delete_game.php" value=' . $idOB . '>Delete</button>');
 		}	// End of WHILE loop
 			
 		// Send the JSON data:
@@ -85,7 +85,7 @@
 	else 
 	{	// No games or events scheduled
 		
-		$json[] = array('<p class="error">You have no games scheduled.  Click the add game button to add a game.');
+		$json[] = array('<p class="error">You have no games scheduled. Click the add game button to add a game.');
 			
 		// Send the JSON data:
 		echo json_encode($json);

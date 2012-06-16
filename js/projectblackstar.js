@@ -78,14 +78,14 @@ var PLAYER = {
 	        	$( '#status' ).text( 'Update failed. Try again.' ).slideDown( 'slow' );
 	     	},
 	      	success: function( data ) {   
-	        	$( '#status' ).text( data ).slideDown( 'slow' );
 	        	ROSTER.loadRoster(); //Call to roster.js
+	        	$( '#status' ).text( data ).slideDown( 'slow' );
 	        	MISCFUNCTIONS.clearForm( '#AddPlayerForm form' );
 	      	},
 	      	complete: function() {
 	        	setTimeout(function() {
 	          		$( '#status' ).slideUp( 'slow' );
-	        	}, 2500);
+	        	}, 1500);
 	      	},
 	      	cache: false
     	});
@@ -103,14 +103,14 @@ var PLAYER = {
 	        	$( '#status' ).text( 'Edit failed. Try again.' ).slideDown( 'slow' );
 	     	},
 	      	success: function( data ) { 
-	        	$( '#status' ).text( data ).slideDown( 'slow' );
 	        	ROSTER.loadRoster(); //Call to roster.js
+	        	$( '#status' ).text( data ).slideDown( 'slow' );
 	        	MISCFUNCTIONS.clearForm( '#EditPlayerForm form' );   	
 	      	},
 	      	complete: function() {
 	        	setTimeout(function() {
 	          		$( '#status' ).slideUp( 'slow' );
-	        	}, 2500);
+	        	}, 1500);
 	      	},
 	      	cache: false
     	});
@@ -128,13 +128,13 @@ var PLAYER = {
 	        	$( '#status' ).text( 'Delete failed. Try again.' ).slideDown( 'slow' );
 	     	},
 	      	success: function( data ) {   
-	        	$( '#status' ).text( data ).slideDown( 'slow' );
-	        	ROSTER.loadRoster(); //Call to roster.js	    
+	        	ROSTER.loadRoster(); //Call to roster.js
+	        	$( '#status' ).text( data ).slideDown( 'slow' );	    
 	      	},
 	      	complete: function() {
 	        	setTimeout(function() {
 	          		$( '#status' ).slideUp( 'slow' );
-	        	}, 2500);
+	        	}, 1500);
 	      	},
 	      	cache: false
     	});
@@ -146,7 +146,7 @@ var PLAYER = {
 var GAME = {
 
 	loadDialog: function() {
-		$("#date").datepicker();
+		//$( ".date" ).datepicker();
 		$( "#AddGameForm" ).dialog({
 			autoOpen: false,
 			height: 400,
@@ -156,18 +156,36 @@ var GAME = {
 				"Add New Game": function() {
 					// Add game to database
 					GAME.add();					
-					$( this ).dialog( "destroy" ).remove();
+					$( this ).dialog( "close" );
 				},
 				Cancel: function() {
 					$( this ).dialog( "close" );
 				}
 			}
 		});		
+
+		$( "#EditGameForm" ).dialog({
+			autoOpen: false,
+			height: 400,
+			width: 400,
+			modal: true,
+			buttons: {
+				"Edit Game": function() {
+					// Edit game in database
+					GAME.edit();					
+					$( this ).dialog( "close" );
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			}
+		});	
+
 	},
 
 	// add game information to database from dialog form
   	add: function() { 
-    	var form_data = $( 'form' ).serialize();
+    	var form_data = $( '#AddGameForm form' ).serialize();
 	    $.ajax({
 	      	type: "POST",
 	      	url: "../manager/add_game.php",
@@ -175,20 +193,44 @@ var GAME = {
 	      	error: function() {
 	        	$( '#status' ).text( 'Update failed. Try again.' ).slideDown( 'slow' );
 	     	},
-	      	success: function() {   
-	        	$( '#status' ).text( 'Update successful!' ).slideDown( 'slow' ); // DEBUG NOTE: THis happends even if no changes  	
+	      	success: function( data ) {   
+	        	SCHEDULE.loadSchedule(); //Call to schedule.js
+	        	$( '#status' ).text( data ).slideDown( 'slow' ); 	
+	        	MISCFUNCTIONS.clearForm( '#AddGameForm form' );
 	      	},
 	      	complete: function() {
 	        	setTimeout(function() {
 	          		$( '#status' ).slideUp( 'slow' );
-	        	}, 1000);
-	        	setTimeout(function() {
-	        		$( '#tabmenu' ).tabs( 'load', 2 ); // Reloads the tab so that new change can be displayed instanly
-	        	}, 1005);
+	        	}, 1500);
 	      	},
 	      	cache: false
     	});
-    }
+    },
+    
+	// edit game information to database from dialog form
+  	edit: function() { 
+		$( '#EditGameForm form' ).append( '<input type="hidden" id="z" name="z" value="' + idplayer + '"/>' );
+    	var form_data = $( '#EditGameForm form' ).serialize();
+	    $.ajax({
+	      	type: "POST",
+	      	url: "../manager/edit_game.php",
+	      	data: form_data, // Data that I'm sending
+	      	error: function() {
+	        	$( '#status' ).text( 'Edit failed. Try again.' ).slideDown( 'slow' );
+	     	},
+	      	success: function( data ) { 
+	        	SCHEDULE.loadSchedule(); //Call to schedule.js
+	        	$( '#status' ).text( data ).slideDown( 'slow' );
+	        	MISCFUNCTIONS.clearForm( '#EditGameForm form' );   	
+	      	},
+	      	complete: function() {
+	        	setTimeout(function() {
+	          		$( '#status' ).slideUp( 'slow' );
+	        	}, 1500);
+	      	},
+	      	cache: false
+    	});
+    },
 } 
 
 var id = $('input#id').val();
@@ -233,7 +275,7 @@ var TEAM = {
 	      	complete: function() {  // LATER ON I COULD PASS THE DATA BACK AND POSSIBLY USE IT TO BUILD THE STICKY FORM, have to put jsonencode on php end
 	        	setTimeout(function() {
 	          		$('#status').slideUp('slow');
-	        		}, 2000);
+	        		}, 1500);
 	      	},
 	      	cache: false
     	});
@@ -286,7 +328,7 @@ var LEAGUE = {
 	}
 }
 
-
+// Function to clear out form contents in DOM
 var MISCFUNCTIONS = {
 	
 	clearForm: function( form ) {
@@ -331,13 +373,13 @@ $(document).ready(function()
 					});
 					
 					// Binds click to ajax loaded edit button
-					$( "#roster" ).on("click", ".edit-player", function() {
+					$( "#roster" ).on("click", ".edit_player", function() {
 						idplayer = this.value;
 						$( "#EditPlayerForm" ).dialog( "open" );
 					});
 
 					// Binds click to ajax loaded delete button
-					$( "#roster" ).on("click", ".delete-player", function() {
+					$( "#roster" ).on("click", ".delete_player", function() {
 						idplayer = this.value;
 						$( "#DelPlayerForm" ).dialog( "open" );
 					});
@@ -348,6 +390,18 @@ $(document).ready(function()
 	
 					$( "#add-game" ).on("click", function() {
 						$( "#AddGameForm" ).dialog( "open" );
+					});
+
+					// Binds click to ajax loaded edit button
+					$( "#schedule" ).on("click", ".edit_game", function() {
+						idplayer = this.value;
+						$( "#EditGameForm" ).dialog( "open" );
+					});
+
+					// Binds click to ajax loaded delete button
+					$( "#schedule" ).on("click", ".delete_player", function() {
+						idplayer = this.value;
+						$( "#DelGameForm" ).dialog( "open" );
 					});
 					break;
 				default:		
