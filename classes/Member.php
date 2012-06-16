@@ -110,10 +110,10 @@
 				$stmt->execute();
 						
 				if ($stmt->affected_rows == 1) { // It ran ok
-					echo '<p>' . $fn . ' ' . $ln . ' was added successfully.</p>';
+					echo $fn . ' ' . $ln . ' was added successfully';
 				}
 				else {
-					echo '<p class="error">Player ' . $fn . ' ' . $ln . ' was not added. Please contact the service administrator.</p>';
+					echo 'Player ' . $fn . ' ' . $ln . ' was not added. Please contact the service administrator';
 				}
 			
 				// Close the statement:
@@ -155,10 +155,10 @@
 					$stmt->execute();
 						
 					if ($stmt->affected_rows == 1) { // It ran ok
-						echo '<p>' . $fn . ' ' . $ln . ' was added successfully.</p>';
+						echo $fn . ' ' . $ln . ' was added successfully';
 					}
 					else {
-						echo '<p class="error">Player' . $fn . ' ' . $ln . ' was not added. Please contact the service administrator.</p>';
+						echo 'Player' . $fn . ' ' . $ln . ' was not added. Please contact the service administrator';
 					}
 
 					// Add conditional here somehow so that Manager has option to submit request or not
@@ -176,8 +176,8 @@
 
 				}
 				else {	// Registration process did not run OK.
-					echo '<p class="error">Invitation could not be sent. We apologize
-						for any inconvenience.</p>';
+					echo 'Invitation could not be sent. We apologize
+						for any inconvenience';
 				}
 			}
 		} // End of createMember function
@@ -239,10 +239,10 @@
 	
 				// MAY NOT WANT THESE MESSAGES LATER ON
 				if ($stmt->affected_rows == 1) { // And update to the database was made
-					echo '<p>The member has been edited.</p>';
+					echo 'The member has been edited';
 				}
 				else { // Either did not run ok or no updates were made
-					echo '<p>No changes were made.</p>';
+					echo 'No changes were made';
 				}
 				
 				// Update attributes
@@ -253,7 +253,7 @@
 				unset($stmt);
 			}
 			else {
-				echo '<p class="error">This page has been accessed in error.</p>';
+				echo 'This page has been accessed in error';
 				include '../includes/footer.html';
 				exit();				
 			}
@@ -279,12 +279,11 @@
 				// If the query ran ok.
 				if ($stmt->affected_rows == 1) {	
 					// Print a message
-					echo '<p>The player has been deleted successfully.</p>';
-					include '../includes/footer.html';
+					echo 'The player has been deleted successfully';
 					exit();				
 				}
 				else {	// If the query did not run ok.
-					echo '<p class="error">The member could not be deleted due to a system errror.</p>';
+					echo 'The member could not be deleted due to a system errror';
 					exit();
 				}
 				
@@ -293,7 +292,7 @@
 				unset($stmt);
 			}
 			else {
-				echo '<p class="error">This page has been accessed in error.</p>';
+				echo 'This page has been accessed in error';
 				include '../includes/footer.html';
 				exit();				
 			}			
