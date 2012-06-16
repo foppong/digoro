@@ -24,7 +24,7 @@ var PLAYER = {
 				"Add Player": function() {
 					// Add player to database
 					PLAYER.add();					
-					$( this ).dialog( "destroy" ).remove();
+					$( this ).dialog( "close" );
 				},
 				Cancel: function() {
 					$( this ).dialog( "close" );
@@ -41,7 +41,7 @@ var PLAYER = {
 				"Edit Player": function() {
 					// Edit player in database
 					PLAYER.edit();					
-					$( this ).dialog( "destroy" ).remove();
+					$( this ).dialog( "close" );
 				},
 				Cancel: function() {
 					$( this ).dialog( "close" );
@@ -58,7 +58,7 @@ var PLAYER = {
 				"Delete Player": function() {
 					// Delete player from database
 					PLAYER.del();					
-					$( this ).dialog( "destroy" ).remove();
+					$( this ).dialog( "close" );
 				},
 				Cancel: function() {
 					$( this ).dialog( "close" );
@@ -77,16 +77,15 @@ var PLAYER = {
 	      	error: function() {
 	        	$( '#status' ).text( 'Update failed. Try again.' ).slideDown( 'slow' );
 	     	},
-	      	success: function() {   
-	        	$( '#status' ).text( 'Update successful!' ).slideDown( 'slow' ); // DEBUG NOTE: THis happends even if no changes  	
+	      	success: function( data ) {   
+	        	$( '#status' ).text( data ).slideDown( 'slow' );
+	        	ROSTER.loadRoster(); //Call to roster.js
+	        	MISCFUNCTIONS.clearForm( '#AddPlayerForm form' );
 	      	},
 	      	complete: function() {
 	        	setTimeout(function() {
 	          		$( '#status' ).slideUp( 'slow' );
-	        	}, 1000);
-	        	setTimeout(function() {  
-	        		$( '#tabmenu' ).tabs( 'load', 1 ); // Reloads the tab so that new change can be displayed instanly
-	        	}, 1005);
+	        	}, 2500);
 	      	},
 	      	cache: false
     	});
@@ -94,10 +93,7 @@ var PLAYER = {
     
 	// edit player information to database from dialog form
   	edit: function() { 
-		//var idplayer = $( '.edit-player' ).attr("value");
-alert(idplayer);
 		$( '#EditPlayerForm form' ).append( '<input type="hidden" id="z" name="z" value="' + idplayer + '"/>' );
-
     	var form_data = $( '#EditPlayerForm form' ).serialize();
 	    $.ajax({
 	      	type: "POST",
@@ -106,26 +102,23 @@ alert(idplayer);
 	      	error: function() {
 	        	$( '#status' ).text( 'Edit failed. Try again.' ).slideDown( 'slow' );
 	     	},
-	      	success: function(data) {
-	      		alert(data);   
-	        	$( '#status' ).text( 'Edit worked.' ).slideDown( 'slow' ); // DEBUG NOTE: THis happends even if no changes  	
+	      	success: function( data ) { 
+	        	$( '#status' ).text( data ).slideDown( 'slow' );
+	        	ROSTER.loadRoster(); //Call to roster.js
+	        	MISCFUNCTIONS.clearForm( '#EditPlayerForm form' );   	
 	      	},
 	      	complete: function() {
 	        	setTimeout(function() {
 	          		$( '#status' ).slideUp( 'slow' );
-	        	}, 1000);
-	        	setTimeout(function() {  
-	        		$( '#tabmenu' ).tabs( 'load', 1 ); // Reloads the tab so that new change can be displayed instanly
-	        	}, 1005);
+	        	}, 2500);
 	      	},
 	      	cache: false
     	});
-    	
-    	//$( '#EditPlayerForm form #z' ).remove();
     },
 
 	// delete player information to database from dialog form
   	del: function() { 
+		$( '#DelPlayerForm form' ).append( '<input type="hidden" id="z" name="z" value="' + idplayer + '"/>' );
     	var form_data = $( '#DelPlayerForm form' ).serialize();
 	    $.ajax({
 	      	type: "POST",
@@ -134,20 +127,19 @@ alert(idplayer);
 	      	error: function() {
 	        	$( '#status' ).text( 'Delete failed. Try again.' ).slideDown( 'slow' );
 	     	},
-	      	success: function() {   
-	        	$( '#status' ).text( 'Delete successful!' ).slideDown( 'slow' ); // DEBUG NOTE: THis happends even if no changes  	
+	      	success: function( data ) {   
+	        	$( '#status' ).text( data ).slideDown( 'slow' );
+	        	ROSTER.loadRoster(); //Call to roster.js	    
 	      	},
 	      	complete: function() {
 	        	setTimeout(function() {
 	          		$( '#status' ).slideUp( 'slow' );
-	        	}, 1000);
-	        	setTimeout(function() {  
-	        		$( '#tabmenu' ).tabs( 'load', 1 ); // Reloads the tab so that new change can be displayed instanly
-	        	}, 1005);
+	        	}, 2500);
 	      	},
 	      	cache: false
     	});
     }
+
 } 
 
 
@@ -295,6 +287,19 @@ var LEAGUE = {
 }
 
 
+var MISCFUNCTIONS = {
+	
+	clearForm: function( form ) {
+  		$(form).children('input, select, textarea').val('');
+ 		$(form).children('input[type=radio], input[type=checkbox]').each(function()
+  		{
+     		this.checked = false;
+     		// or
+     		$(this).attr('checked', false);
+  		});
+	}
+}
+
 // jQuery Code for when page is loaded
 $(document).ready(function()
 {
@@ -333,6 +338,7 @@ $(document).ready(function()
 
 					// Binds click to ajax loaded delete button
 					$( "#roster" ).on("click", ".delete-player", function() {
+						idplayer = this.value;
 						$( "#DelPlayerForm" ).dialog( "open" );
 					});
 					break;
