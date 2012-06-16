@@ -376,31 +376,32 @@
 					{
 						$user = new Manager($userID);						
 						$_SESSION['userObj'] = $user;
-						$url = BASE_URL . 'manager/mg_welcome.php';
+						$url = BASE_URL . '../manager/mg_welcome.php'; // Fix filepaths after stop using LaunchRock and go back to index
 						header("Location: $url");
 						exit();
 					}
 					
-					//Redirect User
+					//Redirect User **Fix filepaths after stop using LaunchRock and go back to index**
 					switch ($role)
 					{
 						case 'A':
 							$user = new Admin($userID);
 							$_SESSION['userObj'] = $user;							
-							$url = BASE_URL . 'admin/admin_home.php';
+							$url = BASE_URL . '../admin/admin_home.php'; // Fix filepaths after stop using LaunchRock and go back to index
 							break;
 						case 'M':
 							$user = new Manager($userID);						
 							$_SESSION['userObj'] = $user;
-							$url = BASE_URL . 'manager/manager_home.php';
+							$url = BASE_URL . '../manager/manager_home.php'; // Fix filepaths after stop using LaunchRock and go back to index
 							break;
 						case 'P':
 							$user = new Player($userID);							
 							$_SESSION['userObj'] = $user;							
-							$url = BASE_URL . 'player/player_home.php';
+							$url = BASE_URL . '../player/player_home.php'; // Fix filepaths after stop using LaunchRock and go back to index
 							break;
 						default:
-							$url = BASE_URL . 'index.php';
+							$url = BASE_URL . 'fatbar.php'; // Fix filename after stop using LaunchRock and go back to index
+/*							$url = BASE_URL . 'index.php';       */
 							break;
 					}
 	
