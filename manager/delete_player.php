@@ -38,6 +38,7 @@
 
 	if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z'])) // Confirmation that form has been submitted from delete_player page	
 	{
+		// Assign variable from FORM submission (hidden id field)	
 		$id = $_POST['z'];
 
 		// Create member object for use & pull latest data from database & initially set attributes

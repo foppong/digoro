@@ -71,6 +71,7 @@
 			<form method="post">
 				<label for="date">Select Game Date:</label>
 				<input type="text" name="date" class="date" tabindex="-1" size="10" maxlength="10" class="text ui-widget-content ui-corner-all" />
+				<br /><small>Click calendar icon to enter date</small>
 		
 				<label for="time">Enter Game Time:</label>
 				<input type="text" name="time" id="time" size="9" maxlength="9" class="text ui-widget-content ui-corner-all" />
@@ -82,33 +83,37 @@
 				<input type="text" name="ven" id="ven" size="30" maxlength="45" class="text ui-widget-content ui-corner-all" />
 		
 				<label for="note">Enter Game Notes:</label>
-				<textarea id="note" name="note" cols="30" rows="2" class="text ui-widget-content ui-corner-all"></textarea><br />
-				<small>Enter any notes about the game.</small><br />
+				<textarea id="note" name="note" cols="30" rows="2" class="text ui-widget-content ui-corner-all"></textarea>
+				<br /><small>Enter any notes about the game.</small>
 		
 				<label for="res">Enter Results:</label>
 				<input type="text" name="res" id="res" size="13" maxlength="13" class="text ui-widget-content ui-corner-all" />
-				<small>Ex. W 4-3</small>
+				<br /><small>Ex. W 4-3</small>
 			</form>
 		</div>
 
 		<div id="EditGameForm" title="Edit Game">
 			<form method="post">
-				<label for="date"><b>Select Game Date:</b></label>
-				<input type="text" name="date" class="date" size="10" maxlength="10" />
-
-				<label for="time"><b>Enter Game Time:</b></label>
-				<input type="text" name="time" id="time" size="9" maxlength="9" />
-				<small>Ex. 6:30 PM</small>
-					
-				<label for="text"><b>Enter Opponent:</b></label>
-				<input type="text" name="opp" id="opp" size="30" maxlength="45" />	
-
-				<label for="text"><b>Enter Venue:</b></label>
-				<input type="text" name="ven" id="ven" size="30" maxlength="45" />
-				
-				<label for="resP"><b>Enter Results:</b></label>
-				<input type="text" name="res" id="res" size="13" maxlength="13" />
-				<small>Ex. W 4-3</small>			
+				<label for="date">Select Game Date:</label>
+				<input type="text" name="date" class="date" tabindex="-1" size="10" maxlength="10" class="text ui-widget-content ui-corner-all" />
+				<br /><small>Click calendar icon to enter date</small>
+		
+				<label for="time">Enter Game Time:</label>
+				<input type="text" name="time" id="time" size="9" maxlength="9" class="text ui-widget-content ui-corner-all" />
+		
+				<label for="opp">Enter Opponent:</label>
+				<input type="text" name="opp" id="opp" size="30" maxlength="45" class="text ui-widget-content ui-corner-all" />
+		
+				<label for="ven">Enter Venue:</label>
+				<input type="text" name="ven" id="ven" size="30" maxlength="45" class="text ui-widget-content ui-corner-all" />
+		
+				<label for="note">Enter Game Notes:</label>
+				<textarea id="note" name="note" cols="30" rows="2" class="text ui-widget-content ui-corner-all"></textarea>
+				<br /><small>Enter any notes about the game.</small>
+		
+				<label for="res">Enter Results:</label>
+				<input type="text" name="res" id="res" size="13" maxlength="13" class="text ui-widget-content ui-corner-all" />
+				<br /><small>Ex. W 4-3</small>
 			</form>
 		</div>
 

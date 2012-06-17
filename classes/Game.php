@@ -188,7 +188,6 @@
 			{
 				// Print a message
 				echo 'This game has been deleted successfully';
-				include '../includes/footer.html';
 				exit();
 			}
 			else 

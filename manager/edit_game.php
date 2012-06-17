@@ -93,6 +93,16 @@
 			$ven = ''; 
 		}
 
+		// Validate a note is entered
+		if ($_POST['note'])
+		{
+			$note = $_POST['note'];
+		}
+		else 
+		{
+			$note = ''; 
+		}
+
 		// Validate a result is selected
 		if ($_POST['res'])
 		{
@@ -106,7 +116,7 @@
 		// Check if user entered information is valid before continuing to edit game
 		if ($gdfrmat && $tm)
 		{
-			$game->editGame($userID, $gdfrmat, $tm, $opp, $ven, $res, $id);
+			$game->editGame($userID, $gdfrmat, $tm, $opp, $ven, $res, $note);
 		}
 		else
 		{	// Errors in the user entered information

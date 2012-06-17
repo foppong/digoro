@@ -154,7 +154,7 @@ var GAME = {
 
 		$( "#AddGameForm" ).dialog({
 			autoOpen: false,
-			height: 400,
+			height: 450,
 			width: 400,
 			modal: true,
 			buttons: {
@@ -171,7 +171,7 @@ var GAME = {
 
 		$( "#EditGameForm" ).dialog({
 			autoOpen: false,
-			height: 400,
+			height: 450,
 			width: 400,
 			modal: true,
 			buttons: {
@@ -265,7 +265,7 @@ var GAME = {
 	        	$( '#status' ).text( 'Delete failed. Try again.' ).slideDown( 'slow' );
 	     	},
 	      	success: function( data ) {   
-	        	ROSTER.loadRoster(); //Call to roster.js
+	        	SCHEDULE.loadSchedule(); //Call to schedule.js
 	        	$( '#status' ).text( data ).slideDown( 'slow' );	    
 	      	},
 	      	complete: function() {
@@ -444,7 +444,7 @@ $(document).ready(function()
 					});
 
 					// Binds click to ajax loaded delete button
-					$( "#schedule" ).on("click", ".delete_player", function() {
+					$( "#schedule" ).on("click", ".delete_game", function() {
 						idplayer = this.value;
 						$( "#DelGameForm" ).dialog( "open" );
 					});

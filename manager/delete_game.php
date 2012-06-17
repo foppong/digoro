@@ -38,7 +38,7 @@
 
 	if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z'])) // Confirmation that form has been submitted from delete_player page	
 	{
-		// Assign variable from delete_player.php FORM submission (hidden id field)
+		// Assign variable from FORM submission (hidden id field)	
 		$id = $_POST['z'];
 
 		// Create game object for use & pull latest data from database & initially set attributes
@@ -47,6 +47,7 @@
 		$game->setGameID($id);
 		$game->pullGameData();
 		$game->checkAuth($userID);
+		$game->deleteGame($userID);
 	}
 	else 
 	{
