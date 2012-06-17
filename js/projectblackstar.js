@@ -144,9 +144,14 @@ var PLAYER = {
 
 
 var GAME = {
-
+		
 	loadDialog: function() {
-		//$( ".date" ).datepicker();
+		$( ".date" ).datepicker({
+			showOn: "button", //Could select both if I separate out the edit and add button b/c that date is triggering when loaded
+			buttonImage: "../css/imgs/calendar.gif",
+			buttonImageOnly: true
+		});
+
 		$( "#AddGameForm" ).dialog({
 			autoOpen: false,
 			height: 400,
@@ -180,7 +185,23 @@ var GAME = {
 				}
 			}
 		});	
-
+		
+		$( "#DelGameForm" ).dialog({
+			autoOpen: false,
+			height: 150,
+			width: 275,
+			modal: true,
+			buttons: {
+				"Delete Game": function() {
+					// Delete player from database
+					GAME.del();					
+					$( this ).dialog( "close" );
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			}			
+		});	
 	},
 
 	// add game information to database from dialog form
@@ -195,7 +216,7 @@ var GAME = {
 	     	},
 	      	success: function( data ) {   
 	        	SCHEDULE.loadSchedule(); //Call to schedule.js
-	        	$( '#status' ).text( data ).slideDown( 'slow' ); 	
+	        	$( '#status' ).text( data ).slideDown( 'slow' );	
 	        	MISCFUNCTIONS.clearForm( '#AddGameForm form' );
 	      	},
 	      	complete: function() {
@@ -231,6 +252,30 @@ var GAME = {
 	      	cache: false
     	});
     },
+    
+	// delete game information in database from dialog form
+  	del: function() { 
+		$( '#DelGameForm form' ).append( '<input type="hidden" id="z" name="z" value="' + idplayer + '"/>' );
+    	var form_data = $( '#DelGameForm form' ).serialize();
+	    $.ajax({
+	      	type: "POST",
+	      	url: "../manager/delete_game.php",
+	      	data: form_data, // Data that I'm sending
+	      	error: function() {
+	        	$( '#status' ).text( 'Delete failed. Try again.' ).slideDown( 'slow' );
+	     	},
+	      	success: function( data ) {   
+	        	ROSTER.loadRoster(); //Call to roster.js
+	        	$( '#status' ).text( data ).slideDown( 'slow' );	    
+	      	},
+	      	complete: function() {
+	        	setTimeout(function() {
+	          		$( '#status' ).slideUp( 'slow' );
+	        	}, 1500);
+	      	},
+	      	cache: false
+    	});
+    }
 } 
 
 var id = $('input#id').val();
@@ -354,7 +399,7 @@ $(document).ready(function()
 
 	// jQuery UI Tabs
 	$('#tabmenu').tabs({
-		//spinner: '<img src="../css/imgs/ajax-loader.gif" />', [NEED A SMALLER SPINNER]
+		spinner: '<img src="../css/imgs/ajax-loader.gif" />',
 		ajaxOptions: {
 			error: function( xhr, status, index, anchor ) {
 				$(anchor.hash).html(

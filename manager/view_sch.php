@@ -111,6 +111,12 @@
 				<small>Ex. W 4-3</small>			
 			</form>
 		</div>
+
+		<div id="DelGameForm" title="Delete Game">
+			<form method="post">
+				<p>Are you sure you want to remove this game?</p>
+			</form>
+		</div>
 		
 		<table id="schedule"></table>
 		
