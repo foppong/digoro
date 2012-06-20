@@ -33,8 +33,8 @@ var ABOUTTM = {
 		var pg = $("#about");
 		pg.html(""); // clear out slection menu if it was previously populated
 	
-		$(data).each(function(key, val) {
-			tmp += "<p>" + val.TeamAbout + "</p>";
+		$(data).each(function( key, val ) {
+			tmp += "<p>" + val.TeamAbout + "</p><br />" + val.Edit;
 		});
 		
 		pg.append(tmp);

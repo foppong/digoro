@@ -64,13 +64,13 @@
 			<h2>Schedule</h2>
 		</div><br />
 
-		<p id="status"></p>		
+		<p class="status"></p>		
 		<button id="add-game">Add Game</button>
 
 		<div id="AddGameForm" title="Add New Game">	
 			<form method="post">
-				<label for="date">Select Game Date:</label>
-				<input type="text" name="date" class="date" tabindex="-1" size="10" maxlength="10" class="text ui-widget-content ui-corner-all" />
+				<label for="dateAdd">Select Game Date:</label>
+				<input type="text" name="dateAdd" id="dateAdd" tabindex="1" size="10" maxlength="10" class="text ui-widget-content ui-corner-all pickdate" />
 				<br /><small>Click calendar icon to enter date</small>
 		
 				<label for="time">Enter Game Time:</label>
@@ -93,9 +93,9 @@
 		</div>
 
 		<div id="EditGameForm" title="Edit Game">
-			<form method="post">
+			<form method="dateEdit">
 				<label for="date">Select Game Date:</label>
-				<input type="text" name="date" class="date" tabindex="-1" size="10" maxlength="10" class="text ui-widget-content ui-corner-all" />
+				<input type="text" name="dateEdit" id="dateEdit" tabindex="-1" size="10" maxlength="10" class="text ui-widget-content ui-corner-all pickdate" />
 				<br /><small>Click calendar icon to enter date</small>
 		
 				<label for="time">Enter Game Time:</label>

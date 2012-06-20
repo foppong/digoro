@@ -1,0 +1,106 @@
+<?php
+	// myteams.php
+	// This script retrieves all the team records associated with user.
+	
+	ob_start();
+	session_start();
+
+	require '../includes/config.php';
+	include '../includes/php-functions.php';
+	
+	$page_title = 'digoro : My Teams';
+
+	// autoloading of classes
+	function __autoload($class) {
+		require_once('../classes/' . $class . '.php');
+	}
+
+	// Site access level -> General
+	$lvl = 'G'; 
+
+	// Assign user object from session variable
+	if (isset($_SESSION['userObj']))
+	{
+		$user = $_SESSION['userObj'];
+		$userID = $user->getUserID();
+	}
+	else 
+	{
+		redirect_to('index.php');
+	}
+
+	// Need the database connection:	
+	require_once MYSQL2;
+
+	// Assign Database Resource to object
+	$user->setDB($db);
+
+	// Authorized Login Check
+	if (!$user->valid($lvl))
+	{
+		redirect_to('index.php');
+	}
+
+	// Page header:
+	echo '<h2>My Teams</h2>';
+
+	//Series of code to set the default team
+	if ($_SERVER['REQUEST_METHOD'] == 'POST')
+	{
+		// Retreieve team ID selection from user form submission	
+		$teamID = $_POST['y'];
+		
+		// Set the new global session variable to new team ID
+		$_SESSION['ctmID'] = $teamID;
+
+		$user->setDefaultTeam($teamID);
+	}	
+			
+?>
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
+	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+		<title><?php echo $page_title; ?></title>
+		<meta name="author" content="Frank" />
+		<!-- External javascript call -->
+		<script type="text/javascript" src="../js/myteams.js"></script>
+		<!-- CSS Style Sheet -->
+		<link rel="stylesheet" type="text/css" href="../css/styles.css" />
+	</head>
+	<body>
+	
+	<p id="status"></p>
+
+	<form action="myteams.php" method="post" id="ViewRosterForm">	
+		<p id="teamP"><b>Select Your Default Team:</b>
+		<select name="y" id="y"></select>
+		<span class="errorMessage" id="teamPError">You must select your team.</span></p>		
+		
+		<div align="left"><input id="submit" type="submit" name="submit" value="Select" /></div>
+	</form><br>
+
+	<div id="EditTeamForm" title="Edit Team">	
+		<form method="post">
+			<label for="tname">New Team Name:</label><br/>
+			<input type="text" name="tname" id="tname" size="10" maxlength="45" />
+
+			<label for="abouttm">Team Information:</label><br/>
+			<textarea id="abouttm" name="abouttm" cols="30" rows="2"></textarea><br />
+			<small>Enter something cool about your team.</small>
+		</form>
+	</div>
+
+	<div id="DelTeamForm" title="Delete Team">
+		<form method="post">
+			<p>Are you sure you want to remove this team?</p>
+		</form>
+	</div>
+
+	<table id="MyTeams"></table>
+
+
+<?php 	include '../includes/footer.html'; ?>

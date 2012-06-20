@@ -148,19 +148,18 @@
 			// Execute the query:
 			$stmt->execute();
 	
-			// MAY NOT WANT THESE MESSAGES LATER ON
 			if ($stmt->affected_rows == 1) // And update to the database was made
 			{				
 				echo 'This game has been edited';
+
+				// Update attributes
+				self::setGameAttributes($this->id_team, $gmdate, $gtime, $opponent, $venue, $result, $note);
 			}
 			else 
 			{	// Either did not run ok or no updates were made
 				echo 'No changes were made';
 			}
-				
-			// Update attributes
-			self::setGameAttributes($this->id_team, $gmdate, $gtime, $opponent, $venue, $result, $note);
-
+		
 			// Close the statement:
 			$stmt->close();
 			unset($stmt);
@@ -188,12 +187,10 @@
 			{
 				// Print a message
 				echo 'This game has been deleted successfully';
-				exit();
 			}
 			else 
 			{	// If the query did not run ok.
 				echo 'The game could not be deleted due to a system errror';
-				exit();
 			}
 				
 			// Close the statement:

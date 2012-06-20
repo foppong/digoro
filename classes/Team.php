@@ -258,20 +258,17 @@
 			// Execute the query:
 			$stmt->execute();
 
-			if ($stmt->affected_rows == 1) // And update to the database was made
-			{				
-				//The team has been edited
-				$result = True;
+			// Print a message based upon result:
+			if ($stmt->affected_rows == 1)
+			{
+				self::setTeamNM($tmname);
+				self::setTeamABT($abtm);
+				echo 'Your team was edited succesfully';
 			}
-			else 
-			{	// Either did not run ok or no updates were made
-				$result = False;
+			else
+			{
+				echo 'No changes made';
 			}
-
-			self::setTeamNM($tmname);
-			self::setTeamABT($abtm);
-
-			return $result;
 
 		} // End of editTeam function
 

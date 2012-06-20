@@ -55,9 +55,9 @@
 		$gdfrmat = $tm = FALSE;
 		
 		// Validate game date
-		if ($_POST['date'])
+		if ($_POST['dateAdd'])
 		{
-			$bd = new DateTime($_POST['date']); // Convert js datepicker entry into format database accepts
+			$bd = new DateTime($_POST['dateAdd']); // Convert js datepicker entry into format database accepts
 			$gdfrmat = $bd->format('Y-m-d');
 		}
 		else 

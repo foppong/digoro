@@ -62,7 +62,7 @@
 			<h2>Roster</h2>
 		</div>
 
-		<p id="status"></p>
+		<p class="status"></p>
 
 		<button id="add-player">Add Player</button>
 		

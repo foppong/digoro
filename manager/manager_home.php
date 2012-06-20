@@ -98,7 +98,8 @@
 	</form>
 </div>
 
-<h2><?php echo stripslashes($teamname); ?></h2>
+<div id="TeamName"><h2><?php echo stripslashes($teamname); ?></h2></div><br />
+
 <div id="tabmenu" class="ui-tabs">
 	<ul>
 		<li><a href="view_abteam.php"><span>About</span></a></li>
