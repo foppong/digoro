@@ -10,6 +10,8 @@ $.ajaxSetup({"error":function(XMLHttpRequest,textStatus, errorThrown) {
   }});
 
 
+var myteamID;
+
 var MYTEAMS = {
 	
 	loadDialog: function() { 
@@ -32,12 +34,12 @@ var MYTEAMS = {
 		
 		$( "#DelTeamForm" ).dialog({
 			autoOpen: false,
-			height: 300,
-			width: 300,
+			height: 150,
+			width: 275,
 			modal: true,
 			buttons: {
 				"Delete": function() {
-					// Edit info in database
+					// Delete info in database
 					MYTEAMS.del();					
 					$( this ).dialog( "close" );
 				},
@@ -51,20 +53,20 @@ var MYTEAMS = {
 	// edit team information to database from dialog form
   	edit: function() { 
     	var _myteam = this;
-		$( '#EditTeamForm form' ).append( '<input type="hidden" id="z" name="z" value="' + idteam + '"/>' );
-
+		$( '#EditTeamForm form' ).append( '<input type="hidden" id="z" name="z" value="' + myteamID + '"/>' );
     	var form_data = $( '#EditTeamForm form' ).serialize();
 	    $.ajax({
 	      	type: "POST",
-	      	url: "../manager/myteams_team.php",
+	      	url: "../manager/edit_team.php",
 	      	data: form_data, // Data that I'm sending
 	      	error: function() {
 	        	$( '.status' ).text( 'Edit failed. Try again.' ).slideDown( 'slow' );
 	     	},
 	      	success: function( data ) { 
-				_team.teamMenu(); // Refresh the team selection menu
-	        	MYTEAMS.loadMyTeams(); //Refresh table of teams
+				_myteam.teamMenu(); // Refresh the team selection menu
+	        	_myteam.loadMyTeams(); //Refresh table of teams
 	        	$( '.status' ).text( data ).slideDown( 'slow' );
+	        	$( '#EditTeamForm form #z' ).remove();
 	        	MISCFUNCTIONS.clearForm( '#EditTeamForm form' );   	
 	      	},
 	      	complete: function() {
@@ -78,7 +80,7 @@ var MYTEAMS = {
 
 	// delete team information in database from dialog form
   	del: function() { 
-		$( '#DelTeamForm form' ).append( '<input type="hidden" id="z" name="z" value="' + idgame + '"/>' );
+		$( '#DelTeamForm form' ).append( '<input type="hidden" id="z" name="z" value="' + myteamID + '"/>' );
     	var form_data = $( '#DelTeamForm form' ).serialize();
 	    $.ajax({
 	      	type: "POST",
@@ -101,7 +103,7 @@ var MYTEAMS = {
     },
 
 	loadMyTeams: function() {
-		var _myteam = this;
+		var _myteams = this;
 		
 		// Ajax call to retreive list of teams assigned to user	
 		$.ajax({
@@ -109,7 +111,7 @@ var MYTEAMS = {
 			dataType: 'json',
 			url: "../data/myteams_data.php",
 			success: function(data) {
-				_myteam.buildTeamTable(data);
+				_myteams.buildTeamTable(data);
 			},
 			error: function() {
 				alert('an error occured!');
@@ -148,7 +150,7 @@ var MYTEAMS = {
 			dataType: 'json',
 			url: "../data/team_data.php",
 			success: function(data) {
-				_team.buildTeamMenu(data);
+				_myteams.buildTeamMenu(data);
 			},
 			error: function() {
 				alert('an error occured!');
@@ -158,7 +160,7 @@ var MYTEAMS = {
 	
 	buildTeamMenu: function(data) {    
 		var tmp = '';
-		var menu = $("#y");
+		var menu = $("#menuteam");
 		menu.html(""); // clear out slection menu if it was previously populated
 		menu.append("<option value=''>-Select Team-</options>");
 	
@@ -170,21 +172,38 @@ var MYTEAMS = {
 	}
 }
 
+// Function to clear out form contents in DOM
+var MISCFUNCTIONS = {
+	
+	clearForm: function( form ) {
+  		$(form).children('input, select, textarea').val('');
+ 		$(form).children('input[type=radio], input[type=checkbox]').each(function()
+  		{
+     		this.checked = false;
+     		// or
+     		$(this).attr('checked', false);
+  		});
+	}
+}
+
 $(document).ready(function() {
 	
+	// Load teams menu
+	MYTEAMS.teamMenu();
+
 	// Load teams associated with user into table
 	MYTEAMS.loadMyTeams();
 
 	// Load MYTEAMS dialogs
 	MYTEAMS.loadDialog();
 										
-	$( "#MyTeams" ).on("click", "#edit_team", function() {
-		idteam = this.value;
+	$( "#MyTeams" ).on("click", ".edit_team", function() {
+		myteamID = this.value;
 		$( "#EditTeamForm" ).dialog( "open" );
 	});
 
-	$( "#MyTeams" ).on("click", "#delete_team", function() {
-		idteam = this.value;
+	$( "#MyTeams" ).on("click", ".delete_team", function() {
+		myteamID = this.value;
 		$( "#DelTeamForm" ).dialog( "open" );
 	});
 

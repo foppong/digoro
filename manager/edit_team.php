@@ -39,7 +39,7 @@
 		redirect_to('index.php');	
 	}
 
-	if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z'])) // Confirmation that form has been submitted from edit_team page	
+	if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z'])) // Confirmation that form has been submitted	
 	{
 		$id = $_POST['z'];
 
@@ -48,8 +48,14 @@
 		$team->setDB($db);
 		$team->setTeamID($id);
 		$team->pullTeamData();
-		$team->checkAuth($userID);
 		
+		// Check if user is authroized to make edit
+		if (!$team->isManager($userID))
+		{
+			echo 'You have to the manager to make this change.';
+			exit();
+		}
+
 		// Collect current attributes
 		$oldname = $team->getTeamAttribute("tmname");
 		$oldabtm = $team->getTeamAttribute("about");

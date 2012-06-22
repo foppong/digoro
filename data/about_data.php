@@ -40,7 +40,7 @@
 	// Retrieve current team ID from session variable
 	$tm = $_SESSION['ctmID'];
 
-	// Make the Query to find all teams associated with user via a union of the players and teams table:
+	// Define the Query 
 	$q = "SELECT about, team_name FROM teams WHERE id_team=? LIMIT 1";
 
 	// Prepare the statement:

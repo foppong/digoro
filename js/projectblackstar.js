@@ -108,6 +108,7 @@ var PLAYER = {
 	      	success: function( data ) { 
 	        	ROSTER.loadRoster(); //Call to roster.js
 	        	$( '.status' ).text( data ).slideDown( 'slow' );
+	        	$( '#EditPlayerForm form #z' ).remove();
 	        	MISCFUNCTIONS.clearForm( '#EditPlayerForm form' );   	
 	      	},
 	      	complete: function() {
@@ -247,6 +248,7 @@ var GAME = {
 	      	success: function( data ) { 
 	        	SCHEDULE.loadSchedule(); //Call to schedule.js
 	        	$( '.status' ).text( data ).slideDown( 'slow' );
+	        	$( '#EditGameForm form #z' ).remove();	        	
 	        	MISCFUNCTIONS.clearForm( '#EditGameForm form' );   	
 	      	},
 	      	complete: function() {
@@ -494,12 +496,6 @@ $(document).ready(function()
 			}
 		}
 	});
-
-	// Update team edits in database
-	$("#update").on("click", function() {
-		TEAM.update();
-	});
-
   	
 });
 

@@ -48,7 +48,7 @@
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
 		// Retreieve team ID selection from user form submission	
-		$teamID = $_POST['y'];
+		$teamID = $_POST['mt'];
 		
 		// Set the new global session variable to new team ID
 		$_SESSION['ctmID'] = $teamID;
@@ -67,18 +67,20 @@
 		<title><?php echo $page_title; ?></title>
 		<meta name="author" content="Frank" />
 		<!-- External javascript call -->
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.js" charset="utf-8"></script>
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.js" charset="utf-8"></script>
 		<script type="text/javascript" src="../js/myteams.js"></script>
 		<!-- CSS Style Sheet -->
+		<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
 		<link rel="stylesheet" type="text/css" href="../css/styles.css" />
 	</head>
 	<body>
 	
-	<p id="status"></p>
+	<p class="status"></p>
 
-	<form action="myteams.php" method="post" id="ViewRosterForm">	
+	<form action="myteams.php" method="post">	
 		<p id="teamP"><b>Select Your Default Team:</b>
-		<select name="y" id="y"></select>
-		<span class="errorMessage" id="teamPError">You must select your team.</span></p>		
+		<select name="mt" id="menuteam"></select>		
 		
 		<div align="left"><input id="submit" type="submit" name="submit" value="Select" /></div>
 	</form><br>
@@ -103,4 +105,4 @@
 	<table id="MyTeams"></table>
 
 
-<?php 	include '../includes/footer.html'; ?>
+<?php include '../includes/footer.html'; ?>

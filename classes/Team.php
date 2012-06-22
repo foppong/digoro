@@ -24,8 +24,8 @@
 	 *  editTeam()
 	 *  transferTeam()
 	 *  deleteTeam()
-	 *  checkAuth()
 	 *  isManager()
+	 *  removeMember()
 	 */
 	
 	class Team {
@@ -179,7 +179,7 @@
 				$tmID = $_SESSION['deftmID'];
 
 				// Make the new query to add manager to player table:
-				$q = 'INSERT INTO players (id_user, id_team) VALUES (?,?)';
+				$q = 'INSERT INTO members (id_user, id_team) VALUES (?,?)';
 					
 				// Prepare the statement:
 				$stmt2 = $this->dbc->prepare($q);
@@ -245,7 +245,7 @@
 		// Function to edit team
 		function editTeam($tmname, $abtm)
 		{
-			// Update the user's info in the players' table in database
+			// Update the user's info in the members' table in database
 			$q = 'UPDATE teams SET team_name=?, about=?
 				WHERE id_team=? LIMIT 1';
 
@@ -275,10 +275,9 @@
 		// Function to transfer Manager role
 		function transferTeam($newMangEmail)
 		{
-
 			// Make the query:
 			$q = 'SELECT p.id_user
-				FROM users AS u INNER JOIN players AS p
+				FROM users AS u INNER JOIN members AS p
 				USING (id_user) 
 				WHERE u.email=? AND p.id_team=? LIMIT 1';
 
@@ -373,21 +372,10 @@
 			// Close the statement:
 			$stmt->close();
 			unset($stmt);
-		} // End of deleteTeam function
-
-		// Function to check if user is authroized to view page
-		function checkAuth($userID)
-		{
-			if (self::isManager($this->id_team, $userID) == False)
-			{
-				$url = BASE_URL . 'manager/manager_home.php';
-				header("Location: $url");
-				exit();
-			}
-		}		
+		} // End of deleteTeam function	
 		
 		// Function to check if user is manager
-		function isManager($teamID, $userID)
+		function isManager($userID)
 		{
 			// Make the query to retreive manager id associated with team:		
 			$q = "SELECT id_manager FROM teams
@@ -397,7 +385,7 @@
 			$stmt = $this->dbc->prepare($q);
 			
 			// Bind the inbound variables:
-			$stmt->bind_param('i', $teamID);
+			$stmt->bind_param('i', $this->id_team);
 			
 			// Exeecute the query
 			$stmt->execute();
@@ -415,24 +403,47 @@
 				{				
 					if ($manIDOB == $userID) 
 					{
-						return True;
+						return True; // User is the manager
 					}
 					else 
 					{
-						return False;
+						return False; // User is not the manager
 					}
 				}
 			}
 			else 
 			{
-				return False;
+				return False; // User was not found
 			}
-			
 			// Close the statement:
 			$stmt->close();
 			unset($stmt);
-	
 		} // End of isManager function
 
+		// Function to remove player from team if not manager
+		function removeMember($userID) {
+			// Make the query	
+			$q = 'DELETE id_player FROM members 
+				WHERE id_user=? LIMIT 1';
+				
+			// Prepare the statement
+			$stmt = $this->dbc->prepare($q);
+			
+			// Bind the inbound variables:
+			$stmt->bindparam("i", $userID);
+			
+			// Execute the query
+			$stmt->execute();
+		
+			if ($stmt->affected_rows == 1) {
+				echo 'You have successfully removed yourself from ' . $this->tmname . '.';
+			}
+			else {
+				echo 'Removal did not work. Pleaes contact the system admistrator';
+			}
+				
+		} // End of removePlayer function
+		
+		
 	} // End of Class
 ?>

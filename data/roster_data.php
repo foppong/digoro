@@ -37,65 +37,6 @@
 		redirect_to('index.php');
 	}
 
-
-/**
-// Confirmation that form has been submitted:	
-//if ($_SERVER['REQUEST_METHOD'] == 'POST')
-
-	// Checks for a valid team roster request, through GET or POST:
-	if ( (isset($_GET['y'])) && (is_numeric($_GET['y'])) )
-	{
-		// Assign variable from view_roster.php using GET method
-		$tm = $_GET['y'];
-	}
-	elseif ( (isset($_POST['y'])) && (is_numeric($_POST['y'])) )
-	{
-		// Assign variable from manager_home.php FORM submission
-		$tm = $_POST['y'];
-	}
-	else 
-	{
-		// No valid ID, kill the script.
-		echo '<p class="error">This page has been accessed in error.</p>';
-		exit();
-	}
-
-	// Determine the sort from view_roster.php click...
-	// Default is by registration date.
-	$sort = (isset($_GET['x'])) ? $_GET['x'] : 'nm'; // Ternary operator style syntax
-		
-	// Determine the sorting order:
-	switch ($sort)
-	{
-		case 'nm':
-			$order_by = 'name ASC';
-			break;
-		case 'gd':
-			$order_by = 'u.gender ASC';
-			break;
-		case 'em':
-			$order_by = 'u.email ASC';
-			break;
-		case 'pos':
-			$order_by = 'sp.position ASC';
-			break;
-		default:
-			$order_by = 'name ASC';
-			$sort = 'nm';
-			break;
-	}
- * 
-	// Make the Query:
-	$q = "SELECT CONCAT(u.first_name, ' ', u.last_name) AS name, u.gender, u.email, sp.id_soccer_player, sp.position
-		FROM soccer_players AS sp INNER JOIN users AS u
-		USING (id_user)
-		WHERE sp.id_soccer_team=?
-		ORDER BY $order_by"; 
-
-**/	
-	// Retrieve team object from session variable
-	//$team = $_SESSION['teamObj'];
-
 	// Retrieve current team ID from session variable
 	$tm = $_SESSION['ctmID'];	
 

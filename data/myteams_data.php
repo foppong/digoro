@@ -1,5 +1,5 @@
 <?php
-	/** team_data.php
+	/** myteams_data.php
 	* This page queries a database, returnnig a list
 	* of teams
 	*/
@@ -40,9 +40,9 @@
 	// Get user ID
 	$userID = $user->getUserID();
 
-	// Make the Query to find all teams associated with user via a union of the players and teams table:
+	// Make the Query to find all teams associated with user via a union of the members and teams table:
 	$q = "SELECT p.id_team, t.team_name, t.city, t.state
-		FROM players AS p INNER JOIN teams AS t
+		FROM members AS p INNER JOIN teams AS t
 		USING (id_team)
 		WHERE p.id_user=?";
 	
@@ -71,12 +71,11 @@
 		while ($stmt->fetch())
 		{		
 			$json[] = array(
-			'TeamID' => $idtmOB,
-			'TeamName' => stripslashes($tmnmOB),
+			'Team Name' => stripslashes($tmnmOB),
 			'City' => $tctyOB,
 			'State' => $tstOB,
-			'Edit' => '<button id="edit_team" value=' . $idOB . '>Edit</button>',
-			'Delete' => '<button id="delete_team" value=' . $idOB . '>Delete</button>');
+			'Edit' => '<button class="edit_team" value=' . $idtmOB . '>Edit</button>',
+			'Delete' => '<button class="delete_team" value=' . $idtmOB . '>Delete</button>');
 		}	// End of WHILE loop
 	
 		// Send the JSON data:

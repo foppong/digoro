@@ -135,7 +135,7 @@
 		// Edit Game Method
 		function editGame($userID, $gmdate, $gtime, $opponent, $venue, $result, $note) 
 		{		
-			// Update the user's info in the players' table in database
+			// Make query
 			$q = 'UPDATE games SET date=?, time=?, opponent=?, venue=?, result=?, note=?
 				WHERE id_game=? LIMIT 1';
 	
