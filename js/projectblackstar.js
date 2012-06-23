@@ -538,10 +538,12 @@ $(document).ready(function()
 		}
 	});
 	
-	// Load add Team dialog
-	TEAM.loadDialog();
-	
+
+	// Code for triggering add team dialog
 	$( "#add_team" ).on("click", function() {
+		// Load add Team dialog
+		TEAM.loadDialog();
+
 		$( "#AddTeamForm" ).dialog( "open" );
 	});
   	
