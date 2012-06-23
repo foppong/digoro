@@ -192,7 +192,7 @@
 						
 				if ($stmt2->affected_rows !== 1) // It didn't run ok
 				{
-					echo '<p class="error">Manager was not added to roster. Please contact the service administrator.</p>';
+					echo 'Manager was not added to roster. Please contact the service administrator.';
 					exit();
 				}
 			
@@ -217,14 +217,11 @@
 					
 				if ($stmt2->affected_rows !== 1) // It didn't run ok
 				{
-					echo '<p class="error">Team was not added. Please contact the service administrator.</p>';
+					echo 'Team was not added. Please contact the service administrator.';
 					exit();
 				}
 
-				// Redirect user to manager homepage after success
-				$url = BASE_URL . 'manager/manager_home.php';
-				header("Location: $url");
-				exit();	
+				echo 'Team was added successfully!';
 					
 				// Close the statement:
 				$stmt2->close();

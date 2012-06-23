@@ -333,7 +333,7 @@ var TEAM = {
 	// add team to database
 	add: function() {
 		var _team = this;
-		var form_data = $( '#AddTeamForm' ).serialize();
+		var form_data = $( '#AddTeamForm form' ).serialize();
 		$.ajax({
 			type: "POST",
 			url: "../manager/add_team.php",
