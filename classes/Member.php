@@ -282,10 +282,10 @@
 			
 		} // End of deleteMember function		
 
-		// Function to check if user is manager
+		// Function to check if user is the manager
 		function isManager($userID)
 		{
-			// Make the query to retrieve all teams associated with user		
+			// Make the query to retrieve all teams associated with member and selected team
 			$q = "SELECT tm.id_manager
 				FROM teams AS tm INNER JOIN members AS p
 				USING (id_team)
@@ -295,7 +295,7 @@
 			$stmt = $this->dbc->prepare($q);
 			
 			// Bind the inbound variables:
-			$stmt->bind_param('i', $userID);
+			$stmt->bind_param('i', $this->id_member);
 			
 			// Exeecute the query
 			$stmt->execute();
@@ -310,8 +310,6 @@
 			if ($stmt->num_rows == 1) {
 				while ($stmt->fetch())
 				{				
-echo $manIDOB;
-echo $userID;
 					if ($manIDOB == $userID) {
 						return True;
 					}

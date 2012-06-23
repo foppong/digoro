@@ -20,7 +20,6 @@
 	 *  createGame()
 	 *  editGame()
 	 *  deleteGame()
-	 *	checkAuth()
 	 *  isManager()
 	 */
 		
@@ -197,21 +196,10 @@
 			$stmt->close();
 			unset($stmt);
 		
-		} // End of deleteGame function
-
-		// Function to check if user is authroized to view page (need to have a game created first)
-		function checkAuth($userID)
-		{
-			if (self::isManager($this->id_game, $userID) == False)
-			{
-				$url = BASE_URL . 'manager/manager_home.php';
-				header("Location: $url");
-				exit();
-			}		
-		}			
+		} // End of deleteGame function		
 			
 		// Function to check if user is manager of game
-		function isManager($gameID, $userID)
+		function isManager($userID)
 		{
 			// Make the query to retreive manager id associated with game:		
 			$q = "SELECT tm.id_manager
@@ -223,7 +211,7 @@
 			$stmt = $this->dbc->prepare($q);
 			
 			// Bind the inbound variables:
-			$stmt->bind_param('i', $gameID);
+			$stmt->bind_param('i', $this->id_game);
 			
 			// Exeecute the query
 			$stmt->execute();
@@ -241,17 +229,17 @@
 				{				
 					if ($manIDOB == $userID) 
 					{
-						return True;
+						return True;  // User is the manager
 					}
 					else 
 					{
-						return False;
+						return False; // User is not the manager
 					}
 				}
 			}
 			else 
 			{
-				return False;
+				return False; // User was not found
 			}
 			
 			// Close the statement:

@@ -45,46 +45,45 @@
 		$member->setDB($db);
 		$member->setMembID($memberid);
 		$member->pullMemberData();
-$member->isManager($userID);
+
 		// Check if user is authroized to make edit
-		if (!$member->isManager($userID))
-		{
-			echo 'You have to be the manager to make these changes.';
+		if (!$member->isManager($userID)) {
+			echo 'You have to be the manager to edit a member.';
 			exit();
 		}
+
+		$oldpos = $member->getMemberAttribute('position');
+		$oldjnumb = $member->getMemberAttribute('jersey_numb');
 
 		// Trim all the incoming data:
 		$trimmed = array_map('trim', $_POST);
-		
-		// Assume invalid values:
-		$pos = $jnumb = FALSE;
 
 		// Validate position input
-		if (is_string($trimmed['position']))
-		{
+		if (is_string($trimmed['position']) && !empty($trimmed['position'])) {
 			$pos = $trimmed['position'];
 		}
-		else 
-		{
-			echo 'Please enter a position.';
-			exit();
+		else {
+			$pos = $oldpos;
 		}
+		
 		// Validate jersey number input
-		if (filter_var($_POST['jersey_num'], FILTER_VALIDATE_INT) OR $_POST['jersey_num'] == NULL)
-		{
+		if (filter_var($_POST['jersey_num'], FILTER_VALIDATE_INT)) {
 			$jnumb = $_POST['jersey_num'];
 		}
-		else 
-		{
-			echo 'Please enter a numerical value.';
-			exit();	
+		else {
+			$jnumb = $oldjnumb;
 		}
 
-		// Update database
-		$member->editMember($pos, $jnumb);
+		if ($pos && $jnumb) {
+			// Update database
+			$member->editMember($pos, $jnumb);			
+		}
+		else { // Errors in the user entered information
+			echo 'Please try again';
+			exit();	
+		}
 	}
-	else 
-	{
+	else {
 		// No valid ID, kill the script.
 		echo '<p class="error">This page has been accessed in error.</p>';
 		include '../includes/footer.html';

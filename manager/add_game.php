@@ -40,16 +40,20 @@
 	// Retrieve current team ID in session
 	$ctmID = $_SESSION['ctmID'];
 
-	// Create team object to help determine if manager can add a game to this team
-	// NOTE: ISSUE HERE MIGHT BE IF I MOVE ADD GAME FEATURE TO HOME PAGE
-	$team = new Team();
-	$team->setDB($db);
-	$team->setTeamID($ctmID);
-	$team->pullTeamData();
-	$team->checkAuth($userID);
-
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
+
+		// Create team object for use & pull latest data from database & initially set attributes - used to add game
+		$team = new Team();
+		$team->setDB($db);
+		$team->setTeamID($ctmID);
+		$team->pullTeamData();
+
+		// Check if user is authroized to make edit
+		if (!$team->isManager($userID)) {
+			echo 'You have to be the manager to add a member.';
+			exit();
+		}
 		
 		// Assume invalid values:
 		$gdfrmat = $tm = FALSE;
@@ -128,6 +132,7 @@
 		else 
 		{									
 			echo 'Please try again';
+			exit();
 		}
 	}
 

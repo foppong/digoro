@@ -369,7 +369,7 @@
 			unset($stmt);
 		} // End of deleteTeam function	
 		
-		// Function to check if user is manager
+		// Function to check if user is the manager
 		function isManager($userID)
 		{
 			// Make the query to retreive manager id associated with team:		

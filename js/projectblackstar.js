@@ -296,6 +296,22 @@ var TEAM = {
 	abouttm: abouttm,
  
  	loadDialog: function() { 
+		$("#AddTeamForm").dialog({
+			autoOpen: false,
+			height: 400,
+			width: 300,
+			modal: true,
+			buttons: {
+				"Add Team": function(){
+					TEAM.add();
+					$( this ).dialog( "close" );
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			}
+		});
+
 		$( "#EditTeamForm" ).dialog({
 			autoOpen: false,
 			height: 400,
@@ -314,6 +330,31 @@ var TEAM = {
 		});	
  	},
 
+	// add team to database
+	add: function() {
+		var _team = this;
+		var form_data = $( '#AddTeamForm' ).serialize();
+		$.ajax({
+			type: "POST",
+			url: "../manager/add_team.php",
+			data: form_data, // Data that I'm sending
+			error: function() {
+				$( '.status' ).text( 'Edit failed. Try again.' ).slideDown( 'slow' );
+			},
+			success: function( data ) {
+				_team.teamMenu(); // Refresh the team selection menu
+				$( '.status' ).text( data ).slideDown( 'slow' );
+				MISCFUNCTIONS.clearForm( '#AddTeamForm' );
+			},
+			complete: function() {
+				setTimeout(function() {
+					$( '.status' ).slideUp( 'slow' );
+				}, 1500);
+			},
+			cache: false
+		});
+	},
+
 	// edit team information to database from dialog form
   	edit: function() { 
     	var _team = this;
@@ -331,7 +372,7 @@ var TEAM = {
 	        	ABOUTTM.loadAbout(); // Call to abtm.js
 				_team.teamMenu(); // Refresh the team selection menu
 	        	$( '.status' ).text( data ).slideDown( 'slow' );
-	        	if (teamname != "") {
+	        	if (teamname != "") { //Update team name on main page
 	        		$( '#TeamName' ).html( '<h2>' + teamname + '</h2>' ); };
 	        	MISCFUNCTIONS.clearForm( '#EditTeamForm form' );   	
 	      	},
@@ -495,6 +536,13 @@ $(document).ready(function()
 				default:		
 			}
 		}
+	});
+	
+	// Load add Team dialog
+	TEAM.loadDialog();
+	
+	$( "#add_team" ).on("click", function() {
+		$( "#AddTeamForm" ).dialog( "open" );
 	});
   	
 });

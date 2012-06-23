@@ -49,7 +49,7 @@
 
 		// Check if user is authroized to make edit
 		if (!$member->isManager($userID)) {
-			echo 'You have to be the manager to make these changes.';
+			echo 'You have to be the manager to delete a member.';
 			exit();
 		}
 

@@ -36,17 +36,23 @@
 	// Need the database connection:
 	require_once MYSQL2;
 
-	if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z'])) // Confirmation that form has been submitted from delete_player page	
+	if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z'])) // Confirmation that form has been submitted	
 	{
 		// Assign variable from FORM submission (hidden id field)	
-		$id = $_POST['z'];
+		$gameid = $_POST['z'];
 
 		// Create game object for use & pull latest data from database & initially set attributes
 		$game = new Game();
 		$game->setDB($db);
-		$game->setGameID($id);
+		$game->setGameID($gameid);
 		$game->pullGameData();
-		$game->checkAuth($userID);
+
+		// Check if user is authroized to make edit
+		if (!$game->isManager($userID)) {
+			echo 'You have to be the manager to delete a game.';
+			exit();
+		}
+
 		$game->deleteGame($userID);
 	}
 	else 
