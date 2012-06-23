@@ -85,7 +85,7 @@
 		function countTeams()
 		{
 			// Make query to count the number of teams associated with user
-			$q = 'SELECT COUNT(id_team) FROM players WHERE id_user=?';
+			$q = 'SELECT COUNT(id_team) FROM members WHERE id_user=?';
 			
 			// Preprea the statement:
 			$stmt = $this->dbc->prepare($q);

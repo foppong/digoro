@@ -36,17 +36,24 @@
 	// Need the database connection:
 	require_once MYSQL2;
 
-	if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z'])) // Confirmation that form has been submitted from delete_player page	
+	if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z'])) // Confirmation that form has been submitted	
 	{
-		$id = $_POST['z'];
+		// Assign variable from FORM submission (hidden id field)	
+		$memberid = $_POST['z'];
 
 		// Create member object for use & pull latest data from database & initially set attributes
 		$member = new Member();
 		$member->setDB($db);
-		$member->setMembID($id);
+		$member->setMembID($memberid);
 		$member->pullMemberData();
-		$member->checkAuth($userID);
-		$member->deleteMember($userID);
+
+		// Check if user is authroized to make edit
+		if (!$member->isManager($userID)) {
+			echo 'You have to be the manager to delete a member.';
+			exit();
+		}
+
+		$member->deleteMember();
 	}
 	else 
 	{

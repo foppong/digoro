@@ -14,7 +14,7 @@ $(document).ready(function()
 {
 	// Hide all error messages:
 	$('.errorMessage').hide();
-	
+/*	
 	$('#AddTeamForm').validate( {
 		rules: {
 			tname: {
@@ -48,7 +48,7 @@ $(document).ready(function()
 			label.text('Ok!').addClass('valid');
 		}
 	});
-
+*/
 	$('#AddPlayerForm').validate( {
 		rules: {
 			first_name: {

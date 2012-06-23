@@ -24,8 +24,8 @@
 	 *  editTeam()
 	 *  transferTeam()
 	 *  deleteTeam()
-	 *  checkAuth()
 	 *  isManager()
+	 *  removeMember()
 	 */
 	
 	class Team {
@@ -179,7 +179,7 @@
 				$tmID = $_SESSION['deftmID'];
 
 				// Make the new query to add manager to player table:
-				$q = 'INSERT INTO players (id_user, id_team) VALUES (?,?)';
+				$q = 'INSERT INTO members (id_user, id_team) VALUES (?,?)';
 					
 				// Prepare the statement:
 				$stmt2 = $this->dbc->prepare($q);
@@ -192,7 +192,7 @@
 						
 				if ($stmt2->affected_rows !== 1) // It didn't run ok
 				{
-					echo '<p class="error">Manager was not added to roster. Please contact the service administrator.</p>';
+					echo 'Manager was not added to roster. Please contact the service administrator.';
 					exit();
 				}
 			
@@ -217,14 +217,11 @@
 					
 				if ($stmt2->affected_rows !== 1) // It didn't run ok
 				{
-					echo '<p class="error">Team was not added. Please contact the service administrator.</p>';
+					echo 'Team was not added. Please contact the service administrator.';
 					exit();
 				}
 
-				// Redirect user to manager homepage after success
-				$url = BASE_URL . 'manager/manager_home.php';
-				header("Location: $url");
-				exit();	
+				echo 'Team was added successfully!';
 					
 				// Close the statement:
 				$stmt2->close();
@@ -232,7 +229,7 @@
 			}
 			else
 			{
-				echo '<p class="error">Your team was not added. Please contact the service administrator.</p>';
+				echo 'Your team was not added. Please contact the service administrator.';
 				exit();
 			}
 
@@ -245,7 +242,7 @@
 		// Function to edit team
 		function editTeam($tmname, $abtm)
 		{
-			// Update the user's info in the players' table in database
+			// Update the user's info in the members' table in database
 			$q = 'UPDATE teams SET team_name=?, about=?
 				WHERE id_team=? LIMIT 1';
 
@@ -258,30 +255,26 @@
 			// Execute the query:
 			$stmt->execute();
 
-			if ($stmt->affected_rows == 1) // And update to the database was made
-			{				
-				//The team has been edited
-				$result = True;
+			// Print a message based upon result:
+			if ($stmt->affected_rows == 1)
+			{
+				self::setTeamNM($tmname);
+				self::setTeamABT($abtm);
+				echo 'Your team was edited succesfully. ';
 			}
-			else 
-			{	// Either did not run ok or no updates were made
-				$result = False;
+			else
+			{
+				echo 'No changes made. ';
 			}
-
-			self::setTeamNM($tmname);
-			self::setTeamABT($abtm);
-
-			return $result;
 
 		} // End of editTeam function
 
 		// Function to transfer Manager role
 		function transferTeam($newMangEmail)
 		{
-
 			// Make the query:
 			$q = 'SELECT p.id_user
-				FROM users AS u INNER JOIN players AS p
+				FROM users AS u INNER JOIN members AS p
 				USING (id_user) 
 				WHERE u.email=? AND p.id_team=? LIMIT 1';
 
@@ -319,25 +312,21 @@
 					
 					if ($stmt2->affected_rows == 1) // Update to database was made
 					{
-						echo '<p>The team has been transferred.</p>';
+						echo 'The team has been transferred. ';
 					}
 					else 
 					{	
-						echo '<p class="error">The team could not be transferred due to a system error.</p>';
-						include '../includes/footer.html';
+						echo 'The team could not be transferred due to a system error. ';
 						exit();
 					}
 					
 					// Close the statement:
 					$stmt2->close();
 					unset($stmt2);
-  
  				}
 			}	
 			else {
-				echo '<p class="error">Could not transfer because player is not on team roster.</p>';
-				include '../includes/footer.html';
-				exit();
+				echo 'Could not transfer because player is not on team roster. ';
 			}
 
 			// Close the statement:
@@ -364,33 +353,21 @@
 			// If the query ran ok.
 			if ($stmt->affected_rows == 1) 
 			{	// Print a message
-				echo '<p>This team has been deleted successfully.</p>';
+				echo 'This team has been deleted successfully. ';
 			}
 			else 
 			{	// If the query did not run ok.
-				echo '<p class="error">The team could not be deleted due to a system error.</p>';
-				include '../includes/footer.html';
+				echo 'The team could not be deleted due to a system error. ';
 				exit();
 			}
 
 			// Close the statement:
 			$stmt->close();
 			unset($stmt);
-		} // End of deleteTeam function
-
-		// Function to check if user is authroized to view page
-		function checkAuth($userID)
-		{
-			if (self::isManager($this->id_team, $userID) == False)
-			{
-				$url = BASE_URL . 'manager/manager_home.php';
-				header("Location: $url");
-				exit();
-			}
-		}		
+		} // End of deleteTeam function	
 		
-		// Function to check if user is manager
-		function isManager($teamID, $userID)
+		// Function to check if user is the manager
+		function isManager($userID)
 		{
 			// Make the query to retreive manager id associated with team:		
 			$q = "SELECT id_manager FROM teams
@@ -400,7 +377,7 @@
 			$stmt = $this->dbc->prepare($q);
 			
 			// Bind the inbound variables:
-			$stmt->bind_param('i', $teamID);
+			$stmt->bind_param('i', $this->id_team);
 			
 			// Exeecute the query
 			$stmt->execute();
@@ -418,24 +395,47 @@
 				{				
 					if ($manIDOB == $userID) 
 					{
-						return True;
+						return True; // User is the manager
 					}
 					else 
 					{
-						return False;
+						return False; // User is not the manager
 					}
 				}
 			}
 			else 
 			{
-				return False;
+				return False; // User was not found
 			}
-			
 			// Close the statement:
 			$stmt->close();
 			unset($stmt);
-	
 		} // End of isManager function
 
+		// Function to remove player from team if not manager
+		function removeMember($userID) {
+			// Make the query	
+			$q = 'DELETE FROM members WHERE id_user=? LIMIT 1';
+				
+			// Prepare the statement
+			$stmt = $this->dbc->prepare($q);
+			
+			// Bind the inbound variables:
+			$stmt->bind_param('i', $userID);
+			
+			// Execute the query
+			$stmt->execute();
+		
+			if ($stmt->affected_rows == 1) {
+				echo 'You have successfully removed yourself from ' . $this->tmname . '. ';
+			}
+			else {
+				echo 'The removal did not work. Pleaes contact the system admistrator. ';
+				exit();
+			}
+				
+		} // End of removePlayer function
+		
+		
 	} // End of Class
 ?>
