@@ -98,7 +98,7 @@
 	</form>
 </div>
 
-<p class="status"></p>
+<p id="tmstatus"></p>
 <button id="add_team">Add Team</button>
 
 <div id="TeamName"><h2><?php echo stripslashes($teamname); ?></h2></div><br />

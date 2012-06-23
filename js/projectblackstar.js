@@ -339,16 +339,16 @@ var TEAM = {
 			url: "../manager/add_team.php",
 			data: form_data, // Data that I'm sending
 			error: function() {
-				$( '.status' ).text( 'Edit failed. Try again.' ).slideDown( 'slow' );
+				$( '#tmstatus' ).text( 'Edit failed. Try again.' ).slideDown( 'slow' );
 			},
 			success: function( data ) {
 				_team.teamMenu(); // Refresh the team selection menu
-				$( '.status' ).text( data ).slideDown( 'slow' );
+				$( '#tmstatus' ).text( data ).slideDown( 'slow' );
 				MISCFUNCTIONS.clearForm( '#AddTeamForm' );
 			},
 			complete: function() {
 				setTimeout(function() {
-					$( '.status' ).slideUp( 'slow' );
+					$( '#tmstatus' ).slideUp( 'slow' );
 				}, 1500);
 			},
 			cache: false
