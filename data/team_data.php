@@ -40,9 +40,9 @@
 	// Get user ID
 	$userID = $user->getUserID();
 
-	// Make the Query to find all teams associated with user via a union of the players and teams table:
-	$q = "SELECT p.id_team, t.team_name
-		FROM players AS p INNER JOIN teams AS t
+	// Make the Query to find all teams associated with user via a union of the members and teams table:
+	$q = "SELECT p.id_team, t.team_name, t.city, t.state
+		FROM members AS p INNER JOIN teams AS t
 		USING (id_team)
 		WHERE p.id_user=?";
 	
@@ -59,7 +59,7 @@
 	$stmt->store_result();
 			
 	// Bind the outbound variable:
-	$stmt->bind_result($idtmOB, $tmnmOB);
+	$stmt->bind_result($idtmOB, $tmnmOB, $tctyOB, $tstOB);
 			
 	// If there are results to show.
 	if ($stmt->num_rows > 0)
@@ -72,8 +72,7 @@
 		{		
 			$json[] = array(
 			'TeamID' => $idtmOB,
-			'TeamName' => stripslashes($tmnmOB)); // If I get PHP >5.3 I believe I can use optional parameter in json_encode
-
+			'TeamName' => stripslashes($tmnmOB));
 		}	// End of WHILE loop
 	
 		// Send the JSON data:

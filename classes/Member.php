@@ -4,7 +4,7 @@
 	 *  protected mname
 	 * 	protected position
 	 * 	protected jersey_numb
-	 * 	protected id_player
+	 * 	protected id_member
 	 *  protected dbc
 	 * 
 	 * Methods:
@@ -25,7 +25,7 @@
 	class Member {
 	 	
 		// Declare the attributes
-		protected $mname, $position, $jersey_numb, $id_player, $dbc;
+		protected $mname, $position, $jersey_numb, $id_member, $dbc;
 
 		// Constructor
 		function __construct() {}
@@ -33,7 +33,7 @@
 		// Function to set member ID attribute
 		function setMembID($memberID)
 		{
-			$this->id_player = $memberID;
+			$this->id_member = $memberID;
 		}
 
 		function setDB($db)
@@ -58,15 +58,15 @@
 		{
 			// Make the query to retreive user information:		
 			$q = "SELECT CONCAT(u.first_name, ' ', u.last_name) AS name, p.position, p.jersey_number
-				FROM players AS p INNER JOIN users AS u
+				FROM members AS p INNER JOIN users AS u
 				USING (id_user)
-				WHERE p.id_player=? LIMIT 1";
+				WHERE p.id_member=? LIMIT 1";
 		
 			// Prepare the statement:
 			$stmt = $this->dbc->prepare($q);
 		
 			// Bind the inbound variable:
-			$stmt->bind_param('i', $this->id_player);
+			$stmt->bind_param('i', $this->id_member);
 				
 			// Execute the query:
 			$stmt->execute();		
@@ -98,13 +98,13 @@
 			// added player completes registeration.
 			if (self::isRegistered($userEmail)) {
 				// Make the query:
-				$q = 'INSERT INTO players (id_user, id_team) VALUES (?,?)';
+				$q = 'INSERT INTO members (id_user, id_team) VALUES (?,?)';
 					
 				// Prepare the statement:
 				$stmt = $this->dbc->prepare($q);
 						
 				// Bind the inbound variables:
-				$stmt->bind_param('ii', $this->id_player, $teamID);
+				$stmt->bind_param('ii', $this->id_member, $teamID);
 					
 				// Execute the query:
 				$stmt->execute();
@@ -143,7 +143,7 @@
 	
 				if ($stmt->affected_rows == 1) { // It ran OK.
 					// Make the query:
-					$q = 'INSERT INTO players (id_user, id_team) VALUES (?,?)';
+					$q = 'INSERT INTO members (id_user, id_team) VALUES (?,?)';
 					
 					// Prepare the statement
 					$stmt = $this->dbc->prepare($q);
@@ -207,7 +207,7 @@
 			// Assign the outbound variables			
 			while ($stmt->fetch())
 			{
-				$this->id_player = $idOB;
+				$this->id_member = $idOB;
 			}
 
 			// If player exists in user table
@@ -220,108 +220,82 @@
 		} // End of isRegistered function
 
 							
-		// Edit Member Method (currently only allows managers)
-		function editMember($userID, $pos, $jnumb) 
-		{
-			if (self::isManager($this->id_player, $userID)) {		
-				// Update the user's info in the database
-				$q = 'UPDATE players SET position=?, jersey_number=? 
-					WHERE id_player=? LIMIT 1';
+		// Edit Member Method
+		function editMember($pos, $jnumb) 
+		{		
+			// Update the user's info in the database
+			$q = 'UPDATE members SET position=?, jersey_number=? 
+				WHERE id_member=? LIMIT 1';
 	
-				// Prepare the statement
-				$stmt = $this->dbc->prepare($q); 
+			// Prepare the statement
+			$stmt = $this->dbc->prepare($q); 
 	
-				// Bind the inbound variables:
-				$stmt->bind_param('ssi', $pos, $jnumb, $this->id_player);
+			// Bind the inbound variables:
+			$stmt->bind_param('ssi', $pos, $jnumb, $this->id_member);
 					
-				// Execute the query:
-				$stmt->execute();
+			// Execute the query:
+			$stmt->execute();
 	
-				// MAY NOT WANT THESE MESSAGES LATER ON
-				if ($stmt->affected_rows == 1) { // And update to the database was made
-					echo 'The member has been edited';
-				}
-				else { // Either did not run ok or no updates were made
-					echo 'No changes were made';
-				}
+			if ($stmt->affected_rows == 1) { // And update to the database was made
+				echo 'The member has been edited. ';
 				
 				// Update attributes
 				self::setMemberAttributes($this->mname, $pos, $jnumb);
-				
-				// Close the statement:
-				$stmt->close();
-				unset($stmt);
 			}
-			else {
-				echo 'This page has been accessed in error';
-				include '../includes/footer.html';
-				exit();				
+			else { // Either did not run ok or no updates were made
+				echo 'No changes were made. ';
 			}
+					
+			// Close the statement:
+			$stmt->close();
+			unset($stmt);
+
 		} // End of editMember function
 		
-
 		// Function to delete member
-		function deleteMember($userID)
+		function deleteMember()
 		{
-			if (self::isManager($this->id_player, $userID)) {
-				// Make the query	
-				$q = "DELETE FROM players WHERE id_player=? LIMIT 1";
+			// Make the query	
+			$q = "DELETE FROM members WHERE id_member=? LIMIT 1";
 	
-				// Prepare the statement:
-				$stmt = $this->dbc->prepare($q);
+			// Prepare the statement:
+			$stmt = $this->dbc->prepare($q);
 	
-				// Bind the inbound variable:
-				$stmt->bind_param('i', $this->id_player);
+			// Bind the inbound variable:
+			$stmt->bind_param('i', $this->id_member);
 	
-				// Execute the query:
-				$stmt->execute();
+			// Execute the query:
+			$stmt->execute();
 				
-				// If the query ran ok.
-				if ($stmt->affected_rows == 1) {	
-					// Print a message
-					echo 'The player has been deleted successfully';
-					exit();				
-				}
-				else {	// If the query did not run ok.
-					echo 'The member could not be deleted due to a system errror';
-					exit();
-				}
-				
-				// Close the statement:
-				$stmt->close();
-				unset($stmt);
+			// If the query ran ok.
+			if ($stmt->affected_rows == 1) {
+				echo 'The player has been deleted successfully. ';			
 			}
-			else {
-				echo 'This page has been accessed in error';
-				include '../includes/footer.html';
-				exit();				
-			}			
-		} // End of deleteMember function
-			
-		// Function to check if user is authroized to view page
-		function checkAuth($userID)
-		{
-			if (self::isManager($this->id_player, $userID) == False) {
-				$url = BASE_URL . 'manager/manager_home.php';
-				header("Location: $url");
+			else {	// If the query did not run ok.
+				echo 'The member could not be deleted due to a system errror.';
 				exit();
-			}		
-		}			
-						
-		// Function to check if user is manager
-		function isManager($membID, $userID)
+			}
+				
+			// Close the statement:
+			$stmt->close();
+			unset($stmt);
+			
+		} // End of deleteMember function		
+
+		// Function to check if user is the manager
+		function isManager($userID)
 		{
-			// Make the query to retreive manager id associated with player:		
+			// Make the query to retrieve all teams associated with member and selected team
 			$q = "SELECT tm.id_manager
-				FROM teams AS tm INNER JOIN players AS p
+				FROM teams AS tm INNER JOIN members AS p
 				USING (id_team)
-				WHERE p.id_player=? LIMIT 1";
+				WHERE p.id_member=? LIMIT 1";
 				
 			// Prepare the statement
 			$stmt = $this->dbc->prepare($q);
 			
 			// Bind the inbound variables:
-			$stmt->bind_param('i', $membID);
+			$stmt->bind_param('i', $this->id_member);
 			
 			// Exeecute the query
 			$stmt->execute();

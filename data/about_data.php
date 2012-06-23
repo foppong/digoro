@@ -36,14 +36,11 @@
 	{
 		redirect_to('index.php');
 	}
-	
-	// Retrieve team object from session variable
-	//$team = $_SESSION['teamObj'];
 
 	// Retrieve current team ID from session variable
 	$tm = $_SESSION['ctmID'];
 
-	// Make the Query to find all teams associated with user via a union of the players and teams table:
+	// Define the Query 
 	$q = "SELECT about, team_name FROM teams WHERE id_team=? LIMIT 1";
 
 	// Prepare the statement:
@@ -72,8 +69,8 @@
 		{		
 			$json[] = array(
 			'TeamAbout' => stripslashes($abtOB), // If I get PHP >5.3 I believe I can use optional parameter in json_encode
-			'TeamName' => stripslashes($tmnmOB));
-			
+			'TeamName' => stripslashes($tmnmOB),
+			'Edit' => '<button id="edit-team" value=' . $tm . '>Edit</button>');			
 		}	// End of WHILE loop
 	
 		// Send the JSON data:

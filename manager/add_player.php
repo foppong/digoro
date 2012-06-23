@@ -39,17 +39,21 @@
 	{
 		redirect_to('index.php');
 	}
-
-	// Create team object to help determine if manager can add a game to this team
-	// NOTE: ISSUE HERE MIGHT BE IF I MOVE ADD GAME FEATURE TO HOME PAGE
-	$team = new Team();
-	$team->setDB($db);
-	$team->setTeamID($ctmID);
-	$team->pullTeamData();
-	$team->checkAuth($userID);
 		
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
+
+		// Create team object for use & pull latest data from database & initially set attributes - used to add member
+		$team = new Team();
+		$team->setDB($db);
+		$team->setTeamID($ctmID);
+		$team->pullTeamData();
+		
+		// Check if user is authroized to make edit
+		if (!$team->isManager($userID)) {
+			echo 'You have to be the manager to add a member.';
+			exit();
+		}
 
 		// Trim all the incoming data:
 		$trimmed = array_map('trim', $_POST);
@@ -100,11 +104,12 @@
 		else 
 		{									
 			echo "Please try again";
+			exit();
 		}
 	}
 	else 
 	{
-		// No valid ID, kill the script.
+		// Accsessed without posting to form
 		echo '<p class="error">This page has been accessed in error.</p>';
 		include '../includes/footer.html';
 		exit();		

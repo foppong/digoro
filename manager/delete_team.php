@@ -2,9 +2,10 @@
 	// This page is for deleting a team record
 	// This page is accessed through myteams-m.php
 	
+	ob_start();
+	session_start();
+
 	require '../includes/config.php';
-	$page_title = 'digoro : Delete Team';
-	include '../includes/header.html';
 	include '../includes/php-functions.php';
 
 	// autoloading of classes
@@ -35,39 +36,26 @@
 		redirect_to('index.php');
 	}
 	
-	if ( (isset($_GET['x'])) && (is_numeric($_GET['x'])) ) // From view teams page
+	if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z'])) // Confirmation that form has been submitted	
 	{
-		$id = $_GET['x'];
+		$teamid = $_POST['z'];
 
 		// Create team object for use & pull latest data from database & initially set attributes
 		$team = new Team();
 		$team->setDB($db);
-		$team->setTeamID($id);		
+		$team->setTeamID($teamid);	
 		$team->pullTeamData();
-		$team->checkAuth($userID);
-	}
-	elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z'])) // Confirmation that form has been submitted from delete_team page	
-	{
-		$id = $_POST['z'];
 
-		// Create team object for use & pull latest data from database & initially set attributes
-		$team = new Team();
-		$team->setDB($db);
-		$team->setTeamID($id);	
-		$team->pullTeamData();
-		$team->checkAuth($userID);
-
-		if ($_POST['sure'] == 'Yes')
-		{	// If form submitted is yes, delete the record
-
-			$team->deleteTeam();		
-			include '../includes/footer.html';
+		// Remove team instead of delete if User is not the manager
+		if (!$team->isManager($userID))
+		{		
+			$team->removeMember($userID);
 			exit();
 		}
-		else
-		{	// No confirmation of deletion.
-			echo '<p>The team has NOT been deleted.</p>';
+		else {
+			$team->deleteTeam();
 		}
+
 	}
 	else 
 	{
@@ -76,28 +64,6 @@
 		include '../includes/footer.html';
 		exit();
 	}	
-	
-	// Get team name attribute for page display purposes
-	$teamname = $team->getTeamAttribute('tmname');
-
-	if ($teamname != '') // Indicates valid user to page
-	{		
-		//Display the record being deleted:
-		echo '<h3>Are you sure you want to delete Team ' . $teamname . ' from your profile?</h3>';
-				
-		// Create the form:
-		echo '<form action ="delete_team.php" method="post" id="DelTeamForm">
-			<input type="hidden" name="z" value="' . $id . '" />
-			<input type="radio" name="sure" value="Yes" />Yes<br />
-			<input type="radio" name="sure" value="No" checked="checked" />No<br />
-			<input type="submit" name="submit" value="Delete" />
-			</form>';		
-	}
-	else 
-	{	//Not a valid user ID.
-		echo '<p class="error">This page has been accessed in error.</p>';
-		exit();
-	}		
 
 	// Delete objects
 	unset($team);
@@ -106,6 +72,5 @@
 	// Close the connection:
 	$db->close();
 	unset($db);
-					
-	include '../includes/footer.html';
+
 ?>

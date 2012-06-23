@@ -75,7 +75,7 @@
 			'Venue' => stripslashes($venOB),
 			'Result' => $resOB,
 			'Edit' => '<button class="edit_game" value=' . $idOB . '>Edit</button>',
-			'Delete' => '<button class="delete_game.php" value=' . $idOB . '>Delete</button>');
+			'Delete' => '<button class="delete_game" value=' . $idOB . '>Delete</button>');
 		}	// End of WHILE loop
 			
 		// Send the JSON data:

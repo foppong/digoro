@@ -36,77 +36,82 @@
 	// Establish database connection
 	require_once MYSQL2;
 
-	if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z'])) // Confirmation that form has been submitted from edit_player page	
+	if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z'])) // Confirmation that form has been submitted	
 	{
-		$id = $_POST['z'];
+		$gameid = $_POST['z'];
 
 		// Create game object for use & pull latest data from database & initially set attributes
 		$game = new Game();
 		$game->setDB($db);
-		$game->setGameID($id);
+		$game->setGameID($gameid);
 		$game->pullGameData();
-		$game->checkAuth($userID);
-
-		// Assume invalid values:
-		$gdfrmat = $tm = FALSE;
 		
+		// Check if user is authroized to make edit
+		if (!$game->isManager($userID)) {
+			echo 'You have to be the manager to edit a game.';
+			exit();
+		}
+
+		$oldDate = $game->getGameAttribute('gdate');
+		$oldTime = $game->getGameAttribute('gtime');
+		$oldOpp = $game->getGameAttribute('opponent');
+		$oldVen = $game->getGameAttribute('venue');
+		$oldRes = $game->getGameAttribute('result');
+		$oldNote = $game->getGameAttribute('note');
+						
 		// Validate game date
-		if ($_POST['date'])
-		{
-			$bd = new DateTime($_POST['date']); // Convert js datepicker entry into format database accepts
+		if ($_POST['dateEdit']) {
+			$bd = new DateTime($_POST['dateEdit']); // Convert js datepicker entry into format database accepts
 			$gdfrmat = $bd->format('Y-m-d');
 		}
-		else 
-		{
-			echo 'Please enter a date';
-			exit();
+		else {
+			$gdfrmat = $oldDate;
 		}		
 		
 		// Validate game time is entered
-		if ($_POST['time'])
-		{
+		if (is_string($_POST['time'] && !empty($_POST['time']))) {
 			$tm = $_POST['time'];
 		}
-		else 
-		{
-			echo 'Please enter a time';
-			exit();
+		else {
+			$tm = $oldTime;
 		}
 	
 		// Validate opponent is entered
-		if ($_POST['opp'])
-		{
+		if (is_string($_POST['opp']) && !empty($_POST['opp'])) {
 			$opp = $_POST['opp'];
 		}
-		else 
-		{
-			$opp = '';
+		else {
+			$opp = $oldOpp;
 		}
 
 		// Validate a venue is entered
-		if ($_POST['ven'])
-		{
+		if (is_string($_POST['ven']) && !empty($_POST['ven'])) {
 			$ven = $_POST['ven'];
 		}
-		else 
-		{
-			$ven = ''; 
+		else {
+			$ven = $oldVen; 
 		}
 
 		// Validate a result is selected
-		if ($_POST['res'])
-		{
+		if (is_string($_POST['res']) && !empty($_POST['res'])) {
 			$res = $_POST['res'];
 		}
-		else 
-		{
-			$res = ''; 
+		else {
+			$res = $oldRes; 
 		}
-		
+
+		// Validate a note is entered
+		if (is_string($_POST['note']) && !empty($_POST['note'])) {
+			$note = $_POST['note'];
+		}
+		else {
+			$note = $oldNote; 
+		}	
+	
 		// Check if user entered information is valid before continuing to edit game
 		if ($gdfrmat && $tm)
 		{
-			$game->editGame($userID, $gdfrmat, $tm, $opp, $ven, $res, $id);
+			$game->editGame($userID, $gdfrmat, $tm, $opp, $ven, $res, $note);
 		}
 		else
 		{	// Errors in the user entered information

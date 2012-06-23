@@ -22,6 +22,7 @@
 	if (isset($_SESSION['userObj']))
 	{
 		$user = $_SESSION['userObj'];
+		$ctmID = $_SESSION['ctmID']; //Retrieve current team in session variable
 	}
 	else 
 	{
@@ -58,11 +59,29 @@
 		<link rel="stylesheet" type="text/css" href="../css/styles.css" />
 	</head>
 	<body>
+		
 		<div id="Header">
 			<h2>About Team</h2>
 		</div>
+		<p class="status"></p>	
 
-		<div id="manager"></div><br />
+		<div id="EditTeamForm" title="Edit Team">	
+			<form method="post">
+				<label for="tname">New Team Name:</label><br/>
+				<input type="text" name="tname" id="tname" size="10" maxlength="45" /><br />
+
+				<label for="abouttm">Team Information:</label><br/>
+				<textarea id="abouttm" name="abouttm" cols="30" rows="2"></textarea><br />
+				<small>Enter something cool about your team.</small><br />
+
+				<label for="transfer">Transfer Team?</label><br />
+				<input type="radio" name="transfer" value="Yes" />Yes<br />
+				<input type="radio" name="transfer" value="No" checked="checked" />No<br />
+
+				<label for="email">If Yes, please enter new manager email address:</label>
+				<input type="text" name="email" id="email" size="30" maxlength="60" />
+			</form>
+		</div>
 		<div id="about"></div>
 	</body>
 </html>
