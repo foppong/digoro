@@ -37,13 +37,12 @@
 	{
 		redirect_to('index.php');
 	}
-	
-	// Assign userID to session variable
-	$_SESSION['userID'] = $userID;
 
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
-
+		// IN FUTURE CAN ADD LOGIC HERE FOR PAYING CUSTOMERS TO ADD TEAM - similar to checks 
+		// i have now for managers to edit and add players/games
+				
 		// Trim all the incoming data:
 		$trimmed = array_map('trim', $_POST);
 		
@@ -51,107 +50,87 @@
 		$tn = $sp = $ct = $st = $lg = FALSE;
 				
 		// Validate Team name
-		if ($trimmed["tname"])
-		{
+		if ($trimmed["tname"]) {
 			$tn = $trimmed["tname"];
 		}
-		else 
-		{
+		else {
 			echo '<p class="error"> Please enter a Team name.</p>';
 		}
 
 		// Validate a sport is selected
-		if ($_POST['sport'])
-		{
+		if ($_POST['sport']) {
 			$sp = $_POST['sport'];
 		}
-		else 
-		{
+		else {
 			echo '<p class="error">Please select your sport.</p>'; 
 		}
 
 		// Validate Team's homecity
-		if ($trimmed['city'])
-		{
+		if ($trimmed['city']) {
 			$ct = $trimmed['city'];
 		}
-		else 
-		{
+		else {
 			echo '<p class="error"> Please enter your teams homecity.</p>';
 		}
 
 		// Validate Team's state
-		if ($trimmed['state'])
-		{
+		if ($trimmed['state']) {
 			$st = $trimmed['state'];
 		}
-		else 
-		{
+		else {
 			echo '<p class="error"> Please enter your teams home state.</p>';
 		}
 
 		// Validate a league is selected
-		if ($_POST['league'])
-		{
+		if ($_POST['league']) {
 			$lg = $_POST['league'];
 		}
-		else 
-		{
+		else {
 			echo '<p class="error">Please select your league.</p>'; 
 		}
 		
 		// Validate about team information
-		if ($_POST['abouttm'])
-		{
+		if ($_POST['abouttm']) {
 			$abtm = trim($_POST['abouttm']);
 		}
-		else
-		{
-			$abtm = '';
+		else {
+			echo '<p class="error">Please enter a brief description about your team.</p>';
+			exit();
 		}	
 
 		// Checks if team name, userID, sport, team city, state, and league are valid before adding team to database.
-		if ($lg && $userID && $sp && $tn && $ct && $st)
-		{
-			$manager->addTeam($lg, $sp, $userID, $tn, $ct, $st, $abtm);
+		if ($lg && $userID && $sp && $tn && $ct && $st) {
+			// Create team object for use & create team for database
+			$team = new Team();
+			$team->setDB($db);
+			$team->createTeam($lg, $sp, $userID, $tn, $ct, $st, $abtm);
 			
-			// Delete objects
-			unset($manager);
-
-			// Close the connection:
-			$db->close();
-			unset($db);
-			
-			include '../includes/footer.html';
-			exit();			
+			// Redirect to manager home page
+			$url = BASE_URL . 'manager/manager_home.php';
+			header("Location: $url");	
 		}
 		else 
 		{									
 			echo '<p class="error">Please try again.</p>';
 		}
 	}
-
+	
 	// Delete objects
+	unset($team);
 	unset($manager);
 
 	// Close the connection:
 	$db->close();
 	unset($db);	
-
-
 ?>
 
 <h1>Welcome to Digoro!</h1>
 <h2>To get started, add a team that you manage.</h2>
 <form action="mg_welcome.php" method="post" id="AddTeamForm">
 	<fieldset>
-	<div>
 		<label for="tname"><b>Enter Team Name:</b></label>
-		<input type="text" name="tname" id="tname" size="30" maxlength="45"
-		value="<?php if (isset($trimmed['tname'])) echo $trimmed['tname']; ?>" />
-	</div>
-	
-	<div>
+		<input type="text" name="tname" id="tname" size="30" maxlength="40" />
+
 		<label for="sport"><b>Select Sport:</b></label>
 		<select name="sport" id="sport">
 			<option value="">-Select Sport-</option>
@@ -165,15 +144,10 @@
 			<option value="8">Kickball</option>
 			<option value="9">Cricket</option>
 		</select>
-	</div>
 
-	<div>
 		<label for="city"><b>Enter Team's Home City:</b></label>
-		<input type="text" name="city" id="city" size="30" maxlength="40"
-		value="<?php if (isset($trimmed['city'])) echo $trimmed['city']; ?>" />
-	</div>
+		<input type="text" name="city" id="city" size="30" maxlength="40" />
 
-	<div>
 		<label for="state"><b>Enter Team's Home State:</b></label>
 		<select name="state" id="state" onchange="LEAGUE.showLeagues(this.value)">
 			<option value="">-Select State-</option>
@@ -203,22 +177,15 @@
 			<option value="WA">WA</option><option value="WV">WV</option>
 			<option value="WI">WI</option><option value="WY">WY</option>
 		</select>		
-	</div>
 	
-	<div>
 		<label for="leaguelb"><b>Select League:</b></label>
-		<select name="league" id="league">
-		</select>
-	</div>
+		<select name="league" id="league"></select>
 	
-	<div>
 		<label for="abouttm"><b>Team Information:</b></label>
 		<textarea id="abouttm" name="abouttm" cols="30" rows="2"></textarea><br />
 		<small>Enter something cool about your team.</small>
-	</div>
 	</fieldset>	
 	<div align="left"><input type="submit" name="submit" value="Add Team" /></div>
-
 </form>
 
 <?php include '../includes/footer.html'; ?>
