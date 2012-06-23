@@ -95,7 +95,6 @@
 		}
 		else {
 			echo '<p class="error">Please enter a brief description about your team.</p>';
-			exit();
 		}	
 
 		// Checks if team name, userID, sport, team city, state, and league are valid before adding team to database.
