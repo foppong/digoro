@@ -125,7 +125,7 @@
 
 <h1>Welcome to Digoro!</h1>
 <h2>To get started, add a team that you manage.</h2>
-<form action="mg_welcome.php" method="post" id="AddTeamForm">
+<form action="mg_welcome.php" method="post" id="FirstTeamForm">
 	<fieldset>
 		<label for="tname"><b>Enter Team Name:</b></label>
 		<input type="text" name="tname" id="tname" size="30" maxlength="40" />
@@ -177,7 +177,7 @@
 			<option value="WI">WI</option><option value="WY">WY</option>
 		</select>		
 	
-		<label for="leaguelb"><b>Select League:</b></label>
+		<label for="league"><b>Select League:</b></label>
 		<select name="league" id="league"></select>
 	
 		<label for="abouttm"><b>Team Information:</b></label>

@@ -14,6 +14,41 @@ $(document).ready(function()
 {
 	// Hide all error messages:
 	$('.errorMessage').hide();
+
+	$('#FirstTeamForm').validate( {
+		rules: {
+			tname: {
+				required: true			
+			},
+			sport: {
+				required: true
+			},
+			city: {
+				required: true
+			},
+			state: {
+				required: true
+			},
+			league: {
+				required: true
+			},
+			abouttm: {
+				required: true
+			}
+		},
+		messages: {
+			tname: "Please enter the team name.",
+			sport: "Please select your sport.",
+			city: "Please enter the team home city.",
+			state: "Please enter the team home state.",
+			league: "Please select the team league.",
+			abouttm: "Please enter some info on your team"
+		},
+		success: function(label) {
+			label.text('Ok!').addClass('valid');
+		}
+	});
+
 /*	
 	$('#AddTeamForm').validate( {
 		rules: {

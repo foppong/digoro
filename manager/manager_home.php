@@ -171,7 +171,7 @@
 			<option value="WI">WI</option><option value="WY">WY</option>
 		</select>		
 	
-		<label for="leaguelb"><b>Select League:</b></label>
+		<label for="league"><b>Select League:</b></label>
 		<select name="league" id="league"></select>
 
 		<label for="abouttm"><b>Team Information:</b></label>
