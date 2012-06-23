@@ -41,7 +41,6 @@
 
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
-
 		// IN FUTURE CAN ADD LOGIC HERE FOR PAYING CUSTOMERS TO ADD TEAM - similar to checks 
 		// i have now for managers to edit and add players/games
 				
