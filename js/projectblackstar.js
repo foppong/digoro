@@ -298,8 +298,8 @@ var TEAM = {
  	loadDialog: function() { 
 		$( "#EditTeamForm" ).dialog({
 			autoOpen: false,
-			height: 300,
-			width: 300,
+			height: 400,
+			width: 350,
 			modal: true,
 			buttons: {
 				"Edit": function() {
@@ -412,11 +412,11 @@ var MISCFUNCTIONS = {
 	
 	clearForm: function( form ) {
   		$(form).children('input, select, textarea').val('');
- 		$(form).children('input[type=radio], input[type=checkbox]').each(function()
+ 		$(form).children('input[type=checkbox]').each(function()
   		{
-     		this.checked = false;
+     		this.checked = false; // for checkboxes
      		// or
-     		$(this).attr('checked', false);
+     		//$(this).attr('checked', false); // for radio buttons
   		});
 	}
 }

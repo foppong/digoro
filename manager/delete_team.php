@@ -38,18 +38,17 @@
 	
 	if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z'])) // Confirmation that form has been submitted	
 	{
-		$id = $_POST['z'];
+		$teamid = $_POST['z'];
 
 		// Create team object for use & pull latest data from database & initially set attributes
 		$team = new Team();
 		$team->setDB($db);
-		$team->setTeamID($id);	
+		$team->setTeamID($teamid);	
 		$team->pullTeamData();
 
 		// Remove team instead of delete if User is not the manager
 		if (!$team->isManager($userID))
-		{
-			
+		{		
 			$team->removeMember($userID);
 			exit();
 		}

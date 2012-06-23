@@ -41,8 +41,8 @@
 	$tm = $_SESSION['ctmID'];	
 
 	// Make the Query:
-	$q = "SELECT CONCAT(u.first_name, ' ', u.last_name) AS name, u.gender, u.email, p.id_player, p.position, p.jersey_number
-		FROM players AS p INNER JOIN users AS u
+	$q = "SELECT CONCAT(u.first_name, ' ', u.last_name) AS name, u.gender, u.email, p.id_member, p.position, p.jersey_number
+		FROM members AS p INNER JOIN users AS u
 		USING (id_user)
 		WHERE p.id_team=?";
 

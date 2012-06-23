@@ -87,18 +87,26 @@
 
 	<div id="EditTeamForm" title="Edit Team">	
 		<form method="post">
-			<label for="tname">New Team Name:</label><br/>
-			<input type="text" name="tname" id="tname" size="10" maxlength="45" />
+			<label for="tname">New Team Name:</label><br />
+			<input type="text" name="tname" id="tname" size="10" maxlength="45" /><br />
 
-			<label for="abouttm">Team Information:</label><br/>
+			<label for="abouttm">Team Information:</label><br />
 			<textarea id="abouttm" name="abouttm" cols="30" rows="2"></textarea><br />
-			<small>Enter something cool about your team.</small>
+			<small>Enter something cool about your team.</small><br />
+
+			<label for="transfer">Transfer Team?</label><br />
+			<input type="radio" name="transfer" value="Yes" />Yes<br />
+			<input type="radio" name="transfer" value="No" checked="checked" />No<br />
+			
+			<label for="email">If Yes, please enter new manager email address:</label>
+			<input type="text" name="email" id="email" size="30" maxlength="60" />
 		</form>
 	</div>
 
 	<div id="DelTeamForm" title="Delete Team">
 		<form method="post">
-			<p>Are you sure you want to remove this team?</p>
+			<p>Are you sure you want to remove this team? If you are the manager and wish to transfer
+				team ownership, please cancel this selection and select the edit button.</p>
 		</form>
 	</div>
 

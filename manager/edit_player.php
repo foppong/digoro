@@ -38,14 +38,20 @@
 
 	if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z']))
 	{
-		$id = $_POST['z'];		
+		$memberid = $_POST['z'];		
 
 		// Create member object for use & pull latest data from database & initially set attributes
 		$member = new Member();
 		$member->setDB($db);
-		$member->setMembID($id);
+		$member->setMembID($memberid);
 		$member->pullMemberData();
-		$member->checkAuth($userID);
+$member->isManager($userID);
+		// Check if user is authroized to make edit
+		if (!$member->isManager($userID))
+		{
+			echo 'You have to be the manager to make these changes.';
+			exit();
+		}
 
 		// Trim all the incoming data:
 		$trimmed = array_map('trim', $_POST);
@@ -60,7 +66,7 @@
 		}
 		else 
 		{
-			echo 'Please enter a position';
+			echo 'Please enter a position.';
 			exit();
 		}
 		// Validate jersey number input
@@ -70,12 +76,12 @@
 		}
 		else 
 		{
-			echo 'Please enter a numerical value';
+			echo 'Please enter a numerical value.';
 			exit();	
 		}
 
 		// Update database
-		$member->editMember($userID, $pos, $jnumb);
+		$member->editMember($pos, $jnumb);
 	}
 	else 
 	{

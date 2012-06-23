@@ -17,8 +17,8 @@ var MYTEAMS = {
 	loadDialog: function() { 
 		$( "#EditTeamForm" ).dialog({
 			autoOpen: false,
-			height: 300,
-			width: 300,
+			height: 400,
+			width: 350,
 			modal: true,
 			buttons: {
 				"Edit": function() {
@@ -34,8 +34,8 @@ var MYTEAMS = {
 		
 		$( "#DelTeamForm" ).dialog({
 			autoOpen: false,
-			height: 150,
-			width: 275,
+			height: 250,
+			width: 300,
 			modal: true,
 			buttons: {
 				"Delete": function() {
@@ -67,7 +67,7 @@ var MYTEAMS = {
 	        	_myteam.loadMyTeams(); //Refresh table of teams
 	        	$( '.status' ).text( data ).slideDown( 'slow' );
 	        	$( '#EditTeamForm form #z' ).remove();
-	        	MISCFUNCTIONS.clearForm( '#EditTeamForm form' );   	
+	        	//MISCFUNCTIONS.clearForm( '#EditTeamForm form' );   	
 	      	},
 	      	complete: function() {
 	        	setTimeout(function() {
@@ -177,11 +177,11 @@ var MISCFUNCTIONS = {
 	
 	clearForm: function( form ) {
   		$(form).children('input, select, textarea').val('');
- 		$(form).children('input[type=radio], input[type=checkbox]').each(function()
-  		{
-     		this.checked = false;
+ 		$(form).children('input[type=checkbox]').each(function()
+  		{  
+     		this.checked = false; // for checkboxes
      		// or
-     		$(this).attr('checked', false);
+     		//$(this).attr('checked', false); // for radio buttons
   		});
 	}
 }

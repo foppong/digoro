@@ -232,7 +232,7 @@
 			}
 			else
 			{
-				echo '<p class="error">Your team was not added. Please contact the service administrator.</p>';
+				echo 'Your team was not added. Please contact the service administrator.';
 				exit();
 			}
 
@@ -263,11 +263,11 @@
 			{
 				self::setTeamNM($tmname);
 				self::setTeamABT($abtm);
-				echo 'Your team was edited succesfully';
+				echo 'Your team was edited succesfully. ';
 			}
 			else
 			{
-				echo 'No changes made';
+				echo 'No changes made. ';
 			}
 
 		} // End of editTeam function
@@ -315,25 +315,21 @@
 					
 					if ($stmt2->affected_rows == 1) // Update to database was made
 					{
-						echo '<p>The team has been transferred.</p>';
+						echo 'The team has been transferred. ';
 					}
 					else 
 					{	
-						echo '<p class="error">The team could not be transferred due to a system error.</p>';
-						include '../includes/footer.html';
+						echo 'The team could not be transferred due to a system error. ';
 						exit();
 					}
 					
 					// Close the statement:
 					$stmt2->close();
 					unset($stmt2);
-  
  				}
 			}	
 			else {
-				echo '<p class="error">Could not transfer because player is not on team roster.</p>';
-				include '../includes/footer.html';
-				exit();
+				echo 'Could not transfer because player is not on team roster. ';
 			}
 
 			// Close the statement:
@@ -360,12 +356,11 @@
 			// If the query ran ok.
 			if ($stmt->affected_rows == 1) 
 			{	// Print a message
-				echo '<p>This team has been deleted successfully.</p>';
+				echo 'This team has been deleted successfully. ';
 			}
 			else 
 			{	// If the query did not run ok.
-				echo '<p class="error">The team could not be deleted due to a system error.</p>';
-				include '../includes/footer.html';
+				echo 'The team could not be deleted due to a system error. ';
 				exit();
 			}
 
@@ -423,23 +418,23 @@
 		// Function to remove player from team if not manager
 		function removeMember($userID) {
 			// Make the query	
-			$q = 'DELETE id_player FROM members 
-				WHERE id_user=? LIMIT 1';
+			$q = 'DELETE FROM members WHERE id_user=? LIMIT 1';
 				
 			// Prepare the statement
 			$stmt = $this->dbc->prepare($q);
 			
 			// Bind the inbound variables:
-			$stmt->bindparam("i", $userID);
+			$stmt->bind_param('i', $userID);
 			
 			// Execute the query
 			$stmt->execute();
 		
 			if ($stmt->affected_rows == 1) {
-				echo 'You have successfully removed yourself from ' . $this->tmname . '.';
+				echo 'You have successfully removed yourself from ' . $this->tmname . '. ';
 			}
 			else {
-				echo 'Removal did not work. Pleaes contact the system admistrator';
+				echo 'The removal did not work. Pleaes contact the system admistrator. ';
+				exit();
 			}
 				
 		} // End of removePlayer function

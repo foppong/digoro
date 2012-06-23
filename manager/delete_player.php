@@ -39,15 +39,21 @@
 	if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z'])) // Confirmation that form has been submitted	
 	{
 		// Assign variable from FORM submission (hidden id field)	
-		$id = $_POST['z'];
+		$memberid = $_POST['z'];
 
 		// Create member object for use & pull latest data from database & initially set attributes
 		$member = new Member();
 		$member->setDB($db);
-		$member->setMembID($id);
+		$member->setMembID($memberid);
 		$member->pullMemberData();
-		$member->checkAuth($userID);
-		$member->deleteMember($userID);
+
+		// Check if user is authroized to make edit
+		if (!$member->isManager($userID)) {
+			echo 'You have to be the manager to make these changes.';
+			exit();
+		}
+
+		$member->deleteMember();
 	}
 	else 
 	{
