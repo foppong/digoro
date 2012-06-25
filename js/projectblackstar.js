@@ -88,7 +88,7 @@ var PLAYER = {
 	      	complete: function() {
 	        	setTimeout(function() {
 	          		$( '.status' ).slideUp( 'slow' );
-	        	}, 1500);
+	        	}, 2000);
 	      	},
 	      	cache: false
     	});
@@ -114,7 +114,7 @@ var PLAYER = {
 	      	complete: function() {
 	        	setTimeout(function() {
 	          		$( '.status' ).slideUp( 'slow' );
-	        	}, 1500);
+	        	}, 2000);
 	      	},
 	      	cache: false
     	});
@@ -138,7 +138,7 @@ var PLAYER = {
 	      	complete: function() {
 	        	setTimeout(function() {
 	          		$( '.status' ).slideUp( 'slow' );
-	        	}, 1500);
+	        	}, 2000);
 	      	},
 	      	cache: false
     	});
@@ -228,7 +228,7 @@ var GAME = {
 	      	complete: function() {
 	        	setTimeout(function() {
 	          		$( '.status' ).slideUp( 'slow' );
-	        	}, 1500);
+	        	}, 2000);
 	      	},
 	      	cache: false
     	});
@@ -254,7 +254,7 @@ var GAME = {
 	      	complete: function() {
 	        	setTimeout(function() {
 	          		$( '.status' ).slideUp( 'slow' );
-	        	}, 1500);
+	        	}, 2000);
 	      	},
 	      	cache: false
     	});
@@ -278,7 +278,7 @@ var GAME = {
 	      	complete: function() {
 	        	setTimeout(function() {
 	          		$( '.status' ).slideUp( 'slow' );
-	        	}, 1500);
+	        	}, 2000);
 	      	},
 	      	cache: false
     	});
@@ -349,7 +349,7 @@ var TEAM = {
 			complete: function() {
 				setTimeout(function() {
 					$( '#tmstatus' ).slideUp( 'slow' );
-				}, 1500);
+				}, 2000);
 			},
 			cache: false
 		});
@@ -379,7 +379,7 @@ var TEAM = {
 	      	complete: function() {
 	        	setTimeout(function() {
 	          		$( '.status' ).slideUp( 'slow' );
-	        	}, 1500);
+	        	}, 2000);
 	      	},
 	      	cache: false
     	});

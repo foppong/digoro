@@ -72,7 +72,7 @@ var MYTEAMS = {
 	      	complete: function() {
 	        	setTimeout(function() {
 	          		$( '.status' ).slideUp( 'slow' );
-	        	}, 1500);
+	        	}, 2000);
 	      	},
 	      	cache: false
     	});
@@ -96,7 +96,7 @@ var MYTEAMS = {
 	      	complete: function() {
 	        	setTimeout(function() {
 	          		$( '.status' ).slideUp( 'slow' );
-	        	}, 1500);
+	        	}, 2000);
 	      	},
 	      	cache: false
     	});

@@ -105,7 +105,7 @@
 		}
 
 		// Checks if team name, userID, sport, team city, state, and league are valid before adding team to database.
-		if ($lg && $userID && $sp && $tn && $ct && $st) {
+		if ($lg && $userID && $sp && $tn && $ct && $st && $abtm) {
 			// Create team object for use & create team for database
 			$team = new Team();
 			$team->setDB($db);
