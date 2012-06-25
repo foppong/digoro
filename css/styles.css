@@ -1,3 +1,19 @@
+/* Reset for Browser Styles*/
+html, body, h1, h2, h3, h4, h5, h6, p, ol, ul, li, pre, code, address, var, form, fieldset, blockquote {
+ padding: 0;
+ margin: 0;
+ font-size: 100%;
+ font-weight: normal;
+}
+table { border-collapse: collapse; border-spacing: 0; }
+td, th, caption { font-weight: normal; text-align: left; }
+img, fieldset { border: 0; }
+ol { padding-left: 1.4em; list-style: decimal; }
+ul { padding-left: 1.4em; list-style:square; }
+q:before, q:after { content:''; }
+/* End of Reset */
+	
+
 html
 {
 	min-height:100%;
@@ -6,27 +22,29 @@ html
 
 body
 {
-	line-height: 1;
-	font: normal 12px Verdana, sans-serif;
-	color: #2a2a2a;
-	background-color:#EEEEEE;
-	background-image:url('imgs/homepage-1.jpg');
-	background-repeat:no-repeat;
+	background-color: #FDF8AB;
+	background-image: url(imgs/bg_page.png);
+	background-repeat: repeat-y;
+	background-position: center top;
+	padding: 0;
+	margin: 0 auto;
+	width: 760px;
 }
 
-h1
-{
-	font-size:36pt;
-}
-
-h2
-{
-	color:#333333;
+h1, h2, h3 {
+	color: #BD8100;
+	font-family: Baskerville, "Palatino Linotype", Times, serif;
+	border-top: 2px solid #86A100;
+	padding-top: 7px;
+	padding-left: 100px;
 }
 
 p
 {
-	margin-left:15px;
+	color: #505050;
+	font-size: 1em;
+	font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+	margin-left: 100px;
 }
 
 li
@@ -211,7 +229,7 @@ button {
 		.wrapper-paging .paging-disabled,
 		.wrapper-paging .paging-disabled:hover {
 			background-color: #FFFFFF;
-			border-color: grey;
-			color: grey;
+			border-color: gray;
+			color: gray;
 			cursor: default;
 		}
