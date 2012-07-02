@@ -25,13 +25,15 @@
 	    // Proceed knowing you have a logged in user who's authenticated.
 
 	   	$user_profile = $facebook->api('/me');
+print htmlspecialchars(print_r($user_profile, true));
+exit();	
 		$first_name = $user_profile['first_name'];
 		$last_name = $user_profile['last_name'];
 		$uemail = $user_profile['email'];
 		$gender = $user_profile['gender'];
 		$oa_provider = 'facebook';
 		$oa_id = $fuser;
-		
+	
 		// Format Facebook birthday to database format	
 		$facebirthday = $user_profile['birthdate'];
 		$bday = explode("/", $facebirthday);	
