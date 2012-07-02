@@ -46,17 +46,13 @@
 	// Confirmation that form has been submitted:	
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
-
-		// Trim all the incoming data:
-		$trimmed = array_map('trim', $_POST);
-		
 		// Assume invalid values:
 		$fn = $ln = $e = $cty = $st = $zp = $bd = $gd = $pnumb = FALSE;
 		
 		// Validate firstname
-		if (preg_match('/^[A-Z \'.-]{2,20}$/i', $trimmed['first_name']))
+		if (preg_match('/^[A-Z \'.-]{2,20}$/i', $_POST['first_name']))
 		{
-			$fn = $trimmed['first_name'];
+			$fn = $_POST['first_name'];
 		}
 		else 
 		{
@@ -64,9 +60,9 @@
 		}
 	
 		// Validate lastname
-		if (preg_match('/^[A-Z \'.-]{2,40}$/i', $trimmed['last_name']))
+		if (preg_match('/^[A-Z \'.-]{2,40}$/i', $_POST['last_name']))
 		{
-			$ln = $trimmed['last_name'];
+			$ln = $_POST['last_name'];
 		}
 		else 
 		{
@@ -74,9 +70,9 @@
 		}
 
 		// Validate email
-		if (filter_var($trimmed['email'], FILTER_VALIDATE_EMAIL))
+		if (filter_var($_POST['email'], FILTER_VALIDATE_EMAIL))
 		{
-			$e = $trimmed['email'];
+			$e = $_POST['email'];
 		}
 		else 
 		{
@@ -84,9 +80,9 @@
 		}
 
 		// Validate city
-		if (preg_match('/^[A-Z \'.-]{2,40}$/i', $trimmed['city']))
+		if (preg_match('/^[A-Z \'.-]{2,40}$/i', $_POST['city']))
 		{
-			$cty = $trimmed['city'];
+			$cty = $_POST['city'];
 		}
 		else 
 		{
@@ -94,9 +90,9 @@
 		}
 
 		// Validate city
-		if (preg_match('/^[A-Z \'.-]{2,2}$/i', $trimmed['state']))
+		if (preg_match('/^[A-Z \'.-]{2,2}$/i', $_POST['state']))
 		{
-			$st = $trimmed['state'];
+			$st = $_POST['state'];
 		}
 		else 
 		{
