@@ -2,12 +2,72 @@
 
 	require 'includes/config.php';
 	include 'includes/iheader.html';
+	require 'includes/facebook.php';
 
 	// autoloading of classes
 	function __autoload($class) {
 		require_once('classes/' . $class . '.php');
 	}
+
+	$facebook = new Facebook(array(
+	  'appId'  => '413593075351071',
+	  'secret' => 'c91c70487679528d6d6b22547db88ea9',
+	));
 	
+	// See if there is a user from a cookie
+	$fuser = $facebook->getUser();
+
+	// Need the database connection:
+	require MYSQL1;
+	
+	if ($fuser) {
+	  try {
+	    // Proceed knowing you have a logged in user who's authenticated.
+
+	   	$user_profile = $facebook->api('/me');
+		$first_name = $user_profile['first_name'];
+		$last_name = $user_profile['last_name'];
+		$uemail = $user_profile['email'];
+		$gender = $user_profile['gender'];
+		$oa_provider = 'facebook';
+		$oa_id = $fuser;
+		
+		// Format Facebook birthday to database format	
+		$facebirthday = $user_profile['birthdate'];
+		$bday = explode("/", $facebirthday);	
+		$month = $bday[0];
+		$day = $bday[1];
+		$year = $bday[2];
+		$bdarray = array($year, $month, $day);
+		$bdstring = implode("-", $bdarray);
+		$bd = new DateTime($bdstring);
+		$bdfrmat = $bd->format('Y-m-d');
+
+		// Create user object
+		$user = new UserAuth();
+		$user->setDB($db);
+		
+		if ($user->isOAuthRegistered($oa_provider, $oa_id)) {
+			
+			// Redirect User to proper page	
+			$user->OAuthlogin($uemail);
+			unset($user);		
+echo "Test Point A";
+		}
+		else {
+			
+			$user->addOAuthUser($uemail, $first_name, $last_name, $gender, $bdfrmat, $oa_provider, $oa_id);
+			unset($user);
+echo "Test Point B";
+			// Then redirect to a page so they can fill out rest of information for the database!!!
+		}		
+	  } catch (FacebookApiException $e) {
+	    echo '<pre>'.htmlspecialchars(print_r($e, true)).'</pre>';
+	    $fuser = null;
+	  }
+	}
+	
+
 	// Authorized Login Check
 	// If session value is present, redirect the user. Also validate the HTTP_USER_AGENT	
 	if (isset($_SESSION['agent']) AND ($_SESSION['agent'] = md5($_SERVER['HTTP_USER_AGENT'])))
@@ -37,8 +97,7 @@
 
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
-		// Need the database connection:
-		require MYSQL1;
+
 
 		// Validate email address
 		if (filter_var($_POST['email'], FILTER_VALIDATE_EMAIL))
@@ -80,6 +139,7 @@
 
 </head>
 <body>
+
 <div id="fb-root"></div>
     <script>
       // Load the SDK Asynchronously
@@ -94,7 +154,7 @@
       // Init the SDK upon load
       window.fbAsyncInit = function() {
         FB.init({
-          appId      : '413593075351071', // App ID
+          appId      : '<?php echo $facebook->getAppID() ?>', // App ID
           channelUrl : 'core/channel.html', // Path to your Channel File
           status     : true, // check login status
           cookie     : true, // enable cookies to allow the server to access the session
@@ -129,7 +189,7 @@
       } 
     </script>
 
-    <h1>Facebook Client-side Authentication Example</h1>
+    <h3>Login With Facebook</h3>
       <div id="auth-status">
         <div id="auth-loggedout">
           <a href="#" id="auth-loginlink">Login</a>
