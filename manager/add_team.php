@@ -44,15 +44,12 @@
 		// IN FUTURE CAN ADD LOGIC HERE FOR PAYING CUSTOMERS TO ADD TEAM - similar to checks 
 		// i have now for managers to edit and add players/games
 				
-		// Trim all the incoming data:
-		$trimmed = array_map('trim', $_POST);
-		
 		// Assume invalid values:
 		$tn = $sp = $ct = $st = $lg = FALSE;
 				
 		// Validate Team name
-		if ($trimmed["tname"]) {
-			$tn = $trimmed["tname"];
+		if ($_POST["tname"]) {
+			$tn = $_POST["tname"];
 		}
 		else {
 			echo 'Please enter a Team name.';
@@ -69,8 +66,8 @@
 		}
 
 		// Validate Team's homecity
-		if ($trimmed['city']) {
-			$ct = $trimmed['city'];
+		if ($_POST['city']) {
+			$ct = $_POST['city'];
 		}
 		else {
 			echo 'Please enter your teams homecity.';
@@ -78,8 +75,8 @@
 		}
 
 		// Validate Team's state
-		if ($trimmed['state']) {
-			$st = $trimmed['state'];
+		if ($_POST['state']) {
+			$st = $_POST['state'];
 		}
 		else {
 			echo 'Please enter your teams home state.';
