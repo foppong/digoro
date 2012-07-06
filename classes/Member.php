@@ -168,7 +168,7 @@
 					$body .= "\n" . BASE_URL;
 					mail($userEmail, 'digoro.com - Digoro Invitation', $body);
 						
-					echo '<h3>Invitation successfully sent.</h3>';
+					echo 'Invitation successfully sent!';
 	
 					// Close the statement:
 					$stmt->close();
