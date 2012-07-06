@@ -16,17 +16,14 @@
 	{
 		// Need the database connection:	
 		require MYSQL2;
-
-		// Trim all the incoming data:
-		$trimmed = array_map('trim', $_POST);
 		
 		// Assume invalid values:
 		$fn = $ln = $e = $p = $zp = $bd = $mstatus = $gd = FALSE;
 		
 		// Validate firstname
-		if (preg_match('/^[A-Z \'.-]{2,20}$/i', $trimmed['first_name']))
+		if (preg_match('/^[A-Z \'.-]{2,20}$/i', $_POST['first_name']))
 		{
-			$fn = $trimmed['first_name'];
+			$fn = $_POST['first_name'];
 		}
 		else 
 		{
@@ -34,9 +31,9 @@
 		}
 	
 		// Validate lastname
-		if (preg_match('/^[A-Z \'.-]{2,40}$/i', $trimmed['last_name']))
+		if (preg_match('/^[A-Z \'.-]{2,40}$/i', $_POST['last_name']))
 		{
-			$ln = $trimmed['last_name'];
+			$ln = $_POST['last_name'];
 		}
 		else 
 		{
@@ -44,9 +41,9 @@
 		}
 
 		// Validate email
-		if (filter_var($trimmed['email'], FILTER_VALIDATE_EMAIL))
+		if (filter_var($_POST['email'], FILTER_VALIDATE_EMAIL))
 		{
-			$e = $trimmed['email'];
+			$e = $_POST['email'];
 		}
 		else 
 		{
@@ -54,11 +51,11 @@
 		}
 
 		// Validate password
-		if (strlen($trimmed['pass1']) > 5)
+		if (strlen($_POST['pass1']) > 5)
 		{
-			if ($trimmed['pass1'] == $trimmed['pass2'])
+			if ($_POST['pass1'] == $_POST['pass2'])
 			{
-				$p = $trimmed['pass1'];
+				$p = $_POST['pass1'];
 			}
 			else 
 			{
@@ -160,32 +157,32 @@
 		<div>
 			<label for="first_name"><b>First Name:</b></label>
 			<input type="text" name="first_name" id="first_name" size="20" maxlength="20"
-			value="<?php if (isset($trimmed['first_name'])) echo $trimmed['first_name']; ?>" />
+			value="<?php if (isset($_POST['first_name'])) echo $_POST['first_name']; ?>" />
 		</div>
 	
 		<div>
 			<label for="last_name"><b>Last Name:</b></label>
 			<input type="text" name="last_name" id="last_name" size="20" maxlength="40"
-			value="<?php if (isset($trimmed['last_name'])) echo $trimmed['last_name']; ?>" />
+			value="<?php if (isset($_POST['last_name'])) echo $_POST['last_name']; ?>" />
 		</div>
 	
 		<div>
 			<label for="email"><b>Email Address:</b></label>
 			<input type="text" name="email" id="email" size="30" maxlength="60"
-			value="<?php if (isset($trimmed['email'])) echo $trimmed['email']; ?>" />
+			value="<?php if (isset($_POST['email'])) echo $_POST['email']; ?>" />
 		</div>
 	
 		<div>
 			<label for="pass1"><b>Enter A New Password:</b></label>
 			<input type="password" name="pass1" id="pass1" size="20" maxlength="20"
-			value="<?php if (isset($trimmed['pass1'])) echo $trimmed['pass1']; ?>" />
+			value="<?php if (isset($_POST['pass1'])) echo $_POST['pass1']; ?>" />
 			<small>Password must be between 6 and 20 characters long.</small>
 		</div>
 	
 		<div>
 			<label for="pass2"><b>Confirm Password:</b></label>
 			<input type="password" name="pass2" id="pass2" size="20" maxlength="20"
-			value="<?php if (isset($trimmed['pass2'])) echo $trimmed['pass2']; ?>" />
+			value="<?php if (isset($_POST['pass2'])) echo $_POST['pass2']; ?>" />
 		</div>
 	
 		<div>

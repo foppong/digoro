@@ -106,4 +106,5 @@
 	<p><a href="core/forgot_password.php">Forgot your password?</a></p>
 
 
-<?php include 'includes/ifooter.html'; ?>
+<?php include '../includes/ifooter.html'; ?>
+

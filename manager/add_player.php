@@ -54,17 +54,14 @@
 			echo 'You have to be the manager to add a member.';
 			exit();
 		}
-
-		// Trim all the incoming data:
-		$trimmed = array_map('trim', $_POST);
 		
 		// Assume invalid values:
 		$fn = $ln = $e = FALSE;
 
 		// Validate firstname
-		if (preg_match('/^[A-Z \'.-]{2,20}$/i', $trimmed['first_name']))
+		if (preg_match('/^[A-Z \'.-]{2,20}$/i', $_POST['first_name']))
 		{
-			$fn = $trimmed['first_name'];
+			$fn = $_POST['first_name'];
 		}
 		else 
 		{
@@ -73,9 +70,9 @@
 		}
 	
 		// Validate lastname
-		if (preg_match('/^[A-Z \'.-]{2,40}$/i', $trimmed['last_name']))
+		if (preg_match('/^[A-Z \'.-]{2,40}$/i', $_POST['last_name']))
 		{
-			$ln = $trimmed['last_name'];
+			$ln = $_POST['last_name'];
 		}
 		else 
 		{
@@ -84,9 +81,9 @@
 		}
 	
 		// Validate email
-		if (filter_var($trimmed['email'], FILTER_VALIDATE_EMAIL))
+		if (filter_var($_POST['email'], FILTER_VALIDATE_EMAIL))
 		{
-			$e = $trimmed['email'];
+			$e = $_POST['email'];
 		}
 		else 
 		{
