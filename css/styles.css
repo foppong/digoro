@@ -31,12 +31,23 @@ body
 	width: 760px;
 }
 
-h1, h2, h3 {
+h1, h3 {
 	color: #BD8100;
 	font-family: Baskerville, "Palatino Linotype", Times, serif;
 	border-top: 2px solid #86A100;
 	padding-top: 7px;
 	padding-left: 100px;
+}
+
+h2 {
+	font-size: 24px;
+	font-family: "Arial Narrow", Arial, Helvetica, sans-serif;
+	color: #F96B18;
+	border-top: 2px dotted #8DA516;
+	border-bottom: 2px dotted #8DA516;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	margin: 15px 0 5px 0;
 }
 
 p
