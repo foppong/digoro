@@ -592,27 +592,29 @@
 
 		
 		// Function to check if user already registered with OAuth
-		function isOAuthRegistered($provider, $oa_id) {
-			
+		function isOAuthRegistered($oa_provider, $oa_id) {
+		
 			// Make the query	
-			$q = "SELECT * FROM users WHERE (oauth_provider=? AND oauth_uid=?) LIMIT 1";
+			$q = "SELECT email FROM users WHERE (oauth_provider=? AND oauth_uid=?) LIMIT 1";
 			
 			// Prepare the statement
 			$stmt = $this->dbc->prepare($q);
 			
 			// Bind the inbound variables
-			$stmt->bind_param('si', $provider, $oa_id);
+			$stmt->bind_param('si', $oa_provider, $oa_id);
 						
 			// Execute the query
 			$stmt->execute();
 			
+			// Store result
+			$stmt->store_result();			
+						
 			if ($stmt->num_rows == 1) {
 				return True;
 			}
-			else {
+			else {				
 				return False;
-			}
-			
+			}			
 			// Close the statement
 			$stmt->close();
 			unset($stmt);
@@ -640,7 +642,7 @@ echo "Test Point A-1";
 					$stmt = $this->dbc->prepare($q); 
 		
 					// Bind the inbound variables:
-					$stmt->bind_param('ssssssisi', $e, $fn, $ln, $mstatus, $gd, $bdfrmat, $iv, $oa_provider, $oa_id);
+					$stmt->bind_param('ssssssisi', $e, $fn, $ln, "P", $gd, $bdfrmat, $iv, $oa_provider, $oa_id);
 						
 					// Execute the query:
 					$stmt->execute();
@@ -674,7 +676,7 @@ echo "Test Poing A-2";
 					$stmt = $this->dbc->prepare($q);
 	
 					// Bind the inbound variables:
-					$stmt->bind_param('ssssssii', $fn, $ln, $mstatus, $gd, $bdfrmat, $oa_provider, $oa_id, $this->id_user);
+					$stmt->bind_param('ssssssii', $fn, $ln, "P", $gd, $bdfrmat, $oa_provider, $oa_id, $this->id_user);
 					
 					// Execute the query:
 					$stmt->execute();

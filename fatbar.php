@@ -19,18 +19,18 @@
 	
 	// See if there is a user from a cookie
 	$fbuser = $facebook->getUser();
-echo "fatbar start A";	
+echo "fatbar start A <br />";	
 	if ($fbuser) {
 		try {
 	    	// Proceed knowing you have a logged in user who's authenticated.
 	   		$user_profile = $facebook->api('/me');
-/*
+
 			$first_name = $user_profile['first_name'];
 			$last_name = $user_profile['last_name'];
 			$uemail = $user_profile['email'];
 			$gender = $user_profile['gender'];
 			$oa_provider = 'facebook';
-			$oa_id = $fbuser;
+			$oa_id = $user_profile['id'];
 	
 			// Format Facebook birthday to database format	
 			$facebirthday = $user_profile['birthday'];
@@ -46,19 +46,20 @@ echo "fatbar start A";
 			// Create user object
 			$OAuser = new UserAuth();
 			$OAuser->setDB($db);
-echo "fatbar B";			
+
+echo "fatbar B <br />";			
 			if ($OAuser->isOAuthRegistered($oa_provider, $oa_id)) {
-echo "fatbar C";
+echo "fatbar C <br />";
 				$OAuser->OAuthlogin($uemail);
 				unset($OAuser);					
 			}
 			else {
-echo "fatbar D";			
+echo "fatbar D <br />";			
 				$OAuser->addOAuthUser($uemail, $first_name, $last_name, $gender, $bdfrmat, $oa_provider, $oa_id);
 				$OAuser->OAuthlogin($uemail);
 				unset($OAuser);
 			}
-*/		} 
+		} 
 		catch (FacebookApiException $e) {
 	    	echo '<pre>'.htmlspecialchars(print_r($e, true)).'</pre>';
 	    	$fbuser = null;
@@ -83,7 +84,7 @@ echo "fatbar D";
 				$url = BASE_URL . 'player/player_home.php';
 				break;
 			default:
-				$url = BASE_URL . 'fatbar.php';
+				$url = BASE_URL . 'fatbar.php'; // Change when site goes live
 				break;
 		}
 		
