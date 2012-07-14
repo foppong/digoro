@@ -38,12 +38,6 @@
 
 	// Assign Database Resource to object
 	$manager->setDB($db);
-
-	// Authorized Login Check
-	if (!$manager->valid($lvl))
-	{
-		redirect_to('index.php');
-	}
 	
 	// Pull current user data from database and set object attributes
 	$manager->pullUserData();

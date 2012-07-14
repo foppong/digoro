@@ -13,9 +13,6 @@
 		require_once('../classes/' . $class . '.php');
 	}
 
-	// Site access level -> Manager
-	$lvl = 'M'; 
-
 	// Assign user object from session variable
 	if (isset($_SESSION['userObj']))
 	{
@@ -32,12 +29,6 @@
 
 	// Assign Database Resource to object
 	$manager->setDB($db);
-
-	// Authorized Login Check
-	if (!$manager->valid($lvl))
-	{
-		redirect_to('index.php');
-	}
 
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{

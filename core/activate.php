@@ -23,7 +23,7 @@
 		// Print a customized message:
 		if ($db->affected_rows == 1) // It ran OK.
 		{
-			echo '<h3>Your account is now active. You may now log in by clicking <a href="../index.php">here</a></h3>';
+			echo '<h3>Your account is now active. You may now log in by clicking <a href="../fatbar.php">here</a></h3>';
 		}
 		else 
 		{
@@ -36,7 +36,7 @@
 	else
 	{
 		// Redirect
-		$url = BASE_URL . 'index.php';
+		$url = BASE_URL . 'fatbar.php';
 		ob_end_clean();
 		header("Location: $url");
 		exit();

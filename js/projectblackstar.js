@@ -453,22 +453,6 @@ var LEAGUE = {
 	}
 }
 
-
-var REGISTRATION = {
-		
-	showForm: function( data ) {
-		if (data == 'P') {
-			// show player profile form
-		}
-		else {
-			// show manager team profile add
-			$( '#OAFirstTeamForm' ).show();
-			$( '#OAFirstTeamForm' ).append( '<input type="hidden" id="role" name="role" value="' + data + '"/>' );
-		}
-	}
-}
-
-
 // Function to clear out form contents in DOM
 var MISCFUNCTIONS = {
 	

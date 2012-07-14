@@ -408,7 +408,7 @@
 							$url = BASE_URL . 'player/player_home.php'; // Chg to general home page
 							break;
 						default:
-							$url = BASE_URL . 'index.php';       
+							$url = BASE_URL . 'fatbar.php';       
 							break;
 					}
 	
@@ -636,133 +636,139 @@
 		
 		
 		// Function to add OAuth Users
-		function addOAuthUser($e, $fn, $ln, $role, $gd, $bdfrmat) 
-		{
-			// Call checkUser function	
-			self::checkUser($e);
+		function addOAuthUser($e, $fn, $ln, $role, $gd, $bdfrmat) {
 
-			// Determine registration method
-			switch ($this->inv_case)
-			{
-				case 1: // User is new to the system & not invited by manager		
-					// Make the query to add new user to database
-					$q = 'INSERT INTO users (email, first_name, last_name, role, gender, birth_date, invited, registration_date, oauth_registered) 
-						VALUES (?,?,?,?,?,?,?,NOW(),?)';
-		
-					// Prepare the statement
-					$stmt = $this->dbc->prepare($q); 
-		
-					// Bind the inbound variables:
-					$stmt->bind_param('ssssssis', $e, $fn, $ln, $role, $gd, $bdfrmat, $iv, TRUE);
+			if (!self::isOAuthRegistered($e)) {
+	
+				// Define constant
+				$oauth_reg = 1;
+	
+				// Call checkUser function	
+				self::checkUser($e);
+	
+				// Determine registration method
+				switch ($this->inv_case)
+				{
+					case 1: // User is new to the system & not invited by manager		
+						$iv = 0; // Define invite constant in database to "brand new user"
 						
-					// Execute the query:
-					$stmt->execute();
-						
-					if ($stmt->affected_rows == 1) // It ran OK.
-					{
-						$userID = $stmt->insert_id;	
-
-						if ($role == 'M') {
-							$user = new Manager($userID);						
-							$_SESSION['userObj'] = $user;
-						}
-							
-						if ($role == 'P') {
-							$user = new Player($userID);
-							$_SESSION['userObj'] = $user;
-						}
-
-						// Close the statement:
-						$stmt->close();
-						unset($stmt);
-							
-						exit();	
-					}
-					else 
-					{	// Registration process did not run OK.
-						echo '<p class="error">You could not be registered due to a system error. We apologize
-							for any inconvenience.</p>';
-					}
-					break;
-
-				case 2: // User invited by manager					
-
-					// Make the query to select the user ID
-					$q = "SELECT id_user FROM users WHERE email=? LIMIT 1";
-					
-					// Prepare the statement
-					$stmt = $this->dbc->prepare($q);
-					
-					// Bind the inbound variable:
-					$stmt->bind_param('s', $e);
-					
-					// Execute the statement
-					$stmt->execute();
-					
-					// Store result
-					$stmt->store_result();
-					
-					// Bind the outbound variable
-					$stmt->bind_result($OAid);	
-								
-					if ($stmt->num_rows == 1) { // Found match in database
-					
-						//Assign the outbound variables	
-						while($stmt->fetch()) {
-							$userID = $OAid;
-						}
-								
-						// Make the query to update user in database
-						$q = 'UPDATE users SET first_name=?, last_name=?, role=?, gender=?, birth_date=?, registration_date=NOW(), oauth_registered=TRUE
-							WHERE id_user=? LIMIT 1';
-		
-						// Prepare the statement
-						$stmt2 = $this->dbc->prepare($q);
-		
-						// Bind the inbound variables:
-						$stmt2->bind_param('sssssi', $fn, $ln, $role, $gd, $bdfrmat, $userID);
-						
-						// Execute the query:
-						$stmt2->execute();
+						// Make the query to add new user to database
+						$q = 'INSERT INTO users (email, first_name, last_name, role, gender, birth_date, invited, oauth_registered, registration_date) 
+							VALUES (?,?,?,?,?,?,?,?,NOW())';
 			
-						if ($stmt2->affected_rows == 1) {// It ran OK.
+						// Prepare the statement
+						$stmt = $this->dbc->prepare($q); 
+			
+						// Bind the inbound variables:
+						$stmt->bind_param('ssssssii', $e, $fn, $ln, $role, $gd, $bdfrmat, $iv, $oauth_reg);
+							
+						// Execute the query:
+						$stmt->execute();
+	
+						if ($stmt->affected_rows == 1) // It ran OK.
+						{
+							$userID = $stmt->insert_id;	
 	
 							if ($role == 'M') {
-								$user = new Manager($userID);						
+								$user = new Manager($userID);					
 								$_SESSION['userObj'] = $user;
 							}
 								
 							if ($role == 'P') {
 								$user = new Player($userID);
 								$_SESSION['userObj'] = $user;
-							}
-		
-							// Close the statement:
-							$stmt->close();
-							unset($stmt);
-							
-							exit();
+							}					
 						}
-						else {
-							//Update failed
+						else 
+						{	// Registration process did not run OK.
+							echo '<p class="error">You could not be registered due to a system error. We apologize
+								for any inconvenience. [Case 1]</p>';
+						}
+							
+						// Close the statement:
+						$stmt->close();
+						unset($stmt);
+		
+						break;
+	
+					case 2: // User invited by manager					
+	
+						// Make the query to select the user ID
+						$q = "SELECT id_user FROM users WHERE email=? LIMIT 1";
+						
+						// Prepare the statement
+						$stmt = $this->dbc->prepare($q);
+						
+						// Bind the inbound variable:
+						$stmt->bind_param('s', $e);
+						
+						// Execute the statement
+						$stmt->execute();
+						
+						// Store result
+						$stmt->store_result();
+						
+						// Bind the outbound variable
+						$stmt->bind_result($OAid);	
+									
+						if ($stmt->num_rows == 1) { // Found match in database
+						
+							//Assign the outbound variables	
+							while($stmt->fetch()) {
+								$userID = $OAid;
+							}
+									
+							// Make the query to update user in database
+							$q = 'UPDATE users SET first_name=?, last_name=?, role=?, gender=?, birth_date=?, registration_date=NOW(), oauth_registered=?
+								WHERE id_user=? LIMIT 1';
+			
+							// Prepare the statement
+							$stmt2 = $this->dbc->prepare($q);
+			
+							// Bind the inbound variables:
+							$stmt2->bind_param('sssssii', $fn, $ln, $role, $gd, $bdfrmat, $oauth_reg, $userID);
+							
+							// Execute the query:
+							$stmt2->execute();
+				
+							if ($stmt2->affected_rows == 1) {// It ran OK.
+		
+								if ($role == 'M') {
+									$user = new Manager($userID);						
+									$_SESSION['userObj'] = $user;
+								}
+									
+								if ($role == 'P') {
+									$user = new Player($userID);
+									$_SESSION['userObj'] = $user;
+								}
+							}
+							else {
+								//Update failed
+								echo '<p class="error">You could not be registered due to a system error. We apologize
+									for any inconvenience. [Case 2]</p>';
+							}
+	
+							// Close the statement:
+							$stmt2->close();
+							unset($stmt2);
+	
+						}
+						else {	
+							// Registration process did not run OK.
 							echo '<p class="error">You could not be registered due to a system error. We apologize
 								for any inconvenience.</p>';
 						}
-					}
-					else {	
-						// Registration process did not run OK.
-						echo '<p class="error">You could not be registered due to a system error. We apologize
-							for any inconvenience.</p>';
-					}
-					break;
-					
-				default:
-					// The email address is not available and player was not previously invited
-					echo '<p class="error">That email address has already been registered. If you have forgotten your password,
-						use the link below to have your password sent to you.</p>';
-					break;
-			} // End of switch
-			
+						
+						// Close the statement:
+						$stmt->close();
+						unset($stmt);
+						break;
+						
+					default:
+						break;
+				} // End of switch
+			}
 		} // End of addOAuthUser function
 		
 
@@ -849,7 +855,7 @@
 							$url = BASE_URL . 'player/player_home.php'; // Change to generic home page
 							break;
 						default:
-							$url = BASE_URL . 'index.php';       
+							$url = BASE_URL . 'fatbar.php';       
 							break;
 					}
 	

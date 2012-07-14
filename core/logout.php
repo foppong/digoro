@@ -30,7 +30,7 @@
 	{
 		session_unset();
 		session_destroy();
-		$url = BASE_URL . 'index.php';
+		$url = BASE_URL . 'fatbar.php';
 		ob_end_clean();
 		header("Location: $url");
 		exit();	
@@ -40,7 +40,7 @@
 	$user->logoff();
 	
 	echo '<h3>You are now logged out.</h3>';
-	echo '<h4>Click <a href="../index.php">here</a> to return to the main login screen.</h4>'; 	
+	echo '<h4>Click <a href="../fatbar.php">here</a> to return to the main login screen.</h4>'; 	
 	
 ?>
 
