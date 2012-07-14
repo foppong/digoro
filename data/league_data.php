@@ -14,9 +14,6 @@
 	function __autoload($class) {
 		require_once('../classes/' . $class . '.php');
 	}
-
-	// Site access level -> General
-	$lvl = 'G'; 
 	
 	// Assign user object from session variable
 	if (isset($_SESSION['userObj']))
@@ -38,7 +35,6 @@
 	if (!empty($_POST["state"])) 
 	{
 		$st = $_POST["state"];
-		
 	}
 	
 	// Checks if state is selected before querying database.
