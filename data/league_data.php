@@ -31,12 +31,6 @@
 	// Need the database connection:	
 	require_once MYSQL2;
 
-	// Authorized Login Check
-	if (!$user->valid($lvl))
-	{
-		redirect_to('index.php');
-	}
-
 	// Assume invalid values:
 	$st = FALSE;
 

@@ -19,46 +19,18 @@
 	
 	// See if there is a user from a cookie
 	$fbuser = $facebook->getUser();
-echo "fatbar start A <br />";	
+	
 	if ($fbuser) {
 		try {
 	    	// Proceed knowing you have a logged in user who's authenticated.
 	   		$user_profile = $facebook->api('/me');
-
-			$first_name = $user_profile['first_name'];
-			$last_name = $user_profile['last_name'];
 			$uemail = $user_profile['email'];
-			$gender = $user_profile['gender'];
-			$oa_provider = 'facebook';
-			$oa_id = $user_profile['id'];
-	
-			// Format Facebook birthday to database format	
-			$facebirthday = $user_profile['birthday'];
-			$bday = explode("/", $facebirthday);	
-			$month = $bday[0];
-			$day = $bday[1];
-			$year = $bday[2];
-			$bdarray = array($year, $month, $day);
-			$bdstring = implode("-", $bdarray);
-			$bd = new DateTime($bdstring);
-			$bdfrmat = $bd->format('Y-m-d');
 
-			// Create user object
+			// Create user object & login user
 			$OAuser = new UserAuth();
 			$OAuser->setDB($db);
-
-echo "fatbar B <br />";			
-			if ($OAuser->isOAuthRegistered($oa_provider, $oa_id)) {
-echo "fatbar C <br />";
-				$OAuser->OAuthlogin($uemail);
-				unset($OAuser);					
-			}
-			else {
-echo "fatbar D <br />";			
-				$OAuser->addOAuthUser($uemail, $first_name, $last_name, $gender, $bdfrmat, $oa_provider, $oa_id);
-				$OAuser->OAuthlogin($uemail);
-				unset($OAuser);
-			}
+			$OAuser->OAuthlogin($uemail);
+			unset($OAuser);					
 		} 
 		catch (FacebookApiException $e) {
 	    	echo '<pre>'.htmlspecialchars(print_r($e, true)).'</pre>';
@@ -66,12 +38,12 @@ echo "fatbar D <br />";
 	  	}
 	}
 
-
 	// Authorized Login Check
 	// If session value is present, redirect the user. Also validate the HTTP_USER_AGENT	
 	if (isset($_SESSION['agent']) AND ($_SESSION['agent'] = md5($_SERVER['HTTP_USER_AGENT']))) {
 		$role = $_SESSION['role'];
-		
+echo "test point - fatbar.php";
+exit();		
 		//Redirect User
 		switch ($role) {
 			case 'A':
@@ -112,7 +84,8 @@ echo "fatbar D <br />";
 		}
 
 		// Check if email and password entered are valid before proceeding to login procedure.
-		if ($e && $p) { 
+		if ($e && $p) {
+			// Create user object & login user 
 			$user = new UserAuth();
 			$user->setDB($db);	
 			$user->login($e, $p);
@@ -132,26 +105,29 @@ echo "fatbar D <br />";
 	</div>
 
     <h3>Login With Facebook</h3>
-    <?php if (isset($user_profile)) { ?>
+<!--    <?php if (isset($user_profile)) { ?>
       Your user profile is 
       <pre>            
         <?php print htmlspecialchars(print_r($user_profile, true)) ?>
       </pre> 
-    <?php } else { ?>
-      <fb:login-button></fb:login-button>
+    <?php } else { ?> -->
+      <fb:login-button size="medium">Login with Facebook</fb:login-button> 
+     <!-- <div class="fb-login-button" data-show-faces="true" data-width="200" data-max-rows="1"></div>-->
     <?php } ?>
 	<div id="fb-root"></div>
     <script>               
       window.fbAsyncInit = function() {
         FB.init({
-          appId: '<?php echo $facebook->getAppID() ?>', 
-          cookie: true, 
-          xfbml: true,
+          appId: '<?php echo $facebook->getAppID() ?>', // check login status
+          cookie: true, // enable cookies to allow the server to access the session
+          xfbml: true, // parse XFBML
           oauth: true
         });
+        // redirect user on login
         FB.Event.subscribe('auth.login', function(response) {
           window.location.reload();
         });
+        // redirect user on logout
         FB.Event.subscribe('auth.logout', function(response) {
           window.location.reload();
         });

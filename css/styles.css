@@ -29,6 +29,10 @@ p
 	margin-left:15px;
 }
 
+p.tip {
+	font-size:9pt;
+}
+
 li
 {
 	display:inline;
