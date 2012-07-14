@@ -12,21 +12,12 @@
 		require_once('../classes/' . $class . '.php');
 	}
 
-	// Site access level -> General
-	$lvl = 'G'; 
-
 	// Assign user object from session variable
 	if (isset($_SESSION['userObj']))
 	{
 		$user = $_SESSION['userObj'];
 	}
 	else 
-	{
-		redirect_to('index.php');
-	}
-
-	// Authorized Login Check
-	if (!$user->valid($lvl))
 	{
 		redirect_to('index.php');
 	}

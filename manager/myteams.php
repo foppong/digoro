@@ -15,9 +15,6 @@
 		require_once('../classes/' . $class . '.php');
 	}
 
-	// Site access level -> General
-	$lvl = 'G'; 
-
 	// Assign user object from session variable
 	if (isset($_SESSION['userObj']))
 	{
@@ -34,12 +31,6 @@
 
 	// Assign Database Resource to object
 	$user->setDB($db);
-
-	// Authorized Login Check
-	if (!$user->valid($lvl))
-	{
-		redirect_to('index.php');
-	}
 
 	// Page header:
 	echo '<h2>My Teams</h2>';

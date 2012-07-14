@@ -445,7 +445,7 @@
 			session_destroy();
 		}
 
-		// Function to check if user is authorized for access
+		// Function to check if user is authorized for access [**Currently not really using at moment**]
 		function valid($lvl)
 		{
 			switch ($lvl)

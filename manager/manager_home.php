@@ -12,9 +12,6 @@
 		require_once('../classes/' . $class . '.php');
 	}
 
-	// Site access level -> Manager
-	$lvl = 'M'; 
-
 	$facebook = new Facebook(array(
 	  'appId'  => '413593075351071',
 	  'secret' => 'c91c70487679528d6d6b22547db88ea9',
