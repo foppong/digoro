@@ -804,25 +804,60 @@
 					ob_end_clean();
 					header("Location: $url");
 					
-					exit();			
+					exit();
 				}
-				else {
+				elseif (!self::isOAuthRegistered($e) && ($lb == 1)) { //User is not OAuth registered but has logged in before
+					// Set boolean logic to true
+					$bl = 1;
+					
+					// Update the user's info in the database
+					$q = 'UPDATE users SET oauth_registered=? WHERE id_user=? LIMIT 1';
+		
+					// Prepare the statement
+					$stmt2 = $this->dbc->prepare($q); 
+		
+					// Bind the inbound variables:
+					$stmt2->bind_param('ii', $bl, $userID);
+						
+					// Execute the query:
+					$stmt2->execute();
+						
+					if ($stmt2->affected_rows !== 1) // It didn't run ok
+					{
+						echo 'There was an error. Please contact the service administrator.';
+						exit();
+					}						
+
 					//Redirect User					
 					$user = new User($userID);
 					$_SESSION['userObj'] = $user;
-					$url = BASE_URL . 'core/oauth_welcome.php';
+					$url = BASE_URL . 'manager/manager_home.php';
 					
 					ob_end_clean();
 					header("Location: $url");
 					
+					// Close the statement:
+					$stmt2->close();
+					unset($stmt2);					
 					exit();
 				}
-			}
+				else {
+					
+					//Redirect User
+					$user = new User($userID);
+					$_SESSION['userObj'] = $user;				
+					$url = BASE_URL . 'core/oauth_welcome.php';
+					ob_end_clean();
+					header("Location: $url");
+					exit();				
+				}
+			}	
 			else {
 				//Redirect User
 				$url = BASE_URL . 'core/oauth_welcome.php';
 				ob_end_clean();
 				header("Location: $url");
+				exit();
 			}
 			
 			// Close the statement:
