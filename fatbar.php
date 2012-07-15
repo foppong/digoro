@@ -41,24 +41,8 @@
 	// Authorized Login Check
 	// If session value is present, redirect the user. Also validate the HTTP_USER_AGENT	
 	if (isset($_SESSION['agent']) AND ($_SESSION['agent'] = md5($_SERVER['HTTP_USER_AGENT']))) {
-		$role = $_SESSION['role'];
 	
-		//Redirect User
-		switch ($role) {
-			case 'A':
-				$url = BASE_URL . 'admin/admin_home.php'; 
-				break;
-			case 'M':
-				$url = BASE_URL . 'manager/manager_home.php';
-				break;
-			case 'P':
-				$url = BASE_URL . 'player/player_home.php';
-				break;
-			default:
-				$url = BASE_URL . 'fatbar.php'; // Change when site goes live
-				break;
-		}
-		
+		$url = BASE_URL . 'manager/manager_home.php';
 		header("Location: $url");
 		exit();			
 	}

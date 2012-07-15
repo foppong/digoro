@@ -24,12 +24,9 @@
 	// See if there is a user from a cookie
 	$fbuser = $facebook->getUser();
 
-	if (!$fbuser) {
-		redirect_to('index.php');
+	if (!isset($fbuser)) {
+		redirect_to('fatbar.php');
 	}
-
-	// Delete objects
-	unset($facebook);
 
 	// Close the connection:
 	$db->close();

@@ -104,6 +104,11 @@
         FB.Event.subscribe('auth.logout', function(response) {
           window.location.reload();
         });
+        
+        FB.logout(function(response) {
+		  Log.info('FB.logout callback', response);
+	});
+        
       };
       (function() {
         var e = document.createElement('script'); e.async = true;
@@ -111,14 +116,11 @@
           '//connect.facebook.net/en_US/all.js';
         document.getElementById('fb-root').appendChild(e);
       }());
-	FB.logout(function(response) {
-		Log.info('FB.logout callback', response);
-	});
 
 	$(document).ready(function() {
 		// Load teams associated with user into select menu
 		TEAM.teamMenu();		
-	};
+	});
 	
     </script>
     

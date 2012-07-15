@@ -59,7 +59,7 @@
 	}
 	else 
 	{
-		redirect_to('index.php');
+		redirect_to('fatbar.php');
 	}
 
 	//Set role of user

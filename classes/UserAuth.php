@@ -365,16 +365,13 @@
 					// Set default team to session variable
 					$_SESSION['deftmID'] = $deftmID;
 				
-					// Set role to session variable
-					$_SESSION['role'] = $role;
-				
 					// Store the HTTP_USER_AGENT:
 					$_SESSION['agent'] = md5($_SERVER['HTTP_USER_AGENT']);			
 					
 					// If user hasn't logged in before and is a manager, take them to welcome page
 					if ($lb == FALSE && $role == 'M')
 					{
-						$user = new Manager($userID);						
+						$user = new User($userID);						
 						$_SESSION['userObj'] = $user;
 						$url = BASE_URL . 'manager/mg_welcome.php';
 						header("Location: $url");
@@ -382,7 +379,7 @@
 					}
 
 					if ($lb == FALSE && $role == 'P') {
-						$user = new Player($userID);
+						$user = new User($userID);
 						$_SESSION['userObj'] = $user;
 						$url = BASE_URL . 'player/p_welcome.php';
 						header("Location: $url");
@@ -390,30 +387,12 @@
 					}
 					
 					//Redirect User
-					switch ($role)
-					{
-						case 'A':
-							$user = new Admin($userID);
-							$_SESSION['userObj'] = $user;							
-							$url = BASE_URL . 'admin/admin_home.php';
-							break;
-						case 'M':
-							$user = new Manager($userID);						
-							$_SESSION['userObj'] = $user;
-							$url = BASE_URL . 'manager/manager_home.php'; // Chg to general home page
-							break;
-						case 'P':
-							$user = new Player($userID);							
-							$_SESSION['userObj'] = $user;							
-							$url = BASE_URL . 'player/player_home.php'; // Chg to general home page
-							break;
-						default:
-							$url = BASE_URL . 'fatbar.php';       
-							break;
-					}
+					$user = new User($userID);
+					$_SESSION['userObj'] = $user;							
+					$url = BASE_URL . 'manager/manager_home.php';
 	
 					ob_end_clean();
-					//header("Location: $url");
+					header("Location: $url");
 	
 					// Close hasher
 					unset($hasher);
@@ -428,7 +407,10 @@
 				{
 					echo '<p class="error">You could not be logged in. Please check that you have activated your account.</p>';
 				}
-
+				
+				// Close the statement:
+				$stmt->close();
+				unset($stmt);
 			}
 			else 
 			{
@@ -776,7 +758,7 @@
 		function OAuthlogin($e) {
 
 			// Make the query	
-			$q = "SELECT role, id_user, login_before, default_teamID FROM users 
+			$q = "SELECT id_user, login_before, default_teamID FROM users 
 				WHERE (email=? AND activation='') LIMIT 1";
 		
 			// Prepare the statement
@@ -792,14 +774,13 @@
 			$stmt->store_result();
 						
 			// Bind the outbound variable:
-			$stmt->bind_result($roleOB, $idOB, $logbfOB, $deftmIDOB);
+			$stmt->bind_result($idOB, $logbfOB, $deftmIDOB);
 			
 			if ($stmt->num_rows == 1) // Found match in database
 			{
 				//Assign the outbound variables			
 				while ($stmt->fetch())
 				{
-					$role = $roleOB;
 					$userID = $idOB;
 					$lb = $logbfOB;
 					$deftmID = $deftmIDOB;
@@ -810,68 +791,31 @@
 				// Set default team to session variable
 				$_SESSION['deftmID'] = $deftmID;
 						
-				// Set role to session variable
-				$_SESSION['role'] = $role;
-						
 				// Store the HTTP_USER_AGENT:
 				$_SESSION['agent'] = md5($_SERVER['HTTP_USER_AGENT']);
 							
 				if (self::isOAuthRegistered($e)) {
-						
-					// If user hasn't logged in before and is a manager, take them to welcome page
-					if ($lb == FALSE && $role == 'M') {
-						$user = new Manager($userID);						
-						$_SESSION['userObj'] = $user;
-						$url = BASE_URL . 'manager/mg_welcome.php';
-						header("Location: $url");
-						exit();
-					}
-						
-					// If user hasn't logged in before and is a player, take them to welcome page
-					if ($lb == FALSE && $role == 'P') {
-						$user = new Player($userID);
-						$_SESSION['userObj'] = $user;
-						$url = BASE_URL . 'player/p_welcome.php';
-						header("Location: $url");
-						exit();
-					}
-						
 					//Redirect User
-					switch ($role)
-					{
-						case 'A':
-							$user = new Admin($userID);
-							$_SESSION['userObj'] = $user;							
-							$url = BASE_URL . 'admin/admin_home.php';
-							break;
-						case 'M':
-							$user = new Manager($userID);						
-							$_SESSION['userObj'] = $user;
-							$url = BASE_URL . 'manager/manager_home.php'; //Change to generic home page
-							break;
-						case 'P':
-							$user = new Player($userID);							
-							$_SESSION['userObj'] = $user;							
-							$url = BASE_URL . 'player/player_home.php'; // Change to generic home page
-							break;
-						default:
-							$url = BASE_URL . 'fatbar.php';       
-							break;
-					}
+					$user = new User($userID);
+					$_SESSION['userObj'] = $user;							
+					$url = BASE_URL . 'manager/manager_home.php';
 	
 					ob_end_clean();
-					//header("Location: $url");			
+					header("Location: $url");
+					
+					exit();			
 				}
 				else {
-/*
+					//Redirect User					
 					$url = BASE_URL . 'core/oauth_welcome.php';
 					ob_end_clean();
 					header("Location: $url");
-*/
+					
+					exit();
 				}
 			}
 			else {
-						
+				//Redirect User
 				$url = BASE_URL . 'core/oauth_welcome.php';
 				ob_end_clean();
 				header("Location: $url");
