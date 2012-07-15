@@ -119,6 +119,13 @@
           '//connect.facebook.net/en_US/all.js';
         document.getElementById('fb-root').appendChild(e);
       }());
+      (function(d, s, id) {
+		  var js, fjs = d.getElementsByTagName(s)[0];
+		  if (d.getElementById(id)) return;
+		  js = d.createElement(s); js.id = id;
+		  js.src = "//connect.facebook.net/en_US/all.js";
+		  fjs.parentNode.insertBefore(js, fjs);
+		}(document, 'script', 'facebook-jssdk'));
     </script>
 	
 	<!-- Existing Member Login Form -->
@@ -138,6 +145,9 @@
 		<input type="submit" name="submit" id="submit" value="Log In" />
 		</fieldset>
 	</form>
+
+	<div class="fb-like" data-href="http://www.facebook.com/DigoroInc" data-send="true" 
+		data-layout="box_count" data-width="450" data-show-faces="true" data-font="verdana"></div>
 
 	<p>Click <a href="core/register.php">here</a> to create an account.</p>
 	<p><a href="core/forgot_password.php">Forgot your password?</a></p>
