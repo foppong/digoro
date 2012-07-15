@@ -5,17 +5,12 @@
 	$page_title = 'Welcome to digoro!';
 	include '../includes/header.html';
 	include '../includes/php-functions.php';
-	include '../includes/facebook.php';
+	//include '../includes/facebook.php';
 
 	// autoloading of classes
 	function __autoload($class) {
 		require_once('../classes/' . $class . '.php');
 	}
-
-	$facebook = new Facebook(array(
-	  'appId'  => '413593075351071',
-	  'secret' => 'c91c70487679528d6d6b22547db88ea9',
-	));
 	
 	// See if there is a user from a cookie
 	$fbuser = $facebook->getUser();	
@@ -87,41 +82,11 @@
 	unset($db);	
 
 ?>
-	<div id="fb-root"></div>
     <script type="text/javascript">               
-      window.fbAsyncInit = function() {
-        FB.init({
-          appId: '<?php echo $facebook->getAppID() ?>', 
-          cookie: true, 
-          xfbml: true,
-          oauth: true
-        });
-        // redirect user on login
-        FB.Event.subscribe('auth.login', function(response) {
-          window.location.reload();
-        });
-        // redirect user on logout
-        FB.Event.subscribe('auth.logout', function(response) {
-          window.location.reload();
-        });
-        
-        FB.logout(function(response) {
-		  Log.info('FB.logout callback', response);
-	});
-        
-      };
-      (function() {
-        var e = document.createElement('script'); e.async = true;
-        e.src = document.location.protocol +
-          '//connect.facebook.net/en_US/all.js';
-        document.getElementById('fb-root').appendChild(e);
-      }());
-
-	$(document).ready(function() {
-		// Load teams associated with user into select menu
-		TEAM.teamMenu();		
-	});
-	
+		$(document).ready(function() {
+			// Load teams associated with user into select menu
+			TEAM.teamMenu();		
+		});
     </script>
     
 	<div>

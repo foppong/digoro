@@ -3,7 +3,6 @@
 	// Landing page for a new OAuth User
 		
 	require '../includes/config.php';
-	require '../includes/facebook.php';
 	$page_title = 'digoro : Welcome';
 	require_once '../includes/header.html';
 	include '../includes/php-functions.php';
@@ -15,11 +14,6 @@
 
 	// Need the database connection:
 	require MYSQL2;
-
-	$facebook = new Facebook(array(
-	  'appId'  => '413593075351071',
-	  'secret' => 'c91c70487679528d6d6b22547db88ea9',
-	));
 	
 	// See if there is a user from a cookie
 	$fbuser = $facebook->getUser();

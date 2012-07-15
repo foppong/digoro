@@ -91,7 +91,8 @@
         <?php print htmlspecialchars(print_r($user_profile, true)) ?>
       </pre> 
     <?php } else { ?> -->
-      <fb:login-button size="medium">Login with Facebook</fb:login-button> 
+    	
+      <fb:login-button size="medium" scope="email, user_birthday">Login with Facebook</fb:login-button> 
      <!-- <div class="fb-login-button" data-show-faces="true" data-width="200" data-max-rows="1"></div>-->
     <?php } ?>
 	<div id="fb-root"></div>

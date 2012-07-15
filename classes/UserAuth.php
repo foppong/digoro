@@ -794,7 +794,8 @@
 				// Store the HTTP_USER_AGENT:
 				$_SESSION['agent'] = md5($_SERVER['HTTP_USER_AGENT']);
 							
-				if (self::isOAuthRegistered($e)) {
+				if (self::isOAuthRegistered($e) && ($lb == 1)) {
+						
 					//Redirect User
 					$user = new User($userID);
 					$_SESSION['userObj'] = $user;							
@@ -807,7 +808,10 @@
 				}
 				else {
 					//Redirect User					
+					$user = new User($userID);
+					$_SESSION['userObj'] = $user;
 					$url = BASE_URL . 'core/oauth_welcome.php';
+					
 					ob_end_clean();
 					header("Location: $url");
 					

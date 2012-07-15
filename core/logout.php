@@ -37,6 +37,7 @@
 	}
 
 	// Log off user
+	$facebook->destroySession();
 	$user->logoff();
 	
 	echo '<h3>You are now logged out.</h3>';
@@ -47,33 +48,32 @@
 </head>
 <body>
 	<div id="fb-root"></div>
-    <script>               
-      window.fbAsyncInit = function() {
-        FB.init({
-          appId: '<?php echo $facebook->getAppID() ?>', 
-          cookie: true, 
-          xfbml: true,
-          oauth: true
-        });
-        // redirect user on login
-        FB.Event.subscribe('auth.login', function(response) {
-          window.location.reload();
-        });
-        // redirect user on logout
-        FB.Event.subscribe('auth.logout', function(response) {
-          window.location.reload();
-        });
-      };
-      (function() {
-        var e = document.createElement('script'); e.async = true;
-        e.src = document.location.protocol +
-          '//connect.facebook.net/en_US/all.js';
-        document.getElementById('fb-root').appendChild(e);
-      }());
-	FB.logout(function(response) {
-		Log.info('FB.logout callback', response);
-	});
-    </script>
+	    <script>               
+	      window.fbAsyncInit = function() {
+	        FB.init({
+	          appId: '<?php echo $facebook->getAppID() ?>', 
+	          cookie: true, 
+	          xfbml: true,
+	          oauth: true
+	        });
+	        
+		  function fbooklogoff(response) {
+		    if (response.authResponse) {
+				FB.logout();
+		    };
+		  }
+		
+		  // run once with current status and whenever the status changes
+		  FB.getLoginStatus(fbooklogoff);
+		  FB.Event.subscribe('auth.statusChange', fbooklogoff);    
+	    };
+	      (function() {
+	        var e = document.createElement('script'); e.async = true;
+	        e.src = document.location.protocol +
+	          '//connect.facebook.net/en_US/all.js';
+	        document.getElementById('fb-root').appendChild(e);
+	      }());
+	    </script>
     
 <?php
 	include '../includes/ifooter.html';
