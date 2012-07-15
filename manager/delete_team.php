@@ -13,9 +13,6 @@
 		require_once('../classes/' . $class . '.php');
 	}
 
-	// Site access level -> Manager
-	$lvl = 'M'; 
-
 	// Assign user object from session variable
 	if (isset($_SESSION['userObj']))
 	{
@@ -29,12 +26,6 @@
 
 	// Need the database connection:
 	require_once MYSQL2;
-
-	// Authorized Login Check
-	if (!$manager->valid($lvl))
-	{
-		redirect_to('index.php');
-	}
 	
 	if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z'])) // Confirmation that form has been submitted	
 	{

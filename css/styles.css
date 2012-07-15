@@ -59,6 +59,10 @@ p
 	margin-left: 100px;
 }
 
+p.tip {
+	font-size:9pt;
+}
+
 li
 {
 	display:inline;

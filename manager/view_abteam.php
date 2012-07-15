@@ -14,9 +14,6 @@
 	function __autoload($class) {
 		require_once('../classes/' . $class . '.php');
 	}
-
-	// Site access level -> Manager
-	$lvl = 'M'; 
 	
 	// Assign user object from session variable
 	if (isset($_SESSION['userObj']))
@@ -28,12 +25,6 @@
 	{
 		redirect_to('index.php');	
 	}
-
-	// Authorized Login Check
-	if (!$user->valid($lvl))
-	{
-		redirect_to('index.php');	
-	}
 	
 	// Check for a $page_title value:
 	if (!isset($page_title))
@@ -42,7 +33,6 @@
 	}
 
 	$page_title = 'digoro : About Team';
-
 ?>
 
 

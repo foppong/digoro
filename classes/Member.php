@@ -92,8 +92,7 @@
 		} // End of pullMemberData function
 
 		// Functon to create member and add to team
-		function createMember($userEmail, $teamID, $fn, $ln)
-		{
+		function createMember($userEmail, $teamID, $fn, $ln) {
 			// Code checks users database to see if player is already registered. If not, enters a place holder until 
 			// added player completes registeration.
 			if (self::isRegistered($userEmail)) {
@@ -125,16 +124,16 @@
 				// If player doesn't exist in user table, add skeleton informatoin to user table, add them to sport_table, & send invitation.		
 
 				// Boolean used for invitation column, setting to True for invited
-				$iv = True;
+				$iv = 1;
 			
 				// Make the query to add new user to database
-				$q = 'INSERT INTO users (email, invited) VALUES (?,?)';
+				$q = 'INSERT INTO users (first_name, last_name, email, invited) VALUES (?,?,?,?)';
 	
 				// Prepare the statement
 				$stmt = $this->dbc->prepare($q); 
 	
 				// Bind the inbound variables:
-				$stmt->bind_param('ss', $userEmail, $iv);
+				$stmt->bind_param('sssi', $fn, $ln, $userEmail, $iv);
 					
 				// Execute the query:
 				$stmt->execute();
@@ -146,19 +145,20 @@
 					$q = 'INSERT INTO members (id_user, id_team) VALUES (?,?)';
 					
 					// Prepare the statement
-					$stmt = $this->dbc->prepare($q);
+					$stmt2 = $this->dbc->prepare($q);
 						
 					// Bind the inbound variables
-					$stmt->bind_param('ii', $newID, $teamID);
+					$stmt2->bind_param('ii', $newID, $teamID);
 					
 					// Execute the query:
-					$stmt->execute();
+					$stmt2->execute();
 						
-					if ($stmt->affected_rows == 1) { // It ran ok
-						echo $fn . ' ' . $ln . ' was added successfully';
+					if ($stmt2->affected_rows == 1) { // It ran ok
+						echo $fn . ' ' . $ln . ' was added successfully. ';
 					}
 					else {
-						echo 'Player' . $fn . ' ' . $ln . ' was not added. Please contact the service administrator';
+						echo 'Player' . $fn . ' ' . $ln . ' was not added. Please contact the service administrator. ';
+						exit();
 					}
 
 					// Add conditional here somehow so that Manager has option to submit request or not
@@ -171,14 +171,18 @@
 					echo 'Invitation successfully sent!';
 	
 					// Close the statement:
-					$stmt->close();
-					unset($stmt);
+					$stmt2->close();
+					unset($stmt2);
 
 				}
 				else {	// Registration process did not run OK.
 					echo 'Invitation could not be sent. We apologize
 						for any inconvenience';
 				}
+				
+				// Close the statement:
+				$stmt->close();
+				unset($stmt);
 			}
 		} // End of createMember function
 

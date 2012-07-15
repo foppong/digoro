@@ -14,9 +14,6 @@
 	function __autoload($class) {
 		require_once('../classes/' . $class . '.php');
 	}
-
-	// Site access level -> General
-	$lvl = 'G'; 
 	
 	// Assign user object from session variable
 	if (isset($_SESSION['userObj']))
@@ -30,12 +27,6 @@
 
 	// Need the database connection:	
 	require_once MYSQL2;
-
-	// Authorized Login Check
-	if (!$user->valid($lvl))
-	{
-		redirect_to('index.php');
-	}
 
 	// Get user ID
 	$userID = $user->getUserID();

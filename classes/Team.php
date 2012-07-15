@@ -204,6 +204,8 @@
 				$bl = 1;
 				
 				// Update the user's info in the database
+				// This is wher the LOGIC of "logged in before" is set
+				// NOTE: When develop player portion, will need to have a different trigger
 				$q = 'UPDATE users SET default_teamID=?, login_before=? WHERE id_user=? LIMIT 1';
 	
 				// Prepare the statement

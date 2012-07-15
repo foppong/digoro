@@ -12,11 +12,20 @@
 	{
 		$page_title = 'digoro';
 	}
+
+	include '../includes/facebook.php';
+
+	$facebook = new Facebook(array(
+	  'appId'  => '413593075351071',
+	  'secret' => 'c91c70487679528d6d6b22547db88ea9',
+	));
+
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
 	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"
+	xmlns:fb="https://www.facebook.com/2008/fbml">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title><?php echo $page_title; ?></title>
@@ -35,16 +44,16 @@
 		<script type="text/javascript" src="../js/formvalidate.js"></script>
 		<script type="text/javascript">
 		
-		  var _gaq = _gaq || [];
-		  _gaq.push(['_setAccount', 'UA-32896382-1']);
-		  _gaq.push(['_trackPageview']);
+		  	var _gaq = _gaq || [];
+		  	_gaq.push(['_setAccount', 'UA-32896382-1']);
+		  	_gaq.push(['_trackPageview']);
 		
-		  (function() {
-		    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-		    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-		    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-		  })();
-		
+		  	(function() {
+		    	var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+		    	ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+		    	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		  	})();
+
 		</script>
 	</head>
 	<body>
@@ -59,6 +68,3 @@
 			<li><a href="../core/logout.php">Logout</a></li>	
 			</ul>
 		</div>
-	
-	<!-- End of Header -->
-

@@ -1,45 +1,69 @@
 <?php
 	// mg_welcome.php
-	// Landing page for a new manager
+	// Landing page for a new OAuth User
 		
 	require '../includes/config.php';
-	$page_title = 'digoro : Manager Welcome';
-	include '../includes/header.html';
-	include '../includes/php-functions.php';	
-
+	$page_title = 'digoro : Welcome';
+	require_once '../includes/header.html';
+	include '../includes/php-functions.php';
+	
 	// autoloading of classes
 	function __autoload($class) {
 		require_once('../classes/' . $class . '.php');
 	}
 
-	// Assign user object from session variable
-	if (isset($_SESSION['userObj']))
-	{
-		$manager = $_SESSION['userObj'];
-		$userID = $manager->getUserID();		
+	// Need the database connection:
+	require MYSQL2;
+	
+	// See if there is a user from a cookie
+	$fbuser = $facebook->getUser();
+
+	if ($fbuser) {
+		try {
+	    	// Proceed knowing you have a logged in user who's authenticated.
+	   		$user_profile = $facebook->api('/me');
+
+			$first_name = $user_profile['first_name'];
+			$last_name = $user_profile['last_name'];
+			$uemail = $user_profile['email'];
+			$gender = $user_profile['gender'];
+			$oa_provider = 'facebook';
+			$oa_id = $user_profile['id'];
+	
+			// Format Facebook birthday to database format	
+			$facebirthday = $user_profile['birthday'];
+			$bday = explode("/", $facebirthday);	
+			$month = $bday[0];
+			$day = $bday[1];
+			$year = $bday[2];
+			$bdarray = array($year, $month, $day);
+			$bdstring = implode("-", $bdarray);
+			$bd = new DateTime($bdstring);
+			$bdfrmat = $bd->format('Y-m-d');
+
+			// Create user object
+			$OAuser = new UserAuth();
+			$OAuser->setDB($db);
+
+		} 
+		catch (FacebookApiException $e) {
+	    	echo '<pre>'.htmlspecialchars(print_r($e, true)).'</pre>';
+	    	$fbuser = null;
+	  	}
 	}
 	else 
 	{
-		redirect_to('index.php');
+		redirect_to('fatbar.php');
 	}
 
-	// Need the database connection:
-	require_once MYSQL2;
+	//Set role of user
+	$role = 'M';
 
-	// Assign Database Resource to object
-	$manager->setDB($db);
+	// Register user in system once I know the role
+	$OAuser->addOAuthUser($uemail, $first_name, $last_name, $role, $gender, $bdfrmat);
+	$OAuser = $_SESSION['userObj'];
+	$userID = $OAuser->getUserID();
 
- 
- /*
-	// Site access level -> Manager
-	$lvl = 'M'; 
- * 
-	// Authorized Login Check
-	if (!$manager->valid($lvl))
-	{
-		redirect_to('index.php');
-	}
-*/
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
 		// IN FUTURE CAN ADD LOGIC HERE FOR PAYING CUSTOMERS TO ADD TEAM - similar to checks 
@@ -103,19 +127,18 @@
 			$team->setDB($db);
 			$team->createTeam($lg, $sp, $userID, $tn, $ct, $st, $abtm);
 			
-			// Redirect to manager home page
+			// Redirect to manager home pag
 			$url = BASE_URL . 'manager/manager_home.php';
 			header("Location: $url");	
 		}
-		else 
-		{									
+		else {									
 			echo '<p class="error">Please try again.</p>';
 		}
 	}
 	
 	// Delete objects
+	unset($OAuser);
 	unset($team);
-	unset($manager);
 
 	// Close the connection:
 	$db->close();
@@ -123,12 +146,13 @@
 ?>
 
 <h1>Welcome to Digoro!</h1>
-<h2>To get started, add a team that you manage.</h2>
-<form action="mg_welcome.php" method="post" id="FirstTeamForm">
-	<fieldset>
-		<label for="tname"><b>Enter Team Name:</b></label>
-		<input type="text" name="tname" id="tname" size="30" maxlength="40" />
+<h2>This page is designed to help get you started!</h2>
 
+<form action="oam_register.php" method="post" id="OAFirstTeamForm">
+		<h3>Now you can use the form below to enter your very first team!</h3><br />
+		<label for="tname"><b>Enter Team Name:</b></label>
+		<input type="text" name="tname" id="tname" size="30" maxlength="45" />
+	
 		<label for="sport"><b>Select Sport:</b></label>
 		<select name="sport" id="sport">
 			<option value="">-Select Sport-</option>
@@ -178,11 +202,10 @@
 	
 		<label for="league"><b>Select League:</b></label>
 		<select name="league" id="league"></select>
-	
+
 		<label for="abouttm"><b>Team Information:</b></label>
 		<textarea id="abouttm" name="abouttm" cols="30" rows="2"></textarea><br />
 		<small>Enter something cool about your team.</small>
-	</fieldset>	
 	<div align="left"><input type="submit" name="submit" value="Add Team" /></div>
 </form>
 

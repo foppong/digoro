@@ -14,6 +14,7 @@ var idplayer;
 var idgame;
 var idteam;
 
+
 // Namespace
 var PLAYER = {
 
@@ -285,6 +286,8 @@ var GAME = {
     }
 } 
 
+
+
 var id = $('input#id').val();
 var tname = $('input#tname').val();
 var abouttm = $('input#abouttm').val();
@@ -397,7 +400,7 @@ var TEAM = {
 				_team.buildTeamMenu(data);
 			},
 			error: function() {
-				alert('an error occured!');
+				alert('teamMenu: an error occured!');
 			}
 		});	
   	},
@@ -416,9 +419,10 @@ var TEAM = {
 	}
 }
 
+
 var LEAGUE = {
 	
-	showLeagues: function(data)	{
+	showLeagues: function( data ) {
 		var _league = this;
 		// AJAX call to retreive all leagues based on entered state
 		$.ajax({
@@ -426,21 +430,22 @@ var LEAGUE = {
 			dataType: 'json',
 			url: "../data/league_data.php",
 			data: {state: data},
-			success: function(data) {
+			success: function( data ) {
 				_league.buildLeagueMenu(data);
 			},
-			error: function() {
-				alert('an error occured!');
+			error: function(xhr, ajaxOptions, thrownError) {
+				alert('showLeagues: an error occured!');
+				console.log(jqXHR, textStatus, errorThrown);
 			}
 		});
 	},
 	
-	buildLeagueMenu: function(data) {
+	buildLeagueMenu: function( data ) {
 		var tmp = '';
 		var menu = $("#league");
 		menu.html(""); // clear out slection menu if it was previously populated
 		menu.append("<option value=''>-Select League-</options>");
-		$(data).each(function(key, val) {
+		$(data).each(function( key, val ) {
 			tmp += "<option value=" + val.LeagueID + ">" + val.LeagueName + "</option>";
 		});
 		
@@ -468,9 +473,6 @@ $(document).ready(function()
 
 	// Warning recommendation for those who do not have javascript enabled
 	$('#no-script').remove();
-
-	// Load teams associated with user into select menu
-	TEAM.teamMenu();
 
 	// jQuery UI Tabs
 	$('#tabmenu').tabs({
@@ -546,6 +548,7 @@ $(document).ready(function()
 
 		$( "#AddTeamForm" ).dialog( "open" );
 	});
+
   	
 });
 

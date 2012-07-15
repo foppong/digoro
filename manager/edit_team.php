@@ -13,9 +13,6 @@
 		require_once('../classes/' . $class . '.php');
 	}
 
-	// Site access level -> Manager
-	$lvl = 'M'; 
-
 	// Establish database connection
 	require_once MYSQL2;
 
@@ -32,12 +29,6 @@
 
 	// Assign Database Resource to object
 	$manager->setDB($db);
-
-	// Authorized Login Check
-	if (!$manager->valid($lvl))
-	{
-		redirect_to('index.php');	
-	}
 
 	if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z'])) // Confirmation that form has been submitted	
 	{

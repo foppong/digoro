@@ -13,9 +13,6 @@
 		require_once('../classes/' . $class . '.php');
 	}
 
-	// Site access level -> Manager
-	$lvl = 'M'; 
-
 	// Assign user object from session variable
 	if (isset($_SESSION['userObj']))
 	{
@@ -23,12 +20,6 @@
 		$userID = $manager->getUserID();
 	}
 	else 
-	{
-		redirect_to('index.php');
-	}
-
-	// Authorized Login Check
-	if (!$manager->valid($lvl))
 	{
 		redirect_to('index.php');
 	}
