@@ -4,6 +4,7 @@
 	 * 	protected id_user
 	 *  protected dbc
 	 *  protected inv_case
+	 *  protected OAuth_case
 	 * 	
 	 * Methods:
 	 *  setDB()
@@ -27,7 +28,7 @@
 	class UserAuth {
 	 	
 		// Declare the attributes
-		protected $id_user, $dbc, $inv_case;
+		protected $id_user, $dbc, $inv_case, $OAuth_case;
 
 		// Constructor
 		function __construct() {}
@@ -48,6 +49,11 @@
 		function setinvCase($ivc)
 		{
 			$this->inv_case = $ivc;
+		}
+		
+		// Set the OAuth_case attribute
+		function setOAuthCase($OAc) {
+			$this->OAuth_case = $OAc;
 		}
 
 		function getDB($db)
@@ -101,7 +107,7 @@
 			$pass = '';
 
 			// Make the query	
-			$q = "SELECT pass FROM users WHERE email=? LIMIT 1";
+			$q = "SELECT pass, oauth_registered FROM users WHERE email=? LIMIT 1";
 
 			// Prepare the statement
 			$stmt = $this->dbc->prepare($q);
@@ -116,12 +122,15 @@
 			$stmt->store_result();
 			
 			// Bind the outbound variable:
-			$stmt->bind_result($passOB);
+			$stmt->bind_result($passOB,$oaOB);
 
 			//Assign the outbound variables			
 			while ($stmt->fetch())
 			{
 				$pass = $passOB;
+				
+				// Set the OAuth case
+				self::setOAuthCase($oaOB);
 			}
 
 			//$hasher = new PasswordHash($hash_cost_log2, $hash_portable);	
@@ -412,11 +421,13 @@
 				$stmt->close();
 				unset($stmt);
 			}
-			else 
-			{
+			elseif ($this->OAuth_case == 1) {
+				echo '<p class="error">You are reigstered with facebook. You must login using the Facebook login feature.</p>';
+			}
+			else {
 				echo '<p class="error">Either the email address and password entered do not match those
-					those on file or you have not yet activated your account.</p>';
-			}	
+					those on file or you have not yet activated your account.</p>';				
+			}
 
 		} // End of login function
 		
