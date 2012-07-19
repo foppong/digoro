@@ -138,9 +138,10 @@
 				// Execute the query:
 				$stmt->execute();
 				
-				$newID = $stmt->insert_id;
-	
 				if ($stmt->affected_rows == 1) { // It ran OK.
+
+					$newID = $stmt->insert_id;				
+				
 					// Make the query:
 					$q = 'INSERT INTO members (id_user, id_team) VALUES (?,?)';
 					
@@ -334,4 +335,3 @@
 	
 } // End of Class
 	 
-?>
