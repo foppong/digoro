@@ -95,48 +95,31 @@ input {
 
 /* Site Navigation Bar */
 
-#Navigation a:link, a:visited
-{
-	font-weight:bold;
-	color:#006699;
-	background-color:#CCCCCC;
-	width:100px;
-	text-align:center;
-	padding:8px;
-	text-decoration:none;
-	text-transform:uppercase;
+#nav {
+	margin-left: 0px;
+	padding-left: 0px;
+	list-style: none;
+	border-bottom: 1px dashed #000;
+	overflow: hidden;
+	zoom: 1; /*for IE6 */
 }
 
-#Navigation a:hover, a:active
-{
-	background-color:#EEEEEE;
+#nav ul li {
+	float: left;
 }
 
-#Navigation ul {
-	margin: 0;
-	padding:12px;
-	width:auto;
-	position:relative;
-	display:block;
-	height:12px;
-}
-
-#Navigation ul li {
-	display:block;
-	float:left;
-	margin:0;
-	padding:6px;
-	text-align:center;
-}
-
-#Navigation ul li a {
-	display:block;
-	float:left;
-	text-decoration:none;
-	text-align:center;
-	font-weight:bold;
-	height:6px;
-	padding:3px;
+#nav ul a {
+	width: 6em;
+	display: block;
+	border: 1px dashed #000;
+	border-bottom: 1px dashed #000;
+	border-bottom: none;
+	padding: 5px;
+	margin-right: 5px;
+	background-color: #EAEAEA;
+	text-decoration: none;
+	color: #333;
+	text-align: center;
 }
 
 /* Zebra style for roster tables */
@@ -151,6 +134,26 @@ tr.zebraHover {
 }
 
 /* Style for form */
+
+#AddPlayerForm {
+	font-size: .8em;
+}
+
+#AddPlayerForm .label {
+	float: left;
+	width: 230px;
+	margin-right: 10px;
+	text-align: right;
+	font-weight: bold;
+	clear: left;
+}
+
+
+
+
+
+
+
 
 label {
   display: block;
@@ -182,6 +185,64 @@ button {
   margin-top: 10px;
 }
 
+/* Style for schedule table on view_sch.php */
+
+#schedule {
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	width: 98%;
+	border-collapse: collapse;
+}
+
+#schedule caption {
+	text-align: right;
+	font-size: 1.0em;
+	padding-top: 25px;
+}
+
+#schedule td, #schedule th {
+	font-size: 1.0em;
+	border: 1px solid #DDB575;
+	padding: 3px 7px 2px 7px;
+}
+
+#schedule th {
+	text-transform: uppercase;
+	text-align: left;
+	padding-top: 5px;
+	padding-bottom: 4px;
+	background: url(imgs/bg_th.png) no-repeat left top;
+	color: #FFF;
+}
+
+
+/* Style for roster table on view_roster.php */
+
+#roster {
+	font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+	width: 98%;
+	border-collapse: collapse;
+}
+
+#roster caption {
+	text-align: right;
+	font-size: 1.0em;
+	padding-top: 25px;
+}
+
+#roster td, #roster th {
+	font-size: 1.0em;
+	border: 1px solid #DDB575;
+	padding: 3px 7px 2px 7px;
+}
+
+#roster th {
+	text-transform: uppercase;
+	text-align: left;
+	padding-top: 5px;
+	padding-bottom: 4px;
+	background: url(imgs/bg_th.png) no-repeat left top;
+	color: #FFF;
+}
 
 /* Style for tables */
 		.table-wrapper {

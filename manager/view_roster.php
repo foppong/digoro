@@ -59,24 +59,24 @@
 		
 		<div id="AddPlayerForm" title="Add New Player">		
 			<form method="post">			
-				<label for="first_name"><b>Enter Player's First Name:</b></label>
+				<label for="first_name" class="label">Enter Player's First Name:</label>
 				<input type="text" name="first_name" id="first_name" size="20" maxlength="20" />
 		
-				<label for="last_name"><b>Enter Player's Last Name:</b></label>
+				<label for="last_name" class="label">Enter Player's Last Name:</label>
 				<input type="text" name="last_name" id="last_name" size="20" maxlength="40" />
 		
-				<label for="email"><b>Enter Player's Email Address:</b></label>
+				<label for="email" class="label">Enter Player's Email Address:</label>
 				<input type="text" name="email" id="email" size="30" maxlength="60" />
 			</form>
 		</div>
 
 		<div id="EditPlayerForm" title="Edit Player">	
 			<form method="post">
-				<label for="position"><b>Position:</b></label>
+				<label for="position" class="label">Position:</label>
 				<input type="text" name="position" id="position" 
 				size="20" maxlength="20"/>				
 				
-				<label for="jersey_num"><b>Jersey Number:</b></label>
+				<label for="jersey_num" class="label">Jersey Number:</label>
 				<input type="text" name="jersey_num" id="jersey_num" 
 				size="4" maxlength="4" />
 			</form>
@@ -87,9 +87,16 @@
 				<p>Are you sure you want to remove this player?</p>
 			</form>
 		</div>
-
-		<!-- Load ajax roster data here -->
-		<table id="roster"></table>
+		
+		<div id="content">
+	
+			<!-- Load ajax roster data here -->
+			<table id="roster" width="100%">
+				<caption>
+					Current players
+				</caption>
+		</table>
+		</div>
 	</body>
 </html>
 

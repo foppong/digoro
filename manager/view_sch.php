@@ -114,7 +114,7 @@
 			</form>
 		</div>
 		
-		<table id="schedule"></table>
+		<table id="schedule" width="100%"></table>
 		
 	</body>
 </html>
