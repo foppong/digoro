@@ -22,7 +22,7 @@ var PLAYER = {
 		$( "#AddPlayerForm" ).dialog({
 			autoOpen: false,
 			height: 250,
-			width: 275,
+			width: 550,
 			modal: true,
 			buttons: {
 				"Add Player": function() {

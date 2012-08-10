@@ -61,8 +61,8 @@
 		<div id="AddGameForm" title="Add New Game">	
 			<form method="post">
 				<label for="dateAdd">Select Game Date:</label>
-				<input type="text" name="dateAdd" id="dateAdd" tabindex="1" size="10" maxlength="10" class="text ui-widget-content ui-corner-all pickdate" />
-				<br /><small>Click calendar icon to enter date</small>
+				<input type="text" name="dateAdd" id="dateAdd" tabindex="1" size="10" maxlength="10" class="text ui-widget-content ui-corner-all pickdate" />	
+				</br><small>Click calendar icon to enter date</small>
 		
 				<label for="time">Enter Game Time:</label>
 				<input type="text" name="time" id="time" size="9" maxlength="9" class="text ui-widget-content ui-corner-all" />
@@ -75,11 +75,11 @@
 		
 				<label for="note">Enter Game Notes:</label>
 				<textarea id="note" name="note" cols="30" rows="2" class="text ui-widget-content ui-corner-all"></textarea>
-				<br /><small>Enter any notes about the game.</small>
+				</br><small>Enter any notes about the game.</small>
 		
 				<label for="res">Enter Results:</label>
 				<input type="text" name="res" id="res" size="13" maxlength="13" class="text ui-widget-content ui-corner-all" />
-				<br /><small>Ex. W 4-3</small>
+				</br><small>Ex. W 4-3</small>
 			</form>
 		</div>
 

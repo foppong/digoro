@@ -249,5 +249,3 @@
 		} // End of isManager function
 	
 } // End of Class
-	 
-?>

@@ -148,10 +148,18 @@ tr.zebraHover {
 	clear: left;
 }
 
+#EditPlayerForm {
+	font-size: .8em;
+}
 
-
-
-
+#EditPlayerForm .label {
+	float: left;
+	width: 150px;
+	margin-right: 10px;
+	text-align: right;
+	font-weight: bold;
+	clear: left;
+}
 
 
 
@@ -184,6 +192,7 @@ form div {
 button {
   margin-top: 10px;
 }
+
 
 /* Style for schedule table on view_sch.php */
 
