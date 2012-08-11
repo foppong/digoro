@@ -14,6 +14,45 @@ q:before, q:after { content:''; }
 /* End of Reset */
 	
 
+
+/*********************/
+/* BANNER STYLES */
+/*********************/
+
+#banner {
+	border: 1px solid black;
+	background-color: #CCCCCC;
+	width: 100%;
+}
+
+#banner label {
+	vertical-align: middle;
+	font-weight: bold;
+}
+
+#banner input {
+	display: inline;
+	vertical-align: middle;
+	width: 100px;
+	border: 1px solid #000000;
+	background: #fff;
+}
+
+/*********************/
+/* SIDEBAR */
+/*********************/
+
+#sidebar {
+	float: left;
+	width: 170px;
+	margin-top: 10px;
+}
+
+#main {
+	margin-left: 180px;
+}
+
+
 html
 {
 	min-height:100%;

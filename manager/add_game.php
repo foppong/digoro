@@ -126,6 +126,12 @@
 			exit();
 		}
 	}
+	else 
+	{
+		// Accsessed without posting to form
+		echo '<p class="error">This page has been accessed in error.</p>';
+		exit();		
+	}
 
 	// Delete objects
 	unset($game);

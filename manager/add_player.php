@@ -99,7 +99,6 @@
 	{
 		// Accsessed without posting to form
 		echo '<p class="error">This page has been accessed in error.</p>';
-		include '../includes/footer.html';
 		exit();		
 	}
 	

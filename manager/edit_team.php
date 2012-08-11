@@ -109,7 +109,6 @@
 	{
 		// No valid ID, kill the script.
 		echo '<p class="error">This page has been accessed in error.</p>';
-		include '../includes/footer.html';
 		exit();		
 	}
 
