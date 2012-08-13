@@ -88,7 +88,17 @@
 			TEAM.teamMenu();		
 		});
     </script>
-	<div id="mainContent">   
+
+		<div class="span9">
+			<div class="hero-unit">
+				<h1>Welcome to Digoro</h1>
+				<p>This is just a test paragraph.</p>
+			</div>
+			<div class="row-fluid">
+				<div class="span4"><h2>My Teams</h2></div>
+			</div>		
+
+  
 		<div>
 			<form action="manager_home.php" method="post" id="ViewRosterForm">	
 				<p id="teamP"><b>View Team:</b>
@@ -101,8 +111,6 @@
 		
 		<p id="tmstatus"></p>
 		<button id="add_team" class=".btn-small btn-primary">Add Team</button>
-		
-		<div id="TeamName"><h2><?php echo stripslashes($teamname); ?></h2></div><br />
 		
 		<div id="tabmenu" class="ui-tabs">
 			<ul>
@@ -179,6 +187,9 @@
 				<textarea class="input-xlarge" id="abouttm" name="abouttm" cols="30" rows="2" placeholder="Enter something cool about your team"></textarea><br />
 			</form>
 		</div>
-	</div> 
-	
+		 
+				</div>
+			</div> <!-- End of row-fluid container -->
+		</div> <!-- End of contentWrapper
+
 <?php include '../includes/footer.html'; ?>

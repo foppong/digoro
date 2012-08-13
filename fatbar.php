@@ -105,30 +105,24 @@
 		      document.getElementById('fb-root').appendChild(e);
 		    }());
 		  </script>
-		  
-	<div class="navbar navbar-fixed-top">
-		<div class="navbar-inner">
-			<div class="container-fluid">
-				<a class="brand" href="#"> digoro </a>
 
-				<div class="pull-right"><p><a href="core/forgot_password.php">Forgot your password?</a></p></div>
-				
-				<div id="loginform">
-					<form class="navbar-form pull-right" method="post">
-						<input class="span2" type="text" name="email" id="email" maxlength="60" placeholder="Email"/>
-						<input class="span2" type="password" name="pass" id="pass" maxlength="20" placeholder="Password" />
-						<button type="submit" id="signin" class="btn">Sign in</button>
-					</form>
-				</div>	
-			</div> 
+  <div id="banner">
+		<div id="headtxt">
+			<h1>digoro</h1>
+			<h3>beta</h3>
 		</div>
-	</div> <!-- End of Navbar div -->
-
-
-		
-		<div class="pull-right" id="fbooklogin">
+		<p><a href="core/forgot_password.php">Forgot your password?</a></p>
+		<div id="loginform">
+			<form class="well form-inline" method="post">
+				<input class="span2" type="text" name="email" id="email" maxlength="60" placeholder="Email"/>
+				<input class="span2" type="password" name="pass" id="pass" maxlength="20" placeholder="Password" />
+				<button type="submit" id="signin" class="btn">Sign in</button>
+			</form>
+		</div>
+		<div id="fbooklogin">
 			<fb:login-button size="medium" scope="email, user_birthday">Login with Facebook</fb:login-button>	
-		 </div>
+  	</div>
+  </div>
   
   <div id="contentWrapper">	
 	

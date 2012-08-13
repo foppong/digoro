@@ -42,7 +42,7 @@
 		<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js" charset="utf-8"></script>
 		<script type="text/javascript" src="../js/projectblackstar.js"></script>
 		<script type="text/javascript" src="../js/formvalidate.js"></script>
-		<script type="text/javascript" src="../js/bootstrap.js"></script>
+		<script type="text/javascript" src="../js/bootstrap.min.js"></script>
 		<script type="text/javascript">
 		
 		  	var _gaq = _gaq || [];
@@ -62,7 +62,7 @@
 		<div class="navbar navbar-fixed-top">
 			<div class="navbar-inner">
 				<div class="container-fluid">
-					<a class="brand" href="#"> digoro </a>
+					<a class="brand" href="../fatbar.php"> digoro </a>
 
 					<div class="btn-group pull-right">
           	<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
@@ -75,26 +75,14 @@
               <li><a href="../core/logout.php">Sign Out</a></li>
             </ul>
           </div>
-
 				</div> 
 			</div>
 		</div> <!-- End of Navbar div -->
 
-		<div id="banner">
-			<h1>digoro</h1>
-
-			<div id="nav" align="right">
-				<ul>
-				<li><a href="../manager/myteams.php">My Teams</a></li>
-				<li><a href="../core/account.php">My Account</a></li>
-				<li><a href="">Help</a></li>
-				<li><a href="../core/logout.php">Logout</a></li>	
-				</ul>
-			</div>
-		</div>
-		
-		<div id="contentWrapper">
-				
-				<div id="iconbar">
-					<p>This is where the icons will go</p>
+		<div class="container-fluid" id="contentWrapper">
+			<div class="row-fluid"> <!-- Row for all content except footer -->	
+				<div class="span3">
+					<div class="well sidebar-nav">
+						<p>This is where the icons will go</p>						
+					</div>
 				</div>			

@@ -54,6 +54,8 @@
 			<h2>About Team</h2>
 		</div>
 		<p class="status"></p>	
+		
+		<!-- <div id="TeamName"><h2><?php echo stripslashes($teamname); ?></h2></div><br /> -->
 
 		<div id="EditTeamForm" title="Edit Team">	
 			<form method="post">
