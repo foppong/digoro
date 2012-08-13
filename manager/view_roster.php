@@ -44,7 +44,7 @@
 		<title><?php echo $page_title; ?></title>
 		<meta name="author" content="Frank" />
 		<!-- CSS Style Sheet -->
-		<link rel="stylesheet" type="text/css" href="../css/styles.css" />
+
 		<!-- External javascript call -->
 		<script type="text/javascript" src="../js/roster.js"></script>
 	</head>
@@ -55,7 +55,7 @@
 
 		<p class="status"></p>
 
-		<button id="add-player" class="btn btn-primary">Add Player</button>
+		<button id="add-player" class=".btn-small btn-primary">Add Player</button>
 		
 		<div id="AddPlayerForm" title="Add New Player">		
 			<form method="post">			
@@ -91,7 +91,7 @@
 		<div id="content">
 	
 			<!-- Load ajax roster data here -->
-			<table id="roster" width="100%">
+			<table class="table table-striped table-bordered table-condensed" id="roster" width="100%">
 				<caption>
 					Current players
 				</caption>

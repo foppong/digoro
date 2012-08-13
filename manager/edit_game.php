@@ -60,13 +60,13 @@
 		}		
 		
 		// Validate game time is entered
-		if (is_string($_POST['time'] && !empty($_POST['time']))) {
+		if (!empty($_POST['time'])) {
 			$tm = $_POST['time'];
 		}
 		else {
 			$tm = $oldTime;
 		}
-	
+
 		// Validate opponent is entered
 		if (is_string($_POST['opp']) && !empty($_POST['opp'])) {
 			$opp = $_POST['opp'];

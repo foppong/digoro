@@ -43,8 +43,7 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title><?php echo $page_title; ?></title>
 		<meta name="author" content="Frank" />
-		<!-- CSS Style Sheet -->
-		<link rel="stylesheet" type="text/css" href="../css/styles.css" />
+
 		<!-- External javascript call-->		
 		<script type="text/javascript" src="../js/schedule.js"></script>
 	</head>
@@ -56,55 +55,55 @@
 		</div><br />
 
 		<p class="status"></p>		
-		<button id="add-game" class="btn btn-primary">Add Game</button>
+		<button id="add-game" class=".btn-small btn-primary">Add Game</button>
 
 		<div id="AddGameForm" title="Add New Game">	
 			<form method="post">
 				<label for="dateAdd">Select Game Date:</label>
-				<input type="text" name="dateAdd" id="dateAdd" tabindex="1" size="10" maxlength="10" class="text ui-widget-content ui-corner-all pickdate" />	
-				</br><small>Click calendar icon to enter date</small>
+				<input type="text" name="dateAdd" id="dateAdd" tabindex="-1" maxlength="10" class="span2 text ui-widget-content ui-corner-all pickdate" 
+					placeholder="Click icon"/>	
 		
 				<label for="time">Enter Game Time:</label>
-				<input type="text" name="time" id="time" size="9" maxlength="9" class="text ui-widget-content ui-corner-all" />
+				<input type="text" name="time" id="time" maxlength="9" class="span2 text ui-widget-content ui-corner-all" />
 		
 				<label for="opp">Enter Opponent:</label>
-				<input type="text" name="opp" id="opp" size="30" maxlength="45" class="text ui-widget-content ui-corner-all" />
+				<input type="text" name="opp" id="opp" maxlength="45" class="span2 text ui-widget-content ui-corner-all" />
 		
 				<label for="ven">Enter Venue:</label>
-				<input type="text" name="ven" id="ven" size="30" maxlength="45" class="text ui-widget-content ui-corner-all" />
+				<input type="text" name="ven" id="ven" maxlength="45" class="span2 text ui-widget-content ui-corner-all" />
 		
 				<label for="note">Enter Game Notes:</label>
-				<textarea id="note" name="note" cols="30" rows="2" class="text ui-widget-content ui-corner-all"></textarea>
-				</br><small>Enter any notes about the game.</small>
+				<textarea id="note" name="note" cols="30" rows="2" class="input-xlarge text ui-widget-content ui-corner-all"
+					placeholder="Enter any game notes"></textarea>
 		
 				<label for="res">Enter Results:</label>
-				<input type="text" name="res" id="res" size="13" maxlength="13" class="text ui-widget-content ui-corner-all" />
-				</br><small>Ex. W 4-3</small>
+				<input type="text" name="res" id="res" maxlength="13" class="span2 text ui-widget-content ui-corner-all" 
+					placeholder="Ex. W 4-3"/>			
 			</form>
 		</div>
 
 		<div id="EditGameForm" title="Edit Game">
 			<form method="dateEdit">
 				<label for="date">Select Game Date:</label>
-				<input type="text" name="dateEdit" id="dateEdit" tabindex="-1" size="10" maxlength="10" class="text ui-widget-content ui-corner-all pickdate" />
-				<br /><small>Click calendar icon to enter date</small>
+				<input type="text" name="dateEdit" id="dateEdit" tabindex="-1" maxlength="10" class="span2 text ui-widget-content ui-corner-all pickdate"
+					placeholder="Click icon"/>
 		
 				<label for="time">Enter Game Time:</label>
-				<input type="text" name="time" id="time" size="9" maxlength="9" class="text ui-widget-content ui-corner-all" />
+				<input type="text" name="time" id="time" maxlength="9" class="span2 text ui-widget-content ui-corner-all" />
 		
 				<label for="opp">Enter Opponent:</label>
-				<input type="text" name="opp" id="opp" size="30" maxlength="45" class="text ui-widget-content ui-corner-all" />
+				<input type="text" name="opp" id="opp" maxlength="45" class="span2 text ui-widget-content ui-corner-all" />
 		
 				<label for="ven">Enter Venue:</label>
-				<input type="text" name="ven" id="ven" size="30" maxlength="45" class="text ui-widget-content ui-corner-all" />
+				<input type="text" name="ven" id="ven" maxlength="45" class="span2 text ui-widget-content ui-corner-all" />
 		
 				<label for="note">Enter Game Notes:</label>
-				<textarea id="note" name="note" cols="30" rows="2" class="text ui-widget-content ui-corner-all"></textarea>
-				<br /><small>Enter any notes about the game.</small>
+				<textarea id="note" name="note" cols="30" rows="2" class="input-xlarge text ui-widget-content ui-corner-all"
+					placeholder="Enter any notes about the game"></textarea>
 		
 				<label for="res">Enter Results:</label>
-				<input type="text" name="res" id="res" size="13" maxlength="13" class="text ui-widget-content ui-corner-all" />
-				<br /><small>Ex. W 4-3</small>
+				<input type="text" name="res" id="res" maxlength="13" class="span2 text ui-widget-content ui-corner-all" 
+					placeholder="Ex. W 4-3" />
 			</form>
 		</div>
 
@@ -114,7 +113,8 @@
 			</form>
 		</div>
 		
-		<table id="schedule" width="100%"></table>
+		<!-- Load ajax schedule data here -->
+		<table class="table table-striped table-bordered table-condensed" id="schedule" width="100%"></table>
 		
 	</body>
 </html>

@@ -44,7 +44,7 @@
 		<title><?php echo $page_title; ?></title>
 		<meta name="author" content="Frank" />
 		<!-- CSS Style Sheet -->
-		<link rel="stylesheet" type="text/css" href="../css/styles.css" />
+
 		<!-- External javascript call -->
 		<script type="text/javascript" src="../js/abtm.js"></script>
 	</head>

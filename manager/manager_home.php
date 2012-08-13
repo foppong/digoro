@@ -100,7 +100,7 @@
 		</div>
 		
 		<p id="tmstatus"></p>
-		<button id="add_team" class="btn btn-primary">Add Team</button>
+		<button id="add_team" class=".btn-small btn-primary">Add Team</button>
 		
 		<div id="TeamName"><h2><?php echo stripslashes($teamname); ?></h2></div><br />
 		
@@ -120,13 +120,13 @@
 		</div><br />
 		
 		
-		<div id="AddTeamForm" title="Add New Team">		
-			<form method="post">
-				<label for="tname"><b>Enter Team Name:</b></label>
-				<input type="text" name="tname" id="tname" size="30" maxlength="45" />
-			
-				<label for="sport"><b>Select Sport:</b></label>
-				<select name="sport" id="sport">
+		<div id="AddTeamForm" title="Add New Team" class="span4">		
+			<form method="post" class="form-horizontal">
+				<label for="tname">Enter Team Name</label>
+				<input class="span2" type="text" name="tname" id="tname" />
+							
+				<label for="sport">Select Sport</label>
+				<select class="span3" name="sport" id="sport">
 					<option value="">-Select Sport-</option>
 					<option value="1">Soccer</option>
 					<option value="2">Flag Football</option>
@@ -139,12 +139,12 @@
 					<option value="9">Cricket</option>
 				</select>
 		
-				<label for="city"><b>Enter Team's Home City:</b></label>
-				<input type="text" name="city" id="city" size="30" maxlength="40" />
+				<label for="city">Enter Team's Home City</label>
+				<input type="text" class="span3" name="city" id="city" maxlength="40" />
 		
-				<label for="state"><b>Enter Team's Home State:</b></label>
-				<select name="state" id="state" onchange="LEAGUE.showLeagues(this.value)">
-					<option value="">-Select State-</option>
+				<label for="state">Enter Team's Home State</label>
+				<select class="span2" name="state" id="state" onchange="LEAGUE.showLeagues(this.value)">
+					<option value="">Select State</option>
 					<option value="AL">AL</option><option value="AK">AK</option>
 					<option value="AZ">AZ</option><option value="AR">AR</option>
 					<option value="CA">CA</option><option value="CO">CO</option>
@@ -172,12 +172,11 @@
 					<option value="WI">WI</option><option value="WY">WY</option>
 				</select>		
 			
-				<label for="league"><b>Select League:</b></label>
-				<select name="league" id="league"></select>
+				<label for="league">Select League</label>
+				<select class="span3" name="league" id="league"></select>
 		
-				<label for="abouttm"><b>Team Information:</b></label>
-				<textarea id="abouttm" name="abouttm" cols="30" rows="2"></textarea><br />
-				<small>Enter something cool about your team.</small>
+				<label for="abouttm">Team Information</label>
+				<textarea class="input-xlarge" id="abouttm" name="abouttm" cols="30" rows="2" placeholder="Enter something cool about your team"></textarea><br />
 			</form>
 		</div>
 	</div> 
