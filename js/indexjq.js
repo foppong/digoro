@@ -15,7 +15,7 @@ $(document).ready(function()
 	// Hide all error messages:
 	$('.errorMessage').hide();
 
-	$('#loginform').validate( {
+	$('#loginform form').validate( {
 		rules: {
 			email: {
 				required: true,				

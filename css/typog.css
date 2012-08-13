@@ -1,0 +1,29 @@
+/*********************/
+/* Typography Styles */
+/*********************/
+
+/* Style for font faces, sizes, weights and neutral colours
+ * Limit to root elements only, so no classes or ids */
+
+
+h1, h2, h3 {
+	font-family: "Arial Narrow", Arial, Helvetica, sans-serif;	
+}
+
+h1 {
+	font-size: 36px;
+}
+
+h2 {
+	font-size: 24px;
+}
+
+h3 {
+	font-size: 14px;
+}
+
+p	{
+	line-height: 150%;
+	font-size: 1em;
+	font-family: "Helvetica Neue", Arial, Helvetica, sans-serif;
+}

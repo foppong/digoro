@@ -1,0 +1,19 @@
+/*********************/
+/* Color Scheme */
+/*********************/
+
+/* No layout information here, ie. margins *
+ * Only for color, background and border color */
+
+/* LOGO */
+
+#headtxt h1, h3 {
+		color: #015287;
+}
+
+
+/* WRAPPER STYLES */
+
+#contentWrapper {
+	background: url(images/white_bg.jpg) repeat-y left top; /*used to create faux column p. 328 CSS Book */
+}

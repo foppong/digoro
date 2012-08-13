@@ -422,7 +422,7 @@
 				unset($stmt);
 			}
 			elseif ($this->OAuth_case == 1) {
-				echo '<p class="error">You are reigstered with facebook. You must login using the Facebook login feature.</p>';
+				echo '<p class="error">You are registered with facebook. You must login using the Facebook login feature.</p>';
 			}
 			else {
 				echo '<p class="error">Either the email address and password entered do not match those

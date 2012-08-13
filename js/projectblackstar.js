@@ -16,6 +16,28 @@ var idteam;
 
 
 // Namespace
+
+var USER = {
+	signIn: function() {
+    	var form_data = $( '#loginform form' ).serialize();
+	    $.ajax({
+	      	type: "POST",
+	      	url: "../fatbar.php",
+	      	data: form_data, // Data that I'm sending
+	      	error: function() {
+	        	$( '.status' ).text( 'Sign in failed. Try again.' ).slideDown( 'slow' );
+	     	},
+	      	success: function( data ) {   
+	        	ROSTER.loadRoster(); //Call to roster.js
+	        	$( '.status' ).text( data ).slideDown( 'slow' );
+	        	MISCFUNCTIONS.clearForm( '#loginform form' );
+	      	},
+	      	cache: false
+    	});	
+	}
+}
+
+
 var PLAYER = {
 
 	loadDialog: function() {
@@ -473,6 +495,11 @@ $(document).ready(function()
 
 	// Warning recommendation for those who do not have javascript enabled
 	$('#no-script').remove();
+
+	// Sign in user login page
+	$( "#signin" ).on("click", function() {
+		USER.signIn();
+	});
 
 	// jQuery UI Tabs
 	$('#tabmenu').tabs({

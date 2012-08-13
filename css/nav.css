@@ -1,0 +1,32 @@
+/*********************/
+/* Navigation */
+/*********************/
+
+/* Site Navigation Bar */
+
+#nav {
+	margin-left: 0px;
+	padding-left: 0px;
+	list-style: none;
+	border-bottom: 1px dashed #000;
+	overflow: hidden;
+	zoom: 1; /*for IE6 */
+}
+
+#nav ul li {
+	float: left;
+}
+
+#nav ul a {
+	width: 6em;
+	display: block;
+	border: 1px dashed #000;
+	border-bottom: 1px dashed #000;
+	border-bottom: none;
+	padding: 5px;
+	margin-right: 5px;
+	background-color: #EAEAEA;
+	text-decoration: none;
+	color: #333;
+	text-align: center;
+}

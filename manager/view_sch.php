@@ -56,7 +56,7 @@
 		</div><br />
 
 		<p class="status"></p>		
-		<button id="add-game">Add Game</button>
+		<button id="add-game" class="btn btn-primary">Add Game</button>
 
 		<div id="AddGameForm" title="Add New Game">	
 			<form method="post">

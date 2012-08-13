@@ -1,9 +1,14 @@
-label {
-  display: block;
+/*********************/
+/* Form Elements */
+/*********************/
+
+form {
+	font-size: .8em;
 }
+
 label.valid {
   width: 24px;
-  background: url(imgs/images/valid.png) center center no-repeat;
+  background: url(imgs/valid.png) center center no-repeat;
   display: inline-block;
   text-indent: -9999px;
 }
@@ -13,18 +18,89 @@ label.error {
   display: inline-block;
 }
 
-input {
-  display: inline-block;
-}
-
-form div {
-  padding: 5px;
-  float: left;
-  clear: left;
-  width: 100%;
-}
-
 button {
   margin-top: 10px;
 }
 
+
+#lgform {
+	position: absolute;
+	right: 60px;
+	bottom: 30px;
+}
+
+#loginform label {
+	font-weight: bold;
+} 
+
+#loginform input {
+	width: 150px;
+}
+
+#inputemail, #inputpass {
+	float: left;
+}
+
+#loginform #submit {
+	clear: both;
+}
+
+#fbooklogin {
+	position: absolute;
+	right: 60px;
+	bottom: 5px;
+}
+
+#spinner{
+	height: 100%;
+	background: transparent url(/ajax-loader.gif) no-repeat center center;
+}
+
+
+#AddPlayerForm .label {
+	float: left;
+	width: 230px;
+	margin-right: 10px;
+	text-align: right;
+	font-weight: bold;
+	clear: left;
+}
+
+
+#EditPlayerForm .label {
+	float: left;
+	width: 150px;
+	margin-right: 10px;
+	text-align: right;
+	font-weight: bold;
+	clear: left;
+}
+
+
+.registerbutton {
+	-moz-box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+	box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+	background-color:#79bbff;
+	-moz-border-radius:6px;
+	-webkit-border-radius:6px;
+	border-radius:6px;
+	border:1px solid #84bbf3;
+	display:inline-block;
+	color:#ffffff;
+	font-family:arial;
+	font-size:15px;
+	font-weight:bold;
+	padding:6px 24px;
+	text-decoration:none;
+	text-shadow:1px 1px 0px #528ecc;
+}
+
+.registerbutton:hover {
+	background-color:#378de5;
+}
+
+.registerbutton:active {
+	position:relative;
+	top:1px;
+}
