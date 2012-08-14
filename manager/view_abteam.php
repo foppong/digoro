@@ -59,14 +59,14 @@
 
 		<div id="EditTeamForm" title="Edit Team">	
 			<form method="post">
-				<label for="tname">New Team Name:</label><br/>
+				<label for="tname">New Team Name:</label>
 				<input type="text" name="tname" id="tname" size="10" maxlength="45" /><br />
 
-				<label for="abouttm">Team Information:</label><br/>
+				<label for="abouttm">Team Information:</label>
 				<textarea id="abouttm" name="abouttm" cols="30" rows="2"></textarea><br />
 				<small>Enter something cool about your team.</small><br />
 
-				<label for="transfer">Transfer Team?</label><br />
+				<label for="transfer">Transfer Team?</label>
 				<input type="radio" name="transfer" value="Yes" />Yes<br />
 				<input type="radio" name="transfer" value="No" checked="checked" />No<br />
 

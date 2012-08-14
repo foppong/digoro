@@ -65,7 +65,7 @@
 		$team->setDB($db);
 		$team->setTeamID($dftmID);
 		$team->pullTeamData();
-		
+	
 		// Assign default team ID to current team ID session variable
 		$_SESSION['ctmID']  = $dftmID;		
 	}
@@ -82,35 +82,34 @@
 	unset($db);	
 
 ?>
-    <script type="text/javascript">               
-		$(document).ready(function() {
-			// Load teams associated with user into select menu
-			TEAM.teamMenu();		
-		});
-    </script>
-
 		<div class="span9">
 			<div class="hero-unit">
 				<h1>Welcome to Digoro</h1>
 				<p>This is just a test paragraph.</p>
 			</div>
-			<div class="row-fluid">
-				<div class="span4"><h2>My Teams</h2></div>
-			</div>		
-
-  
-		<div>
-			<form action="manager_home.php" method="post" id="ViewRosterForm">	
-				<p id="teamP"><b>View Team:</b>
-				<select name="y" id="y"></select>
-				<span class="errorMessage" id="teamPError">You must select your team.</span></p>		
-				
-				<div align="left"><input id="submit" type="submit" name="submit" value="Select" /></div>
-			</form>
-		</div>
-		
-		<p id="tmstatus"></p>
-		<button id="add_team" class=".btn-small btn-primary">Add Team</button>
+			<div class="row">
+				<div class="span3 page-header"><h1>My Teams</h1></div>
+				<div class="span6">
+					<div class="row">
+						<div class="span3"><h4>Add a team that you manage</h4></div>
+						<div class="span3">
+							<button type="button" id="addTeam" class=".btn-small btn-primary">Add Team</button></div>
+					</div>
+				</div>		
+			</div>
+			<div class="row">
+				<div class="span2">
+					<form method="post" id="SelectTeamForm">	
+						<label for="y">Select Team</label>
+						<select name="y" id="y"></select>
+						<span class="errorMessage" id="teamPError">You must select your team.</span></p>		
+						<button type="submit" id="selectTeam" class="btn">Select</button>
+					</form>
+				</div>
+			</div>
+			
+			
+		<p class="status"></p>
 		
 		<div id="tabmenu" class="ui-tabs">
 			<ul>
@@ -187,9 +186,9 @@
 				<textarea class="input-xlarge" id="abouttm" name="abouttm" cols="30" rows="2" placeholder="Enter something cool about your team"></textarea><br />
 			</form>
 		</div>
-		 
-				</div>
-			</div> <!-- End of row-fluid container -->
+
+</div>		 
+			</div> <!-- End of main row -->
 		</div> <!-- End of contentWrapper
 
 <?php include '../includes/footer.html'; ?>

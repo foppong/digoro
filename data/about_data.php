@@ -61,7 +61,7 @@
 			$json[] = array(
 			'TeamAbout' => stripslashes($abtOB), // If I get PHP >5.3 I believe I can use optional parameter in json_encode
 			'TeamName' => stripslashes($tmnmOB),
-			'Edit' => '<button id="edit-team" value=' . $tm . '>Edit</button>');			
+			'Edit' => '<button type="button" id="editTeam" value=' . $tm . '>Edit</button>');			
 		}	// End of WHILE loop
 	
 		// Send the JSON data:

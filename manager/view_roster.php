@@ -55,7 +55,7 @@
 
 		<p class="status"></p>
 
-		<button id="add-player" class=".btn-small btn-primary">Add Player</button>
+		<button type="button" id="add-player" class=".btn-small btn-primary">Add Player</button>
 		
 		<div id="AddPlayerForm" title="Add New Player">		
 			<form method="post">			

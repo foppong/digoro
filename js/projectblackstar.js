@@ -28,12 +28,32 @@ var USER = {
 	        	$( '.status' ).text( 'Sign in failed. Try again.' ).slideDown( 'slow' );
 	     	},
 	      	success: function( data ) {   
-	        	ROSTER.loadRoster(); //Call to roster.js
 	        	$( '.status' ).text( data ).slideDown( 'slow' );
-	        	MISCFUNCTIONS.clearForm( '#loginform form' );
 	      	},
 	      	cache: false
     	});	
+	},
+	
+	selectTeam: function () {
+    	var form_data = $( '#SelectTeamForm' ).serialize();
+	    $.ajax({
+	      	type: "POST",
+	      	url: "../manager/manager_home.php",
+	      	data: form_data, // Data that I'm sending
+	      	error: function(jqXHR, textStatus, errorThrown) {
+	        	$( '.status' ).text( 'Selection failed. Try again.' ).slideDown( 'slow' );
+	     	},
+	      	success: function( data ) {   
+	        	$( '.status' ).text( data ).slideDown( 'slow' );
+	        	MISCFUNCTIONS.clearForm( '#SelectTeamForm' );
+	      	},
+	      	complete: function() {
+	        	setTimeout(function() {
+	          		$( '.status' ).slideUp( 'slow' );
+	        	}, 2000);
+	      	},
+	      	cache: false
+    	});			
 	}
 }
 
@@ -323,8 +343,8 @@ var TEAM = {
  	loadDialog: function() { 
 		$("#AddTeamForm").dialog({
 			autoOpen: false,
-			height: 400,
-			width: 300,
+			height: 450,
+			width: 375,
 			modal: true,
 			buttons: {
 				"Add Team": function(){
@@ -339,8 +359,8 @@ var TEAM = {
 
 		$( "#EditTeamForm" ).dialog({
 			autoOpen: false,
-			height: 400,
-			width: 350,
+			height: 450,
+			width: 375,
 			modal: true,
 			buttons: {
 				"Edit": function() {
@@ -497,9 +517,17 @@ $(document).ready(function()
 	$('#no-script').remove();
 
 	// Sign in user login page
-	$( "#signin" ).on("click", function() {
+	$( "#signin" ).on("submit", function() {
 		USER.signIn();
 	});
+
+	// Load teams associated with user into select menu
+	TEAM.teamMenu();	
+
+	// Select team from select team form
+	$( "#selectTeam" ).on("submit", function() {
+		USER.selectTeam();
+	})
 
 	// jQuery UI Tabs
 	$('#tabmenu').tabs({
@@ -517,7 +545,7 @@ $(document).ready(function()
 					// Load about team dialog
 					TEAM.loadDialog();
 										
-					$( "#about" ).on("click", "#edit-team", function() {
+					$( "#about" ).on("click", "#editTeam", function() {
 						idteam = this.value;
 						$( "#EditTeamForm" ).dialog( "open" );
 					});
@@ -569,7 +597,7 @@ $(document).ready(function()
 	
 
 	// Code for triggering add team dialog
-	$( "#add_team" ).on("click", function() {
+	$( "#addTeam" ).on("click", function() {
 		// Load add Team dialog
 		TEAM.loadDialog();
 
