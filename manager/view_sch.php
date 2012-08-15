@@ -64,13 +64,15 @@
 					placeholder="Click icon"/>	
 		
 				<label for="time">Enter Game Time:</label>
-				<input type="text" name="time" id="time" maxlength="9" class="span2 text ui-widget-content ui-corner-all" />
+				<input type="text" name="time" id="time" maxlength="9" class="span2 text ui-widget-content ui-corner-all" 
+					placeholder="ex. 7:00 PM" />
 		
 				<label for="opp">Enter Opponent:</label>
 				<input type="text" name="opp" id="opp" maxlength="45" class="span2 text ui-widget-content ui-corner-all" />
 		
 				<label for="ven">Enter Venue:</label>
-				<input type="text" name="ven" id="ven" maxlength="45" class="span2 text ui-widget-content ui-corner-all" />
+				<input type="text" name="ven" id="ven" maxlength="45" class="span2 text ui-widget-content ui-corner-all" 
+					placeholder="ex. Polo Fields" />
 		
 				<label for="note">Enter Game Notes:</label>
 				<textarea id="note" name="note" cols="30" rows="2" class="input-xlarge text ui-widget-content ui-corner-all"
@@ -78,7 +80,7 @@
 		
 				<label for="res">Enter Results:</label>
 				<input type="text" name="res" id="res" maxlength="13" class="span2 text ui-widget-content ui-corner-all" 
-					placeholder="Ex. W 4-3"/>			
+					placeholder="ex. W 4-3" />			
 			</form>
 		</div>
 
@@ -89,13 +91,15 @@
 					placeholder="Click icon"/>
 		
 				<label for="time">Enter Game Time:</label>
-				<input type="text" name="time" id="time" maxlength="9" class="span2 text ui-widget-content ui-corner-all" />
+				<input type="text" name="time" id="time" maxlength="9" class="span2 text ui-widget-content ui-corner-all" 
+					placeholder="ex. 7:00 PM" />
 		
 				<label for="opp">Enter Opponent:</label>
 				<input type="text" name="opp" id="opp" maxlength="45" class="span2 text ui-widget-content ui-corner-all" />
 		
 				<label for="ven">Enter Venue:</label>
-				<input type="text" name="ven" id="ven" maxlength="45" class="span2 text ui-widget-content ui-corner-all" />
+				<input type="text" name="ven" id="ven" maxlength="45" class="span2 text ui-widget-content ui-corner-all" 
+					placeholder="ex. Polo Fields" />
 		
 				<label for="note">Enter Game Notes:</label>
 				<textarea id="note" name="note" cols="30" rows="2" class="input-xlarge text ui-widget-content ui-corner-all"
@@ -103,7 +107,7 @@
 		
 				<label for="res">Enter Results:</label>
 				<input type="text" name="res" id="res" maxlength="13" class="span2 text ui-widget-content ui-corner-all" 
-					placeholder="Ex. W 4-3" />
+					placeholder="ex. W 4-3" />
 			</form>
 		</div>
 

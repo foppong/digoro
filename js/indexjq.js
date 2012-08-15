@@ -15,6 +15,9 @@ $(document).ready(function()
 	// Hide all error messages:
 	$('.errorMessage').hide();
 
+	// Call carousel 
+	$('.carousel').carousel()
+
 	$('#loginform form').validate( {
 		rules: {
 			email: {

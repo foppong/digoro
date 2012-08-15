@@ -3,87 +3,15 @@
 /*********************/
 	
 
-
-/* BANNER STYLES */
-
-#banner {
-	position: relative;
-	background-color: #cccccc;
-	width: 960px;
-	border: 1px solid black;
-	zoom: 1;
-	margin: 5px;
-	height: 120px;
+body
+{
+	padding: 40px;
 }
 
-#headtxt {
-	float: left;
+.side-nav {
+
+  
 }
-
-#headtxt h1 {
-	padding-top: 7px;
-	padding-left: 20px;
-}
-
-#headtxt h3 {
-	padding-left: 100px;
-}
-
-
-
-
-/* WRAPPER STYLES */
-
-#contentWrapper {
-	clear: both;
-	position: relative;
-	border: 1px solid black;
-	width: 960px;
-}
-
-
-
-/* INDEX PAGE MAIN CONTENT */
-
-#tagline, #no-script {
-
-}
-
-#digoroInfo {
-	float: left;
-	border: 1px solid black;
-	width: 350px;
-}
-
-#registerBlock {
-	float: right;
-	border: 1px solid black;
-	width: 350px;
-}
-
-
-/* MAIN CONTENT */
-
-#mainContent {
-	margin-left: 180px;
-	border: 1px solid black;
-}
-
-
-
-/* ICON BAR */
-
-#iconbar {
-	position: absolute;
-	left: 0;
-	top: 0;
-	width: 175px;
-	border: 1px solid black;
-}
-
-
-
-
 
 /* FOOTER */
 
@@ -91,26 +19,6 @@
 	clear: both; /* drops footer below all the floats */
 	border: 1px solid black;	
 	padding: 5px 5px 5px 5px;
-	background: #cccccc;
+	background: #f5f5f5;
 	
-}
-
-html
-{
-	min-height:100%;
-	height:auto;
-}
-
-body
-{
-	margin: 20;
-	padding: 0;
-}
-
-.error { 
-	color:#FF0000;
-}
-
-.errorMessage { 
-	font-style: italic; 
 }

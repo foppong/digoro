@@ -106,35 +106,72 @@
 		    }());
 		  </script>
 
-  <div id="banner">
-		<div id="headtxt">
-			<h1>digoro</h1>
-			<h3>beta</h3>
-		</div>
-		<p><a href="core/forgot_password.php">Forgot your password?</a></p>
-		<div id="loginform">
-			<form class="well form-inline" method="post">
-				<input class="span2" type="text" name="email" id="email" maxlength="60" placeholder="Email"/>
-				<input class="span2" type="password" name="pass" id="pass" maxlength="20" placeholder="Password" />
-				<button type="submit" id="signin" class="btn">Sign in</button>
-			</form>
-		</div>
-		<div id="fbooklogin">
-			<fb:login-button size="medium" scope="email, user_birthday">Login with Facebook</fb:login-button>	
-  	</div>
-  </div>
-  
-  <div id="contentWrapper">	
-	
-		<div id="tagline"><h1>The virtual agent for amateur sports.</h1></div>
-		<div id="no-script"><h1>You must have JavaScript enabled!</h1></div> <!-- Only shows if javascript is disabled -->
+	<div class="container" id="contentWrapper">
+		<div class="row"> <!-- page row - except footer -->
+			<div class="span12">
+				<div class="row"> <!-- Header row -->
+					<div class="span2">
+						<div class="row" id="headtxt">
+							<h1>digoro</h1>
+						</div>
+						<div class="row pull-right">
+							<h3>beta</h3>
+						</div>
+					</div>
+					<div class="span5 offset5">
+						<div class="row">
+							<p><a href="core/forgot_password.php">Forgot your password?</a></p>
+						</div>
+						<div class="row" id="loginform">
+							<form class="form-inline" method="post">
+								<input class="span2" type="text" name="email" id="email" maxlength="60" placeholder="Email"/>
+								<input class="span2" type="password" name="pass" id="pass" maxlength="20" placeholder="Password" />
+								<button type="submit" id="signin" class="btn">Sign in</button>
+							</form>
+						</div>
+						<div class="row" id="fbooklogin">
+							<fb:login-button size="medium" scope="email, user_birthday">Login with Facebook</fb:login-button>
+						</div>
+					</div>
+				</div> <!-- end of header row -->
+				<hr>
 				
-		<!-- Digoro video and testimonials -->
-		<div id="digoroInfo"><p>Digoro video wlil go here</p></div>
-			
+				<div class="row"> <!-- tagline row -->
+					<div class="span9 offset2">
+						<h2>The virtual agent for amateur sports players and teams.</h2>
+						<div id="no-script"><h2>You must have JavaScript enabled!</h2></div> <!-- Only shows if javascript is disabled -->
+					</div>
+				</div> <!-- end of tagline row -->
+				
+				<div class="row"> <!-- content row -->
+					<div class="span4 offset1 well"> <!-- discover info column -->
+						<!-- Digoro video and testimonials -->
+						<div id="carousel" class="carousel slide">
+						  <!-- Carousel items -->
+						  <div class="carousel-inner">
+						    <div class="active item">
+						    	<img src="../css/imgs/splashpage.jpg" width="300" height="300">
+						    	<p>Digoro video can go here</p>
+						    </div>
+						    <div class="item">
+						    	<img src="../css/imgs/FrankPort.jpg" width="300" height="300">
+						    	<p>Learn more about Digoro slide</p></div>
+						    <div class="item">
+						    	<img src="../css/imgs/FrankPort2.jpg" width="300" height="300">
+						    	<p>Contact slide</p></div>
+						  </div>
+						  <!-- Carousel nav -->
+						  <a class="carousel-control left" href="#carousel" data-slide="prev">&lsaquo;</a>
+						  <a class="carousel-control right" href="#carousel" data-slide="next">&rsaquo;</a>
+						</div>					
+					</div>
+					<div class="span5 well"> <!-- signup info column -->
+		
+		
+
 		<!-- Register New Users -->
 		<div id="registerBlock">
-			<h2>Start playing today - it's free!</h2>
+			<h4>Start playing today - it's free!</h4>
 
 
 			<form action="register.php" method="post" id="SignUpForm">
@@ -165,6 +202,12 @@
 				</fieldset>		
 				<button type="submit" class="btn btn-primary">Join Now</button>
 				</div>
-			</form>
-		</div>
+			</form>						
+					</div>
+					
+				</div> <!-- end of content row -->
+
+		
+		</div> <!-- End of page row -->
+		
 <?php include 'includes/ifooter.html'; ?>
