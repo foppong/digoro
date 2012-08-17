@@ -55,15 +55,15 @@
 		</div><br />
 
 		<p class="status"></p>		
-		<button type="button" id="add-game" class=".btn-small btn-primary">Add Game</button>
+		<button type="button" id="add-event" class=".btn-small btn-primary">Add Event</button>
 
-		<div id="AddGameForm" title="Add New Game">	
+		<div id="AddEventForm" title="Add New Event">	
 			<form method="post">
-				<label for="dateAdd">Select Game Date:</label>
+				<label for="dateAdd">Select Event Date:</label>
 				<input type="text" name="dateAdd" id="dateAdd" tabindex="-1" maxlength="10" class="span2 text ui-widget-content ui-corner-all pickdate" 
 					placeholder="Click icon"/>	
 		
-				<label for="time">Enter Game Time:</label>
+				<label for="time">Enter Event Time:</label>
 				<input type="text" name="time" id="time" maxlength="9" class="span2 text ui-widget-content ui-corner-all" 
 					placeholder="ex. 7:00 PM" />
 		
@@ -74,9 +74,9 @@
 				<input type="text" name="ven" id="ven" maxlength="45" class="span2 text ui-widget-content ui-corner-all" 
 					placeholder="ex. Polo Fields" />
 		
-				<label for="note">Enter Game Notes:</label>
+				<label for="note">Enter Event Notes:</label>
 				<textarea id="note" name="note" cols="30" rows="2" class="input-xlarge text ui-widget-content ui-corner-all"
-					placeholder="Enter any game notes"></textarea>
+					placeholder="Enter any event notes"></textarea>
 		
 				<label for="res">Enter Results:</label>
 				<input type="text" name="res" id="res" maxlength="13" class="span2 text ui-widget-content ui-corner-all" 
@@ -84,13 +84,13 @@
 			</form>
 		</div>
 
-		<div id="EditGameForm" title="Edit Game">
+		<div id="EditEventForm" title="Edit Event">
 			<form method="dateEdit">
-				<label for="date">Select Game Date:</label>
+				<label for="date">Select Event Date:</label>
 				<input type="text" name="dateEdit" id="dateEdit" tabindex="-1" maxlength="10" class="span2 text ui-widget-content ui-corner-all pickdate"
 					placeholder="Click icon"/>
 		
-				<label for="time">Enter Game Time:</label>
+				<label for="time">Enter Event Time:</label>
 				<input type="text" name="time" id="time" maxlength="9" class="span2 text ui-widget-content ui-corner-all" 
 					placeholder="ex. 7:00 PM" />
 		
@@ -101,9 +101,9 @@
 				<input type="text" name="ven" id="ven" maxlength="45" class="span2 text ui-widget-content ui-corner-all" 
 					placeholder="ex. Polo Fields" />
 		
-				<label for="note">Enter Game Notes:</label>
+				<label for="note">Enter Event Notes:</label>
 				<textarea id="note" name="note" cols="30" rows="2" class="input-xlarge text ui-widget-content ui-corner-all"
-					placeholder="Enter any notes about the game"></textarea>
+					placeholder="Enter any notes about the event"></textarea>
 		
 				<label for="res">Enter Results:</label>
 				<input type="text" name="res" id="res" maxlength="13" class="span2 text ui-widget-content ui-corner-all" 
@@ -111,9 +111,9 @@
 			</form>
 		</div>
 
-		<div id="DelGameForm" title="Delete Game">
+		<div id="DelEventForm" title="Delete Event">
 			<form method="post">
-				<p>Are you sure you want to remove this game?</p>
+				<p>Are you sure you want to remove this event?</p>
 			</form>
 		</div>
 		

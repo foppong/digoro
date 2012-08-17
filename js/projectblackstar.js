@@ -11,7 +11,7 @@ $.ajaxSetup({"error":function(XMLHttpRequest,textStatus, errorThrown) {
 
 // Global variables
 var idplayer;
-var idgame;
+var idevent;
 var idteam;
 
 
@@ -190,7 +190,7 @@ var PLAYER = {
 } 
 
 
-var GAME = {
+var EVENT = {
 		
 	loadDialog: function() {
 		$( ".pickdate" ).each( function() {
@@ -201,15 +201,15 @@ var GAME = {
 			});
 		});
 		
-		$( "#AddGameForm" ).dialog({
+		$( "#AddEventForm" ).dialog({
 			autoOpen: false,
 			height: 450,
 			width: 400,
 			modal: true,
 			buttons: {
-				"Add New Game": function() {
-					// Add game to database
-					GAME.add();					
+				"Add New Event": function() {
+					// Add event to database
+					EVENT.add();					
 					$( this ).dialog( "close" );
 				},
 				Cancel: function() {
@@ -218,15 +218,15 @@ var GAME = {
 			}
 		});		
 
-		$( "#EditGameForm" ).dialog({
+		$( "#EditEventForm" ).dialog({
 			autoOpen: false,
 			height: 450,
 			width: 400,
 			modal: true,
 			buttons: {
-				"Edit Game": function() {
-					// Edit game in database
-					GAME.edit();					
+				"Edit Event": function() {
+					// Edit event in database
+					EVENT.edit();					
 					$( this ).dialog( "close" );
 				},
 				Cancel: function() {
@@ -235,15 +235,15 @@ var GAME = {
 			}
 		});	
 		
-		$( "#DelGameForm" ).dialog({
+		$( "#DelEventForm" ).dialog({
 			autoOpen: false,
 			height: 150,
 			width: 275,
 			modal: true,
 			buttons: {
-				"Delete Game": function() {
+				"Delete Event": function() {
 					// Delete player from database
-					GAME.del();					
+					EVENT.del();					
 					$( this ).dialog( "close" );
 				},
 				Cancel: function() {
@@ -253,12 +253,12 @@ var GAME = {
 		});	
 	},
 
-	// add game information to database from dialog form
+	// add event information to database from dialog form
   	add: function() { 
-    	var form_data = $( '#AddGameForm form' ).serialize();
+    	var form_data = $( '#AddEventForm form' ).serialize();
 	    $.ajax({
 	      	type: "POST",
-	      	url: "../manager/add_game.php",
+	      	url: "../manager/add_event.php",
 	      	data: form_data, // Data that I'm sending
 	      	error: function() {
 	        	$( '.status' ).text( 'Update failed. Try again.' ).slideDown( 'slow' );
@@ -266,7 +266,7 @@ var GAME = {
 	      	success: function( data ) {   
 	        	SCHEDULE.loadSchedule(); //Call to schedule.js
 	        	$( '.status' ).text( data ).slideDown( 'slow' );	
-	        	MISCFUNCTIONS.clearForm( '#AddGameForm form' );
+	        	MISCFUNCTIONS.clearForm( '#AddEventForm form' );
 	      	},
 	      	complete: function() {
 	        	setTimeout(function() {
@@ -277,13 +277,13 @@ var GAME = {
     	});
     },
     
-	// edit game information to database from dialog form
+	// edit event information to database from dialog form
   	edit: function() { 
-		$( '#EditGameForm form' ).append( '<input type="hidden" id="z" name="z" value="' + idgame + '"/>' );
-    	var form_data = $( '#EditGameForm form' ).serialize();
+		$( '#EditEventForm form' ).append( '<input type="hidden" id="z" name="z" value="' + idevent + '"/>' );
+    	var form_data = $( '#EditEventForm form' ).serialize();
 	    $.ajax({
 	      	type: "POST",
-	      	url: "../manager/edit_game.php",
+	      	url: "../manager/edit_event.php",
 	      	data: form_data, // Data that I'm sending
 	      	error: function() {
 	        	$( '.status' ).text( 'Edit failed. Try again.' ).slideDown( 'slow' );
@@ -291,8 +291,8 @@ var GAME = {
 	      	success: function( data ) { 
 	        	SCHEDULE.loadSchedule(); //Call to schedule.js
 	        	$( '.status' ).text( data ).slideDown( 'slow' );
-	        	$( '#EditGameForm form #z' ).remove();	        	
-	        	MISCFUNCTIONS.clearForm( '#EditGameForm form' );   	
+	        	$( '#EditEventForm form #z' ).remove();	        	
+	        	MISCFUNCTIONS.clearForm( '#EditEventForm form' );   	
 	      	},
 	      	complete: function() {
 	        	setTimeout(function() {
@@ -303,13 +303,13 @@ var GAME = {
     	});
     },
     
-	// delete game information in database from dialog form
+	// delete event information in database from dialog form
   	del: function() { 
-		$( '#DelGameForm form' ).append( '<input type="hidden" id="z" name="z" value="' + idgame + '"/>' );
-    	var form_data = $( '#DelGameForm form' ).serialize();
+		$( '#DelEventForm form' ).append( '<input type="hidden" id="z" name="z" value="' + idevent + '"/>' );
+    	var form_data = $( '#DelEventForm form' ).serialize();
 	    $.ajax({
 	      	type: "POST",
-	      	url: "../manager/delete_game.php",
+	      	url: "../manager/delete_event.php",
 	      	data: form_data, // Data that I'm sending
 	      	error: function() {
 	        	$( '.status' ).text( 'Delete failed. Try again.' ).slideDown( 'slow' );
@@ -571,23 +571,23 @@ $(document).ready(function()
 					});
 					break;
 				case 2:
-					// Load game dialog
-					GAME.loadDialog();
+					// Load event dialog
+					EVENT.loadDialog();
 	
-					$( "#add-game" ).on("click", function() {
-						$( "#AddGameForm" ).dialog( "open" );
+					$( "#add-event" ).on("click", function() {
+						$( "#AddEventForm" ).dialog( "open" );
 					});
 
 					// Binds click to ajax loaded edit button
-					$( "#schedule" ).on("click", ".edit_game", function() {
-						idgame = this.value;
-						$( "#EditGameForm" ).dialog( "open" );
+					$( "#schedule" ).on("click", ".edit_event", function() {
+						idevent = this.value;
+						$( "#EditEventForm" ).dialog( "open" );
 					});
 
 					// Binds click to ajax loaded delete button
-					$( "#schedule" ).on("click", ".delete_game", function() {
-						idgame = this.value;
-						$( "#DelGameForm" ).dialog( "open" );
+					$( "#schedule" ).on("click", ".delete_event", function() {
+						idevent = this.value;
+						$( "#DelEventForm" ).dialog( "open" );
 					});
 					break;
 				default:		

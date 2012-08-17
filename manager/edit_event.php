@@ -1,5 +1,5 @@
 <?php
-	// This page is for editing a game
+	// This page is for editing a event
 	// This page is accessed through view_sch.php
 	
 	ob_start();
@@ -29,28 +29,28 @@
 
 	if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z'])) // Confirmation that form has been submitted	
 	{
-		$gameid = $_POST['z'];
+		$eventid = $_POST['z'];
 
-		// Create game object for use & pull latest data from database & initially set attributes
-		$game = new Game();
-		$game->setDB($db);
-		$game->setGameID($gameid);
-		$game->pullGameData();
+		// Create event object for use & pull latest data from database & initially set attributes
+		$event = new Event();
+		$event->setDB($db);
+		$event->setEventID($eventid);
+		$event->pullEventData();
 		
 		// Check if user is authroized to make edit
-		if (!$game->isManager($userID)) {
-			echo 'You have to be the manager to edit a game.';
+		if (!$event->isManager($userID)) {
+			echo 'You have to be the manager to edit a event.';
 			exit();
 		}
 
-		$oldDate = $game->getGameAttribute('gdate');
-		$oldTime = $game->getGameAttribute('gtime');
-		$oldOpp = $game->getGameAttribute('opponent');
-		$oldVen = $game->getGameAttribute('venue');
-		$oldRes = $game->getGameAttribute('result');
-		$oldNote = $game->getGameAttribute('note');
+		$oldDate = $event->getEventAttribute('gdate');
+		$oldTime = $event->getEventAttribute('gtime');
+		$oldOpp = $event->getEventAttribute('opponent');
+		$oldVen = $event->getEventAttribute('venue');
+		$oldRes = $event->getEventAttribute('result');
+		$oldNote = $event->getEventAttribute('note');
 						
-		// Validate game date
+		// Validate event date
 		if ($_POST['dateEdit']) {
 			$bd = new DateTime($_POST['dateEdit']); // Convert js datepicker entry into format database accepts
 			$gdfrmat = $bd->format('Y-m-d');
@@ -59,7 +59,7 @@
 			$gdfrmat = $oldDate;
 		}		
 		
-		// Validate game time is entered
+		// Validate event time is entered
 		if (!empty($_POST['time'])) {
 			$tm = $_POST['time'];
 		}
@@ -99,10 +99,10 @@
 			$note = $oldNote; 
 		}	
 	
-		// Check if user entered information is valid before continuing to edit game
+		// Check if user entered information is valid before continuing to edit event
 		if ($gdfrmat && $tm)
 		{
-			$game->editGame($userID, $gdfrmat, $tm, $opp, $ven, $res, $note);
+			$event->editEvent($userID, $gdfrmat, $tm, $opp, $ven, $res, $note);
 		}
 		else
 		{	// Errors in the user entered information
@@ -117,7 +117,7 @@
 	}
 		
 	// Delete objects
-	unset($game);
+	unset($event);
 	unset($manager);
 			
 	// Close the connection:

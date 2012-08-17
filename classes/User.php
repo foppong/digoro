@@ -13,7 +13,7 @@
 	 *  protected rdate (registration date)
 	 *  protected bday (birthday)
 	 *  protected pnum (phone number)
-	 *  protected rating
+	 *  protected digscore (digoro score)
 	 *  protected invited
 	 *  protected dftmID (default team id)
 	 *  protected lb (login in before)
@@ -38,7 +38,7 @@
 	 	
 		// Declare the attributes
 		protected $fn, $ln, $role, $city, $state, $zp, $gd, $email,
-			$pass, $rdate, $bday, $pnum, $rating, $invited, $dftmID, $lb;
+			$pass, $rdate, $bday, $pnum, $digscore, $invited, $dftmID, $lb;
 
 		// Constructor
 		function __construct($userID) 
@@ -49,7 +49,7 @@
 
 		// Function to set the User attributes
 		function setUserAttributes($fnIN='', $lnIN='', $roleIN='', $cityIN='', $stIN='', $zpIN=0, $gdIN='', $emailIN='',
-			$passIN='', $rdateIN='', $bdayIN='', $pnumIN=0, $rateIN='', $invIN=0, $dftmIN=0, $lbIN=0)
+			$passIN='', $rdateIN='', $bdayIN='', $pnumIN=0, $digscoreIN=0, $invIN=0, $dftmIN=0, $lbIN=0)
 		{
 			$this->fn = $fnIN;
 			$this->ln = $lnIN;
@@ -63,7 +63,7 @@
 			$this->rdate = $rdateIN;
 			$this->bday = $bdayIN;
 			$this->pnum = $pnumIN;
-			$this->rating = $rateIN;
+			$this->digscore = $digscoreIN;
 			$this->invited = $invIN;
 			$this->dftmID = $dftmIN;
 			$this->lb = $lbIN;
@@ -169,7 +169,7 @@
 			// Make the query
 			$q = 'SELECT first_name,last_name,role,city,state,zipcode,
 				gender,email,pass,registration_date,birth_date,phone_num,
-				rating,invited,default_teamID,login_before
+				digoro_score,invited,default_teamID,login_before
 				FROM users WHERE id_user=? LIMIT 1';
 					
 			// Prepare the statement
@@ -186,7 +186,7 @@
 		
 			// Bind the outbound variable:
 			$stmt->bind_result($fnOB, $lnOB, $roleOB, $cityOB, $stOB, $zpOB, $gdOB, $emailOB,
-				$passOB, $rdateOB, $bdOB, $pnumOB, $ratingOB, $invOB, $dftmOB, $lbOB);	
+				$passOB, $rdateOB, $bdOB, $pnumOB, $digscoreOB, $invOB, $dftmOB, $lbOB);	
 				
 			// Found result
 			if ($stmt->num_rows == 1)
@@ -194,7 +194,7 @@
 				while ($stmt->fetch())
 				{				
 					self::setuserAttributes($fnOB, $lnOB, $roleOB, $cityOB, $stOB, $zpOB, $gdOB, $emailOB,
-				$passOB, $rdateOB, $bdOB, $pnumOB, $ratingOB, $invOB, $dftmOB, $lbOB);
+				$passOB, $rdateOB, $bdOB, $pnumOB, $digscoreOB, $invOB, $dftmOB, $lbOB);
 				
 				}
 			}

@@ -1,5 +1,5 @@
 <?php
-	// This page is for deleting a game record
+	// This page is for deleting a event record
 	// This page is accessed through view_roster.php
 	
 	ob_start();
@@ -30,21 +30,21 @@
 	if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z'])) // Confirmation that form has been submitted	
 	{
 		// Assign variable from FORM submission (hidden id field)	
-		$gameid = $_POST['z'];
+		$eventid = $_POST['z'];
 
-		// Create game object for use & pull latest data from database & initially set attributes
-		$game = new Game();
-		$game->setDB($db);
-		$game->setGameID($gameid);
-		$game->pullGameData();
+		// Create event object for use & pull latest data from database & initially set attributes
+		$event = new Event();
+		$event->setDB($db);
+		$event->setEventID($eventid);
+		$event->pullEventData();
 
 		// Check if user is authroized to make edit
-		if (!$game->isManager($userID)) {
-			echo 'You have to be the manager to delete a game.';
+		if (!$event->isManager($userID)) {
+			echo 'You have to be the manager to delete a event.';
 			exit();
 		}
 
-		$game->deleteGame($userID);
+		$event->deleteEvent($userID);
 	}
 	else 
 	{
@@ -54,7 +54,7 @@
 	}	
 
 	// Delete objects
-	unset($game);
+	unset($event);
 	unset($manager);
 			
 	// Close the connection:

@@ -1,5 +1,5 @@
 <?php
-	/* This page defines the Game class.
+	/* This page defines the Event class.
 	 * Attributes:
 	 * 	protected date
 	 * 	protected time
@@ -7,35 +7,35 @@
 	 * 	protected venue
 	 *  protected result
 	 *  protected id_team
-	 * 	protected id_game
+	 * 	protected id_event
 	 *  protected dbc
 	 *  protected note
 	 * 
 	 * Methods:
-	 *  setGameID()
+	 *  setEventID()
 	 *  setDB()
-	 *	setGameAttributes()
-	 *  getGameAttribute()
-	 *  pullGameData()
-	 *  createGame()
-	 *  editGame()
-	 *  deleteGame()
+	 *	setEventAttributes()
+	 *  getEventAttribute()
+	 *  pullEventData()
+	 *  createEvent()
+	 *  editEvent()
+	 *  deleteEvent()
 	 *  isManager()
 	 */
 		
 
-	class Game {
+	class Event {
 	 	
 		// Declare the attributes
-		protected $gdate, $gtime, $opponent, $venue, $result, $id_team, $id_game, $dbc, $note;
+		protected $gdate, $gtime, $opponent, $venue, $result, $id_team, $id_event, $dbc, $note;
 
 		// Constructor
 		function __construct() {}
 
-		// Function to set game ID attribute
-		function setGameID($gameID)
+		// Function to set event ID attribute
+		function setEventID($eventID)
 		{
-			$this->id_game = $gameID;
+			$this->id_event = $eventID;
 		}
 
 		// Set database connection attribute
@@ -44,8 +44,8 @@
 			$this->dbc = $db;
 		}		
 		
-		// Function to set Game attributes
-		function setGameAttributes($tmID = 0, $gmdate = '', $gmtime = '', $opp ='', $ven = '', $res = '', $gnote = '')
+		// Function to set Event attributes
+		function setEventAttributes($tmID = 0, $gmdate = '', $gmtime = '', $opp ='', $ven = '', $res = '', $gnote = '')
 		{
 			$this->id_team = $tmID;	
 			$this->gdate = $gmdate;
@@ -56,24 +56,24 @@
 			$this->note = $gnote;
 		}		
 
-		function getGameAttribute($attribute)
+		function getEventAttribute($attribute)
 		{
 			return $this->$attribute;
 		}
 		
-		// Function to pull complete game data from database and set attributes
-		function pullGameData()
+		// Function to pull complete event data from database and set attributes
+		function pullEventData()
 		{
-			// Make the query to retreive game information from games table in database:		
+			// Make the query to retreive event information from events table in database:		
 			$q = "SELECT id_team, date, time, opponent, venue, result, note
-				FROM games
-				WHERE id_game=? LIMIT 1";
+				FROM events
+				WHERE id_event=? LIMIT 1";
 		
 			// Prepare the statement: DATE_FORMAT(date, '%Y-%m-%d')
 			$stmt = $this->dbc->prepare($q);
 		
 			// Bind the inbound variable:
-			$stmt->bind_param('i', $this->id_game);
+			$stmt->bind_param('i', $this->id_event);
 				
 			// Execute the query:
 			$stmt->execute();		
@@ -89,7 +89,7 @@
 			{	
 				while ($stmt->fetch())
 				{				
-					self::setGameAttributes($id_teamOB, $gdateOB, $gtmOB, $oppOB, $venOB, $resOB, $noteOB);
+					self::setEventAttributes($id_teamOB, $gdateOB, $gtmOB, $oppOB, $venOB, $resOB, $noteOB);
 				}
 			}			
 			
@@ -97,13 +97,13 @@
 			$stmt->close();
 			unset($stmt);			
 
-		} // End of pullGameData function
+		} // End of pullEventData function
 
-		// Function to add game to team schedule
-		function createGame($teamID, $gmdate, $gtime, $opponent, $venue, $result, $note)
+		// Function to add event to team schedule
+		function createEvent($teamID, $gmdate, $gtime, $opponent, $venue, $result, $note)
 		{
 			// Make the query:
-			$q = 'INSERT INTO games (id_team, date, time, opponent, venue, result, note) 
+			$q = 'INSERT INTO events (id_team, date, time, opponent, venue, result, note) 
 				VALUES (?,?,?,?,?,?,?)';
 
 			// Prepare the statement
@@ -118,11 +118,11 @@
 			// Print a message based upon result:
 			if ($stmt->affected_rows == 1)
 			{
-				echo 'Your game was added succesfully';
+				echo 'Your event was added succesfully';
 			}
 			else
 			{
-				echo 'Your game was not added. Please contact the service administrator';
+				echo 'Your event was not added. Please contact the service administrator';
 			}
 
 			// Close the statement:
@@ -131,28 +131,28 @@
 		}
 		
 							
-		// Edit Game Method
-		function editGame($userID, $gmdate, $gtime, $opponent, $venue, $result, $note) 
+		// Edit Event Method
+		function editEvent($userID, $gmdate, $gtime, $opponent, $venue, $result, $note) 
 		{		
 			// Make query
-			$q = 'UPDATE games SET date=?, time=?, opponent=?, venue=?, result=?, note=?
-				WHERE id_game=? LIMIT 1';
+			$q = 'UPDATE events SET date=?, time=?, opponent=?, venue=?, result=?, note=?
+				WHERE id_event=? LIMIT 1';
 	
 			// Prepare the statement
 			$stmt = $this->dbc->prepare($q); 
 	
 			// Bind the inbound variables:
-			$stmt->bind_param('ssssssi', $gmdate, $gtime, $opponent, $venue, $result, $note, $this->id_game);
+			$stmt->bind_param('ssssssi', $gmdate, $gtime, $opponent, $venue, $result, $note, $this->id_event);
 					
 			// Execute the query:
 			$stmt->execute();
 	
 			if ($stmt->affected_rows == 1) // And update to the database was made
 			{				
-				echo 'This game has been edited';
+				echo 'This event has been edited';
 
 				// Update attributes
-				self::setGameAttributes($this->id_team, $gmdate, $gtime, $opponent, $venue, $result, $note);
+				self::setEventAttributes($this->id_team, $gmdate, $gtime, $opponent, $venue, $result, $note);
 			}
 			else 
 			{	// Either did not run ok or no updates were made
@@ -163,20 +163,20 @@
 			$stmt->close();
 			unset($stmt);
 
-		} // End of editGame function
+		} // End of editEvent function
 		
 
-		// Function to delete game
-		function deleteGame($userID)
+		// Function to delete event
+		function deleteEvent($userID)
 		{
 			// Make the query	
-			$q = "DELETE FROM games WHERE id_game=? LIMIT 1";
+			$q = "DELETE FROM events WHERE id_event=? LIMIT 1";
 	
 			// Prepare the statement:
 			$stmt = $this->dbc->prepare($q);
 	
 			// Bind the inbound variable:
-			$stmt->bind_param('i', $this->id_game);
+			$stmt->bind_param('i', $this->id_event);
 	
 			// Execute the query:
 			$stmt->execute();
@@ -185,33 +185,33 @@
 			if ($stmt->affected_rows == 1) 
 			{
 				// Print a message
-				echo 'This game has been deleted successfully';
+				echo 'This event has been deleted successfully';
 			}
 			else 
 			{	// If the query did not run ok.
-				echo 'The game could not be deleted due to a system errror';
+				echo 'The event could not be deleted due to a system errror';
 			}
 				
 			// Close the statement:
 			$stmt->close();
 			unset($stmt);
 		
-		} // End of deleteGame function		
+		} // End of deleteEvent function		
 			
-		// Function to check if user is manager of game
+		// Function to check if user is manager of event
 		function isManager($userID)
 		{
-			// Make the query to retreive manager id associated with game:		
+			// Make the query to retreive manager id associated with event:		
 			$q = "SELECT tm.id_manager
-				FROM teams AS tm INNER JOIN games AS g
+				FROM teams AS tm INNER JOIN events AS g
 				USING (id_team)
-				WHERE g.id_game=? LIMIT 1";
+				WHERE g.id_event=? LIMIT 1";
 				
 			// Prepare the statement
 			$stmt = $this->dbc->prepare($q);
 			
 			// Bind the inbound variables:
-			$stmt->bind_param('i', $this->id_game);
+			$stmt->bind_param('i', $this->id_event);
 			
 			// Exeecute the query
 			$stmt->execute();

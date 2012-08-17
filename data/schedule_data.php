@@ -32,8 +32,8 @@
 	$tm = $_SESSION['ctmID'];
 
 	// Make the Query:
-	$q = "SELECT id_game, DATE_FORMAT(date, '%a: %b %e, %Y'), time, opponent, venue, result
-		FROM games
+	$q = "SELECT id_event, DATE_FORMAT(date, '%a: %b %e, %Y'), time, opponent, venue, result
+		FROM events
 		WHERE id_team=?
 		ORDER BY date ASC";
 		
@@ -64,8 +64,8 @@
 			'Opponent' => stripslashes($oppOB),
 			'Venue' => stripslashes($venOB),
 			'Result' => $resOB,
-			'Edit' => '<button class="edit_game" value=' . $idOB . '>Edit</button>',
-			'Delete' => '<button class="delete_game" value=' . $idOB . '>Delete</button>');
+			'Edit' => '<button class="edit_event" value=' . $idOB . '>Edit</button>',
+			'Delete' => '<button class="delete_event" value=' . $idOB . '>Delete</button>');
 		}	// End of WHILE loop
 			
 		// Send the JSON data:
@@ -73,9 +73,9 @@
 
 	}
 	else 
-	{	// No games or events scheduled
+	{	// No events or events scheduled
 		
-		$json[] = array('<p class="error">You have no games scheduled. Click the add game button to add a game.');
+		$json[] = array('<p class="error">You have no events scheduled. Click the add event button to add a event.');
 			
 		// Send the JSON data:
 		echo json_encode($json);

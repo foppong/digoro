@@ -15,7 +15,7 @@ var SCHEDULE = {
 	loadSchedule: function() {
 		var _schedule = this;
 
-		// AJAX call to retrieve list of games associated with team
+		// AJAX call to retrieve list of events associated with team
 		$.ajax({
 	      	type: "POST",
 			dataType: 'json',

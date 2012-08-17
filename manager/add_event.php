@@ -1,6 +1,6 @@
 <?php
-	// add_game.php
-	// This page allows a logged-in user to add a game to the schedule
+	// add_event.php
+	// This page allows a logged-in user to add a event to the schedule
 
 	ob_start();
 	session_start();	
@@ -34,7 +34,7 @@
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
 
-		// Create team object for use & pull latest data from database & initially set attributes - used to add game
+		// Create team object for use & pull latest data from database & initially set attributes - used to add event
 		$team = new Team();
 		$team->setDB($db);
 		$team->setTeamID($ctmID);
@@ -49,7 +49,7 @@
 		// Assume invalid values:
 		$gdfrmat = $tm = FALSE;
 		
-		// Validate game date
+		// Validate event date
 		if ($_POST['dateAdd'])
 		{
 			$bd = new DateTime($_POST['dateAdd']); // Convert js datepicker entry into format database accepts
@@ -61,7 +61,7 @@
 			exit();
 		}		
 		
-		// Validate game time is entered
+		// Validate event time is entered
 		if ($_POST['time'])
 		{
 			$tm = $_POST['time'];
@@ -112,13 +112,13 @@
 			$note = ''; 
 		}
 
-		// Checks if team is selected and date format and entered time are valid before adding game to team.
+		// Checks if team is selected and date format and entered time are valid before adding event to team.
 		if ($ctmID && $gdfrmat && $tm)
 		{
-			// Create game object for use & push game to database for specified team
-			$game = new Game();
-			$game->setDB($db);
-			$game->createGame($ctmID, $gdfrmat, $tm, $opp, $ven, $res, $note);		
+			// Create event object for use & push event to database for specified team
+			$event = new Event();
+			$event->setDB($db);
+			$event->createEvent($ctmID, $gdfrmat, $tm, $opp, $ven, $res, $note);		
 		}
 		else 
 		{									
@@ -134,7 +134,7 @@
 	}
 
 	// Delete objects
-	unset($game);
+	unset($event);
 	unset($manager);
 
 	// Close the connection:
