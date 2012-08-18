@@ -13,6 +13,7 @@ $.ajaxSetup({"error":function(XMLHttpRequest,textStatus, errorThrown) {
 var idplayer;
 var idevent;
 var idteam;
+var idsubrequest;
 
 
 // Namespace
@@ -74,6 +75,7 @@ var PLAYER = {
 				},
 				Cancel: function() {
 					$( this ).dialog( "close" );
+	       	MISCFUNCTIONS.clearForm( '#AddPlayerForm form' );
 				}
 			}
 		});
@@ -91,6 +93,7 @@ var PLAYER = {
 				},
 				Cancel: function() {
 					$( this ).dialog( "close" );
+	       	MISCFUNCTIONS.clearForm( '#EditPlayerForm form' );
 				}
 			}			
 		});
@@ -214,6 +217,7 @@ var EVENT = {
 				},
 				Cancel: function() {
 					$( this ).dialog( "close" );
+	       	MISCFUNCTIONS.clearForm( '#AddEventForm form' );
 				}
 			}
 		});		
@@ -231,6 +235,7 @@ var EVENT = {
 				},
 				Cancel: function() {
 					$( this ).dialog( "close" );
+	       	MISCFUNCTIONS.clearForm( '#EditEventForm form' );					
 				}
 			}
 		});	
@@ -343,8 +348,8 @@ var TEAM = {
  	loadDialog: function() { 
 		$("#AddTeamForm").dialog({
 			autoOpen: false,
-			height: 450,
-			width: 375,
+			height: 500,
+			width: 450,
 			modal: true,
 			buttons: {
 				"Add Team": function(){
@@ -353,6 +358,7 @@ var TEAM = {
 				},
 				Cancel: function() {
 					$( this ).dialog( "close" );
+					MISCFUNCTIONS.clearForm( '#AddTeamForm form' );
 				}
 			}
 		});
@@ -370,6 +376,7 @@ var TEAM = {
 				},
 				Cancel: function() {
 					$( this ).dialog( "close" );
+					MISCFUNCTIONS.clearForm( '#EditTeamForm form' );
 				}
 			}
 		});	
@@ -433,18 +440,18 @@ var TEAM = {
   	teamMenu: function() {
     	var _team = this;
 
-		// Ajax call to retreive list of teams assigned to user	
-		$.ajax({
-	      	type: "POST",
-			dataType: 'json',
-			url: "../data/team_data.php",
-			success: function(data) {
-				_team.buildTeamMenu(data);
-			},
-			error: function() {
-				alert('teamMenu: an error occured!');
-			}
-		});	
+			// Ajax call to retreive list of teams assigned to user	
+			$.ajax({
+		    type: "POST",
+				dataType: 'json',
+				url: "../data/team_data.php",
+				success: function(data) {
+					_team.buildTeamMenu(data);
+				},
+				error: function() {
+					alert('teamMenu: an error occured!');
+				}
+			});	
   	},
 	
 	buildTeamMenu: function(data) {    
@@ -495,6 +502,139 @@ var LEAGUE = {
 	}
 }
 
+
+var FINDSUB = {
+
+ 	loadDialog: function() { 
+		$("#Create-SubRequest-Form").dialog({
+			autoOpen: false,
+			height: 450,
+			width: 450,
+			modal: true,
+			buttons: {
+				"Create": function(){
+					FINDSUB.create();
+					$( this ).dialog( "close" );
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+	       	MISCFUNCTIONS.clearForm( '#Create-SubRequest-Form form' );	
+				}
+			}
+		});
+		
+		$( "#Edit-SubRequest-Form" ).dialog({
+			autoOpen: false,
+			height: 450,
+			width: 375,
+			modal: true,
+			buttons: {
+				"Edit": function() {
+					// Edit info in database
+					FINDSUB.edit();					
+					$( this ).dialog( "close" );
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+					MISCFUNCTIONS.clearForm( '#Edit-SubRequest-Form form' );
+				}
+			}
+		});			
+
+		$( "#Del-SubRequest-Form" ).dialog({
+			autoOpen: false,
+			height: 150,
+			width: 275,
+			modal: true,
+			buttons: {
+				"Delete SubRequest": function() {
+					// Delete player from database
+					FINDSUB.del();					
+					$( this ).dialog( "close" );
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			}			
+		});	
+	},
+
+	// add subrequest information to database from dialog form
+  create: function() { 
+   	var form_data = $( '#Create-SubRequest-Form form' ).serialize();
+	   $.ajax({
+	     	type: "POST",
+	     	url: "../manager/create_subrequest.php",
+	     	data: form_data, // Data that I'm sending
+	     	error: function() {
+	       	$( '.status' ).text( 'Update failed. Try again.' ).slideDown( 'slow' );
+	    	},
+	     	success: function( data ) {   
+	       	SUBREQUEST.loadOpenSubRequests(); //Call to subrequest.js
+	       	$( '.status' ).text( data ).slideDown( 'slow' );	
+	       	MISCFUNCTIONS.clearForm( '#Create-SubRequest-Form form' );
+	     	},
+	     	complete: function() {
+	       	setTimeout(function() {
+	        		$( '.status' ).slideUp( 'slow' );
+	       	}, 2000);
+	     	},
+	     	cache: false
+   	});
+  },
+	
+	// edit subrequest information to database from dialog form
+  edit: function() { 
+		$( '#Edit-SubRequest-Form form' ).append( '<input type="hidden" id="z" name="z" value="' + idsubrequest + '"/>' );
+    var form_data = $( '#Edit-SubRequest-Form form' ).serialize();
+	  $.ajax({
+	  	type: "POST",
+	    url: "../manager/edit_subrequest.php",
+	    data: form_data, // Data that I'm sending
+	    error: function() {
+	    	$( '.status' ).text( 'Edit failed. Try again.' ).slideDown( 'slow' );
+	    },
+	    success: function( data ) {   
+				SUBREQUEST.loadOpenSubRequests(); //Call to subrequest.js
+	    	$( '.status' ).text( data ).slideDown( 'slow' );
+	      MISCFUNCTIONS.clearForm( '#Edit-SubRequest-Form form' );    
+	    },
+	    complete: function() {
+	    	setTimeout(function() {
+	     		$( '.status' ).slideUp( 'slow' );
+	      }, 2000);
+	    },
+	    cache: false
+   	});
+   },
+
+	// delete event information in database from dialog form
+  del: function() { 
+		$( '#Del-SubRequest-Form form' ).append( '<input type="hidden" id="z" name="z" value="' + idsubrequest + '"/>' );
+    	var form_data = $( '#Del-SubRequest-Form form' ).serialize();
+	  $.ajax({
+	    type: "POST",
+	    url: "../manager/delete_subrequest.php",
+	    data: form_data, // Data that I'm sending
+	    error: function() {
+	      $( '.status' ).text( 'Delete failed. Try again.' ).slideDown( 'slow' );
+	    },
+	    success: function( data ) {   
+				SUBREQUEST.loadOpenSubRequests(); //Call to subrequest.js
+	      $( '.status' ).text( data ).slideDown( 'slow' ); 
+	    },
+	    complete: function() {
+	    	setTimeout(function() {
+	      	$( '.status' ).slideUp( 'slow' );
+	      }, 2000);
+	    },
+	    cache: false
+   	});
+   }
+	
+}
+
+
 // Function to clear out form contents in DOM
 var MISCFUNCTIONS = {
 	
@@ -528,6 +668,65 @@ $(document).ready(function()
 	$( "#selectTeam" ).on("submit", function() {
 		USER.selectTeam();
 	})
+
+	// Find Players Tabs
+	$('#find-players-tabs').tabs({
+		spinner: '<img src="../css/imgs/ajax-loader.gif" />',
+		ajaxOptions: {
+			error: function( xhr, status, index, anchor ) {
+				$(anchor.hash).html(
+					"Couldn't load this tab. We'll try to fix this as soon as possible. "
+				);				
+			}
+		},		
+		load: function ( event, ui ) {
+			switch (ui.index) {
+				case 0:
+					// Load subrequest dialogs [but blocked from loading initially]
+					FINDSUB.loadDialog();
+										
+					$( "#create-sub-request" ).on("click", function() {
+						$( "#Create-SubRequest-Form" ).dialog( "open" );
+					});
+					
+					$( "#open-subrequests" ).on("click", "#edit-subreq", function() {
+						idsubrequest = this.value;
+						$( "#Edit-SubRequest-Form" ).dialog( "open" );
+					});
+
+					$( "#open-subrequests" ).on("click", "#delete-subreq", function() {
+						idsubrequest = this.value;
+						$( "#Del-SubRequest-Form" ).dialog( "open" );					
+					});
+					
+					break;
+				case 1:
+					// Load player dialog
+					PLAYER.loadDialog();
+	
+					$( "#add-player" ).on("click", function() {
+						$( "#AddPlayerForm" ).dialog( "open" );
+					});
+					
+					// Binds click to ajax loaded edit button
+					$( "#roster" ).on("click", ".edit_player", function() {
+						idplayer = this.value;
+						$( "#EditPlayerForm" ).dialog( "open" );
+					});
+
+					// Binds click to ajax loaded delete button
+					$( "#roster" ).on("click", ".delete_player", function() {
+						idplayer = this.value;
+						$( "#DelPlayerForm" ).dialog( "open" );
+					});
+					break;
+				default:		
+			}
+		}
+	});
+
+
+
 
 	// jQuery UI Tabs
 	$('#tabmenu').tabs({

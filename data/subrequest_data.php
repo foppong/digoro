@@ -1,7 +1,7 @@
 <?php
-	/** team_data.php
+	/** subrequest_data.php
 	* This page queries a database, returnnig a list
-	* of teams
+	* of subrequest
 	*/
 	
 	ob_start();
@@ -31,15 +31,25 @@
 	// Get user ID
 	$userID = $user->getUserID();
 
-	// Make the Query to find all teams associated with user via a union of the members and teams table:
-	$q = "SELECT p.id_team, t.team_name
-		FROM members AS p INNER JOIN teams AS t
-		USING (id_team)
-		WHERE p.id_user=?";
+	// Make the Query to find all subrequests associated with user
+/*	$q = "SELECT s.id_subrequest, s.id_team, s.sex_needed, DATE_FORMAT(e.date, '%a: %b %e, %Y'), 
+		e.time, tm.team_name
+		FROM subrequests AS s 
+		INNER JOIN events AS e USING (id_event)
+		INNER JOIN teams AS tm USING (id_team)
+		WHERE s.id_manager=?";
+*/
+
+	$q = "SELECT s.id_subrequest, s.id_team, s.sex_needed, DATE_FORMAT(e.date, '%a: %b %e, %Y'), tm.team_name, e.time
+		FROM subrequests AS s 
+		INNER JOIN teams AS tm USING (id_team)		
+		INNER JOIN events AS e USING (id_event)
+		WHERE s.id_manager=?
+		ORDER BY e.date ASC";
 	
 	// Prepare the statement:
 	$stmt = $db->prepare($q);
-		
+	
 	// Bind the inbound variable:
 	$stmt->bind_param('i', $userID);
 			
@@ -50,7 +60,7 @@
 	$stmt->store_result();
 			
 	// Bind the outbound variable:
-	$stmt->bind_result($idtmOB, $tmnmOB);
+	$stmt->bind_result($idSROB, $idtmOB, $sexOB, $dateOB, $tmnameOB, $timeOB);
 			
 	// If there are results to show.
 	if ($stmt->num_rows > 0)
@@ -60,10 +70,14 @@
 				
 		// Fetch and put results in the JSON array...
 		while ($stmt->fetch())
-		{		
+		{			
 			$json[] = array(
-			'TeamID' => $idtmOB,
-			'TeamName' => stripslashes($tmnmOB));
+			'Team' => $tmnameOB,
+			'Sex Needed' => $sexOB,
+			'Event Date' => $dateOB,
+			'Event Time' => $timeOB,
+			'Edit' => '<button type="button" id="edit-subreq" class="btn btn-mini" value=' . $idSROB . '>Edit</button>',
+			'Delete' => '<button id="delete-subreq" class="btn btn-mini" value=' . $idSROB . '>Delete</button>');
 		}	// End of WHILE loop
 	
 		// Send the JSON data:
@@ -81,7 +95,7 @@
 	{	// No registered users
 
 		$json[] = array(
-			'<p class="error">You have no teams associated with your account.</p><br />');
+			'<p class="error">You have no sub requests open.</p><br />');
 			
 		// Send the JSON data:
 		echo json_encode($json);

@@ -74,6 +74,7 @@
 			$this->about = $abtm;
 		}
 
+		// Function to get specific class attribute
 		function getTeamAttribute($attribute)
 		{
 			return $this->$attribute;

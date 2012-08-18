@@ -1,7 +1,7 @@
 <?php
-	/** league_data.php
-	* This page queries a database, returnnig a list
-	* of leagues
+	/* subrequest_game_data.php
+	* This script retrieves all the records from the schedule table for team.
+	* 
 	*/
 	
 	ob_start();
@@ -14,7 +14,7 @@
 	function __autoload($class) {
 		require_once('../classes/' . $class . '.php');
 	}
-	
+
 	// Assign user object from session variable
 	if (isset($_SESSION['userObj']))
 	{
@@ -29,81 +29,68 @@
 	require_once MYSQL2;
 
 	// Assume invalid values:
-	$st = FALSE;
+	$tm = FALSE;
 
-	// Assign state variable from add_team.php ajax post
-	if (!empty($_POST["state"])) 
+	// Assign state variable from find_sub_view ajax call
+	if (!empty($_POST["teamID"])) 
 	{
-		$st = $_POST["state"];
+		$tm = $_POST["teamID"];
 	}
-	
-	// Checks if state is selected before querying database.
-	if ($st)
+
+	// Checks if team is selected before querying database.
+	if ($tm)
 	{
 		// Make the Query:
-		$q = "SELECT id_league, league_name FROM leagues WHERE state=?";
-	
+		$q = "SELECT id_event, DATE_FORMAT(date, '%a: %b %e, %Y')
+			FROM events
+			WHERE id_team=?
+			ORDER BY date ASC";
+			
 		// Prepare the statement:
 		$stmt = $db->prepare($q);
-			
+		
 		// Bind the inbound variable:
-		$stmt->bind_param('s', $st);
-				
+		$stmt->bind_param('i', $tm);
+			
 		// Execute the query:
 		$stmt->execute();		
-					
+				
 		// Store results:
 		$stmt->store_result();
-				
+			
 		// Bind the outbound variable:
-		$stmt->bind_result($idlgOB, $lgnmOB);
-				
+		$stmt->bind_result($idOB, $dateOB);
+			
 		// If there are results to show.
 		if ($stmt->num_rows > 0)
-		{
-			// Initialize an array:
-			$json = array();
-					
-			// Fetch and put results in the JSON array...
+		{		
+			// Fetch and print all records...
 			while ($stmt->fetch())
 			{		
 				$json[] = array(
-				'LeagueID' => $idlgOB,
-				'LeagueName' => $lgnmOB);
-	
+				'EventID' => $idOB,
+				'DateInfo' => $dateOB);
 			}	// End of WHILE loop
-		
-			// Send the JSON data:
-			echo json_encode($json);
-					
-			// Close the statement:
-			$stmt->close();
-			unset($stmt);			
-		
-			// Close the connection:
-			$db->close();
-			unset($db);
-		}
-		else 
-		{	// No registered users
-	
-			$json[] = array(
-				'<p class="error">There are no leagues that match your query.</p><br />');
 				
 			// Send the JSON data:
 			echo json_encode($json);
-	
 		}
-		
+		else 
+		{	// No events or events scheduled
+			
+			$json[] = array('<p class="error">You have no events scheduled.');
+				
+			// Send the JSON data:
+			echo json_encode($json);
+		}	
+	
 		// Close the statement:
 		$stmt->close();
-		unset($stmt);	
-		
+		unset($stmt);			
 	}
-
+	
 	// Close the connection:
 	$db->close();
 	unset($db);
-
 
 ?>

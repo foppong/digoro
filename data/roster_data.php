@@ -67,8 +67,8 @@
 			'Gender' => $genOB,
 			'Position' => $posOB,
 			'Jersey' => $jnOB,
-			'Edit' => '<button class="edit_player" value=' . $idOB . '>Edit</button>',
-			'Delete' => '<button class="delete_player" value=' . $idOB . '>Delete</button>');
+			'Edit' => '<button type="button" class="edit_player btn btn-mini" value=' . $idOB . '>Edit</button>',
+			'Delete' => '<button type="button" class="delete_player btn btn-mini" value=' . $idOB . '>Delete</button>');
 		}	// End of WHILE loop
 	
 		// Send the JSON data:

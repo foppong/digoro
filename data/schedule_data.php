@@ -64,8 +64,8 @@
 			'Opponent' => stripslashes($oppOB),
 			'Venue' => stripslashes($venOB),
 			'Result' => $resOB,
-			'Edit' => '<button class="edit_event" value=' . $idOB . '>Edit</button>',
-			'Delete' => '<button class="delete_event" value=' . $idOB . '>Delete</button>');
+			'Edit' => '<button type="button" class="edit_event btn btn-mini" value=' . $idOB . '>Edit</button>',
+			'Delete' => '<button type="button" class="delete_event btn btn-mini" value=' . $idOB . '>Delete</button>');
 		}	// End of WHILE loop
 			
 		// Send the JSON data:
@@ -84,10 +84,6 @@
 	// Close the statement:
 	$stmt->close();
 	unset($stmt);			
-
-	// Delete objects
-	unset($gdt);
-	unset($user);
 
 	// Close the connection:
 	$db->close();

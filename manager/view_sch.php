@@ -55,7 +55,7 @@
 		</div><br />
 
 		<p class="status"></p>		
-		<button type="button" id="add-event" class=".btn-small btn-primary">Add Event</button>
+		<button type="button" id="add-event" class="btn btn-small btn-primary">Add Event</button>
 
 		<div id="AddEventForm" title="Add New Event">	
 			<form method="post">

@@ -189,7 +189,7 @@
 			}
 			else 
 			{	// If the query did not run ok.
-				echo 'The event could not be deleted due to a system errror';
+				echo 'The event was not deleted';
 			}
 				
 			// Close the statement:

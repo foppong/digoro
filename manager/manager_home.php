@@ -106,7 +106,7 @@
 					</li>
 					<li><p>My Teams</p></li>
 					<li>
-						<a href="manager_home.php"><img src="../css/imgs/binoculars-icon.png" 
+						<a href="find_players.php"><img src="../css/imgs/binoculars-icon.png" 
 							alt="binoculars-icon" height="60" width="60"></a>
 					</li>
 					<li><p>Find Players</p></li>
@@ -120,7 +120,7 @@
 				</div>
 			</div>		
 
-			<div class="span10">
+			<div class="span10"> <!-- column for main content --> 
 				<div class="row"> <!-- My Teams header -->
 					<div class="span3">
 						<div class="page-header"><h1>My Teams</h1></div>
@@ -131,10 +131,9 @@
 						<h4>Add a team that you manage</h4>
 					</div>
 					<div class="span2">
-						<button type="button" id="addTeam" class=".btn-small btn-primary">Add Team</button>
+						<button type="button" id="addTeam" class="btn btn-small btn-primary">Add Team</button>
 					</div>
 				</div>
-				<hr>
 				<div class="row"> <!-- Select team row -->
 					<div class="span4">
 						<form method="post" class="form-inline" id="SelectTeamForm">	
