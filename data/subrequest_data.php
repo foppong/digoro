@@ -95,7 +95,7 @@
 	{	// No registered users
 
 		$json[] = array(
-			'<p class="error">You have no sub requests open.</p><br />');
+			'<p class="error">You have no subrequests open. Click the create subrequest to create one.</p><br />');
 			
 		// Send the JSON data:
 		echo json_encode($json);
