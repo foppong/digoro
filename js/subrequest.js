@@ -3,13 +3,6 @@
  */
 
 
-$.ajaxSetup({"error":function(XMLHttpRequest,textStatus, errorThrown) {   
-      alert(textStatus);
-      alert(errorThrown);
-      alert(XMLHttpRequest.responseText);
-  }});
-
-
 var SUBREQUEST = {
 
   teamMenu: function() {
@@ -41,11 +34,6 @@ var SUBREQUEST = {
 		
 		menu.append(tmp);
 	},
-
-	stickyTeamMenu: function( data ) {
-		
-	},
-
 
 	showEvents: function( data ) {
 		var _event = this;
@@ -89,7 +77,7 @@ var SUBREQUEST = {
 				_subrequest.buildOpenSRTable(data);
 			},
 			error: function() {
-				alert('an error occured!');
+				alert('loadOpenSubRequests: an error occured!');
 			}
 		});	
 	},
@@ -115,11 +103,10 @@ var SUBREQUEST = {
 	        }
 	    });		
 	}
-
-
-
-
-
+		
+		
+		
+		
 }
 
 $(document).ready(function() {

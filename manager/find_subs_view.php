@@ -65,7 +65,19 @@
 					</div>
 				</div>
 
+		<hr>
+		<div>
+		<h4>Open SubRequests</h4>
+		<!-- Load ajax open subrequest data here -->
+		<table class="table table-striped table-bordered table-condensed" id="open-subrequests" width="100%">
+		</div>
 		
+		<div>
+		<h4>Responses</h4>
+		<!-- Load ajax subrequest responses data here -->
+		<table class="table table-striped table-bordered table-condensed" id="subrequests-responses" width="100%">		
+		</div>
+
 
 		<!-- Modal Dialog Form -->
 		<div id="Create-SubRequest-Form" title="Create SubRequest" class="span4">	
@@ -140,10 +152,14 @@
 			</form>
 		</div>
 
-		<hr>
-		<h4>Open SubRequests</h4>
-		<!-- Load ajax open subrequest data here -->
-		<table class="table table-striped table-bordered table-condensed" id="open-subrequests" width="100%">
+		<div id="Respond-SubResponse-Form" title="Respond" class="span4">	
+			<form method="post">
+				<label for="respond-SRR-comment">Enter any comments:</label>
+					<textarea id="respond-SRR-comment" name="respond-SR-comment" cols="30" rows="2" class="input-xlarge text ui-widget-content ui-corner-all"
+					placeholder="ex. please bring a red shirt. thanks!"></textarea>			
+			</form>
+		</div>
+
 		
 	</body>
 </html>

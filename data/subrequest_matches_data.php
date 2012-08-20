@@ -1,7 +1,7 @@
 <?php
-	/** subrequest_data.php
+	/** subrequest_matches_data.php
 	* This page queries a database, returnnig a list
-	* of subrequest
+	* of subrequests that match
 	*/
 	
 	ob_start();
@@ -32,6 +32,7 @@
 	$userID = $user->getUserID();
 
 	// Make the Query to find all subrequests associated with user
+	// NEED TO REVAMP or include functon to sort through sports profiles for matches
 	$q = "SELECT s.id_subrequest, s.id_team, s.sex_needed, DATE_FORMAT(e.date, '%a: %b %e, %Y'), tm.team_name, e.time
 		FROM subrequests AS s 
 		INNER JOIN teams AS tm USING (id_team)		
@@ -68,8 +69,7 @@
 			'Sex Needed' => $sexOB,
 			'Event Date' => $dateOB,
 			'Event Time' => $timeOB,
-			'Edit' => '<button type="button" id="edit-subreq" class="btn btn-mini" value=' . $idSROB . '>Edit</button>',
-			'Delete' => '<button id="delete-subreq" class="btn btn-mini" value=' . $idSROB . '>Delete</button>');
+			'Take Action' => '<button type="button" id="view-subreq" class="btn btn-mini" value=' . $idSROB . '>View</button>');
 		}	// End of WHILE loop
 	
 		// Send the JSON data:
@@ -87,7 +87,7 @@
 	{	// No registered users
 
 		$json[] = array(
-			'<p class="error">You have no subrequests open. Click the create subrequest to create one.</p><br />');
+			'<p class="error">You have no subrequests matches. Create a sport profile to get linked with teams.</p><br />');
 			
 		// Send the JSON data:
 		echo json_encode($json);

@@ -31,7 +31,7 @@
 	{
 		$subReqid = $_POST['z'];
 
-		// Create event object for use & pull latest data from database & initially set attributes
+		// Create object for use & pull latest data from database & initially set attributes
 		$subReq = new SubRequest();
 		$subReq->setDB($db);
 		$subReq->setSubReqID($subReqid);

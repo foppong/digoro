@@ -91,12 +91,12 @@
 				<div class="side-nav">
 				<ul class="nav nav-list">
 					<li>
-						<a href="manager_home.php"><img src="../css/imgs/home-icon.png" 
+						<a href=""><img src="../css/imgs/home-icon.png" 
 							alt="home-icon" height="60" width="60"></a>
 					</li>
 					<li><p>Home</p></li>
 					<li>
-						<a href="manager_home.php"><img src="../css/imgs/user-icon.png" 
+						<a href="profile.php"><img src="../css/imgs/user-icon.png" 
 							alt="user-icon" height="60" width="60"></a>	
 					</li>
 					<li><p>Profile</p></li>
@@ -111,7 +111,7 @@
 					</li>
 					<li><p>Find Players</p></li>
 					<li>
-						<a href="manager_home.php"><img src="../css/imgs/world-icon.png" 
+						<a href=""><img src="../css/imgs/world-icon.png" 
 							alt="world-icon" height="60" width="60"></a>
 					</li>
 					<li><p>Find Teams</p></li>		

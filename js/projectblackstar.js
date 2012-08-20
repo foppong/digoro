@@ -508,11 +508,11 @@ var FINDSUB = {
  	loadDialog: function() { 
 		$("#Create-SubRequest-Form").dialog({
 			autoOpen: false,
-			height: 450,
-			width: 450,
+			height: 300,
+			width: 350,
 			modal: true,
 			buttons: {
-				"Create": function(){
+				"Create": function() {
 					FINDSUB.create();
 					$( this ).dialog( "close" );
 				},
@@ -631,8 +631,10 @@ var FINDSUB = {
 	    cache: false
    	});
    }
-	
 }
+
+
+
 
 
 // Function to clear out form contents in DOM

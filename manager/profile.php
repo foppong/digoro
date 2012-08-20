@@ -1,9 +1,9 @@
 <?php 
-	// find_players.php
-	// Page to discover and recruit players
+	// profile.php
+	// Profile page for users
 	
 	require '../includes/config.php';
-	$page_title = 'Find Players';
+	$page_title = 'Profile';
 	include '../includes/header.html';
 	include '../includes/php-functions.php';
 	//include '../includes/facebook.php';
@@ -47,7 +47,7 @@
 					</li>
 					<li><p>Home</p></li>
 					<li>
-						<a href="profile.php"><img src="../css/imgs/user-icon.png" 
+						<a href=""><img src="../css/imgs/user-icon.png" 
 							alt="user-icon" height="60" width="60"></a>	
 					</li>
 					<li><p>Profile</p></li>
@@ -70,25 +70,34 @@
 				</div>
 				</div>
 			</div>		
-
 			<div class="span10"> <!-- column for main content --> 
-				<div class="row"> <!-- Find Players header -->
-					<div class="span3">
-						<div class="page-header"><h1>Find Players</h1></div>
+				<div class="row"> <!-- Profile row -->
+					<div class="span10">
+						<div class="page-header"><h1>Profile</h1></div>
 					</div>
 				</div>
-				<div class="row"> <!-- Tabs container -->		
-					<div id="find-players-tabs" class="ui-tabs">
-						<ul>
-							<li><a href="find_subs_view.php"><span>Find Subs</span></a></li>
-							<li><a href="view_roster.php"><span>Browse Players</span></a></li>
-						</ul>
-							<div id="find_subs_view.php" class="ui-tabs-hide">Find Subs</div>
-							<div id="view_roster.php" class="ui-tabs-hide">Roster</div>
+				<div class="row"> <!-- SubResponses row -->		
+					<div class="span10">
+						<div>
+							<h4>SubRequest Matches for You!</h4>
+							<!-- Load ajax subrequest matches data here -->
+							<table class="table table-striped table-bordered table-condensed" id="subrequests-matches" width="100%"></table>	
+						</div>
+						<div id="Respond-SubRequest-Form" title="Respond SubRequest" class="span4">	
+							<form method="post">
+								<div id="dynamicSRinfo"></div>
+								<label for="respond-SR-commment">Comments:</label>
+									<textarea id="respond-SR-comment" tabindex="-1" name="respond-SR-comment" cols="30" rows="2" class="input-xlarge text ui-widget-content ui-corner-all"
+									placeholder="ex. I can't wait to play!"></textarea>			
+							</form>
+						</div>						
 					</div>
 				</div>
 			</div>
-			 
-		</div> <!-- End of main row -->
+		</div>	 
+	</div> <!-- End of main row -->
+
+	<!-- External javascript call-->
+	<script type="text/javascript" src="../js/subresponse.js"></script>
 
 <?php include '../includes/footer.html'; ?>
