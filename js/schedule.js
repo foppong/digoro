@@ -24,7 +24,7 @@ var SCHEDULE = {
 				_schedule.buildTable(data);
 			},
 			error: function() {
-				alert('an error occured!');
+				alert('SCHEDULE: an error occured!');
 			}
 		});	
 	},
@@ -49,7 +49,52 @@ var SCHEDULE = {
 	            tr.append('<td>' + val[propertyName] + '</td>');
 	        }
 	    });		
-	}
+	},
+
+  pullEventData: function ( data ) {
+  	var _schedule = this;
+		var data_send = { eventID: idevent };
+
+	  $.ajax({
+	  	type: "POST",
+	    dataType: 'json',
+	    url: "../data/single_event_data.php",
+	    data: data_send, // Data that I'm sending
+	    error: function() {
+	      alert('Error: Response failed');
+	   	},
+	    success: function( data ) { 
+				_schedule.make_Edit_Event_Form_sticky( data );
+	    },
+	    cache: false
+   	});
+	},
+
+
+  make_Edit_Event_Form_sticky: function( data ) {
+
+		var eventInfo_array = new Array(); // set up array to store data pulled from database
+	  $(data).each(function(key, val) {
+			var i = 0;
+	  	for (var propertyName in val) {
+	    	console.log(val[propertyName]);
+	    	eventInfo_array[i] = val[propertyName];
+	    	i++;
+	    }
+	  });	
+	  	
+		$( '#edit-event-sel-type' ).val( eventInfo_array[0] );
+		$( '#edit-event-sel-date' ).val( eventInfo_array[1] );
+		$( '#edit-event-time' ).val( eventInfo_array[2] );
+		$( '#edit-event-opname' ).val( eventInfo_array[3] );
+		$( '#edit-event-vname' ).val( eventInfo_array[4] );
+		$( '#edit-event-vadd' ).val( eventInfo_array[5] );
+		$( '#edit-event-note' ).val( eventInfo_array[6] );
+		$( '#edit-event-res' ).val( eventInfo_array[7] );
+		
+  }
+
+
 }
 
 $(document).ready(function() {

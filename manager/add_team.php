@@ -36,68 +36,67 @@
 		// i have now for managers to edit and add players/games
 				
 		// Assume invalid values:
-		$tn = $sp = $ct = $st = $lg = FALSE;
+		$sp = $tn = $sex = $reg = $lvl = FALSE;
 				
-		// Validate Team name
-		if ($_POST["tname"]) {
-			$tn = $_POST["tname"];
+		// Validate a sport is selected
+		if ($_POST['add-team-sel-sport']) {
+			$sp = $_POST['add-team-sel-sport'];
+		}
+		else {
+			echo 'Please select a sport.';
+			exit(); 
+		}
+
+		// Validate Team name entered
+		if ($_POST["add-team-name"]) {
+			$tn = $_POST["add-team-name"];
 		}
 		else {
 			echo 'Please enter a Team name.';
 			exit();
 		}
 
-		// Validate a sport is selected
-		if ($_POST['sport']) {
-			$sp = $_POST['sport'];
+		// Validate Team sex selected
+		if ($_POST['add-team-sel-sex']) {
+			$sex = $_POST['add-team-sel-sex'];
 		}
 		else {
-			echo 'Please select your sport.';
-			exit(); 
-		}
-
-		// Validate Team's homecity
-		if ($_POST['city']) {
-			$ct = $_POST['city'];
-		}
-		else {
-			echo 'Please enter your teams homecity.';
+			echo 'Please enter your teams sex.';
 			exit();
 		}
 
-		// Validate Team's state
-		if ($_POST['state']) {
-			$st = $_POST['state'];
+		// Validate Team region selected
+		if ($_POST['add-team-sel-region']) {
+			$reg = $_POST['add-team-sel-region'];
 		}
 		else {
-			echo 'Please enter your teams home state.';
+			echo 'Please enter your teams region.';
 			exit();
 		}
 
-		// Validate a league is selected
-		if ($_POST['league']) {
-			$lg = $_POST['league'];
+		// Validate Team level of play selected
+		if ($_POST['add-team-sel-level-play']) {
+			$lvl = $_POST['add-team-sel-level-play'];
 		}
 		else {
-			echo 'Please select your league.';
-			exit(); 
+			echo 'Please enter your teams level of play.';
+			exit();
 		}
 		
 		// Validate about team information
-		if ($_POST['abouttm']) {
-			$abtm = trim($_POST['abouttm']);
+		if ($_POST['add-team-abouttm']) {
+			$abtm = trim($_POST['add-team-abouttm']);
 		}
 		else {
-			echo 'Please enter a brief description about your team.';
-			exit();
+			$abtm = '';
 		}
 
-		// Checks if team name, userID, sport, team city, state, and league are valid before adding team to database.
-		if ($lg && $userID && $sp && $tn && $ct && $st && $abtm) {
+		// Check if values true before creating team
+		if ($userID && $sp && $tn && $sex && $reg && $lvl) {
 			// Create team object for use & create team for database
 			$team = new Team();
 			$team->setDB($db);
-			$team->createTeam($lg, $sp, $userID, $tn, $ct, $st, $abtm);	
+			$team->createTeam($sp, $userID, $tn, $abtm, $lvl, $reg, $sex);	
 		}
 		else {									
 			echo 'Please try again.';

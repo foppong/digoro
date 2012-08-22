@@ -47,12 +47,23 @@
 		}
 		
 		// Assume invalid values:
-		$gdfrmat = $tm = FALSE;
-		
-		// Validate event date
-		if ($_POST['dateAdd'])
+		$typ = $gdfrmat = $evtm = $ven = $venadd = FALSE;
+
+		// Validate event type is selected
+		if ($_POST['add-event-sel-type'])
 		{
-			$bd = new DateTime($_POST['dateAdd']); // Convert js datepicker entry into format database accepts
+			$typ = $_POST['add-event-sel-type'];
+		}
+		else 
+		{
+			echo 'Please select event type';
+			exit();
+		}
+
+		// Validate event date
+		if ($_POST['add-event-sel-date'])
+		{
+			$bd = new DateTime($_POST['add-event-sel-date']); // Convert js datepicker entry into format database accepts
 			$gdfrmat = $bd->format('Y-m-d');
 		}
 		else 
@@ -61,10 +72,10 @@
 			exit();
 		}		
 		
-		// Validate event time is entered
-		if ($_POST['time'])
+		// Validate event time
+		if ($_POST['add-event-time'])
 		{
-			$tm = $_POST['time'];
+			$evtm = $_POST['add-event-time'];
 		}
 		else 
 		{
@@ -73,9 +84,9 @@
 		}
 	
 		// Validate opponent is entered
-		if ($_POST['opp'])
+		if ($_POST['add-event-opname'])
 		{
-			$opp = $_POST['opp'];
+			$opp = $_POST['add-event-opname'];
 		}
 		else 
 		{
@@ -83,29 +94,31 @@
 		}
 
 		// Validate a venue is entered
-		if ($_POST['ven'])
+		if ($_POST['add-event-vname'])
 		{
-			$ven = $_POST['ven'];
+			$ven = $_POST['add-event-vname'];
 		}
 		else 
 		{
-			$ven = ''; 
+			echo 'Please enter a venue name';
+			exit();
 		}
 
-		// Validate a result is enetered
-		if ($_POST['res'])
+		// Validate venue address is enetered
+		if ($_POST['add-event-vadd'])
 		{
-			$res = $_POST['res'];
+			$venadd = $_POST['add-event-vadd'];
 		}
 		else 
 		{
-			$res = ''; 
+			echo 'Please enter a venue address';
+			exit();
 		}
 
-		// Validate a note is enetered
-		if ($_POST['note'])
+		// Validate note
+		if ($_POST['add-event-note'])
 		{
-			$note = $_POST['note'];
+			$note = $_POST['add-event-note'];
 		}
 		else 
 		{
@@ -113,12 +126,12 @@
 		}
 
 		// Checks if team is selected and date format and entered time are valid before adding event to team.
-		if ($ctmID && $gdfrmat && $tm)
+		if ($ctmID && $gdfrmat && $typ && $evtm && $ven && $venadd)
 		{
 			// Create event object for use & push event to database for specified team
 			$event = new Event();
 			$event->setDB($db);
-			$event->createEvent($ctmID, $gdfrmat, $tm, $opp, $ven, $res, $note);		
+			$event->createEvent($ctmID, $gdfrmat, $evtm, $opp, $ven, $venadd, $note, $typ);		
 		}
 		else 
 		{									

@@ -32,7 +32,7 @@
 	$tm = $_SESSION['ctmID'];
 
 	// Make the Query:
-	$q = "SELECT id_event, DATE_FORMAT(date, '%a: %b %e, %Y'), time, opponent, venue, result
+	$q = "SELECT id_event, DATE_FORMAT(date, '%a: %b %e, %Y'), time, opponent, venue_name, result
 		FROM events
 		WHERE id_team=?
 		ORDER BY date ASC";

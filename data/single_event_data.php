@@ -1,6 +1,6 @@
 <?php
-	/** single_subreq_data.php
-	* This page queries a database, returnnig a single subrequest
+	/** single_event_data.php
+	* This page queries a database, returnnig a single event data
 	* 
 	*/
 	
@@ -33,21 +33,18 @@
 
 	if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-		$subReqID = $_POST['idSubReq'];
+		$eventID = $_POST['eventID'];
 
-	
-		// Make the Query to find subrequest, event, and team info 
-		$q = "SELECT s.id_team, s.sex_needed, DATE_FORMAT(e.date, '%a: %b %e, %Y'), tm.team_name, e.time
-			FROM subrequests AS s 
-			INNER JOIN teams AS tm USING (id_team)		
-			INNER JOIN events AS e USING (id_event)
-			WHERE s.id_subrequest=? LIMIT 1";
+		// Make the query to retreive event information from events table in database:		
+		$q = "SELECT date, time, opponent, venue_name, venue_address, result, note, type
+			FROM events
+			WHERE id_event=? LIMIT 1";
 		
 		// Prepare the statement:
 		$stmt = $db->prepare($q);
 		
 		// Bind the inbound variable:
-		$stmt->bind_param('i', $subReqID);
+		$stmt->bind_param('i', $eventID);
 				
 		// Execute the query:
 		$stmt->execute();		
@@ -56,7 +53,7 @@
 		$stmt->store_result();
 				
 		// Bind the outbound variable:
-		$stmt->bind_result($idtmOB, $sexOB, $dateOB, $tmnameOB, $timeOB);
+		$stmt->bind_result($gdateOB, $gtmOB, $oppOB, $venOB, $venadOB, $resOB, $noteOB, $typeOB);
 				
 		// If there are results to show.
 		if ($stmt->num_rows == 1)
@@ -68,10 +65,14 @@
 			while ($stmt->fetch())
 			{			
 				$json[] = array(
-				'Team' => $tmnameOB,
-				'Sex Needed' => $sexOB,
-				'Event Date' => $dateOB,
-				'Event Time' => $timeOB);
+				'Event Type' => $typeOB,
+				'Event Date' => $gdateOB,
+				'Event Time' => $gtmOB,
+				'Event Oppo' => $oppOB,
+				'Event Ven Name' => $venOB,
+				'Event Ven Addr' => $venadOB,
+				'Event Note' => $noteOB,								
+				'Event Res' => $resOB);
 			}	// End of WHILE loop
 		
 			// Send the JSON data:
@@ -84,16 +85,6 @@
 			// Close the connection:
 			$db->close();
 			unset($db);
-		}
-		else 
-		{	// No registered users
-	
-			$json[] = array(
-				'<p class="error">You have no subrequests open. Click the create subrequest to create one.</p><br />');
-				
-			// Send the JSON data:
-			echo json_encode($json);
-	
 		}
 	}
 

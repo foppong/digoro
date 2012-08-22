@@ -206,7 +206,7 @@ var EVENT = {
 		
 		$( "#AddEventForm" ).dialog({
 			autoOpen: false,
-			height: 450,
+			height: 545,
 			width: 400,
 			modal: true,
 			buttons: {
@@ -224,7 +224,7 @@ var EVENT = {
 
 		$( "#EditEventForm" ).dialog({
 			autoOpen: false,
-			height: 450,
+			height: 545,
 			width: 400,
 			modal: true,
 			buttons: {
@@ -391,11 +391,11 @@ var TEAM = {
 			url: "../manager/add_team.php",
 			data: form_data, // Data that I'm sending
 			error: function() {
-				$( '#tmstatus' ).text( 'Edit failed. Try again.' ).slideDown( 'slow' );
+				$( '#status' ).text( 'Add failed. Try again.' ).slideDown( 'slow' );
 			},
 			success: function( data ) {
 				_team.teamMenu(); // Refresh the team selection menu
-				$( '#tmstatus' ).text( data ).slideDown( 'slow' );
+				$( '#status' ).text( data ).slideDown( 'slow' );
 				MISCFUNCTIONS.clearForm( '#AddTeamForm' );
 			},
 			complete: function() {
@@ -468,7 +468,7 @@ var TEAM = {
 	}
 }
 
-
+/*  NOT BEING USED AT MOMENT
 var LEAGUE = {
 	
 	showLeagues: function( data ) {
@@ -502,6 +502,7 @@ var LEAGUE = {
 	}
 }
 
+*/
 
 var FINDSUB = {
 
@@ -782,6 +783,7 @@ $(document).ready(function()
 					// Binds click to ajax loaded edit button
 					$( "#schedule" ).on("click", ".edit_event", function() {
 						idevent = this.value;
+						SCHEDULE.pullEventData(idevent);
 						$( "#EditEventForm" ).dialog( "open" );
 					});
 

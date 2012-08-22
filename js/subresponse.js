@@ -91,21 +91,44 @@ var RESPONDSR = {
   
   pullSRData: function ( data ) {
   	var _respondsr = this;
+		var data_send = { idSubReq: idsubrequest };
 
-		$.post("../data/single_subreq_data.php", { idSubReq: idsubrequest }, function(data) {
-			_respondsr.buildSRResponseForm( data ); });
+	  $.ajax({
+	  	type: "POST",
+	    dataType: 'json',
+	    url: "../data/single_subreq_data.php",
+	    data: data_send, // Data that I'm sending
+	    error: function() {
+	      alert('Error: Response failed');
+	   	},
+	    success: function( data ) { 
+				_respondsr.buildSRResponseForm( data );
+	    },
+	    cache: false
+   	});
+
 
   },
   
   buildSRResponseForm: function( data ) {
+  	
 		$('#dynamicSRinfo').html(""); // clear out any prior info
+		var teamInfo_array = new Array(); // set up array to store data pulled from database
+	  $(data).each(function(key, val) {
+			var i = 0;
+	  	for (var propertyName in val) {
+	    	console.log(val[propertyName]);
+	    	teamInfo_array[i] = val[propertyName];
+	    	i++;
+	    }
+	  });	
 		
-		alert(data);
-		$(data).each(function(key, val) {
-			alert(val[Team]);
-		});
+		$( '#Respond-SubRequest-Form form #dynamicSRinfo' )
+			.append( '<p>Team Name: ' + teamInfo_array[0] +'</p>' )
+			.append( '<p>Level of Play: ' + teamInfo_array[1] + '</p>')
+			.append( '<p>Venue Name: ' + teamInfo_array[2] + '</p>')
+			.append( '<p>Venue Address: ' + teamInfo_array[3] + '</p>')
 		
-  	$( '#Respond-SubRequest-Form form #dynamicSRinfo' ).append( '<p>Test Test</p>' );
   }
   
 }

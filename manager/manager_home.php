@@ -163,61 +163,49 @@
 	<!-- Modal Dialog Form -->
 	<div id="AddTeamForm" title="Add New Team" class="span4">		
 		<form method="post" class="form-horizontal">
-			<label for="tname">Enter Team Name</label>
-			<input class="span2" type="text" name="tname" id="tname" />
-							
-			<label for="sport">Select Sport</label>
-			<select class="span3" name="sport" id="sport">
+
+			<label for="add-team-sel-sport">We play</label>
+			<select class="span3" name="add-team-sel-sport" id="add-team-sel-sport">
 				<option value="">-Select Sport-</option>
 				<option value="1">Soccer</option>
 				<option value="2">Flag Football</option>
-				<option value="3">Ice Hockey</option>
+				<option value="3">Hockey</option>
 				<option value="4">Softball</option>
 				<option value="5">Basketball</option>
 				<option value="6">Ultimate</option>
 				<option value="7">Volleyball</option>
 				<option value="8">Kickball</option>
-				<option value="9">Cricket</option>
+				<option value="9">Rugby</option>
+			</select>
+
+			<label for="add-team-name">Our team name is</label>
+			<input class="span3" type="text" name="add-team-name" id="add-team-name" />	
+
+			<label for="add-team-sel-sex">The team sex is</label>
+			<select class="span3" name="add-team-sel-sex" id="add-team-sel-sex">
+				<option value="">-Select Sex-</option>
+				<option value="1">Coed</option>
+				<option value="2">All Female</option>
+				<option value="3">All Male</option>
+			</select>
+			
+			<label for="add-team-sel-region">We are based in</label>
+			<select class="span3" name="add-team-sel-region" id="add-team-sel-region">
+				<option value="">-Select Region-</option>
+				<option value="1">San Francisco/ Bay Area</option>
+			</select>
+
+			<label for="add-team-sel-level-play">Our level of play is</label>
+			<select class="span3" name="add-team-sel-level-play" id="add-team-sel-level-play">
+				<option value="">-Select Level-</option>
+				<option value="1">Recreational</option>
+				<option value="2">Intermediate</option>
+				<option value="3">Advanced</option>
 			</select>
 		
-			<label for="city">Enter Team's Home City</label>
-			<input type="text" class="span3" name="city" id="city" maxlength="40" />
-		
-			<label for="state">Enter Team's Home State</label>
-			<select class="span2" name="state" id="state" onchange="LEAGUE.showLeagues(this.value)">
-				<option value="">Select State</option>
-				<option value="AL">AL</option><option value="AK">AK</option>
-				<option value="AZ">AZ</option><option value="AR">AR</option>
-				<option value="CA">CA</option><option value="CO">CO</option>
-				<option value="CT">CT</option><option value="DE">DE</option>
-				<option value="FL">FL</option><option value="GA">GA</option>
-				<option value="HI">HI</option><option value="ID">ID</option>
-				<option value="IL">IL</option><option value="IN">IN</option>
-				<option value="IA">IA</option><option value="KS">KS</option>
-				<option value="KY">KY</option><option value="LA">LA</option>
-				<option value="ME">ME</option><option value="MD">MD</option>
-				<option value="MA">MA</option><option value="MI">MI</option>
-				<option value="MN">MN</option><option value="MS">MS</option>
-				<option value="MO">MO</option><option value="MT">MT</option>
-				<option value="NE">NE</option><option value="NV">NV</option>
-				<option value="NH">NH</option><option value="NJ">NJ</option>
-				<option value="NM">NM</option><option value="NY">NY</option>
-				<option value="NC">NC</option><option value="ND">ND</option>
-				<option value="OH">OH</option><option value="OK">OK</option>
-				<option value="OR">OR</option><option value="PA">PA</option>
-				<option value="RI">RI</option><option value="SC">SC</option>
-				<option value="SD">SD</option><option value="TN">TN</option>
-				<option value="TX">TX</option><option value="UT">UT</option>
-				<option value="VT">VT</option><option value="VA">VA</option>
-				<option value="WA">WA</option><option value="WV">WV</option>
-				<option value="WI">WI</option><option value="WY">WY</option>
-			</select>		
-			
-			<label for="league">Select League</label>
-			<select class="span3" name="league" id="league"></select>
-		
-			<label for="abouttm">Team Information</label>
-			<textarea class="input-xlarge" id="abouttm" name="abouttm" cols="30" rows="2" placeholder="Enter something cool about your team"></textarea><br />
+			<label for="add-team-abouttm">Other team information to share</label>
+			<textarea class="input-xlarge" id="add-team-abouttm" name="add-team-abouttm" 
+				cols="30" rows="2" placeholder="enter something cool about your team"></textarea>
 		</form>
 	</div> <!-- End of Modal Dialog Form -->
 

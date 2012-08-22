@@ -7,7 +7,7 @@
 	 *  protected id_event
 	 *  protected sex_needed
 	 *  protected experience_needed
-	 *  protected region
+	 *  protected id_region
 	 *  protected dbc
 	 * 
 	 * Methods:
@@ -26,7 +26,7 @@
 	 	
 		// Declare the attributes
 		protected $id_subrequest, $id_manager, $id_team, $id_event, $sex_needed, 
-			$experience_needed, $region, $dbc;
+			$experience_needed, $id_region, $dbc;
 
 		// Constructor
 		function __construct() {}
@@ -60,7 +60,7 @@
 		function createSubReq($manID, $tmID, $evntID, $sex, $exp, $reg) {
 			// Make the query:
 			$q = 'INSERT INTO subrequests (id_manager, id_team, id_event, sex_needed, 
-				experience_needed, region) VALUES (?,?,?,?,?,?)';
+				experience_needed, id_region) VALUES (?,?,?,?,?,?)';
 				
 			// Prepare the statement
 			$stmt = $this->dbc->prepare($q);
@@ -91,7 +91,7 @@
 		// Function to edit a SubRequest object in database
 		function editSubReq($tmID, $evntID, $sex, $exp, $reg) {
 			// Make the query:
-			$q = 'UPDATE subrequests SET id_team=?,id_event=?,sex_needed=?,experience_needed=?, region=? 
+			$q = 'UPDATE subrequests SET id_team=?,id_event=?,sex_needed=?,experience_needed=?,id_region=? 
 				WHERE id_subrequest=? LIMIT 1';
 				
 			// Prepare the statement

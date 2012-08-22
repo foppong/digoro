@@ -85,7 +85,9 @@
 						</div>
 						<div id="Respond-SubRequest-Form" title="Respond SubRequest" class="span4">	
 							<form method="post">
+								<h4>Details:</h4>
 								<div id="dynamicSRinfo"></div>
+								<h4>Respond:</h4>
 								<label for="respond-SR-commment">Comments:</label>
 									<textarea id="respond-SR-comment" tabindex="-1" name="respond-SR-comment" cols="30" rows="2" class="input-xlarge text ui-widget-content ui-corner-all"
 									placeholder="ex. I can't wait to play!"></textarea>			

@@ -2,13 +2,13 @@
 	/* This page defines the Team class.
 	 * Attributes:
 	 * 	protected tmname
-	 *  protected city
-	 *  protected state
 	 *  protected about
 	 *  protected id_team
-	 * 	protected id_league
 	 *  protected id_sport
 	 *  protected id_manager
+	 *  protected level
+	 *  protected id_region
+	 *  protected team_sex
 	 *  protected dbc
 	 * 
 	 * Methods:
@@ -31,8 +31,8 @@
 	class Team {
 	 	
 		// Declare the attributes
-		protected $tmname, $city, $state, $about, $id_team, $id_league,
-			$id_sport, $id_manager, $dbc;
+		protected $tmname, $about, $id_team, $id_sport, $id_manager, $level, 
+			$id_region, $team_sex, $dbc;
 
 		// Constructor
 		function __construct() {}
@@ -62,16 +62,16 @@
 		}
 		
 		// Function to set Team attributes
-		function setTeamAttributes($lgID = 0, $sprtID = 0, $manID = 0, $tmname ='', $cty = '', 
-			$st = '', $abtm = '')
+		function setTeamAttributes($sprtID = 0, $manID = 0, $tmname ='', 
+			$abtm = '', $lvl = '', $sex = '', $reg = 0)
 		{
-			$this->id_league = $lgID;
 			$this->id_sport = $sprtID;
 			$this->id_manager = $manID;						
 			$this->tmname = $tmname;
-			$this->city = $cty;
-			$this->state = $st;
 			$this->about = $abtm;
+			$this->level = $lvl;
+			$this->team_sex = $sex;
+			$this->id_region = $reg;
 		}
 
 		// Function to get specific class attribute
@@ -84,7 +84,7 @@
 		function pullTeamData()
 		{
 			// Make the query
-			$q = 'SELECT id_league,id_sport,id_manager,team_name,city,state,about
+			$q = 'SELECT id_sport,id_manager,team_name,about,level_of_play,id_region,team_sex
 				FROM teams WHERE id_team=? LIMIT 1';
 				
 			// Prepare the statement
@@ -100,14 +100,14 @@
 			$stmt->store_result();
 			
 			// Bind the outbound variables
-			$stmt->bind_result($lgIDOB, $sprtIDOB, $manIDOB, $tmnameOB, $ctyOB, $stOB, $abtmIN);
+			$stmt->bind_result($sprtIDOB, $manIDOB, $tmnameOB, $abtmOB, $lvlOB, $regOB, $sexOB);
 
 			// Found result
 			if ($stmt->num_rows == 1)
 			{	
 				while ($stmt->fetch())
 				{				
-					self::setTeamAttributes($lgIDOB, $sprtIDOB, $manIDOB, $tmnameOB, $ctyOB, $stOB, $abtmIN);
+					self::setTeamAttributes($sprtIDOB, $manIDOB, $tmnameOB, $abtmOB, $sexOB, $lvlOB);
 				}
 			}			
 			
@@ -155,16 +155,17 @@
 		} // End of pullSpecificData function		
 
 		// Function to create team
-		function createTeam($lgID, $sprtID, $manID, $tmname, $cty, $st, $abtm)
+		function createTeam($sprtID, $manID, $tmname, $abtm, $lvl, $reg, $sex)
 		{
 			// Make the query:
-			$q = 'INSERT INTO teams (id_league, id_sport, id_manager, team_name, city, state, about) VALUES (?,?,?,?,?,?,?)';
+			$q = 'INSERT INTO teams (id_sport, id_manager, team_name, about, level_of_play, id_region, team_sex) 
+				VALUES (?,?,?,?,?,?,?)';
 
 			// Prepare the statement
 			$stmt = $this->dbc->prepare($q);
 			
 			// Bind the variables
-			$stmt->bind_param('iiissss', $lgID, $sprtID, $manID, $tmname, $cty, $st, $abtm);
+			$stmt->bind_param('iissiii', $sprtID, $manID, $tmname, $abtm, $lvl, $reg, $sex);
 			
 			// Execute the query:
 			$stmt->execute();
@@ -242,6 +243,7 @@
 
 		} // End of createTeam function
 		
+		// NEED TO MODIFY *********************************************************************
 		// Function to edit team
 		function editTeam($tmname, $abtm)
 		{
@@ -263,6 +265,7 @@
 			{
 				self::setTeamNM($tmname);
 				self::setTeamABT($abtm);
+				//self::setTeamAttributes($sprtIDOB, $manIDOB, $tmnameOB, $abtmOB, $sexOB, $lvlOB);
 				echo 'Your team was edited succesfully. ';
 			}
 			else

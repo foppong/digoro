@@ -35,7 +35,6 @@
 		$event = new Event();
 		$event->setDB($db);
 		$event->setEventID($eventid);
-		$event->pullEventData();
 		
 		// Check if user is authroized to make edit
 		if (!$event->isManager($userID)) {
@@ -43,69 +42,83 @@
 			exit();
 		}
 
-		$oldDate = $event->getEventAttribute('gdate');
-		$oldTime = $event->getEventAttribute('gtime');
-		$oldOpp = $event->getEventAttribute('opponent');
-		$oldVen = $event->getEventAttribute('venue');
-		$oldRes = $event->getEventAttribute('result');
-		$oldNote = $event->getEventAttribute('note');
+		// Validate event type is selected
+		if ($_POST['edit-event-sel-type']) {
+			$typ = $_POST['edit-event-sel-type'];
+		}
+		else {
+			echo 'Please select event type';
+			exit();
+		}
 						
 		// Validate event date
-		if ($_POST['dateEdit']) {
-			$bd = new DateTime($_POST['dateEdit']); // Convert js datepicker entry into format database accepts
+		if ($_POST['edit-event-sel-date']) {
+			$bd = new DateTime($_POST['edit-event-sel-date']); // Convert js datepicker entry into format database accepts
 			$gdfrmat = $bd->format('Y-m-d');
 		}
 		else {
-			$gdfrmat = $oldDate;
-		}		
+			echo 'Please enter a date';
+			exit();
+		}			
 		
-		// Validate event time is entered
-		if (!empty($_POST['time'])) {
-			$tm = $_POST['time'];
+		// Validate event time
+		if ($_POST['edit-event-time']) {
+			$evtm = $_POST['edit-event-time'];
 		}
 		else {
-			$tm = $oldTime;
+			echo 'Please enter a time';
+			exit();
 		}
 
 		// Validate opponent is entered
-		if (is_string($_POST['opp']) && !empty($_POST['opp'])) {
-			$opp = $_POST['opp'];
+		if ($_POST['edit-event-opname']) {
+			$opp = $_POST['edit-event-opname'];
 		}
 		else {
-			$opp = $oldOpp;
+			$opp = '';
 		}
 
 		// Validate a venue is entered
-		if (is_string($_POST['ven']) && !empty($_POST['ven'])) {
-			$ven = $_POST['ven'];
+		if ($_POST['edit-event-vname']) {
+			$ven = $_POST['edit-event-vname'];
 		}
 		else {
-			$ven = $oldVen; 
+			echo 'Please enter a venue name';
+			exit();
+		}
+
+		// Validate venue address is enetered
+		if ($_POST['edit-event-vadd']) {
+			$venadd = $_POST['edit-event-vadd'];
+		}
+		else {
+			echo 'Please enter a venue address';
+			exit();
+		}
+
+		// Validate note
+		if ($_POST['edit-event-note']) {
+			$note = $_POST['edit-event-note'];
+		}
+		else 
+		{
+			$note = ''; 
 		}
 
 		// Validate a result is selected
-		if (is_string($_POST['res']) && !empty($_POST['res'])) {
-			$res = $_POST['res'];
+		if ($_POST['edit-event-res']) {
+			$res = $_POST['edit-event-res'];
 		}
 		else {
-			$res = $oldRes; 
+			$res = ''; 
 		}
 
-		// Validate a note is entered
-		if (is_string($_POST['note']) && !empty($_POST['note'])) {
-			$note = $_POST['note'];
-		}
-		else {
-			$note = $oldNote; 
-		}	
 	
 		// Check if user entered information is valid before continuing to edit event
-		if ($gdfrmat && $tm)
-		{
-			$event->editEvent($userID, $gdfrmat, $tm, $opp, $ven, $res, $note);
+		if ($gdfrmat && $typ && $evtm && $ven && $venadd) {
+			$event->editEvent($userID, $gdfrmat, $evtm, $opp, $ven, $venadd, $res, $note, $typ);
 		}
-		else
-		{	// Errors in the user entered information
+		else {	// Errors in the user entered information
 			echo 'Please try again';
 			exit();
 		}

@@ -4,12 +4,14 @@
 	 * 	protected date
 	 * 	protected time
 	 * 	ptotected opponent
-	 * 	protected venue
+	 * 	protected venue_name
+	 *  protected venue_address
 	 *  protected result
 	 *  protected id_team
 	 * 	protected id_event
 	 *  protected dbc
 	 *  protected note
+	 *  protected type
 	 * 
 	 * Methods:
 	 *  setEventID()
@@ -27,7 +29,8 @@
 	class Event {
 	 	
 		// Declare the attributes
-		protected $gdate, $gtime, $opponent, $venue, $result, $id_team, $id_event, $dbc, $note;
+		protected $gdate, $gtime, $opponent, $v_name, $v_address, $result, 
+			$id_team, $id_event, $dbc, $note, $type;
 
 		// Constructor
 		function __construct() {}
@@ -45,15 +48,18 @@
 		}		
 		
 		// Function to set Event attributes
-		function setEventAttributes($tmID = 0, $gmdate = '', $gmtime = '', $opp ='', $ven = '', $res = '', $gnote = '')
+		function setEventAttributes($tmID = 0, $gmdate = '', $gmtime = '', $opp ='', $ven = '',
+			$venad = '', $res = '', $gnote = '', $typ = 0)
 		{
 			$this->id_team = $tmID;	
 			$this->gdate = $gmdate;
 			$this->gtime = $gmtime;
 			$this->opponent = $opp;
-			$this->venue = $ven;
+			$this->v_name = $ven;
+			$this->v_address = $venad;
 			$this->result = $res;
 			$this->note = $gnote;
+			$this->type = $typ;
 		}		
 
 		function getEventAttribute($attribute)
@@ -65,7 +71,7 @@
 		function pullEventData()
 		{
 			// Make the query to retreive event information from events table in database:		
-			$q = "SELECT id_team, date, time, opponent, venue, result, note
+			$q = "SELECT id_team, date, time, opponent, venue_name, venue_address, result, note, type
 				FROM events
 				WHERE id_event=? LIMIT 1";
 		
@@ -82,14 +88,14 @@
 			$stmt->store_result();
 			
 			// Bind the outbound variable:
-			$stmt->bind_result($id_teamOB, $gdateOB, $gtmOB, $oppOB, $venOB, $resOB, $noteOB);
+			$stmt->bind_result($id_teamOB, $gdateOB, $gtmOB, $oppOB, $venOB, $venadOB, $resOB, $noteOB, $typeOB);
 
 			// Found result
 			if ($stmt->num_rows == 1)
 			{	
 				while ($stmt->fetch())
 				{				
-					self::setEventAttributes($id_teamOB, $gdateOB, $gtmOB, $oppOB, $venOB, $resOB, $noteOB);
+					self::setEventAttributes($id_teamOB, $gdateOB, $gtmOB, $oppOB, $venOB, $venadOB, $resOB, $noteOB, $typeOB);
 				}
 			}			
 			
@@ -100,17 +106,18 @@
 		} // End of pullEventData function
 
 		// Function to add event to team schedule
-		function createEvent($teamID, $gmdate, $gtime, $opponent, $venue, $result, $note)
+		function createEvent($teamID, $gmdate, $gtime, $opponent, $ven, $venad, $note, $type)
 		{
 			// Make the query:
-			$q = 'INSERT INTO events (id_team, date, time, opponent, venue, result, note) 
-				VALUES (?,?,?,?,?,?,?)';
+			$q = 'INSERT INTO events (id_team, date, time, opponent, venue_name, 
+				venue_address, note, type) 
+				VALUES (?,?,?,?,?,?,?,?)';
 
 			// Prepare the statement
 			$stmt = $this->dbc->prepare($q);
 			
 			// Bind the variables
-			$stmt->bind_param('issssss', $teamID, $gmdate, $gtime, $opponent, $venue, $result, $note);
+			$stmt->bind_param('issssssi', $teamID, $gmdate, $gtime, $opponent, $ven, $venad, $note, $type);
 			
 			// Execute the query:
 			$stmt->execute();
@@ -132,17 +139,18 @@
 		
 							
 		// Edit Event Method
-		function editEvent($userID, $gmdate, $gtime, $opponent, $venue, $result, $note) 
+		function editEvent($userID, $gmdate, $gtime, $opponent, $ven, $venad, $result, $note, $type) 
 		{		
 			// Make query
-			$q = 'UPDATE events SET date=?, time=?, opponent=?, venue=?, result=?, note=?
+			$q = 'UPDATE events SET date=?, time=?, opponent=?, venue_name=?, 
+				venue_address=?, result=?, note=?, type=?
 				WHERE id_event=? LIMIT 1';
 	
 			// Prepare the statement
 			$stmt = $this->dbc->prepare($q); 
 	
 			// Bind the inbound variables:
-			$stmt->bind_param('ssssssi', $gmdate, $gtime, $opponent, $venue, $result, $note, $this->id_event);
+			$stmt->bind_param('sssssssii', $gmdate, $gtime, $opponent, $ven, $venad, $result, $note, $type, $this->id_event);
 					
 			// Execute the query:
 			$stmt->execute();
@@ -152,7 +160,7 @@
 				echo 'This event has been edited';
 
 				// Update attributes
-				self::setEventAttributes($this->id_team, $gmdate, $gtime, $opponent, $venue, $result, $note);
+				self::setEventAttributes($this->id_team, $gmdate, $gtime, $opponent, $ven, $venad, $result, $note, $type);
 			}
 			else 
 			{	// Either did not run ok or no updates were made
