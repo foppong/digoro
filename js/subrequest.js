@@ -14,7 +14,7 @@ var SUBREQUEST = {
 			dataType: 'json',
 			url: "../data/subrequest_team_data.php",
 			success: function(data) {
-				_team.buildTeamMenu(data);
+				_team.showTeams(data);
 			},
 			error: function() {
 				alert('teamMenu: an error occured!');
@@ -22,7 +22,7 @@ var SUBREQUEST = {
 		});	
   },
 	
-	buildTeamMenu: function( data ) {    
+	showTeams: function( data ) {    
 		var tmp = '';
 		var menu = $(".SR-myteams-menu");
 		menu.html(""); // clear out slection menu if it was previously populated
@@ -67,7 +67,7 @@ var SUBREQUEST = {
 
 	loadOpenSubRequests: function() {
 		var _subrequest = this;
-
+		
 		// AJAX call to retrieve list of events associated with team
 		$.ajax({
 	    type: "POST",

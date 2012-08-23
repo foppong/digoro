@@ -210,8 +210,7 @@
 			unset($hasher);
 
 			// Determine registration method
-			switch ($this->inv_case)
-			{
+			switch ($this->inv_case) {
 				case 1: // User is new to the system & not invited by manager
 					
 					// Create the activation code

@@ -47,7 +47,7 @@
 		$oldEventID = $subReq->getSRAttribute('id_event');
 		$oldSex = $subReq->getSRAttribute('sex_needed');
 		$oldExp = $subReq->getSRAttribute('experience_needed');
-		$oldReg = $subReq->getSRAttribute('region');
+		$oldReg = $subReq->getSRAttribute('id_region');
 
 		// Validate team is selected
 		if ($_POST['edit-SR-sel-teams'])

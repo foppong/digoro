@@ -32,7 +32,7 @@
 	$tm = $_SESSION['ctmID'];
 
 	// Make the Query:
-	$q = "SELECT id_event, DATE_FORMAT(date, '%a: %b %e, %Y'), time, opponent, venue_name, result
+	$q = "SELECT id_event, DATE_FORMAT(date, '%a: %b %e, %Y'), time, opponent, venue_name, result, type
 		FROM events
 		WHERE id_team=?
 		ORDER BY date ASC";
@@ -50,7 +50,7 @@
 	$stmt->store_result();
 		
 	// Bind the outbound variable:
-	$stmt->bind_result($idOB, $dateOB, $timeOB, $oppOB, $venOB, $resOB);
+	$stmt->bind_result($idOB, $dateOB, $timeOB, $oppOB, $venOB, $resOB, $typeOB);
 		
 	// If there are results to show.
 	if ($stmt->num_rows > 0)
@@ -58,12 +58,34 @@
 		// Fetch and print all records...
 		while ($stmt->fetch())
 		{		
+
+			// Translate event type data from database
+			switch ($typeOB) {
+				case 1: // Event is a game
+					$type = 'Game';
+					break;
+				
+				case 2: // Event is a practice
+					$type = 'Practice';
+					break;
+				
+				case 3: // Event is a scrimmage
+					$type = 'Scrimmage';
+					break;
+					
+				default: 
+					$type = 'Game';
+					break;
+			}
+
 			$json[] = array(
+			'Type' => $type,
 			'Date' => $dateOB,
 			'Time' => $timeOB,
 			'Opponent' => stripslashes($oppOB),
 			'Venue' => stripslashes($venOB),
 			'Result' => $resOB,
+			'Details' => '<button type="button" class="view_event btn btn-mini" value=' . $idOB . '>View</button>',
 			'Edit' => '<button type="button" class="edit_event btn btn-mini" value=' . $idOB . '>Edit</button>',
 			'Delete' => '<button type="button" class="delete_event btn btn-mini" value=' . $idOB . '>Delete</button>');
 		}	// End of WHILE loop

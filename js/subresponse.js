@@ -50,8 +50,8 @@ var RESPONDSR = {
  	loadDialog: function() { 
 		$("#Respond-SubRequest-Form").dialog({
 			autoOpen: false,
-			height: 300,
-			width: 350,
+			height: 400,
+			width: 400,
 			modal: true,
 			buttons: {
 				"I can play!": function() {
@@ -117,14 +117,13 @@ var RESPONDSR = {
 	  $(data).each(function(key, val) {
 			var i = 0;
 	  	for (var propertyName in val) {
-	    	console.log(val[propertyName]);
 	    	teamInfo_array[i] = val[propertyName];
 	    	i++;
 	    }
 	  });	
 		
 		$( '#Respond-SubRequest-Form form #dynamicSRinfo' )
-			.append( '<p>Team Name: ' + teamInfo_array[0] +'</p>' )
+			.append( '<p>Team Name: ' + teamInfo_array[0] + '</p>' )
 			.append( '<p>Level of Play: ' + teamInfo_array[1] + '</p>')
 			.append( '<p>Venue Name: ' + teamInfo_array[2] + '</p>')
 			.append( '<p>Venue Address: ' + teamInfo_array[3] + '</p>')

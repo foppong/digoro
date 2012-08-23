@@ -28,14 +28,12 @@
 	require_once MYSQL2;
 
 	if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
+		
 		// Validate team is selected
-		if ($_POST['create-SR-sel-teams'])
-		{
+		if ($_POST['create-SR-sel-teams']) {
 			$tmID = $_POST['create-SR-sel-teams'];
 		}
-		else 
-		{
+		else {
 			echo 'Please select a team.';
 			exit();
 		}
@@ -104,7 +102,7 @@
 	// Delete objects
 	unset($team);
 	unset($manager);
-		
+	
 	// Close the connection:
 	$db->close();
 	unset($db);	

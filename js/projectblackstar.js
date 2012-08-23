@@ -127,7 +127,7 @@ var PLAYER = {
 	        	$( '.status' ).text( 'Update failed. Try again.' ).slideDown( 'slow' );
 	     	},
 	      	success: function( data ) {   
-	        	ROSTER.loadRoster(); //Call to roster.js
+	        	ROSTER.loadRoster(); //Call to roster.js to refresh table
 	        	$( '.status' ).text( data ).slideDown( 'slow' );
 	        	MISCFUNCTIONS.clearForm( '#AddPlayerForm form' );
 	      	},
@@ -507,7 +507,7 @@ var LEAGUE = {
 var FINDSUB = {
 
  	loadDialog: function() { 
-		$("#Create-SubRequest-Form").dialog({
+		$( "#Create-SubRequest-Form" ).dialog({
 			autoOpen: false,
 			height: 300,
 			width: 350,
@@ -563,6 +563,8 @@ var FINDSUB = {
 	// add subrequest information to database from dialog form
   create: function() { 
    	var form_data = $( '#Create-SubRequest-Form form' ).serialize();
+//		var form_data = { idSubReq: '5' };
+
 	   $.ajax({
 	     	type: "POST",
 	     	url: "../manager/create_subrequest.php",
@@ -571,9 +573,9 @@ var FINDSUB = {
 	       	$( '.status' ).text( 'Update failed. Try again.' ).slideDown( 'slow' );
 	    	},
 	     	success: function( data ) {   
-	       	SUBREQUEST.loadOpenSubRequests(); //Call to subrequest.js
+	       	SUBREQUEST.loadOpenSubRequests(); //Call to subrequest.js to refresh table
 	       	$( '.status' ).text( data ).slideDown( 'slow' );	
-	       	MISCFUNCTIONS.clearForm( '#Create-SubRequest-Form form' );
+	       	//MISCFUNCTIONS.clearForm( '#Create-SubRequest-Form form' );
 	     	},
 	     	complete: function() {
 	       	setTimeout(function() {
@@ -596,7 +598,7 @@ var FINDSUB = {
 	    	$( '.status' ).text( 'Edit failed. Try again.' ).slideDown( 'slow' );
 	    },
 	    success: function( data ) {   
-				SUBREQUEST.loadOpenSubRequests(); //Call to subrequest.js
+				SUBREQUEST.loadOpenSubRequests(); //Call to subrequest.js to refresh table
 	    	$( '.status' ).text( data ).slideDown( 'slow' );
 	      MISCFUNCTIONS.clearForm( '#Edit-SubRequest-Form form' );    
 	    },

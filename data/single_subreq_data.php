@@ -35,9 +35,8 @@
 
 		$subReqID = $_POST['idSubReq'];
 
-	
 		// Make the Query to find subrequest, event, and team info 
-		$q = "SELECT s.id_team, s.sex_needed, DATE_FORMAT(e.date, '%a: %b %e, %Y'), tm.team_name, e.time
+		$q = "SELECT tm.team_name, tm.level_of_play, e.venue_name, e.venue_address
 			FROM subrequests AS s 
 			INNER JOIN teams AS tm USING (id_team)		
 			INNER JOIN events AS e USING (id_event)
@@ -56,7 +55,7 @@
 		$stmt->store_result();
 				
 		// Bind the outbound variable:
-		$stmt->bind_result($idtmOB, $sexOB, $dateOB, $tmnameOB, $timeOB);
+		$stmt->bind_result($tmnameOB, $tmlvlOB, $venOB, $venaddOB);
 				
 		// If there are results to show.
 		if ($stmt->num_rows == 1)
@@ -66,12 +65,33 @@
 					
 			// Fetch and put results in the JSON array...
 			while ($stmt->fetch())
-			{			
+			{
+				
+			// Translate level of play data from database
+			switch ($tmlvlOB) {
+				case 1: //  Recreational
+					$tmlevel = 'Recreational';
+					break;
+				
+				case 2: // Intermediate
+					$tmlevel = 'Intermediate';
+					break;
+				
+				case 3: // Advanced
+					$tmlevel = 'Advanced';
+					break;
+					
+				default: 
+					$tmlevel = 'Recreational';
+					break;
+			}				
+				
+							
 				$json[] = array(
-				'Team' => $tmnameOB,
-				'Sex Needed' => $sexOB,
-				'Event Date' => $dateOB,
-				'Event Time' => $timeOB);
+				'Team Name' => $tmnameOB,
+				'Team Level' => $tmlevel,
+				'Venue Name' => $venOB,
+				'Venue Addr' => $venaddOB);
 			}	// End of WHILE loop
 		
 			// Send the JSON data:
@@ -84,16 +104,6 @@
 			// Close the connection:
 			$db->close();
 			unset($db);
-		}
-		else 
-		{	// No registered users
-	
-			$json[] = array(
-				'<p class="error">You have no subrequests open. Click the create subrequest to create one.</p><br />');
-				
-			// Send the JSON data:
-			echo json_encode($json);
-	
 		}
 	}
 

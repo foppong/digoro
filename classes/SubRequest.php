@@ -48,7 +48,7 @@
 			$this->id_event = $evntID;						
 			$this->sex_needed = $sex;
 			$this->experience_needed = $exp;
-			$this->region = $reg;
+			$this->id_region = $reg;
 		}
 
 		// Function to get specific SubRequest object attribute
@@ -203,7 +203,7 @@
 		// Function to pull current SubRequest data from database & set attributes
 		function pullSubReqData() {
 			// Make the query
-			$q = 'SELECT id_manager,id_team,id_event,sex_needed,experience_needed,region
+			$q = 'SELECT id_manager,id_team,id_event,sex_needed,experience_needed,id_region
 				FROM subrequests WHERE id_subrequest=? LIMIT 1';
 				
 			// Prepare the statement

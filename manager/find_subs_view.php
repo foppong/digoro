@@ -66,21 +66,11 @@
 				</div>
 
 		<hr>
-		<div>
-		<h4>Open SubRequests</h4>
-		<!-- Load ajax open subrequest data here -->
-		<table class="table table-striped table-bordered table-condensed" id="open-subrequests" width="100%">
-		</div>
-		
-		<div>
-		<h4>Responses</h4>
-		<!-- Load ajax subrequest responses data here -->
-		<table class="table table-striped table-bordered table-condensed" id="subrequests-responses" width="100%">		
-		</div>
+
 
 
 		<!-- Modal Dialog Form -->
-		<div id="Create-SubRequest-Form" title="Create SubRequest" class="span4">	
+		<div id="Create-SubRequest-Form" title="Create SubRequest">	
 			<form method="post">
 				
 				<select class="span3 SR-myteams-menu" name="create-SR-sel-teams" id="create-SR-sel-teams" onchange="SUBREQUEST.showEvents(this.value)"></select>	
@@ -108,7 +98,6 @@
 				<select class="span4" name="create-SR-sel-reg" id="create-SR-sel-reg">
 					<option value="">-Select Region-</option>
 					<option value="1">San Francisco/ Bay Area</option>
-					<option value="2">Seoul Korea/ Metro Area</option>
 				</select>			
 			</form>
 		</div>
@@ -141,7 +130,6 @@
 				<select class="span4" name="edit-SR-sel-reg" id="edit-SR-sel-reg">
 					<option value="">-Select Region-</option>
 					<option value="1">San Francisco/ Bay Area</option>
-					<option value="2">Seoul Korea/ Metro Area</option>
 				</select>			
 			</form>
 		</div>
@@ -151,7 +139,7 @@
 				<p>Are you sure you want to cancel this subrequest?</p>
 			</form>
 		</div>
-
+<!--
 		<div id="Respond-SubResponse-Form" title="Respond" class="span4">	
 			<form method="post">
 				<label for="respond-SRR-comment">Enter any comments:</label>
@@ -159,8 +147,21 @@
 					placeholder="ex. please bring a red shirt. thanks!"></textarea>			
 			</form>
 		</div>
+-->
 
+		<!-- Keep these on the bottom of the page or gives problems with dialog boxes capturing form -->
+		<div>
+		<h4>Open SubRequests</h4>
+		<!-- Load ajax open subrequest data here -->
+		<table class="table table-striped table-bordered table-condensed" id="open-subrequests" width="100%">
+		</div>
 		
+		<div>
+		<h4>Responses</h4>
+		<!-- Load ajax subrequest responses data here -->
+		<table class="table table-striped table-bordered table-condensed" id="subrequests-responses" width="100%">		
+		</div>
+				
 	</body>
 </html>
 
