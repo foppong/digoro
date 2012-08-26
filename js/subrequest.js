@@ -135,7 +135,7 @@ var SUBREQUEST = {
 	  	
 		$( '#edit-SR-sel-teams' ).val( subReqInfo_array[0] );
 		_subrequest.showEvents( subReqInfo_array[0] );
-alert(ubReqInfo_array[0]);
+alert(subReqInfo_array[0]);
 		// Hack to allow time for dynamic selection to me made
 		setTimeout(function () {
 			$( '#edit-SR-sel-events' ).val( subReqInfo_array[1] );		
