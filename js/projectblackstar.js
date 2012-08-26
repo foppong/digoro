@@ -72,6 +72,7 @@ var MEMBER = {
 					// Add member to database
 					MEMBER.add();					
 					$( this ).dialog( "close" );
+	       	MISCFUNCTIONS.clearForm( '#AddMemberForm form' );
 				},
 				"Save and Add Another": function() {
 					MEMBER.add();
