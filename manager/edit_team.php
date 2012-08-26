@@ -30,83 +30,96 @@
 	// Assign Database Resource to object
 	$manager->setDB($db);
 
-	if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z'])) // Confirmation that form has been submitted	
+	if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['z'])) // Confirmation that form has been submitted	
 	{
 		$teamid = $_POST['z'];
 
 		// Create team object for use & pull latest data from database & initially set attributes
 		$team = new Team();
 		$team->setDB($db);
-		$team->setTeamID($teamid);
-		$team->pullTeamData();
 		
 		// Check if user is authroized to make edit
-		if (!$team->isManager($userID))
+		if (!$team->isManager($userID, $teamid))
 		{
 			echo 'You have to be the manager to make these changes.';
 			exit();
 		}
 
-		// Collect current attributes
-		$oldname = $team->getTeamAttribute("tmname");
-		$oldabtm = $team->getTeamAttribute("about");
-
-		// Validate team name
-		if ($_POST['tname'])
-		{
-			$tname = $_POST['tname'];	
-		}
-		else 
-		{
-			$tname = $oldname;
-		}		
-	
-		// Validate about team information
-		if ($_POST['abouttm'])
-		{
-			$abtm = trim($_POST['abouttm']);
-		}
-		else 
-		{
-			$abtm = $oldabtm;
-		}
-
-		// Validate transfer decision
-		if (isset($_POST['transfer'])) {
-			$transfer = $_POST['transfer'];	
+		// Assume invalid values:
+		$sp = $tn = $sex = $reg = $lvl = $e = FALSE;
+				
+		// Validate a sport is selected
+		if ($_POST['edit-team-sel-sport']) {
+			$sp = $_POST['edit-team-sel-sport'];
 		}
 		else {
-			$transfer = FALSE;
+			echo 'Please select a sport.';
+			exit(); 
 		}
 
-		// Validate email
-		if (filter_var($_POST['email'], FILTER_VALIDATE_EMAIL))
-		{
-			$e = $_POST['email'];
+		// Validate Team name entered
+		if ($_POST["edit-team-name"]) {
+			$tn = $_POST["edit-team-name"];
 		}
-		else 
-		{
-			$e = FALSE;
-		}
-		
-		// Check if user entered information is valid before continuing to edit game
-		if ($tname) {
-			$team->editTeam($tname, $abtm);
-		}
-		else
-		{	// Errors in the user entered information
-			echo 'Please try again';
+		else {
+			echo 'Please enter a Team name.';
 			exit();
 		}
 
-		// Check if transfer option is set and correct
-		if ($transfer == 'Yes' && $e) {
-			$team->transferTeam($e);
+		// Validate Team sex selected
+		if ($_POST['edit-team-sel-sex']) {
+			$sex = $_POST['edit-team-sel-sex'];
+		}
+		else {
+			echo 'Please enter your teams sex.';
+			exit();
 		}
 
+		// Validate Team region selected
+		if ($_POST['edit-team-sel-region']) {
+			$reg = $_POST['edit-team-sel-region'];
+		}
+		else {
+			echo 'Please enter your teams region.';
+			exit();
+		}
+
+		// Validate Team level of play selected
+		if ($_POST['edit-team-sel-level-play']) {
+			$lvl = $_POST['edit-team-sel-level-play'];
+		}
+		else {
+			echo 'Please enter your teams level of play.';
+			exit();
+		}
+
+		// Validate email address
+		if (filter_var($_POST['edit-team-email'], FILTER_VALIDATE_EMAIL)) {
+			$e = $_POST['edit-team-email'];
+		}
+		else {
+			echo 'Please enter valid email address';
+			exit();
+		}
+		
+		// Validate about team information
+		if ($_POST['edit-team-abouttm']) {
+			$abtm = trim($_POST['edit-team-abouttm']);
+		}
+		else {
+			$abtm = '';
+		}
+		
+		// Check if user entered information is valid before continuing to edit game
+		if ($userID && $sp && $tn && $sex && $reg && $lvl && $e) {
+			$team->editTeam($sp, $tn, $abtm, $lvl, $reg, $sex, $e, $teamid);
+		}
+		else {	// Errors in the user entered information
+			echo 'Please try again';
+			exit();
+		}
 	}
-	else 
-	{
+	else {
 		// No valid ID, kill the script.
 		echo '<p class="error">This page has been accessed in error.</p>';
 		exit();		

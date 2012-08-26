@@ -32,7 +32,8 @@
 	$tm = $_SESSION['ctmID'];	
 
 	// Make the Query:
-	$q = "SELECT CONCAT(u.first_name, ' ', u.last_name) AS name, u.gender, u.email, p.id_member, p.position, p.jersey_number
+	$q = "SELECT CONCAT(u.first_name, ' ', u.last_name) AS name, u.sex, 
+		u.email, p.id_member, CONCAT(p.primary_position, ', ',p.secondary_position) AS pos, p.jersey_number
 		FROM members AS p INNER JOIN users AS u
 		USING (id_user)
 		WHERE p.id_team=?";
@@ -61,14 +62,30 @@
 		// Fetch and put results in the JSON array...
 		while ($stmt->fetch())
 		{								
+				
+			// Translate sex data from database
+			switch ($genOB) {
+				case 1: //  Female
+					$sex = 'Female';
+					break;
+				
+				case 2: // Male
+					$sex = 'Male';
+					break;
+					
+				default: 
+					$sex = 'Undefined';
+					break;
+			}	
+
 			$json[] = array(
 			'Name' => $nOB,
 			'Email' => $eOB,
-			'Gender' => $genOB,
+			'Sex' => $sex,
 			'Position' => $posOB,
 			'Jersey' => $jnOB,
-			'Edit' => '<button type="button" class="edit_player btn btn-mini" value=' . $idOB . '>Edit</button>',
-			'Delete' => '<button type="button" class="delete_player btn btn-mini" value=' . $idOB . '>Delete</button>');
+			'Edit' => '<button type="button" class="edit_member btn btn-mini" value=' . $idOB . '>Edit</button>',
+			'Delete' => '<button type="button" class="delete_member btn btn-mini" value=' . $idOB . '>Delete</button>');
 		}	// End of WHILE loop
 	
 		// Send the JSON data:

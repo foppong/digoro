@@ -23,7 +23,7 @@ var ROSTER = {
 				_roster.buildTable(data);
 			},
 			error: function() {
-				alert('an error occured!');
+				alert('load roster: error occured!');
 			}
 		});	
   	},
@@ -32,7 +32,7 @@ var ROSTER = {
     	var form_data = $('form').serialize();
 	    $.ajax({
 	      	type: "POST",
-	      	url: "../manager/edit_player.php",
+	      	url: "../manager/edit_member.php",
 	      	data: form_data, // Data that I'm sending
 	      	error: function() {
 	        	alert("Error");
@@ -64,7 +64,48 @@ var ROSTER = {
 	            tr.append('<td>' + val[propertyName] + '</td>');
 	        }		
    		});
-	}
+	},
+	
+  pullMemberData: function ( data ) {
+  	var _roster = this;
+		var data_send = { memberID: idmember };
+
+	  $.ajax({
+	  	type: "POST",
+	    dataType: 'json',
+	    url: "../data/single_member_data.php",
+	    data: data_send, // Data that I'm sending
+	    error: function() {
+	      alert('Error: Pull Member Data failed');
+	   	},
+	    success: function( data ) { 
+				_roster.make_Edit_Member_Form_sticky( data );
+	    },
+	    cache: false
+   	});
+	},
+
+  make_Edit_Member_Form_sticky: function( data ) {
+
+		var eventInfo_array = new Array(); // set up array to store data pulled from database
+	  $(data).each(function(key, val) {
+			var i = 0;
+	  	for (var propertyName in val) {
+	    	eventInfo_array[i] = val[propertyName];
+	    	i++;
+	    }
+	  });	
+	  	
+		$( '#edit-member-fname' ).val( eventInfo_array[0] );
+		$( '#edit-member-lname' ).val( eventInfo_array[1] );
+		$( '#edit-member-sel-sex' ).val( eventInfo_array[2] );
+		$( '#edit-member-ppos' ).val( eventInfo_array[3] );
+		$( '#edit-member-spos' ).val( eventInfo_array[4] );
+		$( '#edit-member-jernum' ).val( eventInfo_array[5] );
+  }	
+	
+	
+	
 }
 
 

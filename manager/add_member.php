@@ -38,21 +38,21 @@
 		$team = new Team();
 		$team->setDB($db);
 		$team->setTeamID($ctmID);
-		$team->pullTeamData();
+		//$team->pullTeamData();
 		
 		// Check if user is authroized to make edit
-		if (!$team->isManager($userID)) {
+		if (!$team->isManager($userID, $ctmID)) {
 			echo 'You have to be the manager to add a member.';
 			exit();
 		}
 		
 		// Assume invalid values:
-		$fn = $ln = $e = FALSE;
+		$fn = $ln = $sex = $e = $ppos = FALSE;
 
 		// Validate firstname
-		if (preg_match('/^[A-Z \'.-]{2,20}$/i', $_POST['first_name']))
+		if (preg_match('/^[A-Z \'.-]{2,20}$/i', $_POST['add-member-fname']))
 		{
-			$fn = $_POST['first_name'];
+			$fn = $_POST['add-member-fname'];
 		}
 		else 
 		{
@@ -61,20 +61,31 @@
 		}
 	
 		// Validate lastname
-		if (preg_match('/^[A-Z \'.-]{2,40}$/i', $_POST['last_name']))
+		if (preg_match('/^[A-Z \'.-]{2,40}$/i', $_POST['add-member-lname']))
 		{
-			$ln = $_POST['last_name'];
+			$ln = $_POST['add-member-lname'];
 		}
 		else 
 		{
 			echo "Please enter a valid last name";
 			exit();
 		}
+
+		// Validate sex is selected
+		if ($_POST['add-member-sel-sex'])
+		{
+			$sex = $_POST['add-member-sel-sex'];
+		}
+		else 
+		{
+			echo 'Please select a sex.';
+			exit();
+		}
 	
 		// Validate email
-		if (filter_var($_POST['email'], FILTER_VALIDATE_EMAIL))
+		if (filter_var($_POST['add-member-email'], FILTER_VALIDATE_EMAIL))
 		{
-			$e = $_POST['email'];
+			$e = $_POST['add-member-email'];
 		}
 		else 
 		{
@@ -82,12 +93,48 @@
 			exit();
 		}
 
-		// Checks if name, email, and league are valid before proceeding.
-		if ($ctmID && $fn && $ln && $e)
+		// Validate primary position is entered
+		if ($_POST['add-member-ppos'])
 		{
+			$ppos = $_POST['add-member-ppos'];
+		}
+		else 
+		{
+			echo "Please enter a primary position";
+			exit();
+		}
+
+		// Validate secondary position
+		if ($_POST['add-member-spos'])
+		{
+			$spos = $_POST['add-member-spos'];
+		}
+		else 
+		{
+			$spos = '';
+		}
+
+		// Validate jersey number input
+		if (filter_var($_POST['add-member-jernum'], FILTER_VALIDATE_INT)) {
+			$jnumb = $_POST['add-member-jernum'];
+		}
+		else {
+			$jnumb = 0;
+		}
+
+		// Validate invite selection
+		if ($_POST['add-member-invite']) {
+			$invite = $_POST['add-member-invite'];
+		}
+		else {
+			$invite = 0;
+		}
+
+		// Checks if name, email, and league are valid before proceeding.
+		if ($ctmID && $fn && $ln && $sex && $e && $ppos) {
 			$member = new Member();
 			$member->setDB($db);
-			$member->createMember($e, $ctmID, $fn, $ln);
+			$member->createMember($e, $ctmID, $fn, $ln, $sex, $ppos, $spos, $jnumb, $invite);
 		}
 		else 
 		{									

@@ -27,7 +27,7 @@
 	// Need the database connection:
 	require_once MYSQL2;
 
-	if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z'])) // Confirmation that form has been submitted	
+	if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['z'])) // Confirmation that form has been submitted	
 	{
 		// Assign variable from FORM submission (hidden id field)	
 		$memberid = $_POST['z'];
@@ -36,15 +36,14 @@
 		$member = new Member();
 		$member->setDB($db);
 		$member->setMembID($memberid);
-		$member->pullMemberData();
 
 		// Check if user is authroized to make edit
-		if (!$member->isManager($userID)) {
+		if (!$member->isManager($userID, $memberid)) {
 			echo 'You have to be the manager to delete a member.';
 			exit();
 		}
 
-		$member->deleteMember();
+		$member->deleteMember($memberid);
 	}
 	else 
 	{

@@ -9,6 +9,7 @@
 	 *  protected level
 	 *  protected id_region
 	 *  protected team_sex
+	 *  protected team_email
 	 *  protected dbc
 	 * 
 	 * Methods:
@@ -32,7 +33,7 @@
 	 	
 		// Declare the attributes
 		protected $tmname, $about, $id_team, $id_sport, $id_manager, $level, 
-			$id_region, $team_sex, $dbc;
+			$id_region, $team_sex, $team_email, $dbc;
 
 		// Constructor
 		function __construct() {}
@@ -48,7 +49,7 @@
 		{
 			$this->id_team = $teamID;
 		}
-
+/*
 		// Function to set team name
 		function setTeamNM($attribute)
 		{
@@ -60,10 +61,10 @@
 		{
 			$this->about = $attribute;
 		}
-		
+*/		
 		// Function to set Team attributes
 		function setTeamAttributes($sprtID = 0, $manID = 0, $tmname ='', 
-			$abtm = '', $lvl = '', $sex = '', $reg = 0)
+			$abtm = '', $lvl = '', $sex = '', $reg = 0, $tmemail = '')
 		{
 			$this->id_sport = $sprtID;
 			$this->id_manager = $manID;						
@@ -72,6 +73,7 @@
 			$this->level = $lvl;
 			$this->team_sex = $sex;
 			$this->id_region = $reg;
+			$this->team_email = $tmemail;
 		}
 
 		// Function to get specific class attribute
@@ -84,7 +86,7 @@
 		function pullTeamData()
 		{
 			// Make the query
-			$q = 'SELECT id_sport,id_manager,team_name,about,level_of_play,id_region,team_sex
+			$q = 'SELECT id_sport,id_manager,team_name,about,level_of_play,id_region,team_sex,team_email
 				FROM teams WHERE id_team=? LIMIT 1';
 				
 			// Prepare the statement
@@ -100,17 +102,18 @@
 			$stmt->store_result();
 			
 			// Bind the outbound variables
-			$stmt->bind_result($sprtIDOB, $manIDOB, $tmnameOB, $abtmOB, $lvlOB, $regOB, $sexOB);
+			$stmt->bind_result($sprtIDOB, $manIDOB, $tmnameOB, $abtmOB, $lvlOB, $regOB, $sexOB, $tmemailOB);
 
 			// Found result
 			if ($stmt->num_rows == 1)
 			{	
 				while ($stmt->fetch())
 				{				
-					self::setTeamAttributes($sprtIDOB, $manIDOB, $tmnameOB, $abtmOB, $sexOB, $lvlOB);
+					self::setTeamAttributes($sprtIDOB, $manIDOB, $tmnameOB, $abtmOB, 
+						$lvlOB, $sexOB, $regOB, $tmemailOB);
 				}
 			}			
-			
+		
 			// Close the statement
 			$stmt->close();
 			unset($stmt);
@@ -154,18 +157,20 @@
 					
 		} // End of pullSpecificData function		
 
+		
 		// Function to create team
-		function createTeam($sprtID, $manID, $tmname, $abtm, $lvl, $reg, $sex)
+		function createTeam($sprtID, $manID, $tmname, $abtm, $lvl, $reg, $sex, $tmemail)
 		{
 			// Make the query:
-			$q = 'INSERT INTO teams (id_sport, id_manager, team_name, about, level_of_play, id_region, team_sex) 
-				VALUES (?,?,?,?,?,?,?)';
+			$q = 'INSERT INTO teams (id_sport, id_manager, team_name, about, 
+				level_of_play, id_region, team_sex, team_email) 
+				VALUES (?,?,?,?,?,?,?,?)';
 
 			// Prepare the statement
 			$stmt = $this->dbc->prepare($q);
 			
 			// Bind the variables
-			$stmt->bind_param('iissiii', $sprtID, $manID, $tmname, $abtm, $lvl, $reg, $sex);
+			$stmt->bind_param('iissiiis', $sprtID, $manID, $tmname, $abtm, $lvl, $reg, $sex, $tmemail);
 			
 			// Execute the query:
 			$stmt->execute();
@@ -242,20 +247,21 @@
 			unset($stmt);
 
 		} // End of createTeam function
+
 		
-		// NEED TO MODIFY *********************************************************************
 		// Function to edit team
-		function editTeam($tmname, $abtm)
+		function editTeam($sprtID, $tmname, $abtm, $lvl, $reg, $sex, $tmemail, $teamid)
 		{
 			// Update the user's info in the members' table in database
-			$q = 'UPDATE teams SET team_name=?, about=?
+			$q = 'UPDATE teams SET id_sport=?, team_name=?, about=?, level_of_play=?, id_region=?,
+				team_sex=?, team_email=?
 				WHERE id_team=? LIMIT 1';
-
+				
 			// Prepare the statement
 			$stmt = $this->dbc->prepare($q); 
 			
 			// Bind the inbound variables:
-			$stmt->bind_param('ssi', $tmname, $abtm, $this->id_team);
+			$stmt->bind_param('issiiisi', $sprtID, $tmname, $abtm, $lvl, $reg, $sex, $tmemail, $teamid);
 				
 			// Execute the query:
 			$stmt->execute();
@@ -263,9 +269,6 @@
 			// Print a message based upon result:
 			if ($stmt->affected_rows == 1)
 			{
-				self::setTeamNM($tmname);
-				self::setTeamABT($abtm);
-				//self::setTeamAttributes($sprtIDOB, $manIDOB, $tmnameOB, $abtmOB, $sexOB, $lvlOB);
 				echo 'Your team was edited succesfully. ';
 			}
 			else
@@ -276,7 +279,7 @@
 		} // End of editTeam function
 
 		// Function to transfer Manager role
-		function transferTeam($newMangEmail)
+		function transferTeam($newMangEmail, $teamid)
 		{
 			// Make the query:
 			$q = 'SELECT p.id_user
@@ -288,7 +291,7 @@
 			$stmt = $this->dbc->prepare($q);
 			
 			// Bind the inbound variable:
-			$stmt->bind_param('si', $newMangEmail, $this->id_team);
+			$stmt->bind_param('si', $newMangEmail, $teamid);
 			
 			// Execute the query:
 			$stmt->execute();
@@ -311,7 +314,7 @@
 					$stmt2 = $this->dbc->prepare($q);
 					
 					// Bind the inbound variables:
-					$stmt2->bind_param('ii', $iduserOB, $this->id_team);
+					$stmt2->bind_param('ii', $iduserOB, $teamid);
 					
 					// Execute the query:
 					$stmt2->execute();
@@ -342,7 +345,7 @@
 		}
 
 		// Functon to delete team from database
-		function deleteTeam()
+		function deleteTeam($teamid)
 		{
 			// Make the query	
 			$q = "DELETE FROM teams WHERE id_team=? LIMIT 1";
@@ -351,7 +354,7 @@
 			$stmt = $this->dbc->prepare($q);
 
 			// Bind the inbound variable:
-			$stmt->bind_param('i', $this->id_team);
+			$stmt->bind_param('i', $teamid);
 
 			// Execute the query:
 			$stmt->execute();
@@ -373,7 +376,7 @@
 		} // End of deleteTeam function	
 		
 		// Function to check if user is the manager
-		function isManager($userID)
+		function isManager($userID, $teamid)
 		{
 			// Make the query to retreive manager id associated with team:		
 			$q = "SELECT id_manager FROM teams
@@ -383,7 +386,7 @@
 			$stmt = $this->dbc->prepare($q);
 			
 			// Bind the inbound variables:
-			$stmt->bind_param('i', $this->id_team);
+			$stmt->bind_param('i', $teamid);
 			
 			// Exeecute the query
 			$stmt->execute();
@@ -433,7 +436,7 @@
 			$stmt->execute();
 		
 			if ($stmt->affected_rows == 1) {
-				echo 'You have successfully removed yourself from ' . $this->tmname . '. ';
+				echo 'You have successfully removed yourself from the team';
 			}
 			else {
 				echo 'The removal did not work. Pleaes contact the system admistrator. ';

@@ -73,7 +73,8 @@
 		<div id="Create-SubRequest-Form" title="Create SubRequest">	
 			<form method="post">
 				
-				<select class="span3 SR-myteams-menu" name="create-SR-sel-teams" id="create-SR-sel-teams" onchange="SUBREQUEST.showEvents(this.value)"></select>	
+				<select class="span3 SR-myteams-menu" name="create-SR-sel-teams" id="create-SR-sel-teams" 
+					onchange="SUBREQUEST.showEvents(this.value)"></select>	
 		
 				<select class="span3 SR-teamevents-menu" name="create-SR-sel-events" id="create-SR-sel-events"></select>
 		

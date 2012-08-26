@@ -7,7 +7,7 @@
 	 *  protected city
 	 *  protected state
 	 *  protected zp (zip code)
-	 *  protected gd (gender)
+	 *  protected gd (sex)
 	 * 	protected email
 	 *  protected pass
 	 *  protected rdate (registration date)
@@ -168,7 +168,7 @@
 		{
 			// Make the query
 			$q = 'SELECT first_name,last_name,role,city,state,zipcode,
-				gender,email,pass,registration_date,birth_date,phone_num,
+				sex,email,pass,registration_date,birth_date,phone_num,
 				digoro_score,invited,default_teamID,login_before
 				FROM users WHERE id_user=? LIMIT 1';
 					
@@ -245,7 +245,7 @@
 		// Function to update user informatin in database
 		function updateUserAcct($e, $fn, $ln, $cty, $st, $zp, $gd, $bdfrmat, $pnumb) {
 			// Update the user's info in the database
-			$q = 'UPDATE users SET email=?, first_name=?, last_name=?, city=?, state=?, zipcode=?, gender=?, birth_date=?, phone_num=?
+			$q = 'UPDATE users SET email=?, first_name=?, last_name=?, city=?, state=?, zipcode=?, sex=?, birth_date=?, phone_num=?
 				WHERE id_user=? LIMIT 1';
 
 			// Prepare the statement

@@ -27,7 +27,7 @@
 	// Establish database connection
 	require_once MYSQL2;
 
-	if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z'])) // Confirmation that form has been submitted	
+	if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['z'])) // Confirmation that form has been submitted	
 	{
 		$subReqid = $_POST['z'];
 
@@ -35,19 +35,6 @@
 		$subReq = new SubRequest();
 		$subReq->setDB($db);
 		$subReq->setSubReqID($subReqid);
-		$subReq->pullSubReqData();
-		
-		// Check if user is authroized to make edit
-		if (!$subReq->isManager($userID)) {
-			echo 'You have to be the manager to edit.';
-			exit();
-		}
-
-		$oldTeamID = $subReq->getSRAttribute('id_team');
-		$oldEventID = $subReq->getSRAttribute('id_event');
-		$oldSex = $subReq->getSRAttribute('sex_needed');
-		$oldExp = $subReq->getSRAttribute('experience_needed');
-		$oldReg = $subReq->getSRAttribute('id_region');
 
 		// Validate team is selected
 		if ($_POST['edit-SR-sel-teams'])
@@ -56,7 +43,14 @@
 		}
 		else 
 		{
-			$tmID = $oldTeamID;
+			echo 'Please select a team.';
+			exit();
+		}
+
+		// Check if user is authroized to make edit
+		if (!$subReq->isManager($userID, $tmID)) {
+			echo 'You have to be the manager to edit.';
+			exit();
 		}
 	
 		// Validate game is selected
@@ -66,7 +60,8 @@
 		}
 		else 
 		{
-			$evntID = $oldEventID;
+			echo 'Please select an event.';
+			exit();
 		}
 
 		// Validate sex is selected
@@ -76,7 +71,8 @@
 		}
 		else 
 		{
-			$sex = $oldSex;
+			echo 'Please select a sex.';
+			exit();
 		}
 
 		// Validate experience is selected
@@ -86,7 +82,8 @@
 		}
 		else 
 		{
-			$exp = $oldExp;
+			echo 'Please select the experience level desired.';
+			exit(); 
 		}
 
 		// Validate region is selected
@@ -96,12 +93,13 @@
 		}
 		else 
 		{
-			$reg = $oldReg;
+			echo 'Please select a region.';
+			exit(); 
 		}
 		
 		// If data is valid, edit subrequest
 		if ($tmID && $evntID && $sex && $exp && $reg) {
-			$subReq->editSubReq($tmID, $evntID, $sex, $exp, $reg);		
+			$subReq->editSubReq($userID, $subReqid, $tmID, $evntID, $sex, $exp, $reg);		
 		}
 		else {									
 			echo 'Please try again';

@@ -31,7 +31,8 @@
 	// Get user ID
 	$userID = $user->getUserID();
 
-	if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+	// If request is coming from the View SubRequest from the Profile page
+	if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['idSubReq'])) {
 
 		$subReqID = $_POST['idSubReq'];
 
@@ -67,26 +68,25 @@
 			while ($stmt->fetch())
 			{
 				
-			// Translate level of play data from database
-			switch ($tmlvlOB) {
-				case 1: //  Recreational
-					$tmlevel = 'Recreational';
-					break;
-				
-				case 2: // Intermediate
-					$tmlevel = 'Intermediate';
-					break;
-				
-				case 3: // Advanced
-					$tmlevel = 'Advanced';
-					break;
+				// Translate level of play data from database
+				switch ($tmlvlOB) {
+					case 1: //  Recreational
+						$tmlevel = 'Recreational';
+						break;
 					
-				default: 
-					$tmlevel = 'Recreational';
-					break;
-			}				
+					case 2: // Intermediate
+						$tmlevel = 'Intermediate';
+						break;
+					
+					case 3: // Advanced
+						$tmlevel = 'Advanced';
+						break;
+						
+					default: 
+						$tmlevel = 'Recreational';
+						break;
+				}				
 				
-							
 				$json[] = array(
 				'Team Name' => $tmnameOB,
 				'Team Level' => $tmlevel,
@@ -106,5 +106,62 @@
 			unset($db);
 		}
 	}
+
+	// Request is coming from the edit SubRequest on the manager Find Subs page
+	if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['subRequestID'])) {
+
+		$subReqID = $_POST['subRequestID'];
+
+		// Make the Query
+		$q = "SELECT id_team, id_event, sex_needed, experience_needed, id_region
+			FROM subrequests 
+			WHERE id_subrequest=? LIMIT 1";
+		
+		// Prepare the statement:
+		$stmt = $db->prepare($q);
+		
+		// Bind the inbound variable:
+		$stmt->bind_param('i', $subReqID);
+				
+		// Execute the query:
+		$stmt->execute();		
+					
+		// Store results:
+		$stmt->store_result();
+				
+		// Bind the outbound variable:
+		$stmt->bind_result($tmidOB, $eventidOB, $sexOB, $expOB, $regOB);
+				
+		// If there are results to show.
+		if ($stmt->num_rows == 1)
+		{
+			// Initialize an array:
+			$json = array();
+					
+			// Fetch and put results in the JSON array...
+			while ($stmt->fetch())
+			{
+						
+				$json[] = array(
+				'Team ID' => $tmidOB,
+				'Event ID' => $eventidOB,
+				'Sex' => $sexOB,
+				'Experience' => $expOB,
+				'Region' => $regOB);
+			}	// End of WHILE loop
+		
+			// Send the JSON data:
+			echo json_encode($json);
+					
+			// Close the statement:
+			$stmt->close();
+			unset($stmt);			
+		
+			// Close the connection:
+			$db->close();
+			unset($db);
+		}
+	}
+
 
 ?>

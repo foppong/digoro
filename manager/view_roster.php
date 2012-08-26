@@ -49,54 +49,101 @@
 		<script type="text/javascript" src="../js/roster.js"></script>
 	</head>
 	<body>
-		<div id="Header">
-			<h2>Roster</h2>
-		</div>
 
-		<p class="status"></p>
+		<div class="row"> <!-- row for main content --> 
+		<div class="span10"> <!-- column for main content --> 
+			<div class="row"> <!-- Team Name header -->
+				<div class="span4">
+					<div class="page-header teamdisplay"></div> <!-- Name dynamically inserted here -->
+				</div>
+				<div class="span2 offset3">
+					<button type="button" id="add-member" class="btn btn-small btn-primary">Add Member</button>
+				</div>
+			</div>
 
-		<button type="button" id="add-player" class="btn btn-small btn-primary">Add Player</button>
-		
-		<div id="AddPlayerForm" title="Add New Player">		
+
+
+
+	<!-- Modal Dialog Forms -->
+		<div id="AddMemberForm" title="Add New Member">		
 			<form method="post">			
-				<label for="first_name" class="label">Enter Player's First Name:</label>
-				<input type="text" name="first_name" id="first_name" size="20" maxlength="20" />
+				<label for="add-member-fname">First name:</label>
+				<input type="text" name="add-member-fname" id="add-member-fname" size="20" maxlength="20" />
 		
-				<label for="last_name" class="label">Enter Player's Last Name:</label>
-				<input type="text" name="last_name" id="last_name" size="20" maxlength="40" />
+				<label for="add-member-lname">Last name:</label>
+				<input type="text" name="add-member-lname" id="add-member-lname" size="20" maxlength="40" />
+
+				<label for="add-member-sel-sex">New member's sex is</label>
+				<select class="span3" name="add-member-sel-sex" id="add-member-sel-sex">
+					<option value="">-Select Sex-</option>
+					<option value="1">Female</option>
+					<option value="2">Male</option>
+				</select>
 		
-				<label for="email" class="label">Enter Player's Email Address:</label>
-				<input type="text" name="email" id="email" size="30" maxlength="60" />
+				<label for="add-member-email">New member's email is</label>
+				<input type="text" name="add-member-email" id="add-member-email" size="30" maxlength="60" />
+			
+				<label for="add-member-ppos">Primary position:</label>
+				<input type="text" name="add-member-ppos" id="add-member-ppos" size="20" maxlength="30" />			
+
+				<label for="add-member-spos">Secondary position:</label>
+				<input type="text" name="add-member-spos" id="add-member-spos" size="20" maxlength="30" />	
+
+				<label for="add-member-jernum">Jersey Number:</label>
+				<input type="text" name="add-member-jernum" id="add-member-jernum" size="4" maxlength="4" />
+
+				<label>Send Invite?</label>
+				<input type="radio" name="add-member-invite" id="add-member-inviteY" value="1" checked="checked" />Yes
+				<br />
+				<input type="radio" name="add-member-invite" id="add-member-inviteN" value="0" />No
+			</form>
+		</div>
+		
+		<div id="EditMemberForm" title="Edit Member">	
+			<form method="post">
+				<label for="edit-member-fname">First name:</label>
+				<input type="text" name="edit-member-fname" id="edit-member-fname" size="20" maxlength="20" />
+		
+				<label for="add-member-lname">Last name:</label>
+				<input type="text" name="edit-member-lname" id="edit-member-lname" size="20" maxlength="40" />
+
+				<label for="edit-member-sel-sex">Member's sex is</label>
+				<select class="span3" name="edit-member-sel-sex" id="edit-member-sel-sex">
+					<option value="">-Select Sex-</option>
+					<option value="1">Female</option>
+					<option value="2">Male</option>
+				</select>
+			
+				<label for="edit-member-ppos">Primary position:</label>
+				<input type="text" name="edit-member-ppos" id="edit-member-ppos" size="20" maxlength="30" />			
+
+				<label for="edit-member-spos">Secondary position:</label>
+				<input type="text" name="edit-member-spos" id="edit-member-spos" size="20" maxlength="30" />	
+
+				<label for="edit-member-jernum">Jersey Number:</label>
+				<input type="text" name="edit-member-jernum" id="edit-member-jernum" size="4" maxlength="4" />
 			</form>
 		</div>
 
-		<div id="EditPlayerForm" title="Edit Player">	
+		<div id="DelMemberForm" title="Delete Member">
 			<form method="post">
-				<label for="position" class="label">Position:</label>
-				<input type="text" name="position" id="position" 
-				size="20" maxlength="20"/>				
-				
-				<label for="jersey_num" class="label">Jersey Number:</label>
-				<input type="text" name="jersey_num" id="jersey_num" 
-				size="4" maxlength="4" />
+				<p>Are you sure you want to remove <span id="member_name"></span> this member?</p>
 			</form>
 		</div>
+		<!-- End of Modal Dialog Form -->
 
-		<div id="DelPlayerForm" title="Delete Player">
-			<form method="post">
-				<p>Are you sure you want to remove this player?</p>
-			</form>
-		</div>
-		
+
 		<div id="content">
-	
 			<!-- Load ajax roster data here -->
 			<table class="table table-striped table-bordered table-condensed" id="roster" width="100%">
 				<caption>
-					Current players
+					Current Members
 				</caption>
 		</table>
 		</div>
+
+		</div> <!-- end of column for main content --> 
+		</div>	<!-- end of row for main content --> 
 	</body>
 </html>
 

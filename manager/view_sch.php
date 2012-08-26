@@ -49,10 +49,12 @@
 	</head>
 	<body>
 
-
-		<div id="Header">
-			<h2>Schedule</h2>
-		</div><br />
+		<div class="span10"> <!-- column for main content --> 
+			<div class="row"> <!-- Team Name header -->
+				<div class="span4">
+					<div class="page-header teamdisplay"></div> <!-- Name dynamically inserted here -->
+				</div>
+		</div>	
 
 		<p class="status"></p>		
 		<button type="button" id="add-event" class="btn btn-small btn-primary">Add Event</button>

@@ -17,7 +17,7 @@ var SCHEDULE = {
 
 		// AJAX call to retrieve list of events associated with team
 		$.ajax({
-	      	type: "POST",
+	    type: "POST",
 			dataType: 'json',
 			url: "../data/schedule_data.php",
 			success: function(data) {
@@ -48,7 +48,7 @@ var SCHEDULE = {
 	        for (var propertyName in val) {
 	            tr.append('<td>' + val[propertyName] + '</td>');
 	        }
-	    });		
+	    });
 	},
 
   pullEventData: function ( data ) {
@@ -70,14 +70,12 @@ var SCHEDULE = {
    	});
 	},
 
-
   make_Edit_Event_Form_sticky: function( data ) {
 
 		var eventInfo_array = new Array(); // set up array to store data pulled from database
 	  $(data).each(function(key, val) {
 			var i = 0;
 	  	for (var propertyName in val) {
-	    	console.log(val[propertyName]);
 	    	eventInfo_array[i] = val[propertyName];
 	    	i++;
 	    }

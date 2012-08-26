@@ -89,7 +89,7 @@
 
 		
 		// Function to edit a SubRequest object in database
-		function editSubReq($tmID, $evntID, $sex, $exp, $reg) {
+		function editSubReq($manID, $subReqid, $tmID, $evntID, $sex, $exp, $reg) {
 			// Make the query:
 			$q = 'UPDATE subrequests SET id_team=?,id_event=?,sex_needed=?,experience_needed=?,id_region=? 
 				WHERE id_subrequest=? LIMIT 1';
@@ -98,7 +98,7 @@
 			$stmt = $this->dbc->prepare($q);
 			
 			// Bind the inbound variables
-			$stmt->bind_param('iisiii', $tmID, $evntID, $sex, $exp, $reg, $this->id_subrequest);
+			$stmt->bind_param('iisiii', $tmID, $evntID, $sex, $exp, $reg, $subReqid);
 			
 			// Execute the query
 			$stmt->execute();
@@ -106,9 +106,6 @@
 			// Successfully added subrequest
 			if ($stmt->affected_rows == 1) {
 				echo 'Your subrequest was edited succesfully';
-				
-				// Update object attributes
-				self::setSRAttributes($this->id_manager, $tmID, $evntID, $sex, $exp, $reg);
 			}
 			else {
 				// Either did not run ok or no updates were made
@@ -123,7 +120,7 @@
 
 		
 		// Function to delete subrequest
-		function deleteSubReq() {
+		function deleteSubReq($subReqid) {
 			// Make the query	
 			$q = "DELETE FROM subrequests WHERE id_subrequest=? LIMIT 1";
 	
@@ -131,7 +128,7 @@
 			$stmt = $this->dbc->prepare($q);
 	
 			// Bind the inbound variable:
-			$stmt->bind_param('i', $this->id_subrequest);
+			$stmt->bind_param('i', $subReqid);
 	
 			// Execute the query:
 			$stmt->execute();

@@ -107,7 +107,6 @@ var RESPONDSR = {
 	    cache: false
    	});
 
-
   },
   
   buildSRResponseForm: function( data ) {

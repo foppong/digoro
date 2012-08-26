@@ -27,7 +27,7 @@
 	// Establish database connection
 	require_once MYSQL2;
 
-	if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z']))
+	if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['z']))
 	{
 		$memberid = $_POST['z'];		
 
@@ -35,39 +35,84 @@
 		$member = new Member();
 		$member->setDB($db);
 		$member->setMembID($memberid);
-		$member->pullMemberData();
 
 		// Check if user is authroized to make edit
-		if (!$member->isManager($userID)) {
+		if (!$member->isManager($userID, $memberid)) {
 			echo 'You have to be the manager to edit a member.';
 			exit();
 		}
 
-		$oldpos = $member->getMemberAttribute('position');
-		$oldjnumb = $member->getMemberAttribute('jersey_numb');
+		// Assume invalid values:
+		$fn = $ln = $sex = $ppos = FALSE;
 
 		// Trim all the incoming data:
 		$trimmed = array_map('trim', $_POST);
 
-		// Validate position input
-		if (is_string($trimmed['position']) && !empty($trimmed['position'])) {
-			$pos = $trimmed['position'];
+		// Validate firstname
+		if (preg_match('/^[A-Z \'.-]{2,20}$/i', $_POST['edit-member-fname']))
+		{
+			$fn = $_POST['edit-member-fname'];
 		}
-		else {
-			$pos = $oldpos;
+		else 
+		{
+			echo "Please enter a valid first name";	
+			exit();
+		}
+
+		// Validate lastname
+		if (preg_match('/^[A-Z \'.-]{2,40}$/i', $_POST['edit-member-lname']))
+		{
+			$ln = $_POST['edit-member-lname'];
+		}
+		else 
+		{
+			echo "Please enter a valid last name";
+			exit();
+		}
+
+		// Validate sex is selected
+		if ($_POST['edit-member-sel-sex'])
+		{
+			$sex = $_POST['edit-member-sel-sex'];
+		}
+		else 
+		{
+			echo 'Please select a sex.';
+			exit();
+		}
+
+		// Validate primary position is entered
+		if ($_POST['edit-member-ppos'])
+		{
+			$ppos = $_POST['edit-member-ppos'];
+		}
+		else 
+		{
+			echo "Please enter a primary position";
+			exit();
+		}
+
+		// Validate secondary position
+		if ($_POST['edit-member-spos'])
+		{
+			$spos = $_POST['edit-member-spos'];
+		}
+		else 
+		{
+			$spos = '';
 		}
 		
 		// Validate jersey number input
-		if (filter_var($_POST['jersey_num'], FILTER_VALIDATE_INT)) {
-			$jnumb = $_POST['jersey_num'];
+		if (filter_var($_POST['edit-member-jernum'], FILTER_VALIDATE_INT)) {
+			$jnumb = $_POST['edit-member-jernum'];
 		}
 		else {
-			$jnumb = $oldjnumb;
+			$jnumb = 0;
 		}
 
-		if ($pos && $jnumb) {
+		if ($fn && $ln && $sex && $ppos) {
 			// Update database
-			$member->editMember($pos, $jnumb);			
+			$member->editMember($memberid, $fn, $ln, $sex, $ppos, $spos, $jnumb);			
 		}
 		else { // Errors in the user entered information
 			echo 'Please try again';

@@ -37,18 +37,17 @@ var SUBREQUEST = {
 
 	showEvents: function( data ) {
 		var _event = this;
-		// AJAX call to retreive all leagues based on entered state
+
 		$.ajax({
 			type: 'POST',
 			dataType: 'json',
 			url: "../data/subrequest_event_data.php",
-			data: {teamID: data}, // Data I'm sending, the selected team'
+			data: {teamID: data}, // Data I'm sending, the selected team
 			success: function( data ) {
 				_event.buildEventMenu(data);
 			},
 			error: function(xhr, ajaxOptions, thrownError) {
 				alert('showEvents: an error occured!');
-				console.log(jqXHR, textStatus, errorThrown);
 			}
 		});
 	},
@@ -102,9 +101,50 @@ var SUBREQUEST = {
 	            tr.append('<td>' + val[propertyName] + '</td>');
 	        }
 	    });		
-	}
+	},
 		
+  pullSubRequestData: function ( data ) {
+  	var _subrequest = this;
+		var data_send = { subRequestID: idsubrequest };
+
+	  $.ajax({
+	  	type: "POST",
+	    dataType: 'json',
+	    url: "../data/single_subreq_data.php",
+	    data: data_send, // Data that I'm sending
+	    error: function() {
+	      alert('Error: Pull Subrequest Data failed');
+	   	},
+	    success: function( data ) { 
+				_subrequest.make_Edit_SubRequest_Form_sticky( data );
+	    },
+	    cache: false
+   	});
+	},
+
+  make_Edit_SubRequest_Form_sticky: function( data ) {
+  	var _subrequest = this;
+		var subReqInfo_array = new Array(); // set up array to store data pulled from database
+	  $(data).each(function(key, val) {
+			var i = 0;
+	  	for (var propertyName in val) {
+	    	subReqInfo_array[i] = val[propertyName];
+	    	i++;
+	    }
+	  });	
+	  	
+		$( '#edit-SR-sel-teams' ).val( subReqInfo_array[0] );
+		_subrequest.showEvents( subReqInfo_array[0] );
 		
+		// Hack to allow time for dynamic selection to me made
+		setTimeout(function () {
+			$( '#edit-SR-sel-events' ).val( subReqInfo_array[1] );		
+		}, 50);
+		
+		$( '#edit-SR-sel-sex' ).val( subReqInfo_array[2] );
+		$( '#edit-SR-sel-exp' ).val( subReqInfo_array[3] );
+		$( '#edit-SR-sel-reg' ).val( subReqInfo_array[4] );
+  }			
 		
 		
 }

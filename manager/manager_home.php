@@ -38,40 +38,41 @@
 	$dftmID = $manager->getUserAttribute('dftmID');
 
 	// Update team object session variable as user selects different teams
+	// *** NEED TO WORK ON THIS LOGIC, DON"T REMEMBER IT ALL"
 	if ( (isset($_POST['y'])) && (is_numeric($_POST['y'])) ) {
 		$_SESSION['ctmID'] = $_POST['y'];
 		$ctmID = $_SESSION['ctmID'];
 	
 		// Create team object with current team selection
-		$team = new Team();
-		$team->setDB($db);
-		$team->setTeamID($ctmID);
-		$team->pullTeamData();
+		//$team = new Team();
+		//$team->setDB($db);
+		//$team->setTeamID($ctmID);
+		//$team->pullTeamData();
 
 	}
 	elseif (isset($_SESSION['ctmID'])) {
 		$ctmID = $_SESSION['ctmID'];
 
 		// Create team object
-		$team = new Team();
-		$team->setDB($db);
-		$team->setTeamID($ctmID);
-		$team->pullTeamData();
+		//$team = new Team();
+		//$team->setDB($db);
+		//$team->setTeamID($ctmID);
+		//$team->pullTeamData();
 		
 	}
 	else {
 		// Create team object
-		$team = new Team();
-		$team->setDB($db);
-		$team->setTeamID($dftmID);
-		$team->pullTeamData();
+		//$team = new Team();
+		//$team->setDB($db);
+		//$team->setTeamID($dftmID);
+		//$team->pullTeamData();
 	
 		// Assign default team ID to current team ID session variable
 		$_SESSION['ctmID']  = $dftmID;		
 	}
 
 	// Get team name attribute for page display purposes
-	$teamname = $team->getTeamAttribute('tmname');	
+	//$teamname = $team->getTeamAttribute('tmname');	
 
 	// Delete objects
 	unset($team);
@@ -202,12 +203,16 @@
 				<option value="2">Intermediate</option>
 				<option value="3">Advanced</option>
 			</select>
+
+			<label for="add-team-email">Our team name email is</label>
+			<input class="span3" type="text" name="add-team-email" id="add-team-email" />
 		
 			<label for="add-team-abouttm">Other team information to share</label>
-			<textarea class="input-xlarge" id="add-team-abouttm" name="add-team-abouttm" 
+			<textarea class="input-large" id="add-team-abouttm" name="add-team-abouttm" 
 				cols="30" rows="2" placeholder="enter something cool about your team"></textarea>
 		</form>
-	</div> <!-- End of Modal Dialog Form -->
+	</div> 
+	<!-- End of Modal Dialog Form -->
 
 
 <?php include '../includes/footer.html'; ?>

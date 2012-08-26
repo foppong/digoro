@@ -158,9 +158,6 @@
 			if ($stmt->affected_rows == 1) // And update to the database was made
 			{				
 				echo 'This event has been edited';
-
-				// Update attributes
-				self::setEventAttributes($this->id_team, $gmdate, $gtime, $opponent, $ven, $venad, $result, $note, $type);
 			}
 			else 
 			{	// Either did not run ok or no updates were made
@@ -175,7 +172,7 @@
 		
 
 		// Function to delete event
-		function deleteEvent($userID)
+		function deleteEvent($eventid)
 		{
 			// Make the query	
 			$q = "DELETE FROM events WHERE id_event=? LIMIT 1";
@@ -184,7 +181,7 @@
 			$stmt = $this->dbc->prepare($q);
 	
 			// Bind the inbound variable:
-			$stmt->bind_param('i', $this->id_event);
+			$stmt->bind_param('i', $eventid);
 	
 			// Execute the query:
 			$stmt->execute();
@@ -207,7 +204,7 @@
 		} // End of deleteEvent function		
 			
 		// Function to check if user is manager of event
-		function isManager($userID)
+		function isManager($userID, $eventid)
 		{
 			// Make the query to retreive manager id associated with event:		
 			$q = "SELECT tm.id_manager
@@ -219,7 +216,7 @@
 			$stmt = $this->dbc->prepare($q);
 			
 			// Bind the inbound variables:
-			$stmt->bind_param('i', $this->id_event);
+			$stmt->bind_param('i', $eventid);
 			
 			// Exeecute the query
 			$stmt->execute();

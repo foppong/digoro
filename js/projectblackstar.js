@@ -10,7 +10,7 @@ $.ajaxSetup({"error":function(XMLHttpRequest,textStatus, errorThrown) {
   }});
 
 // Global variables
-var idplayer;
+var idmember;
 var idevent;
 var idteam;
 var idsubrequest;
@@ -59,54 +59,58 @@ var USER = {
 }
 
 
-var PLAYER = {
+var MEMBER = {
 
 	loadDialog: function() {
-		$( "#AddPlayerForm" ).dialog({
+		$( "#AddMemberForm" ).dialog({
 			autoOpen: false,
-			height: 250,
-			width: 550,
+			height: 550,
+			width: 450,
 			modal: true,
 			buttons: {
-				"Add Player": function() {
-					// Add player to database
-					PLAYER.add();					
+				"Add Member": function() {
+					// Add member to database
+					MEMBER.add();					
 					$( this ).dialog( "close" );
+				},
+				"Save and Add Another": function() {
+					MEMBER.add();
+	       	MISCFUNCTIONS.clearForm( '#AddMemberForm form' );
 				},
 				Cancel: function() {
 					$( this ).dialog( "close" );
-	       	MISCFUNCTIONS.clearForm( '#AddPlayerForm form' );
+	       	MISCFUNCTIONS.clearForm( '#AddMemberForm form' );
 				}
 			}
 		});
 		
-		$( "#EditPlayerForm" ).dialog({
+		$( "#EditMemberForm" ).dialog({
 			autoOpen: false,
-			height: 250,
-			width: 275,
+			height: 550,
+			width: 450,
 			modal: true,
 			buttons: {
-				"Edit Player": function() {
-					// Edit player in database
-					PLAYER.edit();					
+				"Edit Member": function() {
+					// Edit member in database
+					MEMBER.edit();					
 					$( this ).dialog( "close" );
 				},
 				Cancel: function() {
 					$( this ).dialog( "close" );
-	       	MISCFUNCTIONS.clearForm( '#EditPlayerForm form' );
+	       	MISCFUNCTIONS.clearForm( '#EditMemberForm form' );
 				}
 			}			
 		});
 		
-		$( "#DelPlayerForm" ).dialog({
+		$( "#DelMemberForm" ).dialog({
 			autoOpen: false,
 			height: 150,
 			width: 275,
 			modal: true,
 			buttons: {
-				"Delete Player": function() {
-					// Delete player from database
-					PLAYER.del();					
+				"Delete Member": function() {
+					// Delete member from database
+					MEMBER.del();					
 					$( this ).dialog( "close" );
 				},
 				Cancel: function() {
@@ -116,12 +120,12 @@ var PLAYER = {
 		});		
 	},
 
-	// add player information to database from dialog form
+	// add member information to database from dialog form
   	add: function() { 
-    	var form_data = $( '#AddPlayerForm form' ).serialize();
+    	var form_data = $( '#AddMemberForm form' ).serialize();
 	    $.ajax({
 	      	type: "POST",
-	      	url: "../manager/add_player.php",
+	      	url: "../manager/add_member.php",
 	      	data: form_data, // Data that I'm sending
 	      	error: function() {
 	        	$( '.status' ).text( 'Update failed. Try again.' ).slideDown( 'slow' );
@@ -129,7 +133,7 @@ var PLAYER = {
 	      	success: function( data ) {   
 	        	ROSTER.loadRoster(); //Call to roster.js to refresh table
 	        	$( '.status' ).text( data ).slideDown( 'slow' );
-	        	MISCFUNCTIONS.clearForm( '#AddPlayerForm form' );
+	        	MISCFUNCTIONS.clearForm( '#AddMemberForm form' );
 	      	},
 	      	complete: function() {
 	        	setTimeout(function() {
@@ -142,11 +146,11 @@ var PLAYER = {
     
 	// edit player information to database from dialog form
   	edit: function() { 
-		$( '#EditPlayerForm form' ).append( '<input type="hidden" id="z" name="z" value="' + idplayer + '"/>' );
-    	var form_data = $( '#EditPlayerForm form' ).serialize();
+		$( '#EditMemberForm form' ).append( '<input type="hidden" id="z" name="z" value="' + idmember + '"/>' );
+    	var form_data = $( '#EditMemberForm form' ).serialize();
 	    $.ajax({
 	      	type: "POST",
-	      	url: "../manager/edit_player.php",
+	      	url: "../manager/edit_member.php",
 	      	data: form_data, // Data that I'm sending
 	      	error: function() {
 	        	$( '.status' ).text( 'Edit failed. Try again.' ).slideDown( 'slow' );
@@ -154,8 +158,8 @@ var PLAYER = {
 	      	success: function( data ) { 
 	        	ROSTER.loadRoster(); //Call to roster.js
 	        	$( '.status' ).text( data ).slideDown( 'slow' );
-	        	$( '#EditPlayerForm form #z' ).remove();
-	        	MISCFUNCTIONS.clearForm( '#EditPlayerForm form' );   	
+	        	$( '#EditMemberForm form #z' ).remove();
+	        	MISCFUNCTIONS.clearForm( '#EditMemberForm form' );   	
 	      	},
 	      	complete: function() {
 	        	setTimeout(function() {
@@ -166,13 +170,13 @@ var PLAYER = {
     	});
     },
 
-	// delete player information to database from dialog form
+	// delete member information to database from dialog form
   	del: function() { 
-		$( '#DelPlayerForm form' ).append( '<input type="hidden" id="z" name="z" value="' + idplayer + '"/>' );
-    	var form_data = $( '#DelPlayerForm form' ).serialize();
+		$( '#DelMemberForm form' ).append( '<input type="hidden" id="z" name="z" value="' + idmember + '"/>' );
+    	var form_data = $( '#DelMemberForm form' ).serialize();
 	    $.ajax({
 	      	type: "POST",
-	      	url: "../manager/delete_player.php",
+	      	url: "../manager/delete_member.php",
 	      	data: form_data, // Data that I'm sending
 	      	error: function() {
 	        	$( '.status' ).text( 'Delete failed. Try again.' ).slideDown( 'slow' );
@@ -229,8 +233,7 @@ var EVENT = {
 			modal: true,
 			buttons: {
 				"Edit Event": function() {
-					// Edit event in database
-					EVENT.edit();					
+					EVENT.edit();	// Edit event in database
 					$( this ).dialog( "close" );
 				},
 				Cancel: function() {
@@ -247,7 +250,7 @@ var EVENT = {
 			modal: true,
 			buttons: {
 				"Delete Event": function() {
-					// Delete player from database
+					// Delete member from database
 					EVENT.del();					
 					$( this ).dialog( "close" );
 				},
@@ -291,10 +294,10 @@ var EVENT = {
 	      	url: "../manager/edit_event.php",
 	      	data: form_data, // Data that I'm sending
 	      	error: function() {
-	        	$( '.status' ).text( 'Edit failed. Try again.' ).slideDown( 'slow' );
+	        	$( '.status' ).text( 'Edit Event failed. Try again.' ).slideDown( 'slow' );
 	     	},
 	      	success: function( data ) { 
-	        	SCHEDULE.loadSchedule(); //Call to schedule.js
+	        	SCHEDULE.loadSchedule(); //Call to schedule.js to refresh table
 	        	$( '.status' ).text( data ).slideDown( 'slow' );
 	        	$( '#EditEventForm form #z' ).remove();	        	
 	        	MISCFUNCTIONS.clearForm( '#EditEventForm form' );   	
@@ -348,8 +351,8 @@ var TEAM = {
  	loadDialog: function() { 
 		$("#AddTeamForm").dialog({
 			autoOpen: false,
-			height: 500,
-			width: 450,
+			height: 520,
+			width: 320,
 			modal: true,
 			buttons: {
 				"Add Team": function(){
@@ -365,8 +368,8 @@ var TEAM = {
 
 		$( "#EditTeamForm" ).dialog({
 			autoOpen: false,
-			height: 450,
-			width: 375,
+			height: 520,
+			width: 320,
 			modal: true,
 			buttons: {
 				"Edit": function() {
@@ -379,8 +382,41 @@ var TEAM = {
 					MISCFUNCTIONS.clearForm( '#EditTeamForm form' );
 				}
 			}
+		});
+
+		$( "#TransferTeamForm" ).dialog({
+			autoOpen: false,
+			height: 250,
+			width: 300,
+			modal: true,
+			buttons: {
+				"Transfer": function() {
+					TEAM.transferTM();
+					$( this ).dialog( "close" );
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			}
+		});
+		
+		$( "#DeleteTeamForm" ).dialog({
+			autoOpen: false,
+			height: 250,
+			width: 300,
+			modal: true,
+			buttons: {
+				"Delete": function() {
+					TEAM.deleteTM();					
+					$( this ).dialog( "close" );
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			}
 		});	
- 	},
+ 	},		
+		
 
 	// add team to database
 	add: function() {
@@ -408,51 +444,70 @@ var TEAM = {
 	},
 
 	// edit team information to database from dialog form
-  	edit: function() { 
-    	var _team = this;
-		$( '#EditTeamForm form' ).append( '<input type="hidden" id="z" name="z" value="' + idteam + '"/>' );
-		var teamname = $( '#tname' ).val();
-    	var form_data = $( '#EditTeamForm form' ).serialize();
-	    $.ajax({
-	      	type: "POST",
-	      	url: "../manager/edit_team.php",
-	      	data: form_data, // Data that I'm sending
-	      	error: function() {
-	        	$( '.status' ).text( 'Edit failed. Try again.' ).slideDown( 'slow' );
-	     	},
-	      	success: function( data ) { 
-	        	ABOUTTM.loadAbout(); // Call to abtm.js
+  edit: function() { 
+  	var _team = this;
+    var form_data = $( '#EditTeamForm form' ).serialize();
+	  $.ajax({
+	  	type: "POST",
+	    url: "../manager/edit_team.php",
+	    data: form_data, // Data that I'm sending
+	    error: function() {
+	    	$( '.status' ).text( 'Edit failed. Try again.' ).slideDown( 'slow' );
+	    },
+	    success: function( data ) { 
+				//_team.teamMenu(); // Refresh the team selection menu
+	      $( '.status' ).text( data ).slideDown( 'slow' );   	
+	     },
+	    complete: function() {
+	    	setTimeout(function() {
+	      	$( '.status' ).slideUp( 'slow' );
+	    	}, 2000);
+	    },
+	    cache: false
+    });
+	},
+	
+	// Function to delete team
+	deleteTM: function() {
+		var _team = this;
+		var form_data = $( '#DeleteTeamForm form' ).serialize();
+		$.ajax({
+			type: "Post",
+			url: "../manager/delete_team.php",
+			data: form_data, // Data that i'm sending
+	    error: function() {
+	    	$( '.status' ).text( 'Delete failed. Try again.' ).slideDown( 'slow' );
+	    },
+	    success: function( data ) { 
 				_team.teamMenu(); // Refresh the team selection menu
-	        	$( '.status' ).text( data ).slideDown( 'slow' );
-	        	if (teamname != "") { //Update team name on main page
-	        		$( '#TeamName' ).html( '<h2>' + teamname + '</h2>' ); };
-	        	MISCFUNCTIONS.clearForm( '#EditTeamForm form' );   	
-	      	},
-	      	complete: function() {
-	        	setTimeout(function() {
-	          		$( '.status' ).slideUp( 'slow' );
-	        	}, 2000);
-	      	},
-	      	cache: false
-    	});
-    },
+	      $( '.status' ).text( data ).slideDown( 'slow' );   	
+	    },
+	    complete: function() {
+	    	setTimeout(function() {
+	      	$( '.status' ).slideUp( 'slow' );
+	    	}, 2000);
+	    },
+	    cache: false		
+		});
+		
+	},
+	
+  teamMenu: function() {
+  	var _team = this;
 
-  	teamMenu: function() {
-    	var _team = this;
-
-			// Ajax call to retreive list of teams assigned to user	
-			$.ajax({
-		    type: "POST",
-				dataType: 'json',
-				url: "../data/team_data.php",
-				success: function(data) {
-					_team.buildTeamMenu(data);
-				},
-				error: function() {
-					alert('teamMenu: an error occured!');
-				}
-			});	
-  	},
+		// Ajax call to retreive list of teams assigned to user	
+		$.ajax({
+			type: "POST",
+			dataType: 'json',
+			url: "../data/team_data.php",
+			success: function(data) {
+				_team.buildTeamMenu(data);
+			},
+			error: function() {
+				alert('teamMenu: an error occured!');
+			}
+		});	
+  },
 	
 	buildTeamMenu: function(data) {    
 		var tmp = '';
@@ -465,7 +520,49 @@ var TEAM = {
 		});
 		
 		menu.append(tmp);
-	}
+	},
+	
+	pullTeamData: function( data ) {
+  	var _team = this;
+		//var data_send = { idSubReq: idsubrequest };
+
+	  $.ajax({
+	  	type: "POST",
+	    dataType: 'json',
+	    url: "../data/team_info_data.php",
+	    //data: data_send, // Data that I'm sending
+	    error: function() {
+	      alert('Error: Pull Team Data failed');
+	   	},
+	    success: function( data ) { 
+				_team.setTeamInfoPageVars( data );
+				ABOUTTM.make_Edit_Team_Form_sticky( data ); // Call to abtm.js
+	    },
+	    cache: false
+   	});
+		
+	},
+	
+	setTeamInfoPageVars: function ( data ) {
+		$('.teamdisplay').html(""); // clear out any prior info
+	  $( 'form #z' ).remove(); // clear out any prior info
+
+		var teamInfo_array = new Array(); // set up array to store data pulled from database
+	  $(data).each(function(key, val) {
+			var i = 0;
+	  	for (var propertyName in val) {
+	    	teamInfo_array[i] = val[propertyName];
+	    	i++;
+	    }
+	  });	
+		$( '.teamdisplay' ).append( '<h4>' + teamInfo_array[2] + ' Team Info</h4>' );		
+		$( '#EditTeamForm form' ).append( '<input type="hidden" id="z" name="z" value="' + teamInfo_array[8] + '"/>' );	
+		$( '#TransferTeamForm form' ).append( '<input type="hidden" id="z" name="z" value="' + teamInfo_array[8] + '"/>' );			
+		$( '#DeleteTeamForm form' ).append( '<input type="hidden" id="z" name="z" value="' + teamInfo_array[8] + '"/>' );			
+		
+	}	
+	
+	
 }
 
 /*  NOT BEING USED AT MOMENT
@@ -531,7 +628,6 @@ var FINDSUB = {
 			modal: true,
 			buttons: {
 				"Edit": function() {
-					// Edit info in database
 					FINDSUB.edit();					
 					$( this ).dialog( "close" );
 				},
@@ -549,7 +645,7 @@ var FINDSUB = {
 			modal: true,
 			buttons: {
 				"Delete SubRequest": function() {
-					// Delete player from database
+					// Delete member from database
 					FINDSUB.del();					
 					$( this ).dialog( "close" );
 				},
@@ -644,13 +740,12 @@ var FINDSUB = {
 var MISCFUNCTIONS = {
 	
 	clearForm: function( form ) {
-  		$(form).children('input, select, textarea').val('');
- 		$(form).children('input[type=checkbox]').each(function()
-  		{
+  	$(form).children('input, select, textarea').val('');
+ 		$(form).children('input[type=checkbox]').each(function() {
      		this.checked = false; // for checkboxes
      		// or
-     		//$(this).attr('checked', false); // for radio buttons
-  		});
+     		$(this).attr('checked', false); // for radio buttons
+  	});
 	}
 }
 
@@ -696,6 +791,7 @@ $(document).ready(function()
 					
 					$( "#open-subrequests" ).on("click", "#edit-subreq", function() {
 						idsubrequest = this.value;
+						SUBREQUEST.pullSubRequestData( idsubrequest );
 						$( "#Edit-SubRequest-Form" ).dialog( "open" );
 					});
 
@@ -715,14 +811,14 @@ $(document).ready(function()
 					
 					// Binds click to ajax loaded edit button
 					$( "#roster" ).on("click", ".edit_player", function() {
-						idplayer = this.value;
+						idmember = this.value;
 						$( "#EditPlayerForm" ).dialog( "open" );
 					});
 
 					// Binds click to ajax loaded delete button
 					$( "#roster" ).on("click", ".delete_player", function() {
-						idplayer = this.value;
-						$( "#DelPlayerForm" ).dialog( "open" );
+						idmember = this.value;
+						$( "#DelMemberForm" ).dialog( "open" );
 					});
 					break;
 				default:		
@@ -746,37 +842,58 @@ $(document).ready(function()
 		load: function ( event, ui ) {
 			switch (ui.index) {
 				case 0:
-					// Load about team dialog
+					// Load about team dialogs
 					TEAM.loadDialog();
-										
-					$( "#about" ).on("click", "#editTeam", function() {
-						idteam = this.value;
+					
+					// Load Selected Team Data
+					TEAM.pullTeamData();
+					
+					// Opens Edit Team Form dialog
+					$( "#edit-team" ).on("click", function() {
 						$( "#EditTeamForm" ).dialog( "open" );
 					});
+					
+					// Opens Transfer Team Form dialog
+					$( "#transfer-team" ).on("click", function() {
+						$( "#TransferTeamForm" ).dialog( "open" );
+					});
+
+					// Opens Delete Team Form dialog
+					$( "#delete-team" ).on("click", function() {
+						$( "#DeleteTeamForm" ).dialog( "open" );
+					});
+
 					break;
 				case 1:
-					// Load player dialog
-					PLAYER.loadDialog();
+					// Load member dialogs
+					MEMBER.loadDialog();
+
+					// Load Selected Team Data
+					TEAM.pullTeamData();
 	
-					$( "#add-player" ).on("click", function() {
-						$( "#AddPlayerForm" ).dialog( "open" );
+					$( "#add-member" ).on("click", function() {
+						$( "#AddMemberForm" ).dialog( "open" );
 					});
 					
 					// Binds click to ajax loaded edit button
-					$( "#roster" ).on("click", ".edit_player", function() {
-						idplayer = this.value;
-						$( "#EditPlayerForm" ).dialog( "open" );
+					$( "#roster" ).on("click", ".edit_member", function() {
+						idmember = this.value;
+						ROSTER.pullMemberData( idmember );
+						$( "#EditMemberForm" ).dialog( "open" );
 					});
 
 					// Binds click to ajax loaded delete button
-					$( "#roster" ).on("click", ".delete_player", function() {
-						idplayer = this.value;
-						$( "#DelPlayerForm" ).dialog( "open" );
+					$( "#roster" ).on("click", ".delete_member", function() {
+						idmember = this.value;
+						$( "#DelMemberForm" ).dialog( "open" );
 					});
 					break;
 				case 2:
-					// Load event dialog
+					// Load event dialogs
 					EVENT.loadDialog();
+
+					// Load Selected Team Data
+					TEAM.pullTeamData();
 	
 					$( "#add-event" ).on("click", function() {
 						$( "#AddEventForm" ).dialog( "open" );

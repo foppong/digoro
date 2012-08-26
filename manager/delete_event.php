@@ -27,7 +27,7 @@
 	// Need the database connection:
 	require_once MYSQL2;
 
-	if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z'])) // Confirmation that form has been submitted	
+	if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['z'])) // Confirmation that form has been submitted	
 	{
 		// Assign variable from FORM submission (hidden id field)	
 		$eventid = $_POST['z'];
@@ -36,15 +36,14 @@
 		$event = new Event();
 		$event->setDB($db);
 		$event->setEventID($eventid);
-		$event->pullEventData();
 
 		// Check if user is authroized to make edit
-		if (!$event->isManager($userID)) {
+		if (!$event->isManager($userID, $eventid)) {
 			echo 'You have to be the manager to delete a event.';
 			exit();
 		}
 
-		$event->deleteEvent($userID);
+		$event->deleteEvent($eventid);
 	}
 	else 
 	{
