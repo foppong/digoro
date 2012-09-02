@@ -50,8 +50,8 @@ var RESPONDSR = {
  	loadDialog: function() { 
 		$("#Respond-SubRequest-Form").dialog({
 			autoOpen: false,
-			height: 400,
-			width: 400,
+			height: 'auto',
+			width: 'auto',
 			modal: true,
 			buttons: {
 				"I can play!": function() {

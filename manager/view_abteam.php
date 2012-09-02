@@ -54,7 +54,7 @@
 
 			<div class="row"> <!-- Team Name header -->
 				<div class="span5">
-					<div class="page-header teamdisplay"></div> <!-- Name dynamically inserted here -->
+					<h3><span class="page-header teamdisplay"></span> Team Info</h3> <!-- Name dynamically inserted here -->
 				</div>
 				<div class="span4">
 					<button type="button" id="edit-team" class="btn btn-small btn-primary">Edit Team</button>
@@ -69,63 +69,88 @@
 
 	<!-- Modal Dialog Forms -->
 	<div id="EditTeamForm" title="Edit Team" class="span4">		
-		<form method="post">
+		<form method="post" class="form-horizontal">
 
-			<label for="edit-team-sel-sport">We play</label>
-			<select class="span3" name="edit-team-sel-sport" id="edit-team-sel-sport">
-				<option value="">-Select Sport-</option>
-				<option value="1">Soccer</option>
-				<option value="2">Flag Football</option>
-				<option value="3">Hockey</option>
-				<option value="4">Softball</option>
-				<option value="5">Basketball</option>
-				<option value="6">Ultimate</option>
-				<option value="7">Volleyball</option>
-				<option value="8">Kickball</option>
-				<option value="9">Rugby</option>
-			</select>
+			<div class="control-group">
+				<label class="control-label" for="edit-team-sel-sport">We play</label>
+				<div class="controls">
+					<select class="input-large" name="edit-team-sel-sport" id="edit-team-sel-sport">
+						<option value="">-Select Sport-</option>
+						<option value="1">Soccer</option>
+						<option value="2">Flag Football</option>
+						<option value="3">Hockey</option>
+						<option value="4">Softball</option>
+						<option value="5">Basketball</option>
+						<option value="6">Ultimate</option>
+						<option value="7">Volleyball</option>
+						<option value="8">Kickball</option>
+						<option value="9">Rugby</option>
+					</select>
+				</div>
+			</div>
 
-			<label for="edit-team-name">Our team name is</label>
-			<input class="span3" type="text" name="edit-team-name" id="edit-team-name" />	
+			<div class="control-group">
+				<label class="control-label" for="edit-team-name">Our team name is</label>
+				<div class="controls">
+					<input class="input-large" type="text" name="edit-team-name" id="edit-team-name" />
+				</div>
+			</div>
 
-			<label for="edit-team-sel-sex">The team sex is</label>
-			<select class="span3" name="edit-team-sel-sex" id="edit-team-sel-sex">
-				<option value="">-Select Sex-</option>
-				<option value="1">Coed</option>
-				<option value="2">All Female</option>
-				<option value="3">All Male</option>
-			</select>
+			<div class="control-group">
+				<label class="control-label" for="edit-team-sel-sex">The team sex is</label>
+				<div class="controls">
+					<select class="input-large" name="edit-team-sel-sex" id="edit-team-sel-sex">
+						<option value="">-Select Sex-</option>
+						<option value="1">Coed</option>
+						<option value="2">All Female</option>
+						<option value="3">All Male</option>
+					</select>
+				</div>
+			</div>
 			
-			<label for="edit-team-sel-region">We are based in</label>
-			<select class="span3" name="edit-team-sel-region" id="edit-team-sel-region">
-				<option value="">-Select Region-</option>
-				<option value="1">San Francisco/ Bay Area</option>
-			</select>
+			<div class="control-group">			
+				<label class="control-label" for="edit-team-sel-region">We are based in</label>
+				<div class="controls">
+					<select class="input-large" name="edit-team-sel-region" id="edit-team-sel-region">
+						<option value="">-Select Region-</option>
+						<option value="1">San Francisco/ Bay Area</option>
+					</select>
+				</div>
+			</div>
 
-			<label for="edit-team-sel-level-play">Our level of play is</label>
-			<select class="span3" name="edit-team-sel-level-play" id="edit-team-sel-level-play">
-				<option value="">-Select Level-</option>
-				<option value="1">Recreational</option>
-				<option value="2">Intermediate</option>
-				<option value="3">Advanced</option>
-			</select>
+			<div class="control-group">
+				<label class="control-label" for="edit-team-sel-level-play">Our level of play is</label>
+				<div class="controls">
+					<select class="input-large" name="edit-team-sel-level-play" id="edit-team-sel-level-play">
+						<option value="">-Select Level-</option>
+						<option value="1">Recreational</option>
+						<option value="2">Intermediate</option>
+						<option value="3">Advanced</option>
+					</select>
+				</div>
+			</div>
 
-			<label for="edit-team-email">Our team name email is</label>
-			<input class="span3" type="text" name="edit-team-email" id="edit-team-email" />
-		
-			<label for="edit-team-abouttm">Other team information to share</label>
-			<textarea class="input-large" id="edit-team-abouttm" name="edit-team-abouttm" 
-				cols="30" rows="2" placeholder="enter something cool about your team"></textarea>
+			<div class="control-group">
+				<label class="control-label" for="edit-team-email">Our team email is</label>
+				<div class="controls">
+					<input class="input-large" type="text" name="edit-team-email" id="edit-team-email" />
+				</div>
+			</div>
+
+			<div class="control-group">		
+				<label class="control-label" for="edit-team-abouttm">Other team information to share</label>
+				<div class="controls">
+					<textarea class="input-large" id="edit-team-abouttm" name="edit-team-abouttm" 
+						cols="30" rows="2" placeholder="enter something cool about your team"></textarea>
+				</div>
+			</div>
 		</form>
 	</div> 
 	
 	<div id="TransferTeamForm" title="Transfer Team">
-		<form method="post">
-			<input type="radio" name="transfer" value="Yes" />Yes<br />
-			<input type="radio" name="transfer" value="No" checked="checked" />No<br />
-
-			<label for="email">If Yes, please enter new manager email address:</label>
-			<input type="text" name="email" id="email" size="30" maxlength="60" />
+		<form method="post" class="form-horizontal">
+			<p>Are you sure you want to transfer team ownership? If so, select who from the registered team members:</p>
+			<select class="input-medium" name="transfermember" id="transferlist"></select>
 		</form>
 	</div>
 	

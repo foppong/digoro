@@ -36,7 +36,7 @@
 		FROM subrequests AS s 
 		INNER JOIN teams AS tm USING (id_team)		
 		INNER JOIN events AS e USING (id_event)
-		WHERE s.id_manager=?
+		WHERE s.id_user=?
 		ORDER BY e.date ASC";
 	
 	// Prepare the statement:

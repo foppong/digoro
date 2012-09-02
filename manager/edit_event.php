@@ -37,7 +37,7 @@
 		$event->setEventID($eventid);
 		
 		// Check if user is authroized to make edit
-		if (!$event->isManager($userID)) {
+		if (!$event->isManager($userID, $eventid)) {
 			echo 'You have to be the manager to edit a event.';
 			exit();
 		}

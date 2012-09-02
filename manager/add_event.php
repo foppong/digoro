@@ -41,7 +41,7 @@
 		$team->pullTeamData();
 
 		// Check if user is authroized to make edit
-		if (!$team->isManager($userID)) {
+		if (!$team->isManager($userID, $ctmID)) {
 			echo 'You have to be the manager to add a member.';
 			exit();
 		}

@@ -68,25 +68,9 @@
 			while ($stmt->fetch())
 			{
 				
-				// Translate level of play data from database
-				switch ($tmlvlOB) {
-					case 1: //  Recreational
-						$tmlevel = 'Recreational';
-						break;
-					
-					case 2: // Intermediate
-						$tmlevel = 'Intermediate';
-						break;
-					
-					case 3: // Advanced
-						$tmlevel = 'Advanced';
-						break;
-						
-					default: 
-						$tmlevel = 'Recreational';
-						break;
-				}				
-				
+				// Translate level of play
+				$tmlevel = translateLevelofPlay($tmlvlOB);
+								
 				$json[] = array(
 				'Team Name' => $tmnameOB,
 				'Team Level' => $tmlevel,

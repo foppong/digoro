@@ -2,7 +2,7 @@
 	/* This page defines the SubRequest class.
 	 * Attributes:
 	 * 	protected id_subrequest
-	 * 	protected id_manager
+	 * 	protected id_user
 	 *  protected id_team
 	 *  protected id_event
 	 *  protected sex_needed
@@ -25,7 +25,7 @@
 	class SubRequest {
 	 	
 		// Declare the attributes
-		protected $id_subrequest, $id_manager, $id_team, $id_event, $sex_needed, 
+		protected $id_subrequest, $id_user, $id_team, $id_event, $sex_needed, 
 			$experience_needed, $id_region, $dbc;
 
 		// Constructor
@@ -43,7 +43,7 @@
 		
 		// Function to set SubRequest object attributes
 		function setSRAttributes($manID = 0, $tmID = 0, $evntID = 0, $sex ='', $exp = 0, $reg = 0) {
-			$this->id_manager = $manID;
+			$this->id_user = $manID;
 			$this->id_team = $tmID;
 			$this->id_event = $evntID;						
 			$this->sex_needed = $sex;
@@ -59,7 +59,7 @@
 		// Function to create a SubRequest object
 		function createSubReq($manID, $tmID, $evntID, $sex, $exp, $reg) {
 			// Make the query:
-			$q = 'INSERT INTO subrequests (id_manager, id_team, id_event, sex_needed, 
+			$q = 'INSERT INTO subrequests (id_user, id_team, id_event, sex_needed, 
 				experience_needed, id_region) VALUES (?,?,?,?,?,?)';
 				
 			// Prepare the statement
@@ -154,7 +154,7 @@
 		// Function to check if user is the manager
 		function isManager($userID) {
 			// Make the query to retreive manager id associated with team:		
-			$q = "SELECT id_manager FROM teams
+			$q = "SELECT id_user FROM teams
 				WHERE id_team=? LIMIT 1";
 				
 			// Prepare the statement
@@ -200,7 +200,7 @@
 		// Function to pull current SubRequest data from database & set attributes
 		function pullSubReqData() {
 			// Make the query
-			$q = 'SELECT id_manager,id_team,id_event,sex_needed,experience_needed,id_region
+			$q = 'SELECT id_user,id_team,id_event,sex_needed,experience_needed,id_region
 				FROM subrequests WHERE id_subrequest=? LIMIT 1';
 				
 			// Prepare the statement

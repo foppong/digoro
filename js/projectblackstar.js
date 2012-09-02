@@ -14,6 +14,8 @@ var idmember;
 var idevent;
 var idteam;
 var idsubrequest;
+var SelectedTeamName;
+var SelectedTeamID;
 
 
 // Namespace
@@ -62,39 +64,51 @@ var USER = {
 var MEMBER = {
 
 	loadDialog: function() {
+		var _member = this;
+
 		$( "#AddMemberForm" ).dialog({
 			autoOpen: false,
-			height: 550,
-			width: 450,
+			height: 'auto',
+			width: 'auto',
 			modal: true,
 			buttons: {
 				"Add Member": function() {
-					// Add member to database
-					MEMBER.add();					
-					$( this ).dialog( "close" );
+					MEMBER.add();	// Add member to database
+					$( this ).dialog( "destroy" ).remove();
+//					$( this ).dialog( "close" );
 	       	MISCFUNCTIONS.clearForm( '#AddMemberForm form' );
+					//_member.loadDialog();       	
+		// Hack
+		//if ($( '#add-member-fname' ).val() == 0) { $( '#add-member-fname' ).remove() };
+
+					$( "#add-member" ).click(function() {
+						$( "#AddMemberForm" ).dialog( "open" );
+					});
 				},
 				"Save and Add Another": function() {
 					MEMBER.add();
 	       	MISCFUNCTIONS.clearForm( '#AddMemberForm form' );
 				},
 				Cancel: function() {
-					$( this ).dialog( "close" );
+					$( this ).dialog( "destroy" );
+//					$( this ).dialog( "close" );
 	       	MISCFUNCTIONS.clearForm( '#AddMemberForm form' );
+	       	_member.loadDialog(); 
 				}
 			}
 		});
 		
 		$( "#EditMemberForm" ).dialog({
 			autoOpen: false,
-			height: 550,
-			width: 450,
+			height: 'auto',
+			width: 'auto',
 			modal: true,
 			buttons: {
 				"Edit Member": function() {
 					// Edit member in database
 					MEMBER.edit();					
 					$( this ).dialog( "close" );
+
 				},
 				Cancel: function() {
 					$( this ).dialog( "close" );
@@ -105,8 +119,8 @@ var MEMBER = {
 		
 		$( "#DelMemberForm" ).dialog({
 			autoOpen: false,
-			height: 150,
-			width: 275,
+			height: 'auto',
+			width: 'auto',
 			modal: true,
 			buttons: {
 				"Delete Member": function() {
@@ -211,14 +225,18 @@ var EVENT = {
 		
 		$( "#AddEventForm" ).dialog({
 			autoOpen: false,
-			height: 545,
-			width: 400,
+			height: 'auto',
+			width: 'auto',
 			modal: true,
 			buttons: {
-				"Add New Event": function() {
+				"Add": function() {
 					// Add event to database
 					EVENT.add();					
 					$( this ).dialog( "close" );
+				},
+				"Save and Add Another": function() {
+					// Add event to database
+					EVENT.add();					
 				},
 				Cancel: function() {
 					$( this ).dialog( "close" );
@@ -229,8 +247,8 @@ var EVENT = {
 
 		$( "#EditEventForm" ).dialog({
 			autoOpen: false,
-			height: 545,
-			width: 400,
+			height: 'auto',
+			width: 'auto',
 			modal: true,
 			buttons: {
 				"Edit Event": function() {
@@ -243,11 +261,23 @@ var EVENT = {
 				}
 			}
 		});	
+
+		$( "#ViewEventForm" ).dialog({
+			autoOpen: false,
+			height: 'auto',
+			width: 'auto',
+			modal: true,
+			buttons: {
+				"Close": function() {
+					$( this ).dialog( "close" );
+				}
+			}
+		});	
 		
 		$( "#DelEventForm" ).dialog({
 			autoOpen: false,
-			height: 150,
-			width: 275,
+			height: 'auto',
+			width: 'auto',
 			modal: true,
 			buttons: {
 				"Delete Event": function() {
@@ -352,8 +382,8 @@ var TEAM = {
  	loadDialog: function() { 
 		$("#AddTeamForm").dialog({
 			autoOpen: false,
-			height: 520,
-			width: 320,
+			height: 'auto',
+			width: 'auto',
 			modal: true,
 			buttons: {
 				"Add Team": function(){
@@ -369,8 +399,8 @@ var TEAM = {
 
 		$( "#EditTeamForm" ).dialog({
 			autoOpen: false,
-			height: 520,
-			width: 320,
+			height: 'auto',
+			width: 'auto',
 			modal: true,
 			buttons: {
 				"Edit": function() {
@@ -387,8 +417,8 @@ var TEAM = {
 
 		$( "#TransferTeamForm" ).dialog({
 			autoOpen: false,
-			height: 250,
-			width: 300,
+			height: 'auto',
+			width: 'auto',
 			modal: true,
 			buttons: {
 				"Transfer": function() {
@@ -397,14 +427,15 @@ var TEAM = {
 				},
 				Cancel: function() {
 					$( this ).dialog( "close" );
+					MISCFUNCTIONS.clearForm( '#TransferTeamForm form' );
 				}
 			}
 		});
 		
 		$( "#DeleteTeamForm" ).dialog({
 			autoOpen: false,
-			height: 250,
-			width: 300,
+			height: 'auto',
+			width: 'auto',
 			modal: true,
 			buttons: {
 				"Delete": function() {
@@ -447,6 +478,7 @@ var TEAM = {
 	// edit team information to database from dialog form
   edit: function() { 
   	var _team = this;
+		$( '#EditTeamForm form' ).append( '<input type="hidden" id="z" name="z" value="' + SelectedTeamID + '"/>' );	
     var form_data = $( '#EditTeamForm form' ).serialize();
 	  $.ajax({
 	  	type: "POST",
@@ -456,7 +488,6 @@ var TEAM = {
 	    	$( '.status' ).text( 'Edit failed. Try again.' ).slideDown( 'slow' );
 	    },
 	    success: function( data ) { 
-				//_team.teamMenu(); // Refresh the team selection menu
 	      $( '.status' ).text( data ).slideDown( 'slow' );   	
 	     },
 	    complete: function() {
@@ -468,16 +499,43 @@ var TEAM = {
     });
 	},
 	
+	// Function to transfer team
+	transferTM: function() {
+		var _team = this;
+		$( '#TransferTeamForm form' ).append( '<input type="hidden" id="z" name="z" value="' + SelectedTeamID + '"/>' );	
+		var form_data = $( '#TransferTeamForm form' ).serialize();
+		$.ajax({
+			type: "Post",
+			url: "../manager/transfer_team.php",
+			data: form_data, // Data that i'm sending
+	    error: function() {
+	    	$( '.status' ).text( 'Transfer Team failed. Try again.' ).slideDown( 'slow' );
+	    },
+	    success: function( data ) { 
+				_team.teamMenu(); // Refresh the team selection menu
+	      $( '.status' ).text( data ).slideDown( 'slow' );   	
+	    },
+	    complete: function() {
+	    	setTimeout(function() {
+	      	$( '.status' ).slideUp( 'slow' );
+	    	}, 2000);
+	    },
+	    cache: false		
+		});
+		
+	},	
+	
 	// Function to delete team
 	deleteTM: function() {
 		var _team = this;
+		$( '#DeleteTeamForm form' ).append( '<input type="hidden" id="z" name="z" value="' + SelectedTeamID + '"/>' );	
 		var form_data = $( '#DeleteTeamForm form' ).serialize();
 		$.ajax({
 			type: "Post",
 			url: "../manager/delete_team.php",
 			data: form_data, // Data that i'm sending
 	    error: function() {
-	    	$( '.status' ).text( 'Delete failed. Try again.' ).slideDown( 'slow' );
+	    	$( '.status' ).text( 'Delete Team failed. Try again.' ).slideDown( 'slow' );
 	    },
 	    success: function( data ) { 
 				_team.teamMenu(); // Refresh the team selection menu
@@ -495,12 +553,14 @@ var TEAM = {
 	
   teamMenu: function() {
   	var _team = this;
-
+		var data_to_send = { actionvar: 'teammenu' }
+		
 		// Ajax call to retreive list of teams assigned to user	
 		$.ajax({
 			type: "POST",
 			dataType: 'json',
 			url: "../data/team_data.php",
+			data: data_to_send,
 			success: function(data) {
 				_team.buildTeamMenu(data);
 			},
@@ -525,13 +585,13 @@ var TEAM = {
 	
 	pullTeamData: function( data ) {
   	var _team = this;
-		//var data_send = { idSubReq: idsubrequest };
+		var data_to_send = { actionvar: 'pullTeamData' };
 
 	  $.ajax({
 	  	type: "POST",
 	    dataType: 'json',
-	    url: "../data/team_info_data.php",
-	    //data: data_send, // Data that I'm sending
+	    url: "../data/team_data.php",
+	    data: data_to_send, 
 	    error: function() {
 	      alert('Error: Pull Team Data failed');
 	   	},
@@ -544,8 +604,51 @@ var TEAM = {
 		
 	},
 	
-	setTeamInfoPageVars: function ( data ) {
+	setTeamInfoPageVars: function( data ) {
 		$('.teamdisplay').html(""); // clear out any prior info
+
+		var teamInfo_array = new Array(); // set up array to store data pulled from database
+	  $(data).each(function(key, val) {
+			var i = 0;
+	  	for (var propertyName in val) {
+	    	teamInfo_array[i] = val[propertyName];
+	    	i++;
+	    }
+	  });
+	  
+	  SelectedTeamName = teamInfo_array[2];  // Assign team name to global variable
+	  SelectedTeamID = teamInfo_array[8]; // Assign team id to global variable
+		$( '.teamdisplay' ).append( SelectedTeamName ); // Set team name for Team Info Tab	  	
+		
+	},
+	
+	
+	setTeamName: function() {
+		$( '.teamdisplay' ).append( SelectedTeamName );
+	},
+
+
+	displayTeamInfo: function() {
+  	var _team = this;
+		var data_to_send = { actionvar: 'pullDisplayTeamData' };
+
+	  $.ajax({
+	  	type: "POST",
+	    dataType: 'json',
+	    url: "../data/team_data.php",
+	    data: data_to_send, 
+	    error: function() {
+	      alert('Error: displayTeamInfo failed');
+	   	},
+	    success: function( data ) { 
+				_team.buildTeamDisplay( data );
+	    },
+	    cache: false
+   	});		
+	},
+	
+	buildTeamDisplay: function( data ) {
+		$('#teamInfo').html(""); // clear out any prior info
 	  $( 'form #z' ).remove(); // clear out any prior info
 
 		var teamInfo_array = new Array(); // set up array to store data pulled from database
@@ -555,60 +658,63 @@ var TEAM = {
 	    	teamInfo_array[i] = val[propertyName];
 	    	i++;
 	    }
-	  });	
-		$( '.teamdisplay' ).append( '<h4>' + teamInfo_array[2] + ' Team Info</h4>' );		
-		$( '#EditTeamForm form' ).append( '<input type="hidden" id="z" name="z" value="' + teamInfo_array[8] + '"/>' );	
-		$( '#TransferTeamForm form' ).append( '<input type="hidden" id="z" name="z" value="' + teamInfo_array[8] + '"/>' );			
-		$( '#DeleteTeamForm form' ).append( '<input type="hidden" id="z" name="z" value="' + teamInfo_array[8] + '"/>' );			
-		
-	}	
-	
-	
-}
-
-/*  NOT BEING USED AT MOMENT
-var LEAGUE = {
-	
-	showLeagues: function( data ) {
-		var _league = this;
-		// AJAX call to retreive all leagues based on entered state
-		$.ajax({
-			type: 'POST',
-			dataType: 'json',
-			url: "../data/league_data.php",
-			data: {state: data},
-			success: function( data ) {
-				_league.buildLeagueMenu(data);
-			},
-			error: function(xhr, ajaxOptions, thrownError) {
-				alert('showLeagues: an error occured!');
-				console.log(jqXHR, textStatus, errorThrown);
-			}
-		});
+	  });
+	  
+		$( '#teamInfo' )
+			.append( '<p>Sport: ' + teamInfo_array[3] + '</p>' )
+			.append( '<p>Team Email: ' + teamInfo_array[4] + '</p>')
+			.append( '<p>Team Gender: ' + teamInfo_array[5] + '</p>')
+			.append( '<p>Level of Play: ' + teamInfo_array[6] + '</p>')
+			.append( '<p>Manager Info:</p>')
+			.append( '<p>Name: ' + teamInfo_array[0] + '</p>')
+			.append( '<p>Email: ' + teamInfo_array[1] + '</p>')
+			.append( '<p>Phone: ' + teamInfo_array[2] + '</p>')
+			.append( '<p>Location: ' + teamInfo_array[7] + '</p>')
+			.append( '<p>Other info: ' + teamInfo_array[8] + '</p>')	  
 	},
 	
-	buildLeagueMenu: function( data ) {
+	loadTransferList: function() {
+  	var _team = this;
+		var data_to_send = { actionvar: 'pullTransferListData' };
+  			
+		// Ajax call to retrieve list of users on team	
+		$.ajax({
+			type: "POST",
+			dataType: 'json',
+			url: "../data/roster_data.php",
+			data: data_to_send,
+			success: function( data ) {
+				_team.buildTransferSelect( data );
+			},
+			error: function() {
+				alert('load transfer list: error occured!');
+			}
+		});			
+	},
+	
+	buildTransferSelect: function( data ) {    
 		var tmp = '';
-		var menu = $("#league");
+		var menu = $( "#transferlist" );
 		menu.html(""); // clear out slection menu if it was previously populated
-		menu.append("<option value=''>-Select League-</options>");
-		$(data).each(function( key, val ) {
-			tmp += "<option value=" + val.LeagueID + ">" + val.LeagueName + "</option>";
+		menu.append("<option value=''>-Select Member-</options>");
+	
+		$(data).each(function(key, val) {
+			tmp += "<option value=" + val.MemberUserID + ">" + val.MemberName + "</options>";
 		});
 		
-		menu.append(tmp);
+		menu.append(tmp);	
 	}
+	
 }
 
-*/
 
 var FINDSUB = {
 
  	loadDialog: function() { 
 		$( "#Create-SubRequest-Form" ).dialog({
 			autoOpen: false,
-			height: 300,
-			width: 350,
+			height: 'auto',
+			width: 'auto',
 			modal: true,
 			buttons: {
 				"Create": function() {
@@ -624,8 +730,8 @@ var FINDSUB = {
 		
 		$( "#Edit-SubRequest-Form" ).dialog({
 			autoOpen: false,
-			height: 450,
-			width: 375,
+			height: 'auto',
+			width: 'auto',
 			modal: true,
 			buttons: {
 				"Edit": function() {
@@ -641,8 +747,8 @@ var FINDSUB = {
 
 		$( "#Del-SubRequest-Form" ).dialog({
 			autoOpen: false,
-			height: 150,
-			width: 275,
+			height: 'auto',
+			width: 'auto',
 			modal: true,
 			buttons: {
 				"Delete SubRequest": function() {
@@ -741,6 +847,7 @@ var FINDSUB = {
 var MISCFUNCTIONS = {
 	
 	clearForm: function( form ) {
+		$( 'form #z' ).remove();  	
   	$(form).children('input, select, textarea').val('');
  		$(form).children('input[type=checkbox]').each(function() {
      		this.checked = false; // for checkboxes
@@ -779,7 +886,7 @@ $(document).ready(function()
 					"Couldn't load this tab. We'll try to fix this as soon as possible. "
 				);				
 			}
-		},		
+		},
 		load: function ( event, ui ) {
 			switch (ui.index) {
 				case 0:
@@ -829,7 +936,6 @@ $(document).ready(function()
 
 
 
-
 	// jQuery UI Tabs
 	$('#tabmenu').tabs({
 		spinner: '<img src="../css/imgs/ajax-loader.gif" />',
@@ -843,11 +949,14 @@ $(document).ready(function()
 		load: function ( event, ui ) {
 			switch (ui.index) {
 				case 0:
+
 					// Load about team dialogs
 					TEAM.loadDialog();
 					
 					// Load Selected Team Data
 					TEAM.pullTeamData();
+					TEAM.displayTeamInfo();
+
 					
 					// Opens Edit Team Form dialog
 					$( "#edit-team" ).on("click", function() {
@@ -856,6 +965,7 @@ $(document).ready(function()
 					
 					// Opens Transfer Team Form dialog
 					$( "#transfer-team" ).on("click", function() {
+						TEAM.loadTransferList();
 						$( "#TransferTeamForm" ).dialog( "open" );
 					});
 
@@ -866,12 +976,13 @@ $(document).ready(function()
 
 					break;
 				case 1:
+
 					// Load member dialogs
 					MEMBER.loadDialog();
 
-					// Load Selected Team Data
-					TEAM.pullTeamData();
-	
+					// Set Team Name
+					TEAM.setTeamName();
+
 					$( "#add-member" ).on("click", function() {
 						$( "#AddMemberForm" ).dialog( "open" );
 					});
@@ -893,8 +1004,8 @@ $(document).ready(function()
 					// Load event dialogs
 					EVENT.loadDialog();
 
-					// Load Selected Team Data
-					TEAM.pullTeamData();
+					// Set Team Name
+					TEAM.setTeamName();
 	
 					$( "#add-event" ).on("click", function() {
 						$( "#AddEventForm" ).dialog( "open" );
@@ -905,6 +1016,13 @@ $(document).ready(function()
 						idevent = this.value;
 						SCHEDULE.pullEventData(idevent);
 						$( "#EditEventForm" ).dialog( "open" );
+					});
+
+					// Binds click to ajax loaded view button
+					$( "#schedule" ).on("click", ".view_event", function() {
+						idevent = this.value;
+						SCHEDULE.pullEventData(idevent);
+						$( "#ViewEventForm" ).dialog( "open" );
 					});
 
 					// Binds click to ajax loaded delete button

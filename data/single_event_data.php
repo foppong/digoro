@@ -60,19 +60,25 @@
 		{
 			// Initialize an array:
 			$json = array();
-					
+
+			// Translate database data					
+			$eventtxt = translateEventType($typeOB);				
+			$bd = new DateTime($gdateOB);
+			$gdfrmat = $bd->format('m-d-Y');
+
 			// Fetch and put results in the JSON array...
 			while ($stmt->fetch())
 			{			
 				$json[] = array(
 				'Event Type' => $typeOB,
-				'Event Date' => $gdateOB,
+				'Event Date' => $gdfrmat,
 				'Event Time' => $gtmOB,
 				'Event Oppo' => $oppOB,
 				'Event Ven Name' => $venOB,
 				'Event Ven Addr' => $venadOB,
 				'Event Note' => $noteOB,								
-				'Event Res' => $resOB);
+				'Event Res' => $resOB,
+				'Event Text' => $eventtxt);
 			}	// End of WHILE loop
 		
 			// Send the JSON data:
