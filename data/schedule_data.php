@@ -60,23 +60,7 @@
 		{		
 
 			// Translate event type data from database
-			switch ($typeOB) {
-				case 1: // Event is a game
-					$type = 'Game';
-					break;
-				
-				case 2: // Event is a practice
-					$type = 'Practice';
-					break;
-				
-				case 3: // Event is a scrimmage
-					$type = 'Scrimmage';
-					break;
-					
-				default: 
-					$type = 'Game';
-					break;
-			}
+			$type = translateEventType($typeOB);
 
 			$json[] = array(
 			'Type' => $type,

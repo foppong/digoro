@@ -11,14 +11,16 @@ $.ajaxSetup({"error":function(XMLHttpRequest,textStatus, errorThrown) {
 
 var ROSTER = {
 	
-  	loadRoster: function() {
-    	var _roster= this;
+	loadRoster: function() {
+  	var _roster= this;
+		var data_to_send = { actionvar: 'pullRosterData' };
     	
 		// Ajax call to retrieve list of users assigned to team	
 		$.ajax({
 			type: "POST",
 			dataType: 'json',
 			url: "../data/roster_data.php",
+			data: data_to_send,
 			success: function(data) {
 				_roster.buildTable(data);
 			},

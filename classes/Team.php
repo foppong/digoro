@@ -5,7 +5,7 @@
 	 *  protected about
 	 *  protected id_team
 	 *  protected id_sport
-	 *  protected id_manager
+	 *  protected id_user
 	 *  protected level
 	 *  protected id_region
 	 *  protected team_sex
@@ -32,7 +32,7 @@
 	class Team {
 	 	
 		// Declare the attributes
-		protected $tmname, $about, $id_team, $id_sport, $id_manager, $level, 
+		protected $tmname, $about, $id_team, $id_sport, $id_user, $level, 
 			$id_region, $team_sex, $team_email, $dbc;
 
 		// Constructor
@@ -67,7 +67,7 @@
 			$abtm = '', $lvl = '', $sex = '', $reg = 0, $tmemail = '')
 		{
 			$this->id_sport = $sprtID;
-			$this->id_manager = $manID;						
+			$this->id_user = $manID;						
 			$this->tmname = $tmname;
 			$this->about = $abtm;
 			$this->level = $lvl;
@@ -86,7 +86,7 @@
 		function pullTeamData()
 		{
 			// Make the query
-			$q = 'SELECT id_sport,id_manager,team_name,about,level_of_play,id_region,team_sex,team_email
+			$q = 'SELECT id_sport,id_user,team_name,about,level_of_play,id_region,team_sex,team_email
 				FROM teams WHERE id_team=? LIMIT 1';
 				
 			// Prepare the statement
@@ -162,7 +162,7 @@
 		function createTeam($sprtID, $manID, $tmname, $abtm, $lvl, $reg, $sex, $tmemail)
 		{
 			// Make the query:
-			$q = 'INSERT INTO teams (id_sport, id_manager, team_name, about, 
+			$q = 'INSERT INTO teams (id_sport, id_user, team_name, about, 
 				level_of_play, id_region, team_sex, team_email) 
 				VALUES (?,?,?,?,?,?,?,?)';
 
@@ -278,70 +278,35 @@
 
 		} // End of editTeam function
 
+		
 		// Function to transfer Manager role
-		function transferTeam($newMangEmail, $teamid)
-		{
-			// Make the query:
-			$q = 'SELECT p.id_user
-				FROM users AS u INNER JOIN members AS p
-				USING (id_user) 
-				WHERE u.email=? AND p.id_team=? LIMIT 1';
-
+		function transferTeam($memberUserID, $teamid) {
+			// Make the query to update the team record with another manager ID
+			$q = 'UPDATE teams SET id_user=? WHERE id_team=? LIMIT 1';
+					
 			// Prepare the statement
 			$stmt = $this->dbc->prepare($q);
-			
-			// Bind the inbound variable:
-			$stmt->bind_param('si', $newMangEmail, $teamid);
-			
+					
+			// Bind the inbound variables:
+			$stmt->bind_param('ii', $memberUserID, $teamid);
+					
 			// Execute the query:
 			$stmt->execute();
-			
-			// Store results:
-			$stmt->store_result();
-			
-			// Bind the outbound variable:
-			$stmt->bind_result($iduserOB);
-			
-			// If there are results to show.
-			if ($stmt->num_rows > 0) {
-				
-				while ($stmt->fetch()) {
-
-					// Make the query to update the team record with another manager ID
-					$q = 'UPDATE teams SET id_manager=? WHERE id_team=? LIMIT 1';
 					
-					// Prepare the statement
-					$stmt2 = $this->dbc->prepare($q);
-					
-					// Bind the inbound variables:
-					$stmt2->bind_param('ii', $iduserOB, $teamid);
-					
-					// Execute the query:
-					$stmt2->execute();
-					
-					if ($stmt2->affected_rows == 1) // Update to database was made
-					{
-						echo 'The team has been transferred. ';
-					}
-					else 
-					{	
-						echo 'The team could not be transferred due to a system error. ';
-						exit();
-					}
-					
-					// Close the statement:
-					$stmt2->close();
-					unset($stmt2);
- 				}
-			}	
-			else {
-				echo 'Could not transfer because player is not on team roster. ';
+			if ($stmt->affected_rows == 1) { // Update to database was made
+				echo 'The team has been transferred. ';
+						
+				// ADD CODE HERE TO SEND EMAIL TO RECEIPIENT
+						
+			}
+			else {	
+				echo 'The team could not be transferred due to a system error. ';
+				exit();
 			}
 
 			// Close the statement:
 			$stmt->close();
 			unset($stmt);
-
 		}
 
 		// Functon to delete team from database
@@ -379,7 +344,7 @@
 		function isManager($userID, $teamid)
 		{
 			// Make the query to retreive manager id associated with team:		
-			$q = "SELECT id_manager FROM teams
+			$q = "SELECT id_user FROM teams
 				WHERE id_team=? LIMIT 1";
 				
 			// Prepare the statement

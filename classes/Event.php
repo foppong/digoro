@@ -207,7 +207,7 @@
 		function isManager($userID, $eventid)
 		{
 			// Make the query to retreive manager id associated with event:		
-			$q = "SELECT tm.id_manager
+			$q = "SELECT tm.id_user
 				FROM teams AS tm INNER JOIN events AS g
 				USING (id_team)
 				WHERE g.id_event=? LIMIT 1";

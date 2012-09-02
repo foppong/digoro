@@ -286,7 +286,7 @@
 		function isManager($userID, $memberid)
 		{
 			// Make the query to retrieve all teams associated with member and selected team
-			$q = "SELECT tm.id_manager
+			$q = "SELECT tm.id_user
 				FROM teams AS tm INNER JOIN members AS p
 				USING (id_team)
 				WHERE p.id_member=? LIMIT 1";

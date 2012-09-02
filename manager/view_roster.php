@@ -50,13 +50,11 @@
 	</head>
 	<body>
 
-		<div class="row"> <!-- row for main content --> 
-		<div class="span10"> <!-- column for main content --> 
-			<div class="row"> <!-- Team Name header -->
-				<div class="span4">
-					<div class="page-header teamdisplay"></div> <!-- Name dynamically inserted here -->
+			<div class="row"> <!-- row for Team Name header -->
+				<div class="span6">
+					<h3><span class="page-header teamdisplay"></span> Roster</h3> <!-- Name dynamically inserted here -->
 				</div>
-				<div class="span2 offset3">
+				<div class="span2">
 					<button type="button" id="add-member" class="btn btn-small btn-primary">Add Member</button>
 				</div>
 			</div>
@@ -64,64 +62,128 @@
 
 
 
-	<!-- Modal Dialog Forms -->
+		<!-- Modal Dialog Forms -->
 		<div id="AddMemberForm" title="Add New Member">		
-			<form method="post">			
-				<label for="add-member-fname">First name:</label>
-				<input type="text" name="add-member-fname" id="add-member-fname" size="20" maxlength="20" />
-		
-				<label for="add-member-lname">Last name:</label>
-				<input type="text" name="add-member-lname" id="add-member-lname" size="20" maxlength="40" />
+			<form method="post" class="form-horizontal">
+				
+				<div class="control-group">			
+					<label class="control-label" for="add-member-fname">First name:</label>
+					<div class="controls">
+						<input type="text" class="input-medium" name="add-member-fname" id="add-member-fname" size="20" maxlength="20" />
+					</div>
+				</div>
 
-				<label for="add-member-sel-sex">New member's sex is</label>
-				<select class="span3" name="add-member-sel-sex" id="add-member-sel-sex">
-					<option value="">-Select Sex-</option>
-					<option value="1">Female</option>
-					<option value="2">Male</option>
-				</select>
-		
-				<label for="add-member-email">New member's email is</label>
-				<input type="text" name="add-member-email" id="add-member-email" size="30" maxlength="60" />
-			
-				<label for="add-member-ppos">Primary position:</label>
-				<input type="text" name="add-member-ppos" id="add-member-ppos" size="20" maxlength="30" />			
+				<div class="control-group">			
+					<label class="control-label" for="add-member-lname">Last name:</label>
+					<div class="controls">
+						<input type="text" class="input-medium" name="add-member-lname" id="add-member-lname" size="20" maxlength="40" />
+					</div>
+				</div>
 
-				<label for="add-member-spos">Secondary position:</label>
-				<input type="text" name="add-member-spos" id="add-member-spos" size="20" maxlength="30" />	
+				<div class="control-group">	
+					<label class="control-label" for="add-member-sel-sex">Member's sex is</label>
+					<div class="controls">
+						<select class="input-medium" name="add-member-sel-sex" id="add-member-sel-sex">
+							<option value="">-Select Sex-</option>
+							<option value="1">Female</option>
+							<option value="2">Male</option>
+						</select>
+					</div>
+				</div>
 
-				<label for="add-member-jernum">Jersey Number:</label>
-				<input type="text" name="add-member-jernum" id="add-member-jernum" size="4" maxlength="4" />
+				<div class="control-group">			
+					<label class="control-label" for="add-member-email">Member's email is</label>
+					<div class="controls">
+						<input type="text" class="input-medium" name="add-member-email" id="add-member-email" size="30" maxlength="60" />
+					</div>
+				</div>
 
-				<label>Send Invite?</label>
-				<input type="radio" name="add-member-invite" id="add-member-inviteY" value="1" checked="checked" />Yes
-				<br />
-				<input type="radio" name="add-member-invite" id="add-member-inviteN" value="0" />No
+				<div class="control-group">				
+					<label class="control-label" for="add-member-ppos">Primary position:</label>
+					<div class="controls">
+						<input type="text" class="input-medium" name="add-member-ppos" id="add-member-ppos" size="20" maxlength="30" 
+							placeholder="ex. striker"/>			
+					</div>
+				</div>
+
+				<div class="control-group">	
+					<label class="control-label" for="add-member-spos">Secondary position:</label>
+					<div class="controls">
+						<input type="text" class="input-medium" name="add-member-spos" id="add-member-spos" size="20" maxlength="30"
+							placeholder="ex. goalkeeper" />	
+					</div>
+				</div>
+
+				<div class="control-group">	
+					<label class="control-label" for="add-member-jernum">Jersey Number:</label>
+					<div class="controls">
+						<input type="text" class="input-medium" name="add-member-jernum" id="add-member-jernum" size="4" maxlength="4" />
+					</div>
+				</div>
+
+				<div class="control-group">	
+					<label class="control-label">Send Invite?</label>
+					<div class="controls">
+						<label class="radio">
+						  <input type="radio" name="add-member-invite" id="add-member-inviteY" value="1" checked>
+						  Yes
+						</label>
+						<label class="radio">
+						  <input type="radio" name="add-member-invite" id="add-member-inviteN" value="0">
+						  No
+						</label>
+					</div>
+				</div>
 			</form>
 		</div>
 		
 		<div id="EditMemberForm" title="Edit Member">	
-			<form method="post">
-				<label for="edit-member-fname">First name:</label>
-				<input type="text" name="edit-member-fname" id="edit-member-fname" size="20" maxlength="20" />
-		
-				<label for="add-member-lname">Last name:</label>
-				<input type="text" name="edit-member-lname" id="edit-member-lname" size="20" maxlength="40" />
+			<form method="post" class="form-horizontal">
+				<div class="control-group">
+					<label class="control-label" for="edit-member-fname">First name:</label>
+					<div class="controls">
+						<input type="text" class="input-medium" name="edit-member-fname" id="edit-member-fname" size="20" maxlength="20" />
+					</div>
+				</div>
 
-				<label for="edit-member-sel-sex">Member's sex is</label>
-				<select class="span3" name="edit-member-sel-sex" id="edit-member-sel-sex">
-					<option value="">-Select Sex-</option>
-					<option value="1">Female</option>
-					<option value="2">Male</option>
-				</select>
-			
-				<label for="edit-member-ppos">Primary position:</label>
-				<input type="text" name="edit-member-ppos" id="edit-member-ppos" size="20" maxlength="30" />			
+				<div class="control-group">		
+					<label class="control-label" for="add-member-lname">Last name:</label>
+					<div class="controls">
+						<input type="text" class="input-medium" name="edit-member-lname" id="edit-member-lname" size="20" maxlength="40" />
+					</div>
+				</div>
 
-				<label for="edit-member-spos">Secondary position:</label>
-				<input type="text" name="edit-member-spos" id="edit-member-spos" size="20" maxlength="30" />	
+				<div class="control-group">
+					<label class="control-label" for="edit-member-sel-sex">Member's sex is</label>
+					<div class="controls">
+						<select class="input-medium" name="edit-member-sel-sex" id="edit-member-sel-sex">
+							<option value="">-Select Sex-</option>
+							<option value="1">Female</option>
+							<option value="2">Male</option>
+						</select>
+					</div>
+				</div>
 
-				<label for="edit-member-jernum">Jersey Number:</label>
-				<input type="text" name="edit-member-jernum" id="edit-member-jernum" size="4" maxlength="4" />
+				<div class="control-group">			
+					<label class="control-label" for="edit-member-ppos">Primary position:</label>
+					<div class="controls">
+						<input type="text" class="input-medium" name="edit-member-ppos" id="edit-member-ppos" size="20" maxlength="30" />			
+					</div>
+				</div>
+
+				<div class="control-group">
+					<label class="control-label" for="edit-member-spos">Secondary position:</label>
+					<div class="controls">
+						<input type="text" class="input-medium" name="edit-member-spos" id="edit-member-spos" size="20" maxlength="30" />	
+					</div>
+				</div>
+
+				<div class="control-group">
+					<label class="control-label" for="edit-member-jernum">Jersey Number:</label>
+					<div class="controls">
+						<input type="text" class="input-medium" name="edit-member-jernum" id="edit-member-jernum" size="4" maxlength="4" />
+					</div>
+				</div>
 			</form>
 		</div>
 
@@ -142,8 +204,6 @@
 		</table>
 		</div>
 
-		</div> <!-- end of column for main content --> 
-		</div>	<!-- end of row for main content --> 
 	</body>
 </html>
 

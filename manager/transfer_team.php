@@ -1,10 +1,9 @@
 <?php
-	// This page is for deleting a team record
-	// This page is accessed through myteams-m.php
+	// This page is for transferring team ownership
 	
 	ob_start();
-	session_start();
-
+	session_start();	
+		
 	require '../includes/config.php';
 	include '../includes/php-functions.php';
 
@@ -12,6 +11,9 @@
 	function __autoload($class) {
 		require_once('../classes/' . $class . '.php');
 	}
+
+	// Establish database connection
+	require_once MYSQL2;
 
 	// Assign user object from session variable
 	if (isset($_SESSION['userObj']))
@@ -21,12 +23,12 @@
 	}
 	else 
 	{
-		redirect_to('index.php'); // Custom function to kick user out of system
+		redirect_to('index.php');	
 	}
 
-	// Need the database connection:
-	require_once MYSQL2;
-	
+	// Assign Database Resource to object
+	$manager->setDB($db);
+
 	if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['z'])) // Confirmation that form has been submitted	
 	{
 		$teamid = $_POST['z'];
@@ -34,32 +36,45 @@
 		// Create team object for use & pull latest data from database & initially set attributes
 		$team = new Team();
 		$team->setDB($db);
-
-		// Remove team instead of delete if User is not the manager
+		
+		// Check if user is authroized to make edit
 		if (!$team->isManager($userID, $teamid))
-		{		
-			$team->removeMember($userID);
+		{
+			echo 'You have to be the manager to make these changes.';
 			exit();
 		}
-		else {
-			$team->deleteTeam($teamid);
-			// Redirect user to home page after delete
-			$url = BASE_URL . 'manager/manager_home.php';
-			header("Location: $url");
-		}
 
+		// Assume invalid values:
+		$memberUserID = FALSE;
+
+		// Validate transfer member
+		if ($_POST['transfermember']) {
+			$memberUserID = $_POST['transfermember'];
+		}
+		else {
+			echo 'Please select a member to transfer team ownership to';
+			exit();
+		}
+		
+		// Check if user entered information is valid before continuing to edit game
+		if ($memberUserID) {
+			$team->transferTeam($memberUserID, $teamid);
+		}
+		else {
+			echo 'Transfer not made';
+			exit();
+		}
 	}
-	else 
-	{
+	else {
 		// No valid ID, kill the script.
 		echo '<p class="error">This page has been accessed in error.</p>';
-		exit();
-	}	
+		exit();		
+	}
 
 	// Delete objects
 	unset($team);
 	unset($manager);
-				
+
 	// Close the connection:
 	$db->close();
 	unset($db);

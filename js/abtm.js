@@ -10,55 +10,6 @@ $.ajaxSetup({"error":function(XMLHttpRequest,textStatus, errorThrown) {
   }});
 
 var ABOUTTM = {
-/*	
-	loadAbout: function() {
-		var _abouttm = this;
-	
-		// AJAX call to retrieve about information associated with team
-		$.ajax({
-	    type: "POST",
-			dataType: 'json',
-			url: "../data/about_data.php",
-			success: function(data) {
-				_abouttm.printAbout(data);
-			},
-			error: function() {
-				alert('an error occured!');
-			}
-		});		
-	},
-	
-	printAbout: function( data ) {
-		var tmp = '';
-		var pg = $("#about");
-		pg.html(""); // clear out slection menu if it was previously populated
-	
-		$(data).each(function( key, val ) {
-			tmp += "<p>" + val.TeamAbout + "</p><br />" + val.Edit;
-		});
-		
-		pg.append(tmp);
-	},
-*/	
-	pullTeamData: function( data ) {
-  	var _abouttm = this;
-		//var data_send = { idSubReq: idsubrequest };
-
-	  $.ajax({
-	  	type: "POST",
-	    dataType: 'json',
-	    url: "../data/team_info_data.php",
-	    //data: data_send, // Data that I'm sending
-	    error: function() {
-	      alert('Error: Response failed');
-	   	},
-	    success: function( data ) { 
-				_abouttm.displayinfo( data );
-	    },
-	    cache: false
-   	});
-		
-	},
 	
 	displayinfo: function ( data ) {
 
@@ -102,9 +53,7 @@ var ABOUTTM = {
 
 $(document).ready(function() {
 	
-	//Load about team information associated with team
-	//ABOUTTM.loadAbout();
+	//Load team data
+	//TEAM.pullTeamData();
 	
-	// Load team data
-	//ABOUTTM.pullTeamData();
 });
