@@ -14,6 +14,7 @@ var idmember;
 var idevent;
 var idteam;
 var idsubrequest;
+var idsubresponse;
 var SelectedTeamName;
 var SelectedTeamID;
 
@@ -760,13 +761,34 @@ var FINDSUB = {
 					$( this ).dialog( "close" );
 				}
 			}			
-		});	
+		});
+		
+		$( "#Respond-SubResponse-Form" ).dialog({
+			autoOpen: false,
+			height: 'auto',
+			width: 'auto',
+			modal: true,
+			buttons: {
+				"Confirm": function() {
+					FINDSUB.confirm();					
+					$( this ).dialog( "close" );
+				},
+				"Decline": function() {
+					FINDSUB.decline();					
+					$( this ).dialog( "close" );
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+					MISCFUNCTIONS.clearForm( '#Respond-SubResponse-Form form' );
+				}
+			}
+		});			
+		
 	},
 
 	// add subrequest information to database from dialog form
   create: function() { 
    	var form_data = $( '#Create-SubRequest-Form form' ).serialize();
-//		var form_data = { idSubReq: '5' };
 
 	   $.ajax({
 	     	type: "POST",
@@ -827,6 +849,7 @@ var FINDSUB = {
 	    },
 	    success: function( data ) {   
 				SUBREQUEST.loadOpenSubRequests(); //Call to subrequest.js
+				SUBREQUEST.loadSubReqResponses(); //Call to subrequest.js to refresh table
 	      $( '.status' ).text( data ).slideDown( 'slow' ); 
 	    },
 	    complete: function() {
@@ -836,7 +859,66 @@ var FINDSUB = {
 	    },
 	    cache: false
    	});
-   }
+   },
+   
+	// confirm subresponse
+  confirm: function() { 
+		$( '#Respond-SubResponse-Form form' ).append( '<input type="hidden" id="z" name="z" value="' + idsubresponse + '"/>' );
+  	$( '#SR-response' ).val( 'confirm' );
+    
+    var form_data = $( '#Respond-SubResponse-Form form' ).serialize();
+	  $.ajax({
+	  	type: "POST",
+	    url: "../manager/respond_subresponse.php",
+	    data: form_data, // Data that I'm sending
+	    error: function() {
+	    	$( '.status' ).text( 'Confirm failed. Try again.' ).slideDown( 'slow' );
+	    },
+	    success: function( data ) {   
+				SUBREQUEST.loadSubReqResponses(); //Call to subrequest.js to refresh table
+	    	$( '.status' ).text( data ).slideDown( 'slow' );
+	      MISCFUNCTIONS.clearForm( '#Respond-SubResponse-Form form' );    
+	    },
+	    complete: function() {
+	    	setTimeout(function() {
+	     		$( '.status' ).slideUp( 'slow' );
+	      }, 2000);
+	    },
+	    cache: false
+   	});
+   },   
+   
+	// decline subresponse
+  decline: function() { 
+		$( '#Respond-SubResponse-Form form' ).append( '<input type="hidden" id="z" name="z" value="' + idsubresponse + '"/>' );
+  	$( '#SR-response' ).val( 'decline' );
+    
+    var form_data = $( '#Respond-SubResponse-Form form' ).serialize();
+	  $.ajax({
+	  	type: "POST",
+	    url: "../manager/respond_subresponse.php",
+	    data: form_data, // Data that I'm sending
+	    error: function() {
+	    	$( '.status' ).text( 'Decline failed. Try again.' ).slideDown( 'slow' );
+	    },
+	    success: function( data ) {   
+				SUBREQUEST.loadSubReqResponses(); //Call to subrequest.js to refresh table
+	    	$( '.status' ).text( data ).slideDown( 'slow' );
+	      MISCFUNCTIONS.clearForm( '#Respond-SubResponse-Form form' );    
+	    },
+	    complete: function() {
+	    	setTimeout(function() {
+	     		$( '.status' ).slideUp( 'slow' );
+	      }, 2000);
+	    },
+	    cache: false
+   	});
+   },  
+   
+   
+   
+   
+   
 }
 
 
@@ -887,7 +969,7 @@ $(document).ready(function()
 				);				
 			}
 		},
-		load: function ( event, ui ) {
+		load: function( event, ui ) {
 			switch (ui.index) {
 				case 0:
 					// Load subrequest dialogs [but blocked from loading initially]
@@ -907,6 +989,18 @@ $(document).ready(function()
 						idsubrequest = this.value;
 						$( "#Del-SubRequest-Form" ).dialog( "open" );					
 					});
+
+					$( "#open-subrequests" ).on("click", "#delete-subreq", function() {
+						idsubrequest = this.value;
+						$( "#Del-SubRequest-Form" ).dialog( "open" );					
+					});
+
+					$( "#subrequests-responses" ).on("click", "#respond-subres", function() {
+						idsubresponse = this.value;
+						$( "#Respond-SubResponse-Form" ).dialog( "open" );					
+					});
+
+
 					
 					break;
 				case 1:
@@ -946,7 +1040,7 @@ $(document).ready(function()
 				);				
 			}
 		},
-		load: function ( event, ui ) {
+		load: function( event, ui ) {
 			switch (ui.index) {
 				case 0:
 

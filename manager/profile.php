@@ -96,8 +96,8 @@
 					</div>
 				</div>
 			</div>
-		</div>	 
-	</div> <!-- End of main row -->
+		</div><!-- End of main row -->
+
 
 	<!-- External javascript call-->
 	<script type="text/javascript" src="../js/subresponse.js"></script>

@@ -83,7 +83,77 @@
 			
 		} // End of createSubReqResp function
 
+		// Function for manager to confirm SubResponse
+		function confirmSubReqResp($subresponseID, $man_comments) {
 
+			$didrespond = 1;
+			
+			// Make the query
+			$q = 'UPDATE subreq_responses SET manager_respond=?, manager_response=?
+				WHERE id_sr_response=?';
+				
+			// Prepare the statement
+			$stmt = $this->dbc->prepare($q);
+			
+			// Bind the variables
+			$stmt->bind_param('isi', $didrespond, $man_comments, $subresponseID);
+			
+			// Execute the query
+			$stmt->execute();
+			
+			// Successfully added subResponse
+			if ($stmt->affected_rows == 1) {
+				echo 'SubResponse was confirmed';
+				
+				// SEND COMMENTS VIA EMAIL VIA SENDGRID HERE -write separate 
+				// function to query database and retrieve manager comments and email
+			}
+			else {
+				echo "SubResponse was not confirmed. Please contact the service administrator";
+			}
+			
+			// Close the statement
+			$stmt->close();
+			unset($stmt);
+			
+		} // End of confirmSubReqResp function
+
+
+		// Function for manager to confirm SubResponse
+		function declineSubReqResp($subresponseID, $man_comments) {
+
+			$didrespond = 2;
+			
+			// Make the query
+			$q = 'UPDATE subreq_responses SET manager_respond=?, manager_response=?
+				WHERE id_sr_response=?';
+				
+			// Prepare the statement
+			$stmt = $this->dbc->prepare($q);
+			
+			// Bind the variables
+			$stmt->bind_param('isi', $didrespond, $man_comments, $subresponseID);
+			
+			// Execute the query
+			$stmt->execute();
+			
+			// Successfully added subResponse
+			if ($stmt->affected_rows == 1) {
+				echo 'SubResponse was declined';
+				
+				// SEND COMMENTS VIA EMAIL VIA SENDGRID HERE -write separate 
+				// function to query database and retrieve manager comments and email
+			}
+			else {
+				echo "SubResponse was not declined. Please contact the service administrator";
+			}
+			
+			// Close the statement
+			$stmt->close();
+			unset($stmt);
+			
+		} // End of confirmSubReqResp function		
+		
 		// Function to delete a SubResponse object
 		function deleteSubReqResp() {
 			

@@ -324,7 +324,7 @@
 							<option value="1905">1905</option><option value="1904">1904</option><option value="1903">1903</option>
 							<option value="1902">1902</option><option value="1901">1901</option><option value="1900">1900</option>
 						</select>
-					<span class="help-inline"><a href="help.php">Why must I be 18?</a></span>
+					<span class="help-inline"><a href="help.php">Why do I need to provide my birthday?</a></span>
 					</div>
 
 				</div>

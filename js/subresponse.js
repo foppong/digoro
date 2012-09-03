@@ -56,7 +56,8 @@ var RESPONDSR = {
 			buttons: {
 				"I can play!": function() {
 					RESPONDSR.respond();
-					MISCFUNCTIONS.clearForm( '#Respond-SubRequest-Form form' );	
+					$( this ).dialog( "close" );
+					MISCFUNCTIONS.clearForm( '#Respond-SubRequest-Form form' );
 				},
 				"Exit": function() {
 					$( this ).dialog( "close" );

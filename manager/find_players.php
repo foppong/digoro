@@ -82,10 +82,10 @@
 					<div id="find-players-tabs" class="ui-tabs">
 						<ul>
 							<li><a href="find_subs_view.php"><span>Find Subs</span></a></li>
-							<li><a href="view_roster.php"><span>Browse Players</span></a></li>
+							<li><a href=""><span>Browse Players</span></a></li>
 						</ul>
 							<div id="find_subs_view.php" class="ui-tabs-hide">Find Subs</div>
-							<div id="view_roster.php" class="ui-tabs-hide">Roster</div>
+							<div id="" class="ui-tabs-hide">Browse Players</div>
 					</div>
 				</div>
 			</div>
