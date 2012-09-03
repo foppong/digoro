@@ -26,7 +26,6 @@ var SUBREQUEST = {
 		var tmp = '';
 		var menu = $(".SR-myteams-menu");
 		menu.html(""); // clear out slection menu if it was previously populated
-		menu.append("<option value=''>-Which team is this for?-</options>");
 	
 		$(data).each(function( key, val ) {
 			tmp += "<option value=" + val.TeamID + ">" + val.TeamName + "</options>";
@@ -56,7 +55,7 @@ var SUBREQUEST = {
 		var tmp = '';
 		var menu = $(".SR-teamevents-menu");
 		menu.html(""); // clear out slection menu if it was previously populated
-		menu.append("<option value=''>-Which event?-</options>");
+		//menu.append("<option value=''>-Which event?-</options>");
 		$(data).each(function( key, val ) {
 			tmp += "<option value=" + val.EventID + ">" + val.DateInfo + "</option>";
 		});
@@ -66,12 +65,14 @@ var SUBREQUEST = {
 
 	loadOpenSubRequests: function() {
 		var _subrequest = this;
+		var data_to_send = { actionvar: 'pullOpenSRData' };
 		
-		// AJAX call to retrieve list of events associated with team
+		// AJAX call to retrieve list of subrequests associated with user's teams
 		$.ajax({
 	    type: "POST",
 			dataType: 'json',
 			url: "../data/subrequest_data.php",
+			data: data_to_send,
 			success: function(data) {
 				_subrequest.buildOpenSRTable(data);
 			},
@@ -84,7 +85,8 @@ var SUBREQUEST = {
 	buildOpenSRTable: function(data) {
 	    var table = $("#open-subrequests");
 	    table.html("");  //clear out the table if it was previously populated
-	
+
+
 	    table.append('<thead><tr></tr></thead>');
 	    var thead = $('thead tr', table);                                        
 	    
@@ -101,6 +103,9 @@ var SUBREQUEST = {
 	            tr.append('<td>' + val[propertyName] + '</td>');
 	        }
 	    });		
+
+			$("#open-subrequests").prepend('<caption>Open SubRequests</caption>');
+
 	},
 		
   pullSubRequestData: function ( data ) {
@@ -144,9 +149,52 @@ var SUBREQUEST = {
 		$( '#edit-SR-sel-sex' ).val( subReqInfo_array[2] );
 		$( '#edit-SR-sel-exp' ).val( subReqInfo_array[3] );
 		$( '#edit-SR-sel-reg' ).val( subReqInfo_array[4] );
-  }			
+  },
+
+
+	loadSubReqResponses: function() {
+		var _subrequest = this;
+		var data_to_send = { actionvar: 'pullSRResponsesData' };
 		
-		
+		// AJAX call to retrieve list of subrequest responses associated with user's teams
+		$.ajax({
+	    type: "POST",
+			dataType: 'json',
+			url: "../data/subrequest_data.php",
+			data: data_to_send,
+			success: function(data) {
+				_subrequest.buildSRResponseTable(data);
+			},
+			error: function() {
+				alert('loadSubReqResponses: an error occured!');
+			}
+		});	
+	},
+	
+	buildSRResponseTable: function(data) {
+	    var table = $("#subrequests-responses");
+	    table.html("");  //clear out the table if it was previously populated
+	
+	    table.append('<thead><tr></tr></thead>');
+	    var thead = $('thead tr', table);                                        
+	    
+	    //create the table headers
+	    for (var propertyName in $(data)[0]) {                
+	        thead.append('<th>' + propertyName + '</th>');
+	    }
+	
+	    //add the table rows
+	    $(data).each(function(key, val) {
+	        table.append('<tr></tr>');
+	        var tr = $('tr:last', table);
+	        for (var propertyName in val) {
+	            tr.append('<td>' + val[propertyName] + '</td>');
+	        }
+	    });
+	    		
+			$("#subrequests-responses").prepend('<caption>Responses</caption>');
+	}
+					
 }
 
 $(document).ready(function() {
@@ -154,7 +202,14 @@ $(document).ready(function() {
 	// Load teams associated with manager into select menu
 	SUBREQUEST.teamMenu();	
 
-	// Load open sub requests associated with user
+	// Load open sub requests associated
 	SUBREQUEST.loadOpenSubRequests();
+
+	// Load sub request responses
+	SUBREQUEST.loadSubReqResponses();
+
+	$( '#OpenSRTitle').append( '<h4>Open SubRequests</h4>' );
+	$( '#SRRespTitle').append( '<h4>Responses</h4>' );
+	
 
 });

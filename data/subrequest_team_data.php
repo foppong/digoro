@@ -32,10 +32,7 @@
 	$userID = $user->getUserID();
 
 	// Make the Query to find all teams associated with user via a union of the members and teams table:
-	$q = "SELECT m.id_team, t.team_name, t.id_user
-		FROM members AS m INNER JOIN teams AS t
-		USING (id_team)
-		WHERE m.id_user=?";
+	$q = "SELECT id_team, team_name FROM teams WHERE id_user=?";
 	
 	// Prepare the statement:
 	$stmt = $db->prepare($q);
@@ -50,7 +47,7 @@
 	$stmt->store_result();
 			
 	// Bind the outbound variable:
-	$stmt->bind_result($idteamOB, $tnameOB, $idmanagerOB);
+	$stmt->bind_result($idteamOB, $tnameOB);
 			
 	// If there are results to show.
 	if ($stmt->num_rows > 0)
@@ -61,11 +58,9 @@
 		// Fetch and put results in the JSON array...
 		while ($stmt->fetch())
 		{		
-			if ($userID == $idmanagerOB) {
-				$json[] = array(
+			$json[] = array(
 				'TeamID' => $idteamOB,
 				'TeamName' => stripslashes($tnameOB));
-			}
 		}	// End of WHILE loop
 	
 		// Send the JSON data:

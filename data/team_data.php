@@ -35,10 +35,10 @@
 		$userID = $user->getUserID();
 	
 		// Make the Query to find all teams associated with user via a union of the members and teams table:
-		$q = "SELECT p.id_team, t.team_name
-			FROM members AS p INNER JOIN teams AS t
+		$q = "SELECT m.id_team, t.team_name
+			FROM members AS m INNER JOIN teams AS t
 			USING (id_team)
-			WHERE p.id_user=?";
+			WHERE m.id_user=?";
 		
 		// Prepare the statement:
 		$stmt = $db->prepare($q);

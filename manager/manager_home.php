@@ -120,7 +120,7 @@
 						<ul>
 							<li><a href="view_abteam.php"><span>Team Info</span></a></li>
 							<li><a href="view_roster.php"><span>Roster</span></a></li>
-						    <li><a href="view_sch.php"><span>Schedule</span></a></li>
+						  <li><a href="view_sch.php"><span>Schedule</span></a></li>
 						</ul>
 							<div id="view_abteam.php" class="ui-tabs-hide">Team Info</div>
 							<div id="view_roster.php" class="ui-tabs-hide">Roster</div>

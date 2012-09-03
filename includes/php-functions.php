@@ -1,5 +1,30 @@
 <?php
 
+	// Custom function to translate subresponse manager status
+	function translateSubResStatus($resp0B) {
+		switch ($resp0B) {
+			case 0:
+				$status = 'Pending';
+					return $status;
+					break;
+					
+			case 1:
+				$status = 'Confirmed';
+					return $status;					
+					break;
+					
+			case 2:
+				$status = 'Declined';
+					return $status;
+					break;
+						
+			default: 
+				$status = 'Pending';
+					return $status;
+					break;
+		}		
+	}
+
 	// Custom function to translate level of play data from int to string
 	function translateLevelofPlay($tmlvl) {
 		switch ($tmlvl) {
