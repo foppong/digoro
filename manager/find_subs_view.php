@@ -43,9 +43,6 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<title><?php echo $page_title; ?></title>
 		<meta name="author" content="Frank" />
-
-		<!-- External javascript call-->		
-		<script type="text/javascript" src="../js/subrequest.js"></script>
 	</head>
 	<body>
 
@@ -75,7 +72,7 @@
 					<label class="control-label" for="create-SR-sel-teams">Which team?</label>
 					<div class="controls">							
 						<select class="span3 SR-myteams-menu" name="create-SR-sel-teams" id="create-SR-sel-teams" 
-							onfocus="SUBREQUEST.showEvents(this.value)"></select>	
+							onfocus="SUBREQUEST.showEvents(this.value)" onchange="SUBREQUEST.showEvents(this.value)"></select>	
 					</div>
 				</div>
 				
@@ -102,12 +99,12 @@
 					<div class="controls">
 						<select class="span3" name="create-SR-sel-exp" id="create-SR-sel-exp">
 							<option value="1">Any</option>
-							<option value="2">Beginner</option>
+			<!--		<option value="2">Beginner</option>
 							<option value="3">Youth League</option>
 							<option value="4">High School - Varsity/ Club</option>
 							<option value="5">College - Varsity/ Club</option>
 							<option value="6">Adult League/ Pick-up</option>
-							<option value="7">Pro/ Semi-pro</option>
+							<option value="7">Pro/ Semi-pro</option> -->
 						</select>
 					</div>
 				</div>
@@ -129,7 +126,8 @@
 				<div class="control-group">
 					<label class="control-label" for="edit-SR-sel-teams">Which team?</label>
 					<div class="controls">						
-						<select class="span3 SR-myteams-menu" name="edit-SR-sel-teams" id="edit-SR-sel-teams" onblur="SUBREQUEST.showEvents(this.value)"></select>	
+						<select class="span3 SR-myteams-menu" name="edit-SR-sel-teams" id="edit-SR-sel-teams"
+						 onchange="SUBREQUEST.showEvents(this.value)"></select>	
 					</div>
 				</div>
 
@@ -156,12 +154,12 @@
 					<div class="controls">
 						<select class="span3" name="edit-SR-sel-exp" id="edit-SR-sel-exp">
 							<option value="1">Any</option>
-							<option value="2">Beginner</option>
+				<!-- <option value="2">Beginner</option>
 							<option value="3">Youth League</option>
 							<option value="4">High School - Varsity/ Club</option>
 							<option value="5">College - Varsity/ Club</option>
 							<option value="6">Adult League/ Pick-up</option>
-							<option value="7">Pro/ Semi-pro</option>
+							<option value="7">Pro/ Semi-pro</option> -->
 						</select>
 					</div>
 				</div>
@@ -183,12 +181,14 @@
 			</form>
 		</div>
 
-		<div id="Respond-SubResponse-Form" title="Respond" class="span4">	
+		<div id="Respond-SubResponse-Form" title="Respond SubRequest" class="span4">	
 			<form method="post">
 				<input type="hidden" name="SR-response" id="SR-response" />
-				<label for="respond-SRR-comment">Enter any comments:</label>
-					<textarea id="respond-SRR-comment" name="respond-SR-comment" cols="30" rows="2" class="input-xlarge text ui-widget-content ui-corner-all"
-					placeholder="ex. please bring a red shirt. thanks!" tabindex='-1'></textarea>			
+				<h4>Details:</h4>
+				<div id="dynamicSRRespinfo"></div>
+					<label for="respond-SRR-comment">Message to player:</label>
+					<textarea id="respond-SRR-comment" name="respond-SRR-comment" cols="30" rows="2" class="input-xlarge text ui-widget-content ui-corner-all"
+						placeholder="ex. please bring a red shirt. thanks!" tabindex='-1'></textarea>			
 			</form>
 		</div>
 
@@ -200,6 +200,9 @@
 		<!-- Load ajax subrequest responses data here -->
 		<table class="table table-striped table-bordered table-condensed" id="subrequests-responses" width="100%">
 				
+				
+		<!-- External javascript call-->		
+		<script type="text/javascript" src="../js/subrequest.js"></script>				
 	</body>
 </html>
 

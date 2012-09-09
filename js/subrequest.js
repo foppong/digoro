@@ -193,7 +193,46 @@ var SUBREQUEST = {
 	    });
 	    		
 			$("#subrequests-responses").prepend('<caption>Responses</caption>');
-	}
+	},
+	
+  pullSubResponseData: function ( data ) {
+  	var _subrequest = this;
+		var data_send = { idSubResp: idsubresponse, actionvar: 'pullSubResponseData' };
+
+	  $.ajax({
+	  	type: "POST",
+	    dataType: 'json',
+	    url: "../data/subresponse_data.php",
+	    data: data_send, // Data that I'm sending
+	    error: function() {
+	      alert('Error: pullSubResponseData failed');
+	   	},
+	    success: function( data ) { 
+				_subrequest.buildSubResponseForm( data );
+	    },
+	    cache: false
+   	});
+
+  },
+  
+  buildSubResponseForm: function( data ) {
+  	
+		$('#dynamicSRRespinfo').html(""); // clear out any prior info
+		var SRInfo_array = new Array(); // set up array to store data pulled from database
+	  $(data).each(function(key, val) {
+			var i = 0;
+	  	for (var propertyName in val) {
+	    	SRInfo_array[i] = val[propertyName];
+	    	i++;
+	    }
+	  });	
+	
+		$( '#Respond-SubResponse-Form form #dynamicSRRespinfo' )
+			.append( '<p>Name: ' + SRInfo_array[0] + '</p>' )
+			.append( '<p>Comment: ' + SRInfo_array[1] + '</p>');
+		
+  }
+
 					
 }
 
@@ -208,8 +247,5 @@ $(document).ready(function() {
 	// Load sub request responses
 	SUBREQUEST.loadSubReqResponses();
 
-	$( '#OpenSRTitle').append( '<h4>Open SubRequests</h4>' );
-	$( '#SRRespTitle').append( '<h4>Responses</h4>' );
-	
 
 });

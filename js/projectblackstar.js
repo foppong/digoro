@@ -65,7 +65,6 @@ var USER = {
 var MEMBER = {
 
 	loadDialog: function() {
-		var _member = this;
 
 		$( "#AddMemberForm" ).dialog({
 			autoOpen: false,
@@ -75,26 +74,16 @@ var MEMBER = {
 			buttons: {
 				"Add Member": function() {
 					MEMBER.add();	// Add member to database
-					$( this ).dialog( "destroy" ).remove();
-//					$( this ).dialog( "close" );
+					$( this ).dialog( "close" );
 	       	MISCFUNCTIONS.clearForm( '#AddMemberForm form' );
-					//_member.loadDialog();       	
-		// Hack
-		//if ($( '#add-member-fname' ).val() == 0) { $( '#add-member-fname' ).remove() };
-
-					$( "#add-member" ).click(function() {
-						$( "#AddMemberForm" ).dialog( "open" );
-					});
 				},
 				"Save and Add Another": function() {
 					MEMBER.add();
 	       	MISCFUNCTIONS.clearForm( '#AddMemberForm form' );
 				},
 				Cancel: function() {
-					$( this ).dialog( "destroy" );
-//					$( this ).dialog( "close" );
-	       	MISCFUNCTIONS.clearForm( '#AddMemberForm form' );
-	       	_member.loadDialog(); 
+					$( this ).dialog( "close" );
+	       	MISCFUNCTIONS.clearForm( '#AddMemberForm form' ); 
 				}
 			}
 		});
@@ -107,7 +96,8 @@ var MEMBER = {
 			buttons: {
 				"Edit Member": function() {
 					// Edit member in database
-					MEMBER.edit();					
+					MEMBER.edit();
+					MISCFUNCTIONS.jDialogHack( '#edit-member-fname' )
 					$( this ).dialog( "close" );
 
 				},
@@ -913,11 +903,7 @@ var FINDSUB = {
 	    },
 	    cache: false
    	});
-   },  
-   
-   
-   
-   
+   }  
    
 }
 
@@ -936,7 +922,22 @@ var MISCFUNCTIONS = {
      		// or
      		$(this).attr('checked', false); // for radio buttons
   	});
-	}
+	},
+	
+	jDialogHack: function( form ) {
+
+		$('[id]').each(function(){
+		  var ids = $('[id="'+this.id+'"]');
+		  if(ids.length>1 && ids[0]==this)
+		    console.warn('Multiple IDs #'+this.id);
+		});
+
+
+/*		var formcount = $( form ).get();
+		alert(formcount.length);
+		newformcount = jQuery.unique(formcount);
+		alert(formcount.length);
+*/	}
 }
 
 // jQuery Code for when page is loaded
@@ -997,11 +998,11 @@ $(document).ready(function()
 
 					$( "#subrequests-responses" ).on("click", "#respond-subres", function() {
 						idsubresponse = this.value;
+						SUBREQUEST.pullSubResponseData(idsubresponse);						
 						$( "#Respond-SubResponse-Form" ).dialog( "open" );					
 					});
 
 
-					
 					break;
 				case 1:
 					// Load player dialog

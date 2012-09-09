@@ -1,6 +1,6 @@
 <?php 
-	// profile.php
-	// Profile page for users
+	// home.php
+	// home page for users
 	
 	require '../includes/config.php';
 	$page_title = 'Profile';
@@ -42,17 +42,17 @@
 				<div class="side-nav">
 				<ul class="nav nav-list">
 					<li>
-						<a href=""><img src="../css/imgs/home-icon.png" 
+						<a href="home.php"><img src="../css/imgs/home-icon.png" 
 							alt="home-icon" height="60" width="60"></a>
 					</li>
 					<li><p>Home</p></li>
 					<li>
-						<a href=""><img src="../css/imgs/user-icon.png" 
+						<a href="profile.php"><img src="../css/imgs/user-icon.png" 
 							alt="user-icon" height="60" width="60"></a>	
 					</li>
 					<li><p>Profile</p></li>
 					<li>
-						<a href="manager_home.php"><img src="../css/imgs/clipboard-icon.png" 
+						<a href="my_teams.php"><img src="../css/imgs/clipboard-icon.png" 
 							alt="clipboard-icon" height="60" width="60"></a>	
 					</li>
 					<li><p>My Teams</p></li>
@@ -79,18 +79,16 @@
 				<div class="row"> <!-- SubResponses row -->		
 					<div class="span10">
 						<div>
-							<h4>SubRequest Matches for You!</h4>
-							<!-- Load ajax subrequest matches data here -->
-							<table class="table table-striped table-bordered table-condensed" id="subrequests-matches" width="100%"></table>	
+							<!-- Load user subresponses here -->
+							<table class="table table-striped table-bordered table-condensed" id="subrequests-responses" width="100%"></table>	
 						</div>
-						<div id="Respond-SubRequest-Form" title="Respond SubRequest" class="span4">	
+						<div id="View-SubRequest-Form" title="SubRequest Details" class="span4">	
 							<form method="post">
 								<h4>Details:</h4>
 								<div id="dynamicSRinfo"></div>
 								<h4>Respond:</h4>
-								<label for="respond-SR-commment">Comments:</label>
-									<textarea id="respond-SR-comment" tabindex="-1" name="respond-SR-comment" cols="30" rows="2" class="input-xlarge text ui-widget-content ui-corner-all"
-									placeholder="ex. I can't wait to play!"></textarea>			
+									<textarea id="SR-response-comment" tabindex="-1" name="SR-response-comment" cols="30" rows="2" class="input-xlarge text ui-widget-content ui-corner-all"
+									placeholder="ex. I can't make it, my car quit on me. Sorry!"></textarea>			
 							</form>
 						</div>						
 					</div>
@@ -99,7 +97,7 @@
 		</div><!-- End of main row -->
 
 
-	<!-- External javascript call-->
-	<script type="text/javascript" src="../js/subresponse.js"></script>
+	<!-- External javascript call -->
+	<script type="text/javascript" src="../js/profile_pg.js"></script>
 
 <?php include '../includes/footer.html'; ?>
