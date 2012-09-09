@@ -87,7 +87,7 @@
 
 
 	// Request is coming from the respond SubResponse form on the manager Find Subs page
-	if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['actionvar'] == 'pullManagerSubResponseData') {
+	if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['actionvar'] == 'Manager_single_SubResp_Data') {
 
 		$idSubResponse = $_POST['idSubResp'];
 
@@ -121,14 +121,13 @@
 			// Fetch and put results in the JSON array...
 			while ($stmt->fetch())
 			{								
-					
 				$json[] = array(
 				'Name' => $nameOB,
 				'Comment' => $comments);
 			}	// End of WHILE loop
 		
 			// Send the JSON data:
-			echo json_encode($json);		
+			echo json_encode($json);	
 		}
 	
 		// Close the statement:

@@ -12,7 +12,7 @@ var MATCHES = {
 			modal: true,
 			buttons: {
 				"I can play!": function() {
-					RESPONDSR.respond();
+					MATCHES.respond();
 					$( this ).dialog( "close" );
 					MISCFUNCTIONS.clearForm( '#Respond-SubRequest-Form form' );
 				},
