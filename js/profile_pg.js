@@ -13,7 +13,7 @@ var MYSUBRESP = {
 			width: 'auto',
 			modal: true,
 			buttons: {
-				"Cancel SubRequest": function() {
+				"Cancel SubResponse": function() {
 					MYSUBRESP.cancel();
 					$( this ).dialog( "close" );
 					MISCFUNCTIONS.clearForm( '#View-SubRequest-Form form' );
@@ -28,7 +28,8 @@ var MYSUBRESP = {
 
 	// function for user to edit subresponse
   cancel: function() { 
-		$( '#View-SubRequest-Form form' ).append( '<input type="hidden" id="z" name="z" value="' + idsubrequest + '"/>' );
+		var _mysubresp = this;
+		$( '#View-SubRequest-Form form' ).append( '<input type="hidden" id="z" name="z" value="' + idsubresponse + '"/>' );
    	var form_data = $( '#View-SubRequest-Form form' ).serialize();
 	   $.ajax({
 	     	type: "POST",
@@ -38,7 +39,8 @@ var MYSUBRESP = {
 	       	$( '.status' ).text( 'Response failed. Try again.' ).slideDown( 'slow' );
 	    	},
 	     	success: function( data ) { 
-	       	$( '.status' ).text( data ).slideDown( 'slow' );	
+	       	$( '.status' ).text( data ).slideDown( 'slow' );
+	       	_mysubresp.load_SubRequests_Responses(); // Refresh table
 	       	MISCFUNCTIONS.clearForm( '#View-SubRequest-Form form' );
 	     	},
 	     	complete: function() {

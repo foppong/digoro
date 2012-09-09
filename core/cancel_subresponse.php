@@ -47,7 +47,7 @@
 			$subResponse = new SubResponse();
 			$subResponse->setSRRespID($subResponseID);
 			$subResponse->setDB($db);
-			$subResponse->cancelSubResponse($userID, $com);	
+			$subResponse->cancelSubResponse($subResponseID, $com);	
 		}
 		else {									
 			echo 'Please try again';

@@ -52,7 +52,7 @@
 		// If data is valid, create subrequest response
 		if ($subReqid) {
 			$subResponse = new SubResponse();
-			$subResponse->$subresponseID($subReqid);
+			$subResponse->setSubReqID($subReqid);
 			$subResponse->setDB($db);
 			$subResponse->createSubReqResp($userID, $evntID, $com);	
 		}

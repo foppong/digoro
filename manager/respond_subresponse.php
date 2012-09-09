@@ -29,41 +29,42 @@
 
 	if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['SR-response'] == 'confirm' && !empty($_POST['z'])) {
 
-		$subresponseID = $_POST['z'];
+		$subResponseID = $_POST['z'];
 		$response = $_POST['SR-response'];
 		
 		// Validate comment
-		if ($_POST['respond-SR-comment']) {
-			$comments = $_POST['respond-SR-comment'];
-		}
-		else {
-			$comments = '';
-		}
-
-		$subResponse = new SubResponse($subresponseID);
-		$subResponse->setDB($db);
-		$subResponse->confirmSubReqResp($subresponseID, $comments);	
-		
-			
-	}
-	
-	elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['SR-response'] == 'decline' && !empty($_POST['z'])) {
-
-		$subresponseID = $_POST['z'];
-		$response = $_POST['SR-response'];
-		
-		// Validate comment
-		if ($_POST['respond-SR-comment']) {
-			$comments = $_POST['respond-SR-comment'];
+		if ($_POST['respond-SRR-comment']) {
+			$comments = $_POST['respond-SRR-comment'];
 		}
 		else {
 			$comments = '';
 		}
 
 		$subResponse = new SubResponse();
-		$subResponse->setSubReqID($subresponseID);
+		$subResponse->setSRRespID($subResponseID);
 		$subResponse->setDB($db);
-		$subResponse->declineSubReqResp($subresponseID, $comments);	
+		$subResponse->confirmSubReqResp($subResponseID, $comments);	
+		
+			
+	}
+	
+	elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['SR-response'] == 'decline' && !empty($_POST['z'])) {
+
+		$subResponseID = $_POST['z'];
+		$response = $_POST['SR-response'];
+		
+		// Validate comment
+		if ($_POST['respond-SRR-comment']) {
+			$comments = $_POST['respond-SRR-comment'];
+		}
+		else {
+			$comments = '';
+		}
+
+		$subResponse = new SubResponse();
+		$subResponse->setSubReqID($subResponseID);
+		$subResponse->setDB($db);
+		$subResponse->declineSubReqResp($subResponseID, $comments);	
 
 	}
 	else {
