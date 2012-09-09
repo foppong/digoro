@@ -1,79 +1,103 @@
 <?php 
-	/*
-	 * view_roster.php
-	 * This page allows user to view roster.
-	 */
+	// home.php
+	// home page for users
 	
-	ob_start();
-	session_start();
-
 	require '../includes/config.php';
+	$page_title = 'Profile';
+	include '../includes/header.html';
 	include '../includes/php-functions.php';
-	
+	//include '../includes/facebook.php';
+
 	// autoloading of classes
 	function __autoload($class) {
 		require_once('../classes/' . $class . '.php');
 	}
-
-	// Site access level -> General
-	$lvl = 'G'; 
-
+	
+	// See if there is a user from a cookie
+	$fbuser = $facebook->getUser();	
+	
 	// Assign user object from session variable
 	if (isset($_SESSION['userObj']))
 	{
-		$user = $_SESSION['userObj'];
+		$manager = $_SESSION['userObj'];
+		$userID = $manager->getUserID();
 	}
 	else 
 	{
 		redirect_to('index.php');
 	}
 
-	// Authorized Login Check
-	if (!$user->valid($lvl))
-	{
-		redirect_to('index.php');
-	}
-	
-	// Check for a $page_title value:
-	if (!isset($page_title))
-	{
-		$page_title = 'digoro';
-	}
+	// Need the database connection:
+	require_once MYSQL2;
 
-	$page_title = 'digoro : Roster';
+
 
 ?>
+	<p class="status"></p> <!-- FIX ALARM/ ALERTS -->
+
+	<div class="container" id="contentWrapper">
+		<div class="row"> <!-- Main row - for all content except footer -->	
+			<div class="span2"> <!-- column for icons --> 
+				<div class="well">
+				<div class="side-nav">
+				<ul class="nav nav-list">
+					<li>
+						<a href="home.php"><img src="../css/imgs/home-icon.png" 
+							alt="home-icon" height="60" width="60"></a>
+					</li>
+					<li><p>Home</p></li>
+					<li>
+						<a href="profile.php"><img src="../css/imgs/user-icon.png" 
+							alt="user-icon" height="60" width="60"></a>	
+					</li>
+					<li><p>Profile</p></li>
+					<li>
+						<a href="my_teams.php"><img src="../css/imgs/clipboard-icon.png" 
+							alt="clipboard-icon" height="60" width="60"></a>	
+					</li>
+					<li><p>My Teams</p></li>
+					<li>
+						<a href="find_players.php"><img src="../css/imgs/binoculars-icon.png" 
+							alt="binoculars-icon" height="60" width="60"></a>
+					</li>
+					<li><p>Find Players</p></li>
+					<li>
+						<a href=""><img src="../css/imgs/world-icon.png" 
+							alt="world-icon" height="60" width="60"></a>
+					</li>
+					<li><p>Find Teams</p></li>		
+				</ul>
+				</div>
+				</div>
+			</div>		
+			<div class="span10"> <!-- column for main content --> 
+				<div class="row"> <!-- Profile row -->
+					<div class="span10">
+						<div class="page-header"><h1>Home</h1></div>
+					</div>
+				</div>
+				<div class="row"> <!-- SubResponses row -->		
+					<div class="span10">
+						<div>
+							<!-- Load ajax subrequest matches data here -->
+							<table class="table table-striped table-bordered table-condensed" id="subrequests-matches" width="100%"></table>	
+						</div>
+						<div id="Respond-SubRequest-Form" title="Respond SubRequest" class="span4">	
+							<form method="post">
+								<h4>Details:</h4>
+								<div id="dynamicSRinfo"></div>
+								<h4>Respond:</h4>
+									<textarea id="respond-SR-comment" tabindex="-1" name="respond-SR-comment" cols="30" rows="2" class="input-xlarge text ui-widget-content ui-corner-all"
+									placeholder="ex. I can't wait to play!"></textarea>			
+							</form>
+						</div>						
+					</div>
+				</div>
+			</div>
+		</div><!-- End of main row -->
 
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title><?php echo $page_title; ?></title>
-		<meta name="author" content="Frank" />
+	<!-- External javascript call-->
+	<script type="text/javascript" src="../js/home_pg.js"></script>
 
-		<!-- CSS Style Sheet -->
-		<link rel="stylesheet" type="text/css" href="../css/styles.css" />
-		<link rel="stylesheet" type="text/css" href="../css/skins/tango/skin.css" />
-
-		<!-- External javascript call -->
-		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.js" charset="utf-8"></script>		
-		<script type="text/javascript" src="../js/jquery.jcarousel.min.js"></script>
-		<script type="text/javascript" src="../js/home.js"></script>
-
-	</head>
-	<body>
-
-		<!-- jCarousel -->
-		<ul id="mycarousel" class="jcarousel-skin-tango">
-		   <!-- The content will be dynamically loaded in here -->
-		</ul>
-
-	</body>
-</html>
-
-<?php
-	ob_end_flush();
-?>		
-
+<?php include '../includes/footer.html'; ?>
