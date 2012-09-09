@@ -154,6 +154,35 @@
 		
 		// Function to cancel a SubResponse object
 		function cancelSubResponse($subresponseID, $user_comments) {
+			// Make the query	
+			$q = "DELETE FROM subreq_responses WHERE id_sr_response=? LIMIT 1";
+	
+			// Prepare the statement:
+			$stmt = $this->dbc->prepare($q);
+	
+			// Bind the inbound variable:
+			$stmt->bind_param('i', $subresponseID);
+	
+			// Execute the query:
+			$stmt->execute();
+				
+			// If the query ran ok.
+			if ($stmt->affected_rows == 1) 
+			{
+				// ********** SEND EMAIL HERE WITH USER COMMENTS ************
+				
+				// Print a message
+				echo 'This subrequest response was cancelled successfully';
+			}
+			else 
+			{	// If the query did not run ok.
+				echo 'The subrequest response was not cancelled';
+			}
+				
+			// Close the statement:
+			$stmt->close();
+			unset($stmt);			
+			
 			
 		} // End of deleteSubReqResp function
 		

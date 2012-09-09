@@ -197,7 +197,7 @@ var SUBREQUEST = {
 	
   pullSubResponseData: function ( data ) {
   	var _subrequest = this;
-		var data_send = { idSubResp: idsubresponse, actionvar: 'pullSubResponseData' };
+		var data_send = { idSubResp: idsubresponse, actionvar: 'Manager_single_SubResp_Data' };
 
 	  $.ajax({
 	  	type: "POST",
