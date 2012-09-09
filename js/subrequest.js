@@ -144,7 +144,7 @@ var SUBREQUEST = {
 		// Hack to allow time for dynamic selection to me made
 		setTimeout(function () {
 			$( '#edit-SR-sel-events' ).val( subReqInfo_array[1] );		
-		}, 200);
+		}, 500);
 		
 		$( '#edit-SR-sel-sex' ).val( subReqInfo_array[2] );
 		$( '#edit-SR-sel-exp' ).val( subReqInfo_array[3] );
