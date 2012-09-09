@@ -3,49 +3,6 @@
  */
 
 var MATCHES = {
-	
-		loadMatched_SubRequests: function() {
-		var _matches = this;
-
-		// AJAX call to retrieve list of events associated with team
-		$.ajax({
-	    type: "POST",
-			dataType: 'json',
-			url: "../data/subrequest_matches_data.php",
-			success: function(data) {
-				_matches.buildMatchesSRTable(data);
-			},
-			error: function() {
-				alert('loadMatched_SubRequests: an error occured!');
-			}
-		});			
-	},
-	
-	buildMatchesSRTable: function(data) {
-	    var table = $("#subrequests-matches");
-	    table.html("");  //clear out the table if it was previously populated
-	
-	    table.append('<thead><tr></tr></thead>');
-	    var thead = $('thead tr', table);                                        
-	    
-	    //create the table headers
-	    for (var propertyName in $(data)[0]) {                
-	        thead.append('<th>' + propertyName + '</th>');
-	    }
-	
-	    //add the table rows
-	    $(data).each(function(key, val) {
-	        table.append('<tr></tr>');
-	        var tr = $('tr:last', table);
-	        for (var propertyName in val) {
-	            tr.append('<td>' + val[propertyName] + '</td>');
-	        }
-	    });	
-		}  
-}
-
-
-var RESPONDSR = {
 
  	loadDialog: function() { 
 		$("#Respond-SubRequest-Form").dialog({
@@ -63,7 +20,7 @@ var RESPONDSR = {
 					$( this ).dialog( "close" );
 				}
 			}
-		});	
+		});
 	},
 
 	// function for user to respond to subrequest
@@ -89,7 +46,47 @@ var RESPONDSR = {
 	     	cache: false
    	});
   },
-  
+	
+	loadMatched_SubRequests: function() {
+	var _matches = this;
+
+		// AJAX call
+		$.ajax({
+			type: "POST",
+			dataType: 'json',
+			url: "../data/subrequest_matches_data.php",
+			success: function(data) {
+				_matches.buildMatchesSRTable(data);
+			},
+			error: function() {
+				alert('loadMatched_SubRequests: an error occured!');
+			}
+		});			
+	},
+	
+	buildMatchesSRTable: function(data) {
+		var table = $("#subrequests-matches");
+	  table.html("");  //clear out the table if it was previously populated
+	
+	  table.append('<thead><tr></tr></thead>');
+	  var thead = $('thead tr', table);                                        
+	    
+	  //create the table headers
+	  for (var propertyName in $(data)[0]) {                
+	  	thead.append('<th>' + propertyName + '</th>');
+	  }
+	
+	  //add the table rows
+	  $(data).each(function(key, val) {
+	  	table.append('<tr></tr>');
+	    var tr = $('tr:last', table);
+	    for (var propertyName in val) {
+	    	tr.append('<td>' + val[propertyName] + '</td>');
+	    }
+	   });
+	   $("#subrequests-matches").prepend('<caption>SubRequest Matches for You!</caption>');    	
+	},
+		
   pullSRData: function ( data ) {
   	var _respondsr = this;
 		var data_send = { idSubReq: idsubrequest };
@@ -126,43 +123,24 @@ var RESPONDSR = {
 			.append( '<p>Team Name: ' + teamInfo_array[0] + '</p>' )
 			.append( '<p>Level of Play: ' + teamInfo_array[1] + '</p>')
 			.append( '<p>Venue Name: ' + teamInfo_array[2] + '</p>')
-			.append( '<p>Venue Address: ' + teamInfo_array[3] + '</p>')
+			.append( '<p>Venue Address: ' + teamInfo_array[3] + '</p>');
 		
-  }
-  
+  }  
 }
-
-
-var MISFUNCTIONS = {
-
-	clearForm: function( form ) {
-  		$(form).children('input, select, textarea').val('');
- 		$(form).children('input[type=checkbox]').each(function()
-  		{
-     		this.checked = false; // for checkboxes
-     		// or
-     		//$(this).attr('checked', false); // for radio buttons
-  		});
-	}  
-
-	
-}
-
 
 
 $(document).ready(function() {
 
 	// Load subrequests that match user
 	MATCHES.loadMatched_SubRequests();
-	
-	// Triggers respond subrequest dialog box
-	RESPONDSR.loadDialog();
-	
+
+	// Triggers dialog box
+	MATCHES.loadDialog();
+
 	$( "#subrequests-matches" ).on("click", "#view-subreq", function() {
 		idsubrequest = this.value;
-		RESPONDSR.pullSRData(idsubrequest);
+		MATCHES.pullSRData(idsubrequest);
 		$( "#Respond-SubRequest-Form" ).dialog( "open" );
 	});
-
 
 });

@@ -30,15 +30,11 @@
 
 	// Get user ID
 	$userID = $user->getUserID();
+	$userSex = $user->getUserAttribute('gd'); // Can utilize this value in logic later in queries
 
 	// Make the Query to find all subrequests associated with user
-	// NEED TO REVAMP or include functon to sort through sports profiles for matches
-	$q = "SELECT s.id_subrequest, s.id_team, s.sex_needed, DATE_FORMAT(e.date, '%a: %b %e, %Y'), tm.team_name, e.time
-		FROM subrequests AS s 
-		INNER JOIN teams AS tm USING (id_team)		
-		INNER JOIN events AS e USING (id_event)
-		WHERE s.id_user=?
-		ORDER BY e.date ASC";
+	$q = "SELECT id_region, id_sport FROM profiles 
+		WHERE id_user=?";
 	
 	// Prepare the statement:
 	$stmt = $db->prepare($q);
@@ -53,25 +49,60 @@
 	$stmt->store_result();
 			
 	// Bind the outbound variable:
-	$stmt->bind_result($idSROB, $idtmOB, $sexOB, $dateOB, $tmnameOB, $timeOB);
+	$stmt->bind_result($idregOB, $idsportOB);
 			
 	// If there are results to show.
-	if ($stmt->num_rows > 0)
-	{
+	if ($stmt->num_rows > 0) {
+
 		// Initialize an array:
 		$json = array();
-				
-		// Fetch and put results in the JSON array...
-		while ($stmt->fetch())
-		{			
-			$json[] = array(
-			'Team' => $tmnameOB,
-			'Sex Needed' => $sexOB,
-			'Event Date' => $dateOB,
-			'Event Time' => $timeOB,
-			'Take Action' => '<button type="button" id="view-subreq" class="btn btn-mini" value=' . $idSROB . '>View</button>');
+
+		// Fetch
+		while ($stmt->fetch()) {			
+			// Make the Query
+			$q = "SELECT sr.id_subrequest, sr.sex_needed, DATE_FORMAT(e.date, '%a: %b %e, %Y'), e.time
+				FROM subrequests AS sr
+				INNER JOIN teams AS tm USING (id_team)				
+				INNER JOIN events AS e USING (id_event)
+				WHERE sr.id_region=? AND tm.id_sport=?";
+
+			// Prepare the statement:
+			$stmt2 = $db->prepare($q);
+			
+			// Bind the inbound variable:
+			$stmt2->bind_param('ii', $idregOB, $idsportOB);
+					
+			// Execute the query:
+			$stmt2->execute();		
+						
+			// Store results:
+			$stmt2->store_result();
+					
+			// Bind the outbound variable:
+			$stmt2->bind_result($idSROB, $sexNeedOB, $dateOB, $timeOB);
+					
+			// If there are results to show.
+			if ($stmt2->num_rows > 0)
+			{			
+				// Fetch and put results in the JSON array...
+				while ($stmt2->fetch()) {	
+
+					$sport = translateSport($idsportOB);
+
+					$json[] = array(
+					'Sport' => $sport,
+					'Sex Needed' => $sexNeedOB,
+					'Event Date' => $dateOB,
+					'Event Time' => $timeOB, 
+					'Take Action' => '<button type="button" id="view-subreq" class="btn btn-mini" value=' . $idSROB . '>View</button>');			
+				} // End of WHILE loop
+
+			// Close the statement:
+			$stmt2->close();
+			unset($stmt2);
+			}						
 		}	// End of WHILE loop
-	
+
 		// Send the JSON data:
 		echo json_encode($json);
 				
@@ -83,8 +114,7 @@
 		$db->close();
 		unset($db);
 	}
-	else 
-	{	// No registered users
+	else {	// No registered users
 
 		$json[] = array(
 			'<p class="error">You have no subrequests matches. Create a sport profile to get linked with teams.</p><br />');

@@ -15,9 +15,7 @@
 			$manager_response, $comments, $did_showup, $dbc;
 
 		// Constructor
-		function __construct($IDsubrequest) {
-			self::setSubReqID($IDsubrequest);
-		}
+		function __construct() {}
 
 
 		// Set database connection attribute
@@ -154,8 +152,8 @@
 			
 		} // End of confirmSubReqResp function		
 		
-		// Function to delete a SubResponse object
-		function deleteSubReqResp() {
+		// Function to cancel a SubResponse object
+		function cancelSubResponse($subresponseID, $user_comments) {
 			
 		} // End of deleteSubReqResp function
 		

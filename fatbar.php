@@ -42,7 +42,7 @@
 	// If session value is present, redirect the user. Also validate the HTTP_USER_AGENT	
 	if (isset($_SESSION['agent']) AND ($_SESSION['agent'] = md5($_SERVER['HTTP_USER_AGENT']))) {
 	
-		$url = BASE_URL . 'manager/manager_home.php';
+		$url = BASE_URL . 'manager/home.php';
 		header("Location: $url");
 		exit();			
 	}

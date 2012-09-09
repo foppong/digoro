@@ -397,7 +397,7 @@
 					//Redirect User
 					$user = new User($userID);
 					$_SESSION['userObj'] = $user;							
-					$url = BASE_URL . 'manager/manager_home.php';
+					$url = BASE_URL . 'manager/home.php';
 	
 					ob_end_clean();
 					header("Location: $url");
@@ -809,7 +809,7 @@
 					//Redirect User
 					$user = new User($userID);
 					$_SESSION['userObj'] = $user;							
-					$url = BASE_URL . 'manager/manager_home.php';
+					$url = BASE_URL . 'manager/home.php';
 	
 					ob_end_clean();
 					header("Location: $url");
@@ -841,7 +841,7 @@
 					//Redirect User					
 					$user = new User($userID);
 					$_SESSION['userObj'] = $user;
-					$url = BASE_URL . 'manager/manager_home.php';
+					$url = BASE_URL . 'manager/home.php';
 					
 					ob_end_clean();
 					header("Location: $url");

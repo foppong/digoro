@@ -29,32 +29,25 @@
 
 	if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-		$subReqid = $_POST['z'];
-
-		// Create object for use & pull latest data from database & initially set attributes
-		$subReq = new SubRequest();
-		$subReq->setDB($db);
-		$subReq->setSubReqID($subReqid);
-		$subReq->pullSubReqData();
-
-		$evntID = $subReq->getSRAttribute('id_event');
+		$subResponseID = $_POST['z'];
 
 		// Validate comment enetered
-		if ($_POST['respond-SR-comment'])
+		if ($_POST['SR-response-comment'])
 		{
-			$com = $_POST['respond-SR-comment'];
+			$com = $_POST['SR-response-comment'];
 		}
 		else 
 		{
-			$com = '';
+			echo 'Please provide a reason for cancelling';
+			exit();
 		}
 
-		// If data is valid, create subrequest response
-		if ($subReqid) {
+		// If data is valid, cancel subrequest response
+		if ($subResponseID) {
 			$subResponse = new SubResponse();
-			$subResponse->$subresponseID($subReqid);
+			$subResponse->setSRRespID($subResponseID);
 			$subResponse->setDB($db);
-			$subResponse->createSubReqResp($userID, $evntID, $com);	
+			$subResponse->cancelSubResponse($userID, $com);	
 		}
 		else {									
 			echo 'Please try again';

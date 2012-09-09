@@ -60,7 +60,8 @@
 			$comments = '';
 		}
 
-		$subResponse = new SubResponse($subresponseID);
+		$subResponse = new SubResponse();
+		$subResponse->setSubReqID($subresponseID);
 		$subResponse->setDB($db);
 		$subResponse->declineSubReqResp($subresponseID, $comments);	
 

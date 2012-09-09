@@ -1,6 +1,6 @@
 <?php 
-	// manager_homepage.php
-	// This is the Manager Homepage
+	// my_teams.php
+	// 
 	require '../includes/config.php';
 	$page_title = 'Welcome to digoro!';
 	include '../includes/header.html';
@@ -64,7 +64,7 @@
 				<div class="side-nav">
 				<ul class="nav nav-list">
 					<li>
-						<a href=""><img src="../css/imgs/home-icon.png" 
+						<a href="home.php"><img src="../css/imgs/home-icon.png" 
 							alt="home-icon" height="60" width="60"></a>
 					</li>
 					<li><p>Home</p></li>
@@ -74,7 +74,7 @@
 					</li>
 					<li><p>Profile</p></li>
 					<li>
-						<a href="manager_home.php"><img src="../css/imgs/clipboard-icon.png" 
+						<a href="my_teams.php"><img src="../css/imgs/clipboard-icon.png" 
 							alt="clipboard-icon" height="60" width="60"></a>	
 					</li>
 					<li><p>My Teams</p></li>
