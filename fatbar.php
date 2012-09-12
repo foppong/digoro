@@ -328,7 +328,7 @@
 					</div>
 
 				</div>
-				<button type="submit" id="joinbutton" class="btn btn-primary btn-large">Join Now</button>
+				<button type="submit" id="joinbutton" class="btn btn-primary btn-block">Join Now</button>
 			</form>						
 					</div>
 					

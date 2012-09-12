@@ -76,21 +76,9 @@
 						<div class="page-header"><h1>Profile</h1></div>
 					</div>
 				</div>
-				<div class="row"> <!-- SubResponses row -->		
+				<div class="row"> <!-- User Profiles row -->		
 					<div class="span10">
-						<div>
-							<!-- Load user subresponses here -->
-							<table class="table table-striped table-bordered table-condensed" id="subrequests-responses" width="100%"></table>	
-						</div>
-						<div id="View-SubRequest-Form" title="SubRequest Details" class="span4">	
-							<form method="post">
-								<h4>Details:</h4>
-								<div id="dynamicSRinfo"></div>
-								<h4>Respond:</h4>
-									<textarea id="SR-response-comment" tabindex="-1" name="SR-response-comment" cols="30" rows="2" class="input-xlarge text ui-widget-content ui-corner-all"
-									placeholder="ex. I can't make it, my car quit on me. Sorry!"></textarea>			
-							</form>
-						</div>						
+					
 					</div>
 				</div>
 			</div>

@@ -67,21 +67,21 @@
 			<form method="post" class="form-horizontal">
 				
 				<div class="control-group">			
-					<label class="control-label" for="add-member-fname">First name:</label>
+					<label class="control-label" for="add-member-fname">First name*</label>
 					<div class="controls">
 						<input type="text" class="input-medium" name="add-member-fname" id="add-member-fname" size="20" maxlength="20" />
 					</div>
 				</div>
 
 				<div class="control-group">			
-					<label class="control-label" for="add-member-lname">Last name:</label>
+					<label class="control-label" for="add-member-lname">Last name*</label>
 					<div class="controls">
 						<input type="text" class="input-medium" name="add-member-lname" id="add-member-lname" size="20" maxlength="40" />
 					</div>
 				</div>
 
 				<div class="control-group">	
-					<label class="control-label" for="add-member-sel-sex">Member's sex is</label>
+					<label class="control-label" for="add-member-sel-sex">Member's sex is*</label>
 					<div class="controls">
 						<select class="input-medium" name="add-member-sel-sex" id="add-member-sel-sex">
 							<option value="">-Select Sex-</option>
@@ -92,14 +92,14 @@
 				</div>
 
 				<div class="control-group">			
-					<label class="control-label" for="add-member-email">Member's email is</label>
+					<label class="control-label" for="add-member-email">Member's email is*</label>
 					<div class="controls">
 						<input type="text" class="input-medium" name="add-member-email" id="add-member-email" size="30" maxlength="60" />
 					</div>
 				</div>
 
 				<div class="control-group">				
-					<label class="control-label" for="add-member-ppos">Primary position:</label>
+					<label class="control-label" for="add-member-ppos">Primary position*</label>
 					<div class="controls">
 						<input type="text" class="input-medium" name="add-member-ppos" id="add-member-ppos" size="20" maxlength="30" 
 							placeholder="ex. striker"/>			
@@ -107,7 +107,7 @@
 				</div>
 
 				<div class="control-group">	
-					<label class="control-label" for="add-member-spos">Secondary position:</label>
+					<label class="control-label" for="add-member-spos">Secondary position</label>
 					<div class="controls">
 						<input type="text" class="input-medium" name="add-member-spos" id="add-member-spos" size="20" maxlength="30"
 							placeholder="ex. goalkeeper" />	
@@ -115,7 +115,7 @@
 				</div>
 
 				<div class="control-group">	
-					<label class="control-label" for="add-member-jernum">Jersey Number:</label>
+					<label class="control-label" for="add-member-jernum">Jersey Number</label>
 					<div class="controls">
 						<input type="text" class="input-medium" name="add-member-jernum" id="add-member-jernum" size="4" maxlength="4" />
 					</div>
@@ -134,20 +134,21 @@
 						</label>
 					</div>
 				</div>
+				<small>* Required Fields</small>
 			</form>
 		</div>
 		
 		<div id="EditMemberForm" title="Edit Member">	
 			<form method="post" class="form-horizontal">
 				<div class="control-group">
-					<label class="control-label" for="edit-member-fname">First name:</label>
+					<label class="control-label" for="edit-member-fname">First name</label>
 					<div class="controls">
 						<input type="text" class="input-medium" name="edit-member-fname" id="edit-member-fname" size="20" maxlength="20" />
 					</div>
 				</div>
 
 				<div class="control-group">		
-					<label class="control-label" for="add-member-lname">Last name:</label>
+					<label class="control-label" for="add-member-lname">Last name</label>
 					<div class="controls">
 						<input type="text" class="input-medium" name="edit-member-lname" id="edit-member-lname" size="20" maxlength="40" />
 					</div>

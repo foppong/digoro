@@ -36,7 +36,7 @@
 		$eventID = $_POST['eventID'];
 
 		// Make the query to retreive event information from events table in database:		
-		$q = "SELECT date, time, opponent, venue_name, venue_address, result, note, type
+		$q = "SELECT DATE_FORMAT(date, '%m/%d/%Y'), time, opponent, venue_name, venue_address, result, note, type
 			FROM events
 			WHERE id_event=? LIMIT 1";
 		
@@ -63,15 +63,13 @@
 
 			// Translate database data					
 			$eventtxt = translateEventType($typeOB);				
-			$bd = new DateTime($gdateOB);
-			$gdfrmat = $bd->format('m-d-Y');
 
 			// Fetch and put results in the JSON array...
 			while ($stmt->fetch())
 			{			
 				$json[] = array(
 				'Event Type' => $typeOB,
-				'Event Date' => $gdfrmat,
+				'Event Date' => $gdateOB,
 				'Event Time' => $gtmOB,
 				'Event Oppo' => $oppOB,
 				'Event Ven Name' => $venOB,
