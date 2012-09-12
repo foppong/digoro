@@ -66,7 +66,7 @@
 			<form method="post" class="form-horizontal">
 
 				<div class="control-group">
-					<label class="control-label" for="add-event-sel-type">Event type</label>
+					<label class="control-label" for="add-event-sel-type">Event type*</label>
 					<div class="controls">
 						<select class="span4" name="add-event-sel-type" id="add-event-sel-type">
 							<option value="1">Game</option>
@@ -77,7 +77,7 @@
 				</div>
 
 				<div class="control-group">
-					<label class="control-label" for="add-event-sel-date">Select event date</label>
+					<label class="control-label" for="add-event-sel-date">Select event date*</label>
 					<div class="controls">
 						<input type="text" name="add-event-sel-date" id="add-event-sel-date" maxlength="10" class="span4 text ui-widget-content ui-corner-all pickdate" 
 							placeholder="click icon"/>	
@@ -85,7 +85,7 @@
 				</div>
 
 				<div class="control-group">		
-					<label class="control-label" for="add-event-time">Event time</label>
+					<label class="control-label" for="add-event-time">Event time*</label>
 					<div class="controls">
 						<input type="text" name="add-event-time" id="add-event-time" maxlength="9" class="span4" 
 							placeholder="ex. 7:00 PM" />
@@ -100,7 +100,7 @@
 				</div>
 
 				<div class="control-group">		
-					<label class="control-label" for="add-event-vname">Venue name</label>
+					<label class="control-label" for="add-event-vname">Venue name*</label>
 					<div class="controls">
 						<input type="text" name="add-event-vname" id="add-event-vname" maxlength="30" class="span4" 
 							placeholder="ex. Polo Fields" />
@@ -108,7 +108,7 @@
 				</div>
 
 				<div class="control-group">					
-					<label class="control-label" for="add-event-vadd">Venue address</label>
+					<label class="control-label" for="add-event-vadd">Venue address*</label>
 					<div class="controls">
 						<input type="text" name="add-event-vadd" id="add-event-vadd" maxlength="70" class="span4" 
 							placeholder="ex. 1234 Union Street, San Francisco" />					
@@ -116,13 +116,13 @@
 				</div>
 
 				<div class="control-group">		
-					<label class="control-label" for="add-event-note">Event Notes:</label>
+					<label class="control-label" for="add-event-note">Event Notes</label>
 					<div class="controls">
 						<textarea id="add-event-note" name="add-event-note" cols="30" rows="1" class="span4"
 							placeholder="Enter any event notes"></textarea>
 					</div>
 				</div>
-		
+				<small>* Required Fields</small>
 			</form>
 		</div>
 
@@ -180,7 +180,7 @@
 				</div>
 
 				<div class="control-group">				
-					<label class="control-label" for="edit-event-note">Event Notes:</label>
+					<label class="control-label" for="edit-event-note">Event Notes</label>
 					<div class="controls">
 						<textarea id="edit-event-note" name="edit-event-note" cols="30" rows="1" class="span4"
 							placeholder="Enter any event notes"></textarea>
@@ -188,7 +188,7 @@
 				</div>
 
 				<div class="control-group">		
-					<label class="control-label" for="edit-event-res">Enter Results:</label>
+					<label class="control-label" for="edit-event-res">Enter Results</label>
 					<div class="controls">
 						<input type="text" name="edit-event-res" id="edit-event-res" maxlength="13" class="span4" 
 							placeholder="ex. W 4-3" />

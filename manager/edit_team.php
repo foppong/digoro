@@ -46,7 +46,7 @@
 		}
 
 		// Assume invalid values:
-		$sp = $tn = $sex = $reg = $lvl = $e = FALSE;
+		$sp = $tn = $sex = $reg = $lvl = FALSE;
 				
 		// Validate a sport is selected
 		if ($_POST['edit-team-sel-sport']) {
@@ -98,8 +98,7 @@
 			$e = $_POST['edit-team-email'];
 		}
 		else {
-			echo 'Please enter valid email address';
-			exit();
+			$e = '';
 		}
 		
 		// Validate about team information
@@ -111,7 +110,7 @@
 		}
 		
 		// Check if user entered information is valid before continuing to edit game
-		if ($userID && $sp && $tn && $sex && $reg && $lvl && $e) {
+		if ($userID && $sp && $tn && $sex && $reg && $lvl) {
 			$team->editTeam($sp, $tn, $abtm, $lvl, $reg, $sex, $e, $teamid);
 		}
 		else {	// Errors in the user entered information

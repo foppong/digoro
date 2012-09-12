@@ -92,4 +92,7 @@
 			 
 		</div> <!-- End of main row -->
 
+	<!-- External javascript call -->
+	<script type="text/javascript" src="../js/findplayers_pg.js"></script>
+
 <?php include '../includes/footer.html'; ?>

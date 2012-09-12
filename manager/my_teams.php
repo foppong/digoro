@@ -137,7 +137,7 @@
 	<div id="AddTeamForm" title="Add New Team" class="span4">		
 		<form method="post" class="form-horizontal">
 			<div class="control-group">
-				<label class="control-label" for="add-team-sel-sport">We play</label>
+				<label class="control-label" for="add-team-sel-sport">We play*</label>
 				<div class="controls">
 					<select class="input-large" name="add-team-sel-sport" id="add-team-sel-sport">
 						<option value="">-Select Sport-</option>
@@ -155,14 +155,14 @@
 			</div>
 			
 			<div class="control-group">
-				<label class="control-label" for="add-team-name">Our team name is</label>
+				<label class="control-label" for="add-team-name">Our team name is*</label>
 				<div class="controls">
 					<input class="input-large" type="text" name="add-team-name" id="add-team-name" />	
 				</div>
 			</div>	
 
 			<div class="control-group">			
-				<label class="control-label" for="add-team-sel-sex">The team sex is</label>
+				<label class="control-label" for="add-team-sel-sex">The team sex is*</label>
 				<div class="controls">
 					<select class="input-large" name="add-team-sel-sex" id="add-team-sel-sex">
 						<option value="">-Select Sex-</option>
@@ -174,7 +174,7 @@
 			</div>
 
 			<div class="control-group">
-				<label class="control-label" for="add-team-sel-region">We are based in</label>
+				<label class="control-label" for="add-team-sel-region">We are based in*</label>
 				<div class="controls">
 					<select class="input-large" name="add-team-sel-region" id="add-team-sel-region">
 						<option value="">-Select Region-</option>
@@ -184,7 +184,7 @@
 			</div>	
 
 			<div class="control-group">
-				<label class="control-label" for="add-team-sel-level-play">Our level of play is</label>
+				<label class="control-label" for="add-team-sel-level-play">Our level of play is*</label>
 				<div class="controls">
 					<select class="input-large" name="add-team-sel-level-play" id="add-team-sel-level-play">
 						<option value="">-Select Level-</option>
@@ -213,5 +213,7 @@
 	</div> 
 	<!-- End of Modal Dialog Form -->
 
+	<!-- External javascript call -->
+	<script type="text/javascript" src="../js/myteams_pg.js"></script>
 
 <?php include '../includes/footer.html'; ?>

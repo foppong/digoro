@@ -60,7 +60,7 @@
 		// Fetch
 		while ($stmt->fetch()) {			
 			// Make the Query
-			$q = "SELECT sr.id_subrequest, sr.sex_needed, DATE_FORMAT(e.date, '%a: %b %e, %Y'), e.time
+			$q = "SELECT sr.id_subrequest, DATE_FORMAT(e.date, '%a: %b %e, %Y'), e.time
 				FROM subrequests AS sr
 				INNER JOIN teams AS tm USING (id_team)				
 				INNER JOIN events AS e USING (id_event)
@@ -79,7 +79,7 @@
 			$stmt2->store_result();
 					
 			// Bind the outbound variable:
-			$stmt2->bind_result($idSROB, $sexNeedOB, $dateOB, $timeOB);
+			$stmt2->bind_result($idSROB, $dateOB, $timeOB);
 					
 			// If there are results to show.
 			if ($stmt2->num_rows > 0)
@@ -91,7 +91,6 @@
 
 					$json[] = array(
 					'Sport' => $sport,
-					'Sex Needed' => $sexNeedOB,
 					'Event Date' => $dateOB,
 					'Event Time' => $timeOB, 
 					'Take Action' => '<button type="button" id="view-subreq" class="btn btn-mini" value=' . $idSROB . '>View</button>');			
