@@ -193,10 +193,11 @@
 		</div>
 
 
-		<!-- Keep these on the bottom of the page or gives problems with dialog boxes capturing form -->
+		<!-- Keep these on the bottom of the page or gives problems with dialog boxes capturing form 
+			*REVISIT THIS - see Home.php how i kept tables in divs, but may be b/c of tabs -->
 		<!-- Load ajax open subrequest data here -->
 		<table class="table table-striped table-bordered table-condensed" id="open-subrequests" width="100%">
-
+		</br>
 		<!-- Load ajax subrequest responses data here -->
 		<table class="table table-striped table-bordered table-condensed" id="subrequests-responses" width="100%">
 				

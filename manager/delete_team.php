@@ -44,7 +44,7 @@
 		else {
 			$team->deleteTeam($teamid);
 			// Redirect user to home page after delete
-			$url = BASE_URL . 'manager/manager_home.php';
+			$url = BASE_URL . 'manager/my_teams.php';
 			header("Location: $url");
 		}
 

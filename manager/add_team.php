@@ -36,7 +36,7 @@
 		// i have now for managers to edit and add players/games
 				
 		// Assume invalid values:
-		$sp = $tn = $sex = $reg = $lvl = $e = FALSE;
+		$sp = $tn = $sex = $reg = $lvl = FALSE;
 				
 		// Validate a sport is selected
 		if ($_POST['add-team-sel-sport']) {
@@ -88,8 +88,7 @@
 			$e = $_POST['add-team-email'];
 		}
 		else {
-			echo 'Please enter valid email address';
-			exit();
+			$e = '';
 		}
 		
 		// Validate about team information
@@ -101,7 +100,7 @@
 		}
 
 		// Check if values true before creating team
-		if ($userID && $sp && $tn && $sex && $reg && $lvl && $e) {
+		if ($userID && $sp && $tn && $sex && $reg && $lvl) {
 			// Create team object for use & create team for database
 			$team = new Team();
 			$team->setDB($db);
