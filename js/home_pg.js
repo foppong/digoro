@@ -261,7 +261,45 @@ var MYSUBRESP = {
 }
 
 
+var UPCOMING_EVENTS = {
+	
+	loadevents: function() {
+  	var _upcomingevents = this;
+		
+		// AJAX call
+		$.ajax({
+			type: "POST",
+			dataType: 'json',
+			url: "../data/upcoming_events_data.php",
+			success: function(data) {
+				_upcomingevents.buildupcomingevents(data);
+			},
+			error: function() {
+				alert('loadevents: an error occured!');
+			}
+		});			
+	},
+	
+  buildupcomingevents: function( data ) {
+
+		var tmp = '';
+		var menu = $("#upcomingevents");
+		menu.html(""); // clear out slection menu if it was previously populated
+	
+		$(data).each(function(key, val) {
+			tmp += "<ul class='upcoming-events'><li>" + val.Edate + "</li><li>Team: " + val.TName + "</li><li>Time: " 
+				+ val.Etime + "</li><li>Venue: " + val.Venue + "</li></ul>";
+		});
+		
+		menu.append(tmp);
+
+ }
+}
+
 $(document).ready(function() {
+
+	// Load upcoming events
+	UPCOMING_EVENTS.loadevents();
 
 	// Load subrequests that match user
 	MATCHES.loadMatched_SubRequests();

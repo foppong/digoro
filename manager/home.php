@@ -69,7 +69,8 @@
 				</ul>
 				</div>
 				</div>
-			</div>		
+			</div>
+					
 			<div class="span10"> <!-- column for main content --> 
 				<div class="row"> <!-- Profile row -->
 					<div class="span10">
@@ -77,7 +78,7 @@
 					</div>
 				</div>
 				<div class="row"> <!-- SubResponses row -->		
-					<div class="span5">
+					<div class="span6">
 						<div>
 							<!-- Load ajax subrequest matches data here -->
 							<table class="table table-striped table-bordered table-condensed" id="subrequests-matches" width="100%"></table>	
@@ -91,8 +92,8 @@
 					<div class="span3 offset1">
 						<div>
 							<!-- Load ajax upcoming events here -->
-							<h4>Upcoming Events</h4>
-							<li></li>
+							<div class="row"><h4>Upcoming Events</h4></div>
+							<div class="row" id="upcomingevents"></div>
 						</div>
 					</div>
 				</div>
