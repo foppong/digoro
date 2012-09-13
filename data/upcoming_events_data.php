@@ -37,7 +37,7 @@
 		INNER JOIN events AS e USING (id_team)
 		INNER JOIN teams AS tm USING (id_team) 
 		WHERE mb.id_user=? && e.date >= CURDATE()
-		ORDER BY e.date ASC";
+		ORDER BY e.date ASC LIMIT 5";
 		
 	// Prepare the statement:
 	$stmt = $db->prepare($q);
@@ -61,10 +61,10 @@
 		while ($stmt->fetch())
 		{		
 			$json[] = array(
-			'Date' => $dateOB,
-			'Time' => $timeOB,
+			'Edate' => $dateOB,
+			'Etime' => $timeOB,
 			'Venue' => $venOB,
-			'Team Name' => $teamOB);
+			'TName' => $teamOB);
 		}	// End of WHILE loop
 			
 		// Send the JSON data:
