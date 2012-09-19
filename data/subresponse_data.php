@@ -38,7 +38,8 @@
 			FROM subreq_responses AS subr
 			INNER JOIN events AS e USING (id_event)			
 			INNER JOIN teams AS tm USING (id_team)				
-			WHERE subr.id_user=?";
+			WHERE subr.id_user=?
+			ORDER BY e.date";
 
 		// Prepare the statement:
 		$stmt = $db->prepare($q);
