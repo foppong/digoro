@@ -102,17 +102,17 @@
 	function translateTmSex($sex) {
 		switch ($sex) {
 			case 1: //  Female
-				$sex = 'All Female';
+				$sex = 'Coed';
 				return $sex;
 				break;
 				
 			case 2: // Male
-				$sex = 'All Male';
+				$sex = 'All Female';
 				return $sex;
 				break;
 
 			case 3: // Coed
-				$sex = 'COED';
+				$sex = 'All Male';
 				return $sex;
 				break;
 					
@@ -190,6 +190,46 @@
 			default: 
 				$sport = 'Soccer';
 				return $sport;
+				break;
+		}			
+		
+	}
+
+	function translateExperience($exp) {
+		switch ($exp) {
+			case 2: 
+				$experience = 'Beginner';
+				return $experience;
+				break;
+				
+			case 3: 
+				$experience = 'Youth League';
+				return $experience;
+				break;
+
+			case 4: 
+				$experience = 'High School - Varsity/ Club';
+				return $experience;
+				break;
+
+			case 5: 
+				$experience = 'College - Varsity/ Club';
+				return $experience;
+				break;
+
+			case 6: 
+				$experience = 'Adult League/ Pick-up';
+				return $experience;
+				break;
+
+			case 7: 
+				$experience = 'Pro/ Semi-pro';
+				return $experience;
+				break;
+					
+			default: 
+				$experience = 'Beginner';
+				return $experience;
 				break;
 		}			
 		

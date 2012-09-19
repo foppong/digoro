@@ -136,7 +136,7 @@
 	}
 
 
-	// Request is coming from the profile page, so user can view the subresponse detail
+	// Request is coming from the home page, so user can view the subresponse detail
 	if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['actionvar'] == 'User_single_SubResp_Data') {
 
 			$idSubResponse = $_POST['idSubResp'];

@@ -49,9 +49,6 @@
 		<script type="text/javascript" src="../js/abtm.js"></script>
 	</head>
 	<body>
-		<p class="status"></p>	
-		
-
 			<div class="row"> <!-- Team Name header -->
 				<div class="span5">
 					<h3><span class="page-header teamdisplay"></span> Team Info</h3> <!-- Name dynamically inserted here -->
@@ -61,7 +58,7 @@
 					<button type="button" id="transfer-team" class="btn btn-small btn-warning">Transfer</button>
 					<button type="button" id="delete-team" class="btn btn-small btn-danger">Delete Team</button>
 				</div>				
-			</div>	
+			</div>
 			
 		
 		<!-- Load Dynamic Team Info Here -->

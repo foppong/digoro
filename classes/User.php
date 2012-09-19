@@ -126,11 +126,11 @@
 			$stmt->execute();
 						
 			if ($stmt->affected_rows == 1) { // It ran ok
-				echo '<p>Default team successfully changed!</p>';
+				echo '<div class="alert alert-success">Default team successfully changed!</div>';
 				self::pullUserData(); // Update object attributes
 			}
 			else {	// Either did not run ok or no updates were made
-				echo '<p>Default team not changed.</p>';
+				echo '<div class="alert">Default team not changed.</div>';
 			}
 						
 			// Close the statement:
@@ -259,12 +259,12 @@
 
 			if ($stmt->affected_rows == 1) // And update to the database was made
 			{				
-				echo '<p>The users account has been edited.</p>';
+				echo '<div class="alert alert-success">The users account has been edited.</div>';
 				self::pullUserData(); // Update object attributes
 			}
 			else 
 			{	// Either did not run ok or no updates were made
-				echo '<p>No changes were made.</p>';
+				echo '<div class="alert">No changes were made.</div>';
 			}
 		} // End of updateUserAcct function
 		

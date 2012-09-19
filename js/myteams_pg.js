@@ -76,16 +76,17 @@ var MEMBER = {
 	      	url: "../manager/add_member.php",
 	      	data: form_data, // Data that I'm sending
 	      	error: function() {
-	        	$( '.status' ).text( 'Update failed. Try again.' ).slideDown( 'slow' );
+	        	$( '#status' ).append( '<div class="alert alert-error">Add failed</div>' ).slideDown( 'slow' );
 	     	},
 	      	success: function( data ) {   
 	        	ROSTER.loadRoster(); //Call to roster.js to refresh table
-	        	$( '.status' ).text( data ).slideDown( 'slow' );
+	        	$( '#status' ).append( data ).slideDown( 'slow' );
 	        	MISCFUNCTIONS.clearForm( '#AddMemberForm form' );
 	      	},
 	      	complete: function() {
 	        	setTimeout(function() {
-	          		$( '.status' ).slideUp( 'slow' );
+	          		$( '#status' ).slideUp( 'slow' );
+	          		$( '#status .alert' ).remove();	          		
 	        	}, 2000);
 	      	},
 	      	cache: false
@@ -101,17 +102,18 @@ var MEMBER = {
 	      	url: "../manager/edit_member.php",
 	      	data: form_data, // Data that I'm sending
 	      	error: function() {
-	        	$( '.status' ).text( 'Edit failed. Try again.' ).slideDown( 'slow' );
+	        	$( '#status' ).append( '<div class="alert alert-error">Edit failed</div>' ).slideDown( 'slow' );
 	     	},
 	      	success: function( data ) { 
 	        	ROSTER.loadRoster(); //Call to roster.js
-	        	$( '.status' ).text( data ).slideDown( 'slow' );
+	        	$( '#status' ).append( data ).slideDown( 'slow' );
 	        	$( '#EditMemberForm form #z' ).remove();
 	        	MISCFUNCTIONS.clearForm( '#EditMemberForm form' );   	
 	      	},
 	      	complete: function() {
 	        	setTimeout(function() {
-	          		$( '.status' ).slideUp( 'slow' );
+	          		$( '#status' ).slideUp( 'slow' );
+	          		$( '#status .alert' ).remove();	          		
 	        	}, 2000);
 	      	},
 	      	cache: false
@@ -127,15 +129,16 @@ var MEMBER = {
 	      	url: "../manager/delete_member.php",
 	      	data: form_data, // Data that I'm sending
 	      	error: function() {
-	        	$( '.status' ).text( 'Delete failed. Try again.' ).slideDown( 'slow' );
+	        	$( '#status' ).append( '<div class="alert alert-error">Delete failed</div>' ).slideDown( 'slow' );
 	     	},
 	      	success: function( data ) {   
 	        	ROSTER.loadRoster(); //Call to roster.js
-	        	$( '.status' ).text( data ).slideDown( 'slow' );	    
+	        	$( '#status' ).append( data ).slideDown( 'slow' );	    
 	      	},
 	      	complete: function() {
 	        	setTimeout(function() {
-	          		$( '.status' ).slideUp( 'slow' );
+	          		$( '#status' ).slideUp( 'slow' );
+	          		$( '#status .alert' ).remove();	          		
 	        	}, 2000);
 	      	},
 	      	cache: false
@@ -231,16 +234,17 @@ var EVENT = {
 	      	url: "../manager/add_event.php",
 	      	data: form_data, // Data that I'm sending
 	      	error: function() {
-	        	$( '.status' ).text( 'Update failed. Try again.' ).slideDown( 'slow' );
+	        	$( '#status' ).append( '<div class="alert alert-error">Add Event failed</div>' ).slideDown( 'slow' );
 	     	},
 	      	success: function( data ) {   
 	        	SCHEDULE.loadSchedule(); //Call to schedule.js
-	        	$( '.status' ).text( data ).slideDown( 'slow' );	
+	        	$( '#status' ).append( data ).slideDown( 'slow' );		
 	        	MISCFUNCTIONS.clearForm( '#AddEventForm form' );
 	      	},
 	      	complete: function() {
 	        	setTimeout(function() {
-	          		$( '.status' ).slideUp( 'slow' );
+	          		$( '#status' ).slideUp( 'slow' );
+	          		$( '#status .alert' ).remove();
 	        	}, 2000);
 	      	},
 	      	cache: false
@@ -256,17 +260,18 @@ var EVENT = {
 	      	url: "../manager/edit_event.php",
 	      	data: form_data, // Data that I'm sending
 	      	error: function() {
-	        	$( '.status' ).text( 'Edit Event failed. Try again.' ).slideDown( 'slow' );
+	        	$( '#status' ).append( '<div class="alert alert-error">Edit failed</div>' ).slideDown( 'slow' );
 	     	},
 	      	success: function( data ) { 
 	        	SCHEDULE.loadSchedule(); //Call to schedule.js to refresh table
-	        	$( '.status' ).text( data ).slideDown( 'slow' );
+	        	$( '#status' ).append( data ).slideDown( 'slow' );
 	        	$( '#EditEventForm form #z' ).remove();	        	
 	        	MISCFUNCTIONS.clearForm( '#EditEventForm form' );   	
 	      	},
 	      	complete: function() {
 	        	setTimeout(function() {
-	          		$( '.status' ).slideUp( 'slow' );
+	          		$( '#status' ).slideUp( 'slow' );
+	          		$( '#status .alert' ).remove();	          		
 	        	}, 2000);
 	      	},
 	      	cache: false
@@ -282,15 +287,16 @@ var EVENT = {
 	      	url: "../manager/delete_event.php",
 	      	data: form_data, // Data that I'm sending
 	      	error: function() {
-	        	$( '.status' ).text( 'Delete failed. Try again.' ).slideDown( 'slow' );
+	        	$( '#status' ).append( '<div class="alert alert-error"><div class="alert alert-error">Delete failed</div>' ).slideDown( 'slow' );
 	     	},
 	      	success: function( data ) {   
 	        	SCHEDULE.loadSchedule(); //Call to schedule.js
-	        	$( '.status' ).text( data ).slideDown( 'slow' );	    
+	        	$( '#status' ).append( data ).slideDown( 'slow' );	    
 	      	},
 	      	complete: function() {
 	        	setTimeout(function() {
-	          		$( '.status' ).slideUp( 'slow' );
+	          		$( '#status' ).slideUp( 'slow' );
+	          		$( '#status .alert' ).remove();	          		
 	        	}, 2000);
 	      	},
 	      	cache: false
@@ -380,16 +386,17 @@ var TEAM = {
 			url: "../manager/add_team.php",
 			data: form_data, // Data that I'm sending
 			error: function() {
-				$( '#status' ).text( 'Add failed. Try again.' ).slideDown( 'slow' );
+				$( '#status' ).append( '<div class="alert alert-error">Add failed</div>' ).slideDown( 'slow' );
 			},
 			success: function( data ) {
 				_team.teamMenu(); // Refresh the team selection menu
-				$( '#status' ).text( data ).slideDown( 'slow' );
+				$( '#status' ).append( data ).slideDown( 'slow' );
 				MISCFUNCTIONS.clearForm( '#AddTeamForm' );
 			},
 			complete: function() {
 				setTimeout(function() {
-					$( '#tmstatus' ).slideUp( 'slow' );
+					$( '#status' ).slideUp( 'slow' );
+	        $( '#status .alert' ).remove();					
 				}, 2000);
 			},
 			cache: false
@@ -406,14 +413,15 @@ var TEAM = {
 	    url: "../manager/edit_team.php",
 	    data: form_data, // Data that I'm sending
 	    error: function() {
-	    	$( '.status' ).text( 'Edit failed. Try again.' ).slideDown( 'slow' );
+	    	$( '#status' ).append( '<div class="alert alert-error">Edit failed</div>' ).slideDown( 'slow' );
 	    },
 	    success: function( data ) { 
-	      $( '.status' ).text( data ).slideDown( 'slow' );   	
+	      $( '#status' ).append( data ).slideDown( 'slow' );   	
 	     },
 	    complete: function() {
 	    	setTimeout(function() {
-	      	$( '.status' ).slideUp( 'slow' );
+	      	$( '#status' ).slideUp( 'slow' );
+	        $( '#status .alert' ).remove();
 	    	}, 2000);
 	    },
 	    cache: false
@@ -430,15 +438,16 @@ var TEAM = {
 			url: "../manager/transfer_team.php",
 			data: form_data, // Data that i'm sending
 	    error: function() {
-	    	$( '.status' ).text( 'Transfer Team failed. Try again.' ).slideDown( 'slow' );
+	    	$( '#status' ).append( '<div class="alert alert-error">Transfer Team failed</div>' ).slideDown( 'slow' );
 	    },
 	    success: function( data ) { 
 				_team.teamMenu(); // Refresh the team selection menu
-	      $( '.status' ).text( data ).slideDown( 'slow' );   	
+	      $( '#status' ).append( data ).slideDown( 'slow' );   	
 	    },
 	    complete: function() {
 	    	setTimeout(function() {
-	      	$( '.status' ).slideUp( 'slow' );
+	      	$( '#status' ).slideUp( 'slow' );
+	        $( '#status .alert' ).remove();	      	
 	    	}, 2000);
 	    },
 	    cache: false		
@@ -456,15 +465,16 @@ var TEAM = {
 			url: "../manager/delete_team.php",
 			data: form_data, // Data that i'm sending
 	    error: function() {
-	    	$( '.status' ).text( 'Delete Team failed. Try again.' ).slideDown( 'slow' );
+	    	$( '#status' ).append( '<div class="alert alert-error">Delete Team failed</div>' ).slideDown( 'slow' );
 	    },
 	    success: function( data ) { 
 				_team.teamMenu(); // Refresh the team selection menu
-	      $( '.status' ).text( data ).slideDown( 'slow' );   	
+	      $( '#status' ).append( data ).slideDown( 'slow' );   	
 	    },
 	    complete: function() {
 	    	setTimeout(function() {
-	      	$( '.status' ).slideUp( 'slow' );
+	      	$( '#status' ).slideUp( 'slow' );
+	        $( '#status .alert' ).remove();	      	
 	    	}, 2000);
 	    },
 	    cache: false		
@@ -632,15 +642,14 @@ var TEAM = {
 	      	url: "../manager/manager_home.php",
 	      	data: form_data, // Data that I'm sending
 	      	error: function(jqXHR, textStatus, errorThrown) {
-	        	$( '.status' ).text( 'Selection failed. Try again.' ).slideDown( 'slow' );
+	        	$( '#status' ).append( '<div class="alert alert-error">Selection failed</div>' ).slideDown( 'slow' );
 	     	},
 	      	success: function( data ) {   
-	        	$( '.status' ).text( data ).slideDown( 'slow' );
 	        	MISCFUNCTIONS.clearForm( '#SelectTeamForm' );
 	      	},
 	      	complete: function() {
 	        	setTimeout(function() {
-	          		$( '.status' ).slideUp( 'slow' );
+	          		$( '#status' ).slideUp( 'slow' );
 	        	}, 2000);
 	      	},
 	      	cache: false
@@ -769,5 +778,6 @@ $(document).ready(function() {
 
 		$( "#AddTeamForm" ).dialog( "open" );
 	});
+
 
 });
