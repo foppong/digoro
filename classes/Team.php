@@ -199,7 +199,7 @@
 						
 				if ($stmt2->affected_rows !== 1) // It didn't run ok
 				{
-					echo 'Manager was not added to roster. Please contact the service administrator.';
+					echo '<div class="alert alert-error">Oh Snap! Manager was not added to roster. Please contact the service administrator.</div>';
 					exit();
 				}
 			
@@ -226,11 +226,11 @@
 					
 				if ($stmt2->affected_rows !== 1) // It didn't run ok
 				{
-					echo 'Team was not added. Please contact the service administrator.';
+					echo '<div class="alert alert-error">Oh Snap! Team was not added. Please contact the service administrator.</div>';
 					exit();
 				}
 
-				echo 'Team was added successfully!';
+				echo '<div class="alert alert-success">Team was added successfully!</div>';
 					
 				// Close the statement:
 				$stmt2->close();
@@ -238,7 +238,7 @@
 			}
 			else
 			{
-				echo 'Your team was not added. Please contact the service administrator.';
+				echo '<div class="alert alert-error">Oh Snap! Team was not added. Please contact the service administrator.</div>';
 				exit();
 			}
 
@@ -269,11 +269,11 @@
 			// Print a message based upon result:
 			if ($stmt->affected_rows == 1)
 			{
-				echo 'Your team was edited succesfully. ';
+				echo '<div class="alert alert-success">Team was edited succesfully.</div>';
 			}
 			else
 			{
-				echo 'No changes made. ';
+				echo '<div class="alert">No changes made.</div>';
 			}
 
 		} // End of editTeam function
@@ -294,13 +294,13 @@
 			$stmt->execute();
 					
 			if ($stmt->affected_rows == 1) { // Update to database was made
-				echo 'The team has been transferred. ';
+				echo '<div class="alert alert-success">The team has been transferred.</div>';
 						
 				// ADD CODE HERE TO SEND EMAIL TO RECEIPIENT
 						
 			}
 			else {	
-				echo 'The team could not be transferred due to a system error. ';
+				echo '<div class="alert alert-error">The team could not be transferred due to a system error.</div>';
 				exit();
 			}
 
@@ -327,11 +327,11 @@
 			// If the query ran ok.
 			if ($stmt->affected_rows == 1) 
 			{	// Print a message
-				echo 'This team has been deleted successfully. ';
+				echo '<div class="alert alert-success">This team has been deleted successfully</div>';
 			}
 			else 
 			{	// If the query did not run ok.
-				echo 'The team could not be deleted due to a system error. ';
+				echo '<div class="alert alert-error">The team could not be deleted due to a system error</div>';
 				exit();
 			}
 
@@ -401,10 +401,10 @@
 			$stmt->execute();
 		
 			if ($stmt->affected_rows == 1) {
-				echo 'You have successfully removed yourself from the team';
+				echo '<div class="alert alert-success">You have successfully removed yourself from the team</div>';
 			}
 			else {
-				echo 'The removal did not work. Pleaes contact the system admistrator. ';
+				echo '<div class="alert alert-error">The removal did not work. Pleaes contact the system admistrator</div>';
 				exit();
 			}
 				

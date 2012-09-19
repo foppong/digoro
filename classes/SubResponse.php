@@ -69,10 +69,10 @@
 			
 			// Successfully added subResponse
 			if ($stmt->affected_rows == 1) {
-				echo 'SubResponse was created successfully';
+				echo '<div class="alert alert-success">SubResponse was created successfully</div>';
 			}
 			else {
-				echo "SubResponse was not added. Please contact the service administrator";
+				echo '<div class="alert alert-error">SubResponse was not added. Please contact the service administrator</div>';
 			}
 			
 			// Close the statement
@@ -101,13 +101,13 @@
 			
 			// Successfully added subResponse
 			if ($stmt->affected_rows == 1) {
-				echo 'SubResponse was confirmed';
+				echo '<div class="alert alert-success">SubResponse was confirmed</div>';
 				
 				// SEND COMMENTS VIA EMAIL VIA SENDGRID HERE -write separate 
 				// function to query database and retrieve manager comments and email
 			}
 			else {
-				echo "SubResponse was not confirmed. Please contact the service administrator";
+				echo '<div class="alert alert-error">SubResponse was not confirmed. Please contact the service administrator</div>';
 			}
 			
 			// Close the statement
@@ -137,13 +137,13 @@
 			
 			// Successfully added subResponse
 			if ($stmt->affected_rows == 1) {
-				echo 'SubResponse was declined';
+				echo '<div class="alert alert-success">SubResponse was declined</div>';
 				
 				// SEND COMMENTS VIA EMAIL VIA SENDGRID HERE -write separate 
 				// function to query database and retrieve manager comments and email
 			}
 			else {
-				echo "SubResponse was not declined. Please contact the service administrator";
+				echo '<div class="alert alert-error">SubResponse was not declined. Please contact the service administrator</div>';
 			}
 			
 			// Close the statement
@@ -172,11 +172,11 @@
 				// ********** SEND EMAIL HERE WITH USER COMMENTS ************
 				
 				// Print a message
-				echo 'This subrequest response was cancelled successfully';
+				echo '<div class="alert alert-success">This subrequest response was cancelled successfully</div>';
 			}
 			else 
 			{	// If the query did not run ok.
-				echo 'The subrequest response was not cancelled';
+				echo '<div class="alert alert-error">The subrequest response was not cancelled. Please contact the service administrator</div>';
 			}
 				
 			// Close the statement:

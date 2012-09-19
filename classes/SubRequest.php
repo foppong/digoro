@@ -74,11 +74,11 @@
 			// Successfully added subrequest
 			if ($stmt->affected_rows == 1)
 			{
-				echo 'Your subrequest was created succesfully';
+				echo '<div class="alert alert-success">Your subrequest was created succesfully</div>';
 			}
 			else
 			{
-				echo 'Your subrequest was not added. Please contact the service administrator';
+				echo '<div class="alert alert-error">Your subrequest was not added. Please contact the service administrator</div>';
 			}
 
 			// Close the statement:
@@ -105,11 +105,11 @@
 
 			// Successfully added subrequest
 			if ($stmt->affected_rows == 1) {
-				echo 'Your subrequest was edited succesfully';
+				echo '<div class="alert alert-success">Your subrequest was edited succesfully</div>';
 			}
 			else {
 				// Either did not run ok or no updates were made
-				echo 'No changes were made';
+				echo '<div class="alert">No changes were made</div>';
 			}
 
 			// Close the statement:
@@ -137,11 +137,11 @@
 			if ($stmt->affected_rows == 1) 
 			{
 				// Print a message
-				echo 'This subrequest has been deleted successfully';
+				echo '<div class="alert alert-success">This subrequest has been deleted successfully</div>';
 			}
 			else 
 			{	// If the query did not run ok.
-				echo 'The subrequest was not deleted';
+				echo '<div class="alert alert-error">The subrequest was not deleted</div>';
 			}
 				
 			// Close the statement:

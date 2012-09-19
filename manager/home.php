@@ -33,7 +33,6 @@
 
 
 ?>
-	<p class="status"></p> <!-- FIX ALARM/ ALERTS -->
 
 	<div class="container" id="contentWrapper">
 		<div class="row"> <!-- Main row - for all content except footer -->	
@@ -50,7 +49,7 @@
 						<a href="profile.php"><img src="../css/imgs/user-icon.png" 
 							alt="user-icon" height="60" width="60"></a>	
 					</li>
-					<li><p>Profile</p></li>
+					<li><p>Profiles</p></li>
 					<li>
 						<a href="my_teams.php"><img src="../css/imgs/clipboard-icon.png" 
 							alt="clipboard-icon" height="60" width="60"></a>	
@@ -72,11 +71,14 @@
 			</div>
 					
 			<div class="span10"> <!-- column for main content --> 
-				<div class="row"> <!-- Profile row -->
+				<div class="row"> <!-- Header row -->
 					<div class="span10">
 						<div class="page-header"><h1>Home</h1></div>
 					</div>
 				</div>
+				<div class="row"> <!-- row for alerts -->
+					<div id="status"></div> 
+				</div>	
 				<div class="row"> <!-- SubResponses row -->		
 					<div class="span6">
 						<div>

@@ -204,7 +204,7 @@
 			$hash = $hasher->HashPassword($p);
 			if (strlen($hash) < 20)
 			{
-				fail('Failed to hash new password');
+				fail('Failed to hash new password'); //Custom function
 				exit();
 			}
 			unset($hasher);
@@ -325,7 +325,7 @@
 				session_destroy();
 			}
 			else {	// If the query did not run ok.
-				echo '<p class="error">This account could not be deleted due to a system errror.</p>';
+				echo '<div class="alert alert-error">This account could not be deleted due to a system error</div>';
 			}
 
 			// Close the statement
@@ -413,7 +413,7 @@
 				}
 				else 
 				{
-					echo '<p class="error">You could not be logged in. Please check that you have activated your account.</p>';
+					echo '<div class="alert alert-error">You could not be logged in. Please check that you have activated your account</div>';
 				}
 				
 				// Close the statement:
@@ -421,11 +421,11 @@
 				unset($stmt);
 			}
 			elseif ($this->OAuth_case == 1) {
-				echo '<p class="error">You are registered with facebook. You must login using the Facebook login feature.</p>';
+				echo '<div class="alert alert-error">You are registered with facebook. You must login using the Facebook login feature</div>';
 			}
 			else {
-				echo '<p class="error">Either the email address and password entered do not match those
-					those on file or you have not yet activated your account.</p>';				
+				echo '<div class="alert alert-error">Either the email address and password entered do not match those
+					those on file or you have not yet activated your account</div>';				
 			}
 
 		} // End of login function
@@ -534,19 +534,19 @@
 					}	
 					else 
 					{
-						echo '<p class="error">Your password did not match the confirmed password!</p>';
+						echo '<div class="alert alert-error">Your password did not match the confirmed password!</div>';
 					}
 				}
 				else 
 				{
-					echo '<p class="error"> Please enter a valid new password!</p>';
+					echo '<div class="alert alert-error">Please enter a valid new password!</div>';
 				}		
 		
 				// Encrypt the new password by making a new hash.
 				$hash = $hasher->HashPassword($p);				
 				if (strlen($hash) < 20)
 				{
-					fail('Failed to hash new password');
+					fail('Failed to hash new password'); // Custom function
 					exit();
 				}
 				unset($hasher);
@@ -673,8 +673,8 @@
 						}
 						else 
 						{	// Registration process did not run OK.
-							echo '<p class="error">You could not be registered due to a system error. We apologize
-								for any inconvenience. [Case 1]</p>';
+							echo '<div class="alert alert-error">You could not be registered due to a system error. We apologize
+								for any inconvenience. [Case 1]</div>';
 						}
 							
 						// Close the statement:
@@ -737,8 +737,8 @@
 							}
 							else {
 								//Update failed
-								echo '<p class="error">You could not be registered due to a system error. We apologize
-									for any inconvenience. [Case 2]</p>';
+								echo '<div class="alert alert-error">You could not be registered due to a system error. We apologize
+									for any inconvenience. [Case 2]</div>';
 							}
 	
 							// Close the statement:
@@ -748,8 +748,8 @@
 						}
 						else {	
 							// Registration process did not run OK.
-							echo '<p class="error">You could not be registered due to a system error. We apologize
-								for any inconvenience.</p>';
+							echo '<div class="alert alert-error">You could not be registered due to a system error. We apologize
+								for any inconvenience.</div>';
 						}
 						
 						// Close the statement:
@@ -834,7 +834,7 @@
 						
 					if ($stmt2->affected_rows !== 1) // It didn't run ok
 					{
-						echo 'There was an error. Please contact the service administrator.';
+						echo '<div class="alert alert-error">There was an error. Please contact the service administrator</div>';
 						exit();
 					}						
 

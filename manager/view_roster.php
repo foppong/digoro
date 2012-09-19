@@ -61,7 +61,6 @@
 
 
 
-
 		<!-- Modal Dialog Forms -->
 		<div id="AddMemberForm" title="Add New Member">		
 			<form method="post" class="form-horizontal">

@@ -125,11 +125,11 @@
 			// Print a message based upon result:
 			if ($stmt->affected_rows == 1)
 			{
-				echo 'Your event was added succesfully';
+				echo '<div class="alert alert-success">Your event was added succesfully</div>';
 			}
 			else
 			{
-				echo 'Your event was not added. Please contact the service administrator';
+				echo '<div class="alert alert-error">Oh Snap! Your event was not added. Please contact the service administrator</div>';
 			}
 
 			// Close the statement:
@@ -157,11 +157,11 @@
 	
 			if ($stmt->affected_rows == 1) // And update to the database was made
 			{				
-				echo 'This event has been edited';
+				echo '<div class="alert alert-success">This event has been edited</div>';
 			}
 			else 
 			{	// Either did not run ok or no updates were made
-				echo 'No changes were made';
+				echo '<div class="alert">No changes were made</div>';
 			}
 		
 			// Close the statement:
@@ -190,11 +190,11 @@
 			if ($stmt->affected_rows == 1) 
 			{
 				// Print a message
-				echo 'This event has been deleted successfully';
+				echo '<div class="alert alert-success">This event has been deleted successfully</div>';
 			}
 			else 
 			{	// If the query did not run ok.
-				echo 'The event was not deleted';
+				echo '<div class="alert alert-error">Oh Snap! Your event was not deleted. Please contact the service administrator</div>';
 			}
 				
 			// Close the statement:

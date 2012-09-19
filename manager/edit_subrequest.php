@@ -45,12 +45,6 @@
 			echo 'Please select a team.';
 			exit();
 		}
-
-		// Check if user is authroized to make edit
-		if (!$subReq->isManager($userID, $tmID)) {
-			echo 'You have to be the manager to edit.';
-			exit();
-		}
 	
 		// Validate game is selected
 		if ($_POST['edit-SR-sel-events'])
