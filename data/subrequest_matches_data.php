@@ -64,7 +64,8 @@
 				FROM subrequests AS sr
 				INNER JOIN teams AS tm USING (id_team)				
 				INNER JOIN events AS e USING (id_event)
-				WHERE sr.id_region=? AND tm.id_sport=?";
+				WHERE sr.id_region=? AND tm.id_sport=?
+				ORDER BY e.date";
 
 			// Prepare the statement:
 			$stmt2 = $db->prepare($q);

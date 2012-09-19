@@ -13,6 +13,7 @@ var MATCHES = {
 			buttons: {
 				"I can play!": function() {
 					MATCHES.respond();
+					MYSUBRESP.load_SubRequests_Responses();
 					$( this ).dialog( "close" );
 					MISCFUNCTIONS.clearForm( '#Respond-SubRequest-Form form' );
 				},
