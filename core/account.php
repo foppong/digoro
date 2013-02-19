@@ -95,60 +95,53 @@
 			$phone = '';
 		}
 
-		if ($_POST['bdayD']) {
-			$bdday = $_POST['bdayD'];
+		if ($_POST['DateOfBirth_Day']) {
+			$bdday = $_POST['DateOfBirth_Day'];
 		}
 		else {
 			echo 'Please enter your birthday day';
 			exit();
 		}
 
-		if ($_POST['bdayM']) {
-			$bdmnth = $_POST['bdayM'];
+		if ($_POST['DateOfBirth_Month']) {
+			$bdmnth = $_POST['DateOfBirth_Month'];
 		}
 		else {
 			echo 'Please enter your birthday month';
 			exit();
 		}
 
-		if ($_POST['bdayY']) {
-			$bdyr = $_POST['bdayY'];
+		if ($_POST['DateOfBirth_Year']) {
+			$bdyr = $_POST['DateOfBirth_Year'];
 		}
 		else {
 			echo 'Please enter your birthday year';
 			exit();
 		}
 
+		$bdarray = array($bdyr, $bdmnth, $bdday);
 
-
-				$bdarrayOB = explode("-", $bdOB);
-				$bdyrOB = $bdarrayOB[0];
-				$bdmnthOB = $bdarrayOB[1];
-				$bddayOB = $bdarrayOB[2];	
-
-		// Validate event date
-		if ($_POST['edit-event-sel-date']) {
-			$bd = new DateTime($_POST['edit-event-sel-date']); // Convert js datepicker entry into format database accepts
-			$gdfrmat = $bd->format('Y-m-d');
+		// Validate if date entered is actually a date
+		if (checkdate($bdmnth, $bdday, $bdyr))
+		{
+			$bdstring = implode("-", $bdarray);
+			$bd = new DateTime($bdstring);
+			$bdfrmat = $bd->format('Y-m-d');
 		}
-		else {
-			echo 'Please enter a date';
-			exit();
-		}			
-		
-
-
+		else 
+		{
+			echo '<p class="error">Please enter a valid birthdate.</p>';
+		}		
 	
 		// Check if user entered information is valid before continuing to edit event
-		if ($gdfrmat && $typ && $evtm && $ven && $venadd) {
-			$event->editEvent($userID, $gdfrmat, $evtm, $opp, $ven, $venadd, $res, $note, $typ);
+		if ($bdfrmat && $fname && $lname && $sex) {
+			$user->editAccount($fname, $lname, $city, $state, $zip, $sex, $phone, $bdfrmat);
 		}
 		else {	// Errors in the user entered information
 			echo 'Please try again';
 			exit();
 		}
 	}
-
 
 	// Delete objects
 	unset($user);
