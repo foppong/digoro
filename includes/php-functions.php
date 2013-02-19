@@ -235,6 +235,65 @@
 		
 	}
 
+	//Custom function to translate month
+	function translateMonth($bdmnthIN) {
+		switch ($bdmnthIN) {
+			case '1':
+				$mth = 'January';
+				return $mth;
+				break;
+			case '2':
+				$mth = 'Febuary';
+				return $mth;				
+				break;
+			case '3':
+				$mth = 'March';
+				return $mth;
+				break;
+			case '4':
+				$mth = 'April';
+				return $mth;
+				break;
+			case '5':
+				$mth = 'May';
+				return $mth;
+				break;
+			case '6':
+				$mth = 'June';
+				return $mth;
+				break;
+			case '7':
+				$mth = 'July';
+				return $mth;
+				break;
+			case '8':
+				$mth = 'August';
+				return $mth;
+				break;
+			case '9':
+				$mth = 'September';
+				return $mth;
+				break;
+			case '10':
+				$mth = 'October';
+				return $mth;
+				break;
+			case '11':
+				$mth = 'November';
+				return $mth;
+				break;
+			case '12':
+				$mth = 'December';
+				return $mth;
+				break;																							
+			default:
+				$mth = NULL;
+				return $mth;
+				break;
+		}
+	}
+
+
 	//Custom function to display errors	
 	function fail($pub, $pvt = '')
 	{

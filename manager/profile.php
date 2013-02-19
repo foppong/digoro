@@ -68,7 +68,7 @@
 				</ul>
 				</div>
 				</div>
-			</div>
+			</div> <!-- end of column for icons --> 
 					
 			<div class="span10"> <!-- column for main content --> 
 				<div class="row"> <!-- Header row -->

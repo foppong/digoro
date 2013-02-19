@@ -152,10 +152,34 @@
 		}
 
 		// Function to edit account settings
-		function editAccount()
-		{
-			
-		}
+		function editAccount($fname, $lname, $city, $state, $zip, $sex, $phone, $bdfrmat) {
+			// Make query
+			$q = 'UPDATE users SET first_name=?, last_name=?, city=?, state=?, 
+				zipcode=?, sex=?, phone_num=?, birth_date=?
+				WHERE id_user=? LIMIT 1';
+	
+			// Prepare the statement
+			$stmt = $this->dbc->prepare($q); 
+	
+			// Bind the inbound variables:
+			$stmt->bind_param('ssssiissi', $fname, $lname, $city, $state, $zip, $sex, $phone, $bdfrmat, $this->id_user);
+					
+			// Execute the query:
+			$stmt->execute();
+	
+			if ($stmt->affected_rows == 1) // And update to the database was made
+			{				
+				echo '<div class="alert alert-success">This account has been edited</div>';
+			}
+			else 
+			{	// Either did not run ok or no updates were made
+				echo '<div class="alert">No changes were made</div>';
+			}
+		
+			// Close the statement:
+			$stmt->close();
+			unset($stmt);			
+		} // End of editAccount function
 
 		// Function to view roster
 		function viewRoster()
