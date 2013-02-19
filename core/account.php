@@ -30,6 +30,125 @@
 	
 	// Pull current user data from database and set object attributes
 	$user->pullUserData();
+	$userID = $user->getUserID();
+
+	// Grab users database birthday
+	$bdOB = $user->getUserAttribute('bday');
+
+	if ($_SERVER['REQUEST_METHOD'] == 'POST') // Confirmation that form has been submitted	
+	{
+
+		// Create event object for use & pull latest data from database & initially set attributes
+		//$event = new Event();
+		//$event->setDB($db);
+		//$event->setEventID($eventid);
+
+		if ($_POST['edit-user-fname']) {
+			$fname = $_POST['edit-user-fname'];
+		}
+		else {
+			echo 'Please enter a valid first name';
+			exit();
+		}		
+		
+		if ($_POST['edit-user-lname']) {
+			$lname = $_POST['edit-user-lname'];
+		}
+		else {
+			echo 'Please enter a valid last name';
+			exit();
+		}		
+		
+		if ($_POST['edit-user-city']) {
+			$city = $_POST['edit-user-city'];
+		}
+		else {
+			$city = '';
+		}				
+		
+		if ($_POST['edit-user-state']) {
+			$state = $_POST['edit-user-state'];
+		}
+		else {
+			$state = '';
+		}				
+
+		if ($_POST['edit-user-zip']) {
+			$zip = $_POST['edit-user-zip'];
+		}
+		else {
+			$zip = '';
+		}		
+
+		if ($_POST['edit-user-sel-sex']) {
+			$sex = $_POST['edit-user-sel-sex'];
+		}
+		else {
+			echo 'Please select your sex';
+			exit();
+		}	
+
+		if ($_POST['edit-user-phone']) {
+			$phone = $_POST['edit-user-phone'];
+		}
+		else {
+			$phone = '';
+		}
+
+		if ($_POST['bdayD']) {
+			$bdday = $_POST['bdayD'];
+		}
+		else {
+			echo 'Please enter your birthday day';
+			exit();
+		}
+
+		if ($_POST['bdayM']) {
+			$bdmnth = $_POST['bdayM'];
+		}
+		else {
+			echo 'Please enter your birthday month';
+			exit();
+		}
+
+		if ($_POST['bdayY']) {
+			$bdyr = $_POST['bdayY'];
+		}
+		else {
+			echo 'Please enter your birthday year';
+			exit();
+		}
+
+
+
+				$bdarrayOB = explode("-", $bdOB);
+				$bdyrOB = $bdarrayOB[0];
+				$bdmnthOB = $bdarrayOB[1];
+				$bddayOB = $bdarrayOB[2];	
+
+		// Validate event date
+		if ($_POST['edit-event-sel-date']) {
+			$bd = new DateTime($_POST['edit-event-sel-date']); // Convert js datepicker entry into format database accepts
+			$gdfrmat = $bd->format('Y-m-d');
+		}
+		else {
+			echo 'Please enter a date';
+			exit();
+		}			
+		
+
+
+	
+		// Check if user entered information is valid before continuing to edit event
+		if ($gdfrmat && $typ && $evtm && $ven && $venadd) {
+			$event->editEvent($userID, $gdfrmat, $evtm, $opp, $ven, $venadd, $res, $note, $typ);
+		}
+		else {	// Errors in the user entered information
+			echo 'Please try again';
+			exit();
+		}
+	}
+
 
 	// Delete objects
 	unset($user);
@@ -52,17 +171,17 @@
 					</li>
 					<li><p>Home</p></li>
 					<li>
-						<a href="profile.php"><img src="../css/imgs/user-icon.png" 
+						<a href="../manager/profile.php"><img src="../css/imgs/user-icon.png" 
 							alt="user-icon" height="60" width="60"></a>	
 					</li>
 					<li><p>Profiles</p></li>
 					<li>
-						<a href="my_teams.php"><img src="../css/imgs/clipboard-icon.png" 
+						<a href="../manager/my_teams.php"><img src="../css/imgs/clipboard-icon.png" 
 							alt="clipboard-icon" height="60" width="60"></a>	
 					</li>
 					<li><p>My Teams</p></li>
 					<li>
-						<a href="find_players.php"><img src="../css/imgs/binoculars-icon.png" 
+						<a href="../manager/find_players.php"><img src="../css/imgs/binoculars-icon.png" 
 							alt="binoculars-icon" height="60" width="60"></a>
 					</li>
 					<li><p>Find Players</p></li>
@@ -82,18 +201,9 @@
 						<div class="page-header"><h1>Account</h1></div>
 					</div>
 
-					<!-- Edit Account Form -->
+				<!-- Edit Account Form -->
+				<div id="EditAccountForm" title="Edit Account">	
 					<form method="post" class="form-horizontal">
-						<div class="control-group">
-							<label class="control-label" for="edit-team-sel-region">Where are you located?</label>
-							<div class="controls">
-								<select class="input-large" name="edit-team-sel-region" id="edit-team-sel-region">
-									<option value="">-Select Region-</option>
-									<option value="1">San Francisco/ Bay Area</option>
-								</select>
-							</div>
-						</div>	
-			
 						<div class="control-group">			
 							<label class="control-label" for="edit-user-fname">First name:</label>
 							<div class="controls">
@@ -109,14 +219,28 @@
 						</div>
 			
 						<div class="control-group">			
-							<label class="control-label" for="edit-user-email">Email:</label>
+							<label class="control-label" for="edit-user-city">City:</label>
 							<div class="controls">
-								<input type="text" name="edit-user-email" id="edit-user-email" size="30" maxlength="60" />
+								<input type="text" name="edit-user-city" id="edit-user-city" size="30" maxlength="40" />
+							</div>
+						</div>
+
+						<div class="control-group">			
+							<label class="control-label" for="edit-user-state">State:</label>
+							<div class="controls">
+								<input type="text" name="edit-user-state" id="edit-user-state" size="2" maxlength="2" />
+							</div>
+						</div>
+
+						<div class="control-group">			
+							<label class="control-label" for="edit-user-zip">Zipcode:</label>
+							<div class="controls">
+								<input type="text" name="edit-user-zip" id="edit-user-zip" size="5" maxlength="5" />
 							</div>
 						</div>
 			
 						<div class="control-group">	
-							<label class="control-label" for="edit-user-sel-sex">I am</label>
+							<label class="control-label" for="edit-user-sel-sex">Sex:</label>
 							<div class="controls">
 								<select class="input-medium" name="edit-user-sel-sex" id="edit-user-sel-sex">
 									<option value="">-Select Sex-</option>
@@ -125,21 +249,28 @@
 								</select>
 							</div>
 						</div>
+						
+						<div class="control-group">	
+							<label class="control-label" for="edit-user-phone">Phone:</label>
+							<div class="controls">
+								<input type="text" name="edit-user-phone" id="edit-user-phone" size="15" maxlength="15" />
+							</div>
+						</div>						
 			
 						<div class="control-group">	
 							<label class="control-label" for="bday">Select Your Birthdate:</label>
 							<div class="controls controls-row">
-								<select class="input-small" name="DateOfBirth_Month" id="bdayM">
+								<select class="input-medium" name="DateOfBirth_Month" id="bdayM">
 									<option value="">- Month -</option>
-									<option value="1">January</option>
-									<option value="2">Febuary</option>
-									<option value="3">March</option>
-									<option value="4">April</option>
-									<option value="5">May</option>
-									<option value="6">June</option>
-									<option value="7">July</option>
-									<option value="8">August</option>
-									<option value="9">September</option>
+									<option value="01">January</option>
+									<option value="02">Febuary</option>
+									<option value="03">March</option>
+									<option value="04">April</option>
+									<option value="05">May</option>
+									<option value="06">June</option>
+									<option value="07">July</option>
+									<option value="08">August</option>
+									<option value="09">September</option>
 									<option value="10">October</option>
 									<option value="11">November</option>
 									<option value="12">December</option>
@@ -147,15 +278,15 @@
 			
 								<select class="input-small" name="DateOfBirth_Day" id="bdayD">
 									<option value="">- Day -</option>
-									<option value="1">1</option>
-									<option value="2">2</option>
-									<option value="3">3</option>
-									<option value="4">4</option>
-									<option value="5">5</option>
-									<option value="6">6</option>
-									<option value="7">7</option>
-									<option value="8">8</option>
-									<option value="9">9</option>
+									<option value="01">1</option>
+									<option value="02">2</option>
+									<option value="03">3</option>
+									<option value="04">4</option>
+									<option value="05">5</option>
+									<option value="06">6</option>
+									<option value="07">7</option>
+									<option value="08">8</option>
+									<option value="09">9</option>
 									<option value="10">10</option>
 									<option value="11">11</option>
 									<option value="12">12</option>
@@ -220,11 +351,12 @@
 								</select>
 								<span class="help-inline"><a href="help.php">Why do I need to provide my birthday?</a></span>
 							</div>
-			
+						</div>
 						<button type="submit" id="editaccount" class="btn btn-primary">Save</button>
 					</form>	<!-- End of Edit Account Form -->
-
+				</div>
 					<p><a href="change_password.php">Change Password</a></p>
+					<p><a href="change_email.php">Change Email</a></p>
 					<p><a href="delete_acct.php">Delete Account</a></p>
 
 				</div> <!-- End of main row -->

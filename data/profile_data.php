@@ -156,7 +156,7 @@
 	// Request is coming from the profile page, so user can view the subresponse detail
 	if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['actionvar'] == 'User_single_SubResp_Data') {
 
-			$idSubResponse = $_POST['idSubResp'];
+		$idSubResponse = $_POST['idSubResp'];
 		
 		// Make the Query
 		$q = "SELECT id_profile, team_sex_preference, id_region, id_sport, 
