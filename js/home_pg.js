@@ -13,6 +13,7 @@ var MATCHES = {
 			buttons: {
 				"I can play!": function() {
 					MATCHES.respond();
+					MYSUBRESP.load_SubRequests_Responses();
 					$( this ).dialog( "close" );
 					MISCFUNCTIONS.clearForm( '#Respond-SubRequest-Form form' );
 				},
@@ -32,15 +33,15 @@ var MATCHES = {
 	     	url: "../core/create_subresponse.php",
 	     	data: form_data, // Data that I'm sending
 	     	error: function() {
-	       	$( '.status' ).text( 'Response failed. Try again.' ).slideDown( 'slow' );
+	       	$( '#status' ).append( '<div class="alert alert-error">Response failed</div>' ).slideDown( 'slow' );
 	    	},
 	     	success: function( data ) { 
-	       	$( '.status' ).text( data ).slideDown( 'slow' );	
+	       	$( '#status' ).append( data ).slideDown( 'slow' );	
 	       	MISCFUNCTIONS.clearForm( '#Respond-SubRequest-Form form' );
 	     	},
 	     	complete: function() {
 	       	setTimeout(function() {
-	        		$( '.status' ).slideUp( 'slow' );
+	        		$( '#status' ).slideUp( 'slow' );
 	       	}, 2000);
 	     	},
 	     	cache: false
@@ -162,16 +163,16 @@ var MYSUBRESP = {
 	     	url: "../core/cancel_subresponse.php",
 	     	data: form_data, // Data that I'm sending
 	     	error: function() {
-	       	$( '.status' ).text( 'Response failed. Try again.' ).slideDown( 'slow' );
+	       	$( '#status' ).append( '<div class="alert alert-error">Response failed</div>' ).slideDown( 'slow' );
 	    	},
 	     	success: function( data ) { 
-	       	$( '.status' ).text( data ).slideDown( 'slow' );
+	       	$( '#status' ).append( data ).slideDown( 'slow' );
 	       	_mysubresp.load_SubRequests_Responses(); // Refresh table
 	       	MISCFUNCTIONS.clearForm( '#View-SubRequest-Form form' );
 	     	},
 	     	complete: function() {
 	       	setTimeout(function() {
-	        		$( '.status' ).slideUp( 'slow' );
+	        		$( '#status' ).slideUp( 'slow' );
 	       	}, 2000);
 	     	},
 	     	cache: false

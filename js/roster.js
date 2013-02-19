@@ -28,7 +28,7 @@ var ROSTER = {
 				alert('load roster: error occured!');
 			}
 		});	
-  	},
+  },
 
 	edit: function() {
     	var form_data = $('form').serialize();

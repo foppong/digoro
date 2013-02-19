@@ -49,9 +49,7 @@
 
 		<div id="Header">
 			<h2>Find Subs</h2>
-		</div><br />
-
-		<p class="status"></p>		
+		</div><br />	
 
 				<div class="row"> <!-- Add Team button row -->
 					<div class="span4">
@@ -61,7 +59,9 @@
 						<button type="button" id="create-sub-request" class="btn btn-small btn-primary">Create SubRequest</button>
 					</div>
 				</div>
-
+				<div class="row"> <!-- row for alerts -->
+					<div id="status"></div> 
+				</div>	
 		<hr>
 
 		<!-- Modal Dialog Form -->

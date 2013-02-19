@@ -34,8 +34,6 @@
 
 ?>
 
-	<p class="status"></p> <!-- FIX ALARM/ ALERTS -->
-
 	<div class="container" id="contentWrapper">
 		<div class="row"> <!-- Main row - for all content except footer -->	
 			<div class="span2"> <!-- column for icons --> 
@@ -51,7 +49,7 @@
 						<a href="profile.php"><img src="../css/imgs/user-icon.png" 
 							alt="user-icon" height="60" width="60"></a>	
 					</li>
-					<li><p>Profile</p></li>
+					<li><p>Profiles</p></li>
 					<li>
 						<a href="my_teams.php"><img src="../css/imgs/clipboard-icon.png" 
 							alt="clipboard-icon" height="60" width="60"></a>	

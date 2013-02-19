@@ -44,8 +44,6 @@
 		<title><?php echo $page_title; ?></title>
 		<meta name="author" content="Frank" />
 
-		<!-- External javascript call-->		
-		<script type="text/javascript" src="../js/schedule.js"></script>
 	</head>
 	<body>
 
@@ -57,8 +55,6 @@
 					<button type="button" id="add-event" class="btn btn-small btn-primary">Add Event</button>
 				</div>
 			</div>
-
-		<p class="status"></p>		
 
 
 		<!-- Modal Dialog Forms -->
@@ -213,6 +209,9 @@
 		
 		<!-- Load ajax schedule data here -->
 		<table class="table table-striped table-bordered table-condensed" id="schedule" width="100%"></table>
+
+		<!-- External javascript call-->		
+		<script type="text/javascript" src="../js/schedule.js"></script>
 		
 	</body>
 </html>

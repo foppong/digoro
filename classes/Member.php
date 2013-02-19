@@ -110,10 +110,10 @@
 				$stmt->execute();
 						
 				if ($stmt->affected_rows == 1) { // It ran ok
-					echo 'Member was added successfully';
+					echo '<div class="alert alert-success">Member was added successfully</div>';
 				}
 				else {
-					echo 'Member was not added. Please contact the service administrator';
+					echo '<div class="alert alert-error">Oh Snap! Member was not added. Please contact the service administrator</div>';
 				}
 			
 				// Close the statement:
@@ -157,10 +157,10 @@
 					$stmt2->execute();
 						
 					if ($stmt2->affected_rows == 1) { // It ran ok
-						echo 'Member was added successfully. ';
+						echo '<div class="alert alert-success">Member was added successfully</div>';
 					}
 					else {
-						echo 'Error: Please contact the service administrator. ';
+						echo '<div class="alert alert-error">Oh Snap! Member was not added. Please contact the service administrator</div>';
 						exit();
 					}
 
@@ -174,10 +174,10 @@
 						$body .= "\n" . BASE_URL;
 						mail($userEmail, 'digoro.com - Digoro Invitation', $body);
 							
-						echo 'Invitation successfully sent!';
+						echo '<div class="alert alert-success">Invitation successfully sent!</div>';
 					}
 					else {
-						echo 'Invitation was not sent.';
+						echo '<div class="alert alert-error">Oh Snap! Invitation was not sent</div>';
 					}
 					
 					// Close the statement:
@@ -186,7 +186,7 @@
 
 				}
 				else {	// Registration process did not run OK.
-					echo 'Error';
+					echo '<div class="alert alert-error">Oh Snap! Registration process didnt work. Please contact service administrator</div>';
 				}
 				
 				// Close the statement:
@@ -212,10 +212,10 @@
 			$stmt->execute();
 	
 			if ($stmt->affected_rows == 1) { // And update to the database was made
-				echo 'The member has been edited. ';
+				echo '<div class="alert alert-success">This member has been edited</div>';
 			}
 			else { // Either did not run ok or no updates were made
-				echo 'No changes were made. ';
+				echo '<div class="alert">No changes were made</div>';
 			}
 					
 			// Close the statement:
@@ -235,14 +235,6 @@
 				
 				// Execute the statement
 				$stmt->execute();
-				
-				// Update was made
-				if ($stmt->affected_rows == 1) {
-					echo 'Member was updated in user table';
-				}
-				else {
-					echo 'No changes made';
-				}
 
 				// Close the statement:
 				$stmt->close();
@@ -269,10 +261,10 @@
 				
 			// If the query ran ok.
 			if ($stmt->affected_rows == 1) {
-				echo 'The player has been deleted successfully. ';			
+				echo '<div class="alert alert-success">This member has been deleted successfully</div>';			
 			}
 			else {	// If the query did not run ok.
-				echo 'The member could not be deleted due to a system errror.';
+				echo '<div class="alert alert-error">Oh Snap! The member could not be deleted. Please contact the system administrator.</div>';
 				exit();
 			}
 				

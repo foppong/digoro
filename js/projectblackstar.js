@@ -15,6 +15,7 @@ var idevent;
 var idteam;
 var idsubrequest;
 var idsubresponse;
+var idprofile;
 var SelectedTeamName;
 var SelectedTeamID;
 
@@ -81,7 +82,6 @@ $(document).ready(function()
 	$( "#signin" ).on("submit", function() {
 		USER.signIn();
 	});
-
 
 });
 

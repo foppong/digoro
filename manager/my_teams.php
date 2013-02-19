@@ -55,7 +55,6 @@
 	unset($db);	
 
 ?>
-	<p class="status"></p> <!-- FIX ALARM/ ALERTS -->
 
 	<div class="container" id="contentWrapper">
 		<div class="row"> <!-- Main row - for all content except footer -->	
@@ -72,7 +71,7 @@
 						<a href="profile.php"><img src="../css/imgs/user-icon.png" 
 							alt="user-icon" height="60" width="60"></a>	
 					</li>
-					<li><p>Profile</p></li>
+					<li><p>Profiles</p></li>
 					<li>
 						<a href="my_teams.php"><img src="../css/imgs/clipboard-icon.png" 
 							alt="clipboard-icon" height="60" width="60"></a>	
@@ -91,7 +90,7 @@
 				</ul>
 				</div>
 				</div>
-			</div>		
+			</div> <!-- end of column for icons --> 
 
 			<div class="span10"> <!-- column for main content --> 
 				<div class="row"> <!-- My Teams header -->
@@ -100,7 +99,7 @@
 					</div>
 				</div>
 				<div class="row"> <!-- Add Team button row -->
-					<div class="span3 offset4">
+					<div class="span4 offset3">
 						<h4>Add a team that you manage</h4>
 					</div>
 					<div class="span2">
@@ -115,6 +114,9 @@
 						</form>
 					</div>
 				</div>
+				<div class="row"> <!-- row for alerts -->
+					<div id="status"></div> 
+				</div>				
 				<div class="row"> <!-- Tabs container -->		
 					<div id="tabmenu" class="ui-tabs">
 						<ul>

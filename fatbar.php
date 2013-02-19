@@ -186,45 +186,45 @@
 				</div>	
 
 				<div class="control-group">			
-					<label class="control-label" for="add-member-fname">First name:</label>
+					<label class="control-label" for="add-user-fname">First name:</label>
 					<div class="controls">
-						<input type="text" name="add-member-fname" id="add-member-fname" size="20" maxlength="20" />
+						<input type="text" name="add-user-fname" id="add-user-fname" size="20" maxlength="20" />
 					</div>
 				</div>
 
 				<div class="control-group">			
-					<label class="control-label" for="add-member-lname">Last name:</label>
+					<label class="control-label" for="add-user-lname">Last name:</label>
 					<div class="controls">
-						<input type="text" name="add-member-lname" id="add-member-lname" size="20" maxlength="40" />
+						<input type="text" name="add-user-lname" id="add-user-lname" size="20" maxlength="40" />
 					</div>
 				</div>
 
 				<div class="control-group">			
-					<label class="control-label" for="add-member-lname">Password:</label>
+					<label class="control-label" for="add-user-lname">Password:</label>
 					<div class="controls">
-						<input type="password" name="add-member-lname" id="add-member-lname" size="20" maxlength="40" />
+						<input type="password" name="add-user-pass1" id="add-user-pass1" size="20" maxlength="40" />
 						<span class="help-inline">6 or more characters</span>
 					</div>
 				</div>
 
 				<div class="control-group">			
-					<label class="control-label" for="add-member-lname">Confirm Password:</label>
+					<label class="control-label" for="add-user-lname">Confirm Password:</label>
 					<div class="controls">
-						<input type="password" name="add-member-lname" id="add-member-lname" size="20" maxlength="40" />
+						<input type="password" name="add-user-pass2" id="add-user-pass2" size="20" maxlength="40" />
 					</div>
 				</div>
 
 				<div class="control-group">			
-					<label class="control-label" for="add-member-email">Email:</label>
+					<label class="control-label" for="add-user-email">Email:</label>
 					<div class="controls">
-						<input type="text" name="add-member-email" id="add-member-email" size="30" maxlength="60" />
+						<input type="text" name="add-user-email" id="add-user-email" size="30" maxlength="60" />
 					</div>
 				</div>
 
 				<div class="control-group">	
-					<label class="control-label" for="add-member-sel-sex">I am</label>
+					<label class="control-label" for="add-user-sel-sex">I am</label>
 					<div class="controls">
-						<select class="input-medium" name="add-member-sel-sex" id="add-member-sel-sex">
+						<select class="input-medium" name="add-user-sel-sex" id="add-user-sel-sex">
 							<option value="">-Select Sex-</option>
 							<option value="1">Female</option>
 							<option value="2">Male</option>

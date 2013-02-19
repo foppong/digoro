@@ -90,16 +90,17 @@ var FINDSUB = {
 	     	url: "../manager/create_subrequest.php",
 	     	data: form_data, // Data that I'm sending
 	     	error: function() {
-	       	$( '.status' ).text( 'Update failed. Try again.' ).slideDown( 'slow' );
+	       	$( '#status' ).append( '<div class="alert alert-error">Addition failed</div>' ).slideDown( 'slow' );
 	    	},
 	     	success: function( data ) {   
 	       	SUBREQUEST.loadOpenSubRequests(); //Call to subrequest.js to refresh table
-	       	$( '.status' ).text( data ).slideDown( 'slow' );	
+	        $( '#status' ).append( data ).slideDown( 'slow' );	
 	       	//MISCFUNCTIONS.clearForm( '#Create-SubRequest-Form form' );
 	     	},
 	     	complete: function() {
 	       	setTimeout(function() {
-	        		$( '.status' ).slideUp( 'slow' );
+	        		$( '#status' ).slideUp( 'slow' );
+	      			$( '#status .alert' ).remove();
 	       	}, 2000);
 	     	},
 	     	cache: false
@@ -115,16 +116,17 @@ var FINDSUB = {
 	    url: "../manager/edit_subrequest.php",
 	    data: form_data, // Data that I'm sending
 	    error: function() {
-	    	$( '.status' ).text( 'Edit failed. Try again.' ).slideDown( 'slow' );
+	    	$( '#status' ).append( '<div class="alert alert-error">Edit failed</div>' ).slideDown( 'slow' );
 	    },
 	    success: function( data ) {   
 				SUBREQUEST.loadOpenSubRequests(); //Call to subrequest.js to refresh table
-	    	$( '.status' ).text( data ).slideDown( 'slow' );
+	    	$( '#status' ).append( data ).slideDown( 'slow' );	
 	      MISCFUNCTIONS.clearForm( '#Edit-SubRequest-Form form' );    
 	    },
 	    complete: function() {
 	    	setTimeout(function() {
-	     		$( '.status' ).slideUp( 'slow' );
+	     		$( '#status' ).slideUp( 'slow' );
+	      	$( '#status .alert' ).remove();
 	      }, 2000);
 	    },
 	    cache: false
@@ -134,22 +136,23 @@ var FINDSUB = {
 	// delete event information in database from dialog form
   del: function() { 
 		$( '#Del-SubRequest-Form form' ).append( '<input type="hidden" id="z" name="z" value="' + idsubrequest + '"/>' );
-    	var form_data = $( '#Del-SubRequest-Form form' ).serialize();
+    var form_data = $( '#Del-SubRequest-Form form' ).serialize();
 	  $.ajax({
 	    type: "POST",
 	    url: "../manager/delete_subrequest.php",
 	    data: form_data, // Data that I'm sending
 	    error: function() {
-	      $( '.status' ).text( 'Delete failed. Try again.' ).slideDown( 'slow' );
+	      $( '#status' ).append( '<div class="alert alert-error">Delete failed</div>' ).slideDown( 'slow' );
 	    },
 	    success: function( data ) {   
-				SUBREQUEST.loadOpenSubRequests(); //Call to subrequest.js
+				SUBREQUEST.loadOpenSubRequests(); //Call to subrequest.js to refresh table
 				SUBREQUEST.loadSubReqResponses(); //Call to subrequest.js to refresh table
-	      $( '.status' ).text( data ).slideDown( 'slow' ); 
+	      $( '#status' ).append( data ).slideDown( 'slow' );	      
 	    },
 	    complete: function() {
 	    	setTimeout(function() {
-	      	$( '.status' ).slideUp( 'slow' );
+	    		$( '#status' ).slideUp( 'slow' );
+	      	$( '#status .alert' ).remove();
 	      }, 2000);
 	    },
 	    cache: false
@@ -167,16 +170,17 @@ var FINDSUB = {
 	    url: "../manager/respond_subresponse.php",
 	    data: form_data, // Data that I'm sending
 	    error: function() {
-	    	$( '.status' ).text( 'Confirm failed. Try again.' ).slideDown( 'slow' );
+	    	$( '#status' ).append( '<div class="alert alert-error">Response failed</div>' ).slideDown( 'slow' );
 	    },
 	    success: function( data ) {   
 				SUBREQUEST.loadSubReqResponses(); //Call to subrequest.js to refresh table
-	    	$( '.status' ).text( data ).slideDown( 'slow' );
+	      $( '#status' ).append( data ).slideDown( 'slow' );		      
 	      MISCFUNCTIONS.clearForm( '#Respond-SubResponse-Form form' );    
 	    },
 	    complete: function() {
 	    	setTimeout(function() {
-	     		$( '.status' ).slideUp( 'slow' );
+	     		$( '#status' ).slideUp( 'slow' );
+	      	$( '#status .alert' ).remove();
 	      }, 2000);
 	    },
 	    cache: false
@@ -194,16 +198,17 @@ var FINDSUB = {
 	    url: "../manager/respond_subresponse.php",
 	    data: form_data, // Data that I'm sending
 	    error: function() {
-	    	$( '.status' ).text( 'Decline failed. Try again.' ).slideDown( 'slow' );
+	    	$( '#status' ).append( '<div class="alert alert-error">Decline failed</div>' ).slideDown( 'slow' );
 	    },
 	    success: function( data ) {   
 				SUBREQUEST.loadSubReqResponses(); //Call to subrequest.js to refresh table
-	    	$( '.status' ).text( data ).slideDown( 'slow' );
+	      $( '#status' ).append( data ).slideDown( 'slow' );	
 	      MISCFUNCTIONS.clearForm( '#Respond-SubResponse-Form form' );    
 	    },
 	    complete: function() {
 	    	setTimeout(function() {
-	     		$( '.status' ).slideUp( 'slow' );
+	     		$( '#status' ).slideUp( 'slow' );
+	      	$( '#status .alert' ).remove();
 	      }, 2000);
 	    },
 	    cache: false

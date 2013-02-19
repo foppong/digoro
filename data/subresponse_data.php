@@ -38,7 +38,8 @@
 			FROM subreq_responses AS subr
 			INNER JOIN events AS e USING (id_event)			
 			INNER JOIN teams AS tm USING (id_team)				
-			WHERE subr.id_user=?";
+			WHERE subr.id_user=?
+			ORDER BY e.date";
 
 		// Prepare the statement:
 		$stmt = $db->prepare($q);
@@ -136,7 +137,7 @@
 	}
 
 
-	// Request is coming from the profile page, so user can view the subresponse detail
+	// Request is coming from the home page, so user can view the subresponse detail
 	if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['actionvar'] == 'User_single_SubResp_Data') {
 
 			$idSubResponse = $_POST['idSubResp'];
