@@ -38,11 +38,6 @@
 	if ($_SERVER['REQUEST_METHOD'] == 'POST') // Confirmation that form has been submitted	
 	{
 
-		// Create event object for use & pull latest data from database & initially set attributes
-		//$event = new Event();
-		//$event->setDB($db);
-		//$event->setEventID($eventid);
-
 		if ($_POST['edit-user-fname']) {
 			$fname = $_POST['edit-user-fname'];
 		}
@@ -159,7 +154,7 @@
 				<div class="side-nav">
 				<ul class="nav nav-list">
 					<li>
-						<a href="home.php"><img src="../css/imgs/home-icon.png" 
+						<a href="../manager/home.php"><img src="../css/imgs/home-icon.png" 
 							alt="home-icon" height="60" width="60"></a>
 					</li>
 					<li><p>Home</p></li>
