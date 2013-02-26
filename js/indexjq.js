@@ -3,7 +3,32 @@
  * This is a library of Frank's JavaScript Functions used for the index page.
  */
 
-
+var NEWUSER = {
+	
+	// register user
+  registerUser: function() { 	
+  	var _team = this;
+    var form_data = $( '#registerBlock form' ).serialize();
+	  $.ajax({
+	  	type: "POST",
+	    url: "../core/register_user.php",
+	    data: form_data, // Data that I'm sending
+	    error: function() {
+	    	$( '#status' ).append( '<div class="alert alert-error">Registration failed</div>' ).slideDown( 'slow' );
+	    },
+	    success: function( data ) { 
+	      $( '#status' ).append( data ).slideDown( 'slow' );   	
+	     },
+	    complete: function() {
+	    	setTimeout(function() {
+	      	$( '#status' ).slideUp( 'slow' );
+	        $( '#status .alert' ).remove();
+	    	}, 2000);
+	    },
+	    cache: false
+    });	
+	
+}
 
 // jQuery Code for when page is loaded
 $(document).ready(function()
@@ -17,6 +42,16 @@ $(document).ready(function()
 
 	// Call carousel 
 	$('.carousel').carousel()
+
+
+	// Code for processing registeration
+	$( "#joinbutton" ).on("click", function() {
+		// Load add Team dialog
+		NEWUSER.registerUser();
+	});
+
+
+
 
 	$('#loginform form').validate( {
 		rules: {
