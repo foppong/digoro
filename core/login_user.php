@@ -1,12 +1,6 @@
 <?php
 	// This page is for logging in a user
 	// This page is accessed through the login page
-	
-	ob_start();
-	session_start();	
-		
-	require '../includes/config.php';
-	include '../includes/php-functions.php';
 
 	// autoloading of classes
 	function __autoload($class) {
@@ -22,7 +16,7 @@
 	}
 	
 	// Establish database connection
-	require_once MYSQL2;
+	require_once MYSQL1;
 
 	if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 		// Validate email address

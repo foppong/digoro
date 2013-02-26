@@ -6,7 +6,7 @@
 
 var RETURNINGUSER = {
 	
-	// register user
+	// login user
   loginUser: function() { 	
   	var _team = this;
     var form_data = $( '#loginform form' ).serialize();
@@ -15,7 +15,7 @@ var RETURNINGUSER = {
 	    url: "../core/login_user.php",
 	    data: form_data, // Data that I'm sending
 	    error: function() {
-	    	$( '#status' ).append( '<div class="alert alert-error">Registration failed</div>' ).slideDown( 'slow' );
+	    	$( '#status' ).append( '<div class="alert alert-error">Login failed</div>' ).slideDown( 'slow' );
 	    },
 	    success: function( data ) { 
 	      $( '#status' ).append( data ).slideDown( 'slow' );   	
@@ -28,7 +28,7 @@ var RETURNINGUSER = {
 	    },
 	    cache: false
     });	
-
+	}
 
 }
 
@@ -58,7 +58,7 @@ var NEWUSER = {
 	    },
 	    cache: false
     });	
-	
+	}
 }
 
 // jQuery Code for when page is loaded
