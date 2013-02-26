@@ -3,6 +3,37 @@
  * This is a library of Frank's JavaScript Functions used for the index page.
  */
 
+
+var RETURNINGUSER = {
+	
+	// register user
+  loginUser: function() { 	
+  	var _team = this;
+    var form_data = $( '#loginform form' ).serialize();
+	  $.ajax({
+	  	type: "POST",
+	    url: "../core/login_user.php",
+	    data: form_data, // Data that I'm sending
+	    error: function() {
+	    	$( '#status' ).append( '<div class="alert alert-error">Registration failed</div>' ).slideDown( 'slow' );
+	    },
+	    success: function( data ) { 
+	      $( '#status' ).append( data ).slideDown( 'slow' );   	
+	     },
+	    complete: function() {
+	    	setTimeout(function() {
+	      	$( '#status' ).slideUp( 'slow' );
+	        $( '#status .alert' ).remove();
+	    	}, 2000);
+	    },
+	    cache: false
+    });	
+
+
+}
+
+
+
 var NEWUSER = {
 	
 	// register user
@@ -43,6 +74,12 @@ $(document).ready(function()
 	// Call carousel 
 	$('.carousel').carousel()
 
+
+	// Code for processing registeration
+	$( "#signin" ).on("click", function() {
+		// Load add Team dialog
+		RETURNINGUSER.loginUser();
+	});
 
 	// Code for processing registeration
 	$( "#joinbutton" ).on("click", function() {
