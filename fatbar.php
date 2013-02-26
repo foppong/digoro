@@ -47,37 +47,6 @@
 		exit();			
 	}
 
-	if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-		// Validate email address
-		if (filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
-			$e = $_POST['email'];
-		}
-		else {
-			$e = FALSE;
-			echo '<p class="error"> Please enter valid email address!</p>';
-		}
-		
-		// Validate password
-		if (!empty($_POST['pass'])) {
-			$p = $_POST['pass'];
-		}
-		else {
-			$p = FALSE;
-			echo '<p class="error">You forgot to enter your password!</p>';
-		}
-
-		// Check if email and password entered are valid before proceeding to login procedure.
-		if ($e && $p) {
-			// Create user object & login user 
-			$user = new UserAuth();
-			$user->setDB($db);	
-			$user->login($e, $p);
-			unset($user);
-		}
-	}
-
-	$db->close();
-	unset($db);
 ?>
 
 	<div id="fb-root"></div>
