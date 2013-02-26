@@ -170,21 +170,11 @@
 		
 
 		<!-- Register New Users -->
-		<div id="registerBlock">
+		<div id="registerBlock" title="Register User">
 			<h3>Start playing today - it's free!</h3>
 			<h4>Registration takes less than 2 minutes</h4></br>
 			
 		<form method="post" class="form-horizontal">
-				<div class="control-group">
-					<label class="control-label" for="add-team-sel-region">Where are you located?</label>
-					<div class="controls">
-						<select class="input-large" name="add-team-sel-region" id="add-team-sel-region">
-							<option value="">-Select Region-</option>
-							<option value="1">San Francisco/ Bay Area</option>
-						</select>
-					</div>
-				</div>	
-
 				<div class="control-group">			
 					<label class="control-label" for="add-user-fname">First name:</label>
 					<div class="controls">
@@ -200,7 +190,7 @@
 				</div>
 
 				<div class="control-group">			
-					<label class="control-label" for="add-user-lname">Password:</label>
+					<label class="control-label" for="add-user-pass1">Password:</label>
 					<div class="controls">
 						<input type="password" name="add-user-pass1" id="add-user-pass1" size="20" maxlength="40" />
 						<span class="help-inline">6 or more characters</span>
@@ -208,7 +198,7 @@
 				</div>
 
 				<div class="control-group">			
-					<label class="control-label" for="add-user-lname">Confirm Password:</label>
+					<label class="control-label" for="add-user-pass2">Confirm Password:</label>
 					<div class="controls">
 						<input type="password" name="add-user-pass2" id="add-user-pass2" size="20" maxlength="40" />
 					</div>
@@ -330,7 +320,7 @@
 				</div>
 				<button type="submit" id="joinbutton" class="btn btn-primary btn-block">Join Now</button>
 			</form>						
-					</div>
+		</div> <!-- end of Register block -->
 					
 				</div> <!-- end of content row -->
 

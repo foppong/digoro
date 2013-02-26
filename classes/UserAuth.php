@@ -73,7 +73,7 @@
 			return $this->inv_case;
 		}
 
-		// Function to check if user email is available
+		// Function to check if user email is available for existing user
 		function isEmailAvailable($e)
 		{
 			// Make the query to make sure User's new email is available	
@@ -193,8 +193,8 @@
 		} // End of checkUser function
 
 		// Function to create users
-		function createUser($e, $p, $fn, $ln, $mstatus, $zp, $gd, $bdfrmat, $iv) 
-		{
+		function createUser($fn, $ln, $e, $p, $sex, $bdfrmat, $iv) {
+			
 			// Call checkUser function	
 			self::checkUser($e);
 
@@ -217,14 +217,14 @@
 					$a = md5(uniqid(rand(), TRUE));	
 		
 					// Make the query to add new user to database
-					$q = 'INSERT INTO users (email, pass, first_name, last_name, role, zipcode, gender, activation, birth_date, invited, registration_date) 
-						VALUES (?,?,?,?,?,?,?,?,?,?,NOW())';
+					$q = 'INSERT INTO users (first_name, last_name, email, pass, sex, activation, birth_date, invited, registration_date) 
+						VALUES (?,?,?,?,?,?,?,?,NOW())';
 		
 					// Prepare the statement
 					$stmt = $this->dbc->prepare($q); 
 		
 					// Bind the inbound variables:
-					$stmt->bind_param('sssssssssi', $e, $hash, $fn, $ln, $mstatus, $zp, $gd, $a, $bdfrmat, $iv);
+					$stmt->bind_param('sssssssi', $fn, $ln, $e, $hash, $sex, $a, $bdfrmat, $iv);
 						
 					// Execute the query:
 					$stmt->execute();
@@ -259,14 +259,14 @@
 					$a = md5(uniqid(rand(), TRUE));			
 				
 					// Make the query to update user in database
-					$q = 'UPDATE users SET pass=?, first_name=?, last_name=?, role=?, zipcode=?, gender=?, activation=?, birth_date=?, registration_date=NOW() 
+					$q = 'UPDATE users SET pass=?, first_name=?, last_name=?, sex=?, activation=?, birth_date=?, registration_date=NOW() 
 						WHERE id_user=? LIMIT 1';
 	
 					// Prepare the statement
 					$stmt = $this->dbc->prepare($q);
 	
 					// Bind the inbound variables:
-					$stmt->bind_param('ssssssssi', $hash, $fn, $ln, $mstatus, $zp, $gd, $a, $bdfrmat, $this->id_user);
+					$stmt->bind_param('ssssssi', $hash, $fn, $ln, $sex, $a, $bdfrmat, $this->id_user);
 					
 					// Execute the query:
 					$stmt->execute();
