@@ -375,6 +375,7 @@
 					$_SESSION['agent'] = md5($_SERVER['HTTP_USER_AGENT']);			
 					
 					// If user hasn't logged in before and is a manager, take them to welcome page
+					/*
 					if ($lb == FALSE && $role == 'M') {
 						$user = new User($userID);						
 						$_SESSION['userObj'] = $user;
@@ -390,7 +391,8 @@
 						header("Location: $url");
 						exit();
 					}
-					
+				*/	
+				
 					//Redirect User
 					$user = new User($userID);
 					$_SESSION['userObj'] = $user;							

@@ -7,12 +7,6 @@
 	ob_start();
 	session_start();
 	
-	// Check for a $page_title value:
-	if (!isset($page_title))
-	{
-		$page_title = 'digoro';
-	}
-	
 ?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
@@ -21,7 +15,6 @@
 	xmlns:fb="https://www.facebook.com/2008/fbml">
 	<head prefix="og: http://ogp.me/ns# fb: http://ogp.me/ns/fb# playdigoro: http://ogp.me/ns/fb/playdigoro#">
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title><?php echo $page_title; ?></title>
 		<meta name="author" content="Frank" />
 
 		<!-- Facebook data -->
