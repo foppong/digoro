@@ -47,34 +47,7 @@
 		exit();			
 	}
 
-	if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-		// Validate email address
-		if (filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
-			$e = $_POST['email'];
-		}
-		else {
-			$e = FALSE;
-			echo '<p class="error"> Please enter valid email address!</p>';
-		}
-		
-		// Validate password
-		if (!empty($_POST['pass'])) {
-			$p = $_POST['pass'];
-		}
-		else {
-			$p = FALSE;
-			echo '<p class="error">You forgot to enter your password!</p>';
-		}
 
-		// Check if email and password entered are valid before proceeding to login procedure.
-		if ($e && $p) {
-			// Create user object & login user 
-			$user = new UserAuth();
-			$user->setDB($db);	
-			$user->login($e, $p);
-			unset($user);
-		}
-	}
 
 	$db->close();
 	unset($db);
@@ -108,9 +81,10 @@
 
 	<div class="container" id="contentWrapper">
 		<div class="row"> <!-- page row - except footer -->
-			<div class="span12">
+			<div class="span12">	
 				<div class="row"> <!-- Header row -->
-					<div class="span2">
+					<div id="status"></div>
+					<div class="span2"> 
 						<div class="row" id="headtxt">
 							<h1>digoro</h1>
 						</div>
@@ -126,8 +100,8 @@
 							<form class="form-inline" method="post">
 								<input class="span2" type="text" name="email" id="email" maxlength="60" placeholder="Email"/>
 								<input class="span2" type="password" name="pass" id="pass" maxlength="20" placeholder="Password" />
-								<button type="submit" id="signin" class="btn">Sign in</button>
 							</form>
+								<button type="button" id="signin" class="btn btn-small btn-primary">Sign In</button>							
 						</div>
 						<div class="row" id="fbooklogin">
 							<fb:login-button size="medium" scope="email, user_birthday">Login with Facebook</fb:login-button>
@@ -316,10 +290,9 @@
 						</select>
 					<span class="help-inline"><a href="help.php">Why do I need to provide my birthday?</a></span>
 					</div>
-
 				</div>
-				<button type="submit" id="joinbutton" class="btn btn-primary btn-block">Join Now</button>
-			</form>						
+			</form>
+				<button type="button" id="joinbutton" class="btn btn-primary btn-block">Join Now</button>									
 		</div> <!-- end of Register block -->
 					
 				</div> <!-- end of content row -->

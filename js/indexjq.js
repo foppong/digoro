@@ -14,12 +14,9 @@ var RETURNINGUSER = {
 	  	type: "POST",
 	    url: "../core/login_user.php",
 	    data: form_data, // Data that I'm sending
-	    error: function() {
-	    	$( '#status' ).append( '<div class="alert alert-error">Login failed</div>' ).slideDown( 'slow' );
+	    error: function( data ) {
+	    	$( '#status' ).append( data ).slideDown( 'slow' );
 	    },
-	    success: function( data ) { 
-	      $( '#status' ).append( data ).slideDown( 'slow' );   	
-	     },
 	    complete: function() {
 	    	setTimeout(function() {
 	      	$( '#status' ).slideUp( 'slow' );
@@ -77,13 +74,11 @@ $(document).ready(function()
 
 	// Code for processing registeration
 	$( "#signin" ).on("click", function() {
-		// Load add Team dialog
 		RETURNINGUSER.loginUser();
 	});
 
 	// Code for processing registeration
 	$( "#joinbutton" ).on("click", function() {
-		// Load add Team dialog
 		NEWUSER.registerUser();
 	});
 

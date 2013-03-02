@@ -2,6 +2,9 @@
 	// This page is for registering a user
 	// This page is accessed through the login page
 
+	require '../includes/config.php';
+	include '../includes/iheader.html';
+
 	// autoloading of classes
 	function __autoload($class) {
 		require_once('../classes/' . $class . '.php');
@@ -16,7 +19,7 @@
 	}
 	
 	// Establish database connection
-	require_once MYSQL1;
+	require_once MYSQL2;
 
 	if ($_SERVER['REQUEST_METHOD'] == 'POST') { // Confirmation that form has been submitted	
 

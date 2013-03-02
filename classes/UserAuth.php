@@ -334,8 +334,7 @@
 		} // End of deleteUser function
 
 		// Function to log in users
-		function login($e, $p)
-		{
+		function login($e, $p) {
 			if (self::checkPass($e, $p)) // Call checkPass function	
 			{
 				// Make the query	
@@ -360,8 +359,7 @@
 				if ($stmt->num_rows == 1) // Found match in database
 				{
 					//Assign the outbound variables			
-					while ($stmt->fetch())
-					{
+					while ($stmt->fetch()) {
 						$role = $roleOB;
 						$userID = $idOB;
 						$lb = $logbfOB;
@@ -377,8 +375,7 @@
 					$_SESSION['agent'] = md5($_SERVER['HTTP_USER_AGENT']);			
 					
 					// If user hasn't logged in before and is a manager, take them to welcome page
-					if ($lb == FALSE && $role == 'M')
-					{
+					if ($lb == FALSE && $role == 'M') {
 						$user = new User($userID);						
 						$_SESSION['userObj'] = $user;
 						$url = BASE_URL . 'manager/mg_welcome.php';
@@ -398,23 +395,18 @@
 					$user = new User($userID);
 					$_SESSION['userObj'] = $user;							
 					$url = BASE_URL . 'manager/home.php';
-	
+					
 					ob_end_clean();
 					header("Location: $url");
 	
-					// Close hasher
-					unset($hasher);
-					
-					// Close the statement:
-					$stmt->close();
-					unset($stmt);
-						
 					exit();
 				}
-				else 
-				{
+				else {
 					echo '<div class="alert alert-error">You could not be logged in. Please check that you have activated your account</div>';
 				}
+
+				// Close hasher
+				unset($hasher);
 				
 				// Close the statement:
 				$stmt->close();
