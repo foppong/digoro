@@ -2,7 +2,7 @@
 
 	require 'includes/config.php';
 	include 'includes/iheader.html';
-	require 'includes/facebook.php';
+	//require 'includes/facebook.php';
 
 	// autoloading of classes
 	function __autoload($class) {
@@ -11,32 +11,6 @@
 
 	// Need the database connection:
 	require MYSQL1;
-
-	$facebook = new Facebook(array(
-	  'appId'  => '413593075351071',
-	  'secret' => 'c91c70487679528d6d6b22547db88ea9',
-	));
-	
-	// See if there is a user from a cookie
-	$fbuser = $facebook->getUser();
-	
-	if ($fbuser) {
-		try {
-	    	// Proceed knowing you have a logged in user who's authenticated.
-	   		$user_profile = $facebook->api('/me');
-			$uemail = $user_profile['email'];
-
-			// Create user object & login user
-			$OAuser = new UserAuth();
-			$OAuser->setDB($db);
-			$OAuser->OAuthlogin($uemail);
-			unset($OAuser);					
-		} 
-		catch (FacebookApiException $e) {
-	    	echo '<pre>'.htmlspecialchars(print_r($e, true)).'</pre>';
-	    	$fbuser = null;
-	  	}
-	}
 
 	// Authorized Login Check
 	// If session value is present, redirect the user. Also validate the HTTP_USER_AGENT	
@@ -47,37 +21,9 @@
 		exit();			
 	}
 
-
-
 	$db->close();
 	unset($db);
 ?>
-
-	<div id="fb-root"></div>
-	   <script>               
-	     window.fbAsyncInit = function() {
-	       FB.init({
-	         appId: '<?php echo $facebook->getAppID() ?>', // check login status
-	         cookie: true, // enable cookies to allow the server to access the session
-	         xfbml: true, // parse XFBML
-	         oauth: true
-	       });
-        // redirect user on login
-		      FB.Event.subscribe('auth.login', function(response) {
-		        window.location.reload();
-		      });
-		      // redirect user on logout
-		      FB.Event.subscribe('auth.logout', function(response) {
-		        window.location.reload();
-		      });
-		    };
-		    (function() {
-		      var e = document.createElement('script'); e.async = true;
-		      e.src = document.location.protocol +
-		        '//connect.facebook.net/en_US/all.js';
-		      document.getElementById('fb-root').appendChild(e);
-		    }());
-		  </script>
 
 	<div class="container" id="contentWrapper">
 		<div class="row"> <!-- page row - except footer -->
@@ -97,21 +43,22 @@
 							<p><a href="core/forgot_password.php">Forgot your password?</a></p>
 						</div>
 						<div class="row" id="loginform">
-							<form class="form-inline" method="post">
-								<input class="span2" type="text" name="email" id="email" maxlength="60" placeholder="Email"/>
-								<input class="span2" type="password" name="pass" id="pass" maxlength="20" placeholder="Password" />
-							</form>
+							<div class="span4">
+								<form class="form-inline" method="post">
+									<input class="span2" type="text" name="email" id="email" maxlength="60" placeholder="Email"/>
+									<input class="span2" type="password" name="pass" id="pass" maxlength="20" placeholder="Password" />
+								</form>
+							</div>
+							<div class="span1">	
 								<button type="button" id="signin" class="btn btn-small btn-primary">Sign In</button>							
-						</div>
-						<div class="row" id="fbooklogin">
-							<fb:login-button size="medium" scope="email, user_birthday">Login with Facebook</fb:login-button>
-						</div>
+							</div>
+						</div>	
 					</div>
 				</div> <!-- end of header row -->
 				<hr>
 				
 				<div class="row"> <!-- tagline row -->
-					<div class="span9 offset2">
+					<div class="span12">
 						<h2>The virtual agent for amateur sports players and teams.</h2>
 						<div id="no-script"><h2>You must have JavaScript enabled!</h2></div> <!-- Only shows if javascript is disabled -->
 					</div>

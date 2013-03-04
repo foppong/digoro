@@ -84,7 +84,7 @@ $(document).ready(function()
 
 
 
-
+/*
 	$('#loginform form').validate( {
 		rules: {
 			email: {
@@ -108,6 +108,7 @@ $(document).ready(function()
 			label.text('Ok!').addClass('valid');
 		}
 	});
+*/
 
 	$('#ForgotPassForm').validate( {
 		rules: {

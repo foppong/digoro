@@ -2,8 +2,11 @@
 	// This page is for logging in a user
 	// This page is accessed through the login page
 
+	ob_start();
+	session_start();	
+
 	require '../includes/config.php';
-	include '../includes/iheader.html';	
+	include '../includes/php-functions.php';
 	
 	// autoloading of classes
 	function __autoload($class) {
@@ -28,7 +31,7 @@
 		}
 		else {
 			$e = FALSE;
-			echo '<div class="alert alert-error"> Please enter valid email address!</div>';
+			echo '<div class="alert alert-error">Please enter valid email address!</div>';
 		}
 		
 		// Validate password
