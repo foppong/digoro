@@ -43,14 +43,12 @@
 							<p><a href="core/forgot_password.php">Forgot your password?</a></p>
 						</div>
 						<div class="row" id="loginform">
-							<div class="span4">
-								<form class="form-inline" method="post">
+							<div class="span5">
+								<form class="form-inline" method="post" action="../core/login_user.php">
 									<input class="span2" type="text" name="email" id="email" maxlength="60" placeholder="Email"/>
 									<input class="span2" type="password" name="pass" id="pass" maxlength="20" placeholder="Password" />
+									<button type="submit" id="signin" class="btn btn-small btn-primary">Sign In</button>	
 								</form>
-							</div>
-							<div class="span1">	
-								<button type="button" id="signin" class="btn btn-small btn-primary">Sign In</button>							
 							</div>
 						</div>	
 					</div>
@@ -95,7 +93,7 @@
 			<h3>Start playing today - it's free!</h3>
 			<h4>Registration takes less than 2 minutes</h4></br>
 			
-		<form method="post" class="form-horizontal">
+		<form method="post" action="../core/register_user.php" class="form-horizontal">
 				<div class="control-group">			
 					<label class="control-label" for="add-user-fname">First name:</label>
 					<div class="controls">
@@ -238,8 +236,8 @@
 					<span class="help-inline"><a href="help.php">Why do I need to provide my birthday?</a></span>
 					</div>
 				</div>
-			</form>
-				<button type="button" id="joinbutton" class="btn btn-primary btn-block">Join Now</button>									
+				<button type="submit" id="joinbutton" class="btn btn-primary btn-block">Join Now</button>
+			</form>									
 		</div> <!-- end of Register block -->
 					
 				</div> <!-- end of content row -->

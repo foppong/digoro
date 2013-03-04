@@ -64,8 +64,8 @@
 			echo 'Please enter valid email address';
 		}	
 
-		if ($_POST['edit-user-sel-sex']) {
-			$sex = $_POST['edit-user-sel-sex'];
+		if ($_POST['add-user-sel-sex']) {
+			$sex = $_POST['add-user-sel-sex'];
 		}
 		else {
 			echo 'Please select your sex';
@@ -114,7 +114,7 @@
 		if ($fname && $lname && $e && $p && $sex && $bdfrmat) {
 			$user = new UserAuth();
 			$user->setDB($db);				
-			$user->createUser($fname, $lname, $e, $p, $zip, $sex, $bdfrmat);
+			$user->createUser($fname, $lname, $e, $p, $sex, $bdfrmat);
 		}
 		else {	// Errors in the user entered information
 			echo 'Please try again';

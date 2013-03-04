@@ -193,7 +193,7 @@
 		} // End of checkUser function
 
 		// Function to create users
-		function createUser($fn, $ln, $e, $p, $sex, $bdfrmat, $iv) {
+		function createUser($fn, $ln, $e, $p, $sex, $bdfrmat) {
 			
 			// Call checkUser function	
 			self::checkUser($e);
@@ -224,7 +224,7 @@
 					$stmt = $this->dbc->prepare($q); 
 		
 					// Bind the inbound variables:
-					$stmt->bind_param('sssssssi', $fn, $ln, $e, $hash, $sex, $a, $bdfrmat, $iv);
+					$stmt->bind_param('sssssssi', $fn, $ln, $e, $hash, $sex, $a, $bdfrmat, $this->inv_case);
 						
 					// Execute the query:
 					$stmt->execute();
@@ -411,12 +411,10 @@
 						
 					exit();
 				}
-				else {
+				else 
+				{
 					echo '<div class="alert alert-error">You could not be logged in. Please check that you have activated your account</div>';
 				}
-
-				// Close hasher
-				unset($hasher);
 				
 				// Close the statement:
 				$stmt->close();
