@@ -16,8 +16,8 @@
 	// Assign user object from session variable
 	if (isset($_SESSION['userObj']))
 	{
-		$manager = $_SESSION['userObj'];
-		$userID = $manager->getUserID();
+		$player = $_SESSION['userObj'];
+		$userID = $player->getUserID();
 	}
 	else 
 	{
@@ -104,6 +104,22 @@
 			echo 'Please try again';
 			exit();
 		}		
+
+		// Perform following actions if first time user is successful in creating a profile
+		if ($_POST['newUser'] = '1') {
+			// Create user object & update user information
+			$user = new User($userID);
+			$user->setDB($db);
+			$user->updateLoginBefore(); // *BUG Function displays "no changes made" regardless
+
+			$role = 'p';
+			$user->updateUserRole($role);			
+						
+			$url = BASE_URL . 'player/home.php';
+			header("Location: $url");
+			exit();		
+		}
+
 	}
 	else {
 		// No valid ID, kill the script.
@@ -112,8 +128,9 @@
 	}
 		
 	// Delete objects
+	unset($user);
 	unset($profile);
-	unset($manager);
+	unset($player);
 			
 	// Close the connection:
 	$db->close();

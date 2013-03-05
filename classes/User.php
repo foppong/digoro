@@ -32,6 +32,8 @@
 	 *  pullUserData()
 	 *  pullSpecificData()
 	 *  updateUserAcct()
+	 *  updateLoginBefore()
+	 *  updateUserRole()
 	 */
 
 	class User extends UserAuth {
@@ -292,5 +294,55 @@
 			}
 		} // End of updateUserAcct function
 		
+		// Function to update the loginbefore variable in the database
+		function updateLoginBefore() {
+			// Variable for us to update the database with
+			$setTrue = 1;
+
+			// Update the user's info in the database
+			$q = 'UPDATE users SET login_before=? WHERE id_user=? LIMIT 1';
+
+			// Prepare the statement
+			$stmt = $this->dbc->prepare($q); 
+
+			// Bind the inbound variables:
+			$stmt->bind_param('ii', $setTrue, $this->id_user);
+				
+			// Execute the query:
+			$stmt->execute();
+
+			if ($stmt->affected_rows == 1) {// And update to the database was made
+				echo '<div class="alert alert-success">The users account has been updated.</div>';
+			}
+			else { 
+				// Either did not run ok or no updates were made
+				echo '<div class="alert">No changes were made.</div>';
+			}
+		} // End of updateLoginBefore function			
+
 		
+		// Function to update the user role in the database
+		function updateUserRole($role) {
+
+			// Update the user's info in the database
+			$q = 'UPDATE users SET role=? WHERE id_user=? LIMIT 1';
+
+			// Prepare the statement
+			$stmt = $this->dbc->prepare($q); 
+
+			// Bind the inbound variables:
+			$stmt->bind_param('si', $role, $this->id_user);
+				
+			// Execute the query:
+			$stmt->execute();
+
+			if ($stmt->affected_rows == 1) {// And update to the database was made
+				echo '<div class="alert alert-success">The users account has been updated.</div>';
+			}
+			else { 
+				// Either did not run ok or no updates were made
+				echo '<div class="alert">No changes were made.</div>';
+			}
+		} // End of updateUserRole function		
+				
 	} // End of Class
