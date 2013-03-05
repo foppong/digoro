@@ -375,25 +375,16 @@
 					// Store the HTTP_USER_AGENT:
 					$_SESSION['agent'] = md5($_SERVER['HTTP_USER_AGENT']);			
 					
-					// If user hasn't logged in before and is a manager, take them to welcome page
-/*
-					if ($lb == FALSE && $role == 'M') {
-						$user = new User($userID);						
-						$_SESSION['userObj'] = $user;
-						$url = BASE_URL . 'manager/mg_welcome.php';
-						header("Location: $url");
-						exit();
-					}
+					// If user hasn't logged in before take them to welcome page
 
-					if ($lb == FALSE && $role == 'P') {
+					if ($lb == FALSE) {
 						$user = new User($userID);
 						$_SESSION['userObj'] = $user;
-						$url = BASE_URL . 'player/p_welcome.php';
+						$url = BASE_URL . 'core/welcome.php';
 						header("Location: $url");
 						exit();
 					}
-*/
-				
+		
 					//Redirect User
 					$user = new User($userID);
 					$_SESSION['userObj'] = $user;							
