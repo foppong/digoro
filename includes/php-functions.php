@@ -1,5 +1,21 @@
 <?php
 
+	// Custom function to retrieve user object variable from session
+	function checkSessionObject() {
+		// Assign user object from session variable
+		if (!isset($_SESSION['userObj'])) {
+			redirect_to('index.php');
+		}		
+	} 
+
+	// Custom function to check user role and redirect if needed
+	function checkRole($role) {
+		if ($_SESSION['role'] !== $role) {
+			$url = BASE_URL . 'core/welcome.php';
+			header("Location: $url");			
+		}				
+	}
+
 	// Custom function to translate subresponse manager status
 	function translateSubResStatus($resp0B) {
 		switch ($resp0B) {

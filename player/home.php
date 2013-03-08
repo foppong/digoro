@@ -1,6 +1,6 @@
 <?php 
 	// home.php
-	// home page for users
+	// home page for players
 	
 	require '../includes/config.php';
 	$page_title = 'Profile';
@@ -12,7 +12,7 @@
 	function __autoload($class) {
 		require_once('../classes/' . $class . '.php');
 	}
-	
+
 	// See if there is a user from a cookie
 	$fbuser = $facebook->getUser();	
 
@@ -20,7 +20,7 @@
 	checkSessionObject();	
 
 	// Check user role
-	checkRole('m');
+	checkRole('p');
 
 ?>
 
@@ -45,11 +45,6 @@
 							alt="clipboard-icon" height="60" width="60"></a>	
 					</li>
 					<li><p>My Teams</p></li>
-					<li>
-						<a href="find_players.php"><img src="../css/imgs/binoculars-icon.png" 
-							alt="binoculars-icon" height="60" width="60"></a>
-					</li>
-					<li><p>Find Players</p></li>
 					<li>
 						<a href=""><img src="../css/imgs/world-icon.png" 
 							alt="world-icon" height="60" width="60"></a>

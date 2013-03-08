@@ -13,23 +13,21 @@
 		require_once('../classes/' . $class . '.php');
 	}
 
-	// Assign user object from session variable
-	if (isset($_SESSION['userObj']))
-	{
-		$manager = $_SESSION['userObj'];
-		$userID = $manager->getUserID();
-		$ctmID = $_SESSION['ctmID']; //Retrieve current team in session variable
-	}
-	else 
-	{
-		redirect_to('index.php');
-	}
+	// Validate user
+	checkSessionObject();	
+	
+	// Check user role
+	checkRole('m');
 
 	// Establish database connection
 	require_once MYSQL2;
 
-	// Assign Database Resource to object
-	$manager->setDB($db);
+	// Assign user object from session variable
+	$user = $_SESSION['userObj'];
+	$userID = $user->getUserID();
+
+	// Retrieve current team ID in session
+	$ctmID = $_SESSION['ctmID'];
 		
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
@@ -104,7 +102,7 @@
 	
 	// Delete objects
 	unset($member);
-	unset($manager);
+	unset($user);
 
 	// Close the connection:
 	$db->close();

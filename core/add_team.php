@@ -14,21 +14,13 @@
 	}
 
 	// Assign user object from session variable
-	if (isset($_SESSION['userObj']))
-	{
-		$manager = $_SESSION['userObj'];
-		$userID = $manager->getUserID();
-	}
-	else 
-	{
-		redirect_to('index.php');
-	}
+	retrieveUserObject();
 
 	// Need the database connection:
 	require_once MYSQL2;
 
 	// Assign Database Resource to object
-	$manager->setDB($db);
+	//$manager->setDB($db);
 
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
@@ -135,7 +127,6 @@
 	// Delete objects
 	unset($user);
 	unset($team);
-	unset($manager);
 
 	// Close the connection:
 	$db->close();

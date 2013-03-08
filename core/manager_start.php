@@ -4,21 +4,18 @@
 		
 	$page_title = 'digoro : Manager Welcome';
 	require_once '../includes/iheader.html';
+	require '../includes/php-functions.php';
 
 	// autoloading of classes
 	function __autoload($class) {
 		require_once('../classes/' . $class . '.php');
 	}
 
-	// Assign user object from session variable
-	if (isset($_SESSION['userObj']))
-	{
-		$user = $_SESSION['userObj'];
-	}
-	else 
-	{
-		redirect_to('index.php');
-	}
+	// Validate user
+	checkSessionObject();	
+	
+	// Check user role
+	checkRole('m');
 
 ?>
 
@@ -33,7 +30,7 @@
 			</div>
 			
 			<div class="row">
-				<form action="../manager/add_team.php" method="post" id="FirstTeamForm" class="form-horizontal">
+				<form action="../core/add_team.php" method="post" id="FirstTeamForm" class="form-horizontal">
 					<div class="control-group">
 						<label class="control-label" for="add-team-sel-sport">We play*</label>
 						<div class="controls">
@@ -117,4 +114,4 @@
 			</div> <!-- end of main column -->
 		</div> <!-- end of main row -->
 
-<?php include '../includes/footer.html'; ?>
+<?php include '../includes/ifooter.html'; ?>

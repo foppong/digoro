@@ -12,23 +12,19 @@
 		require_once('../classes/' . $class . '.php');
 	}
 
-	// Establish database connection
-	require_once MYSQL2;
+	// Validate user
+	checkSessionObject();	
 
 	// Assign user object from session variable
-	if (isset($_SESSION['userObj']))
-	{
-		$manager = $_SESSION['userObj'];
-		$userID = $manager->getUserID();
-	}
-	else 
-	{
-		redirect_to('index.php');	
-	}
+	$user = $_SESSION['userObj'];
+	$userID = $user->getUserID();
 
-	// Assign Database Resource to object
-	$manager->setDB($db);
+	// Check user role
+	checkRole('m');
 
+	// Establish database connection
+	require_once MYSQL2;
+	
 	if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['z'])) // Confirmation that form has been submitted	
 	{
 		$teamid = $_POST['z'];
@@ -73,7 +69,7 @@
 
 	// Delete objects
 	unset($team);
-	unset($manager);
+	unset($user);
 
 	// Close the connection:
 	$db->close();
