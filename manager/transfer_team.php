@@ -16,18 +16,13 @@
 	require_once MYSQL2;
 
 	// Assign user object from session variable
-	if (isset($_SESSION['userObj']))
-	{
-		$manager = $_SESSION['userObj'];
-		$userID = $manager->getUserID();
-	}
-	else 
-	{
-		redirect_to('index.php');	
-	}
+	retrieveUserObject();
+	
+	// Check user role
+	checkRole('m');
 
 	// Assign Database Resource to object
-	$manager->setDB($db);
+	//$manager->setDB($db);
 
 	if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['z'])) // Confirmation that form has been submitted	
 	{
@@ -73,7 +68,7 @@
 
 	// Delete objects
 	unset($team);
-	unset($manager);
+	unset($user);
 
 	// Close the connection:
 	$db->close();

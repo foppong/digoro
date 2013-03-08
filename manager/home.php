@@ -16,9 +16,9 @@
 	// See if there is a user from a cookie
 	$fbuser = $facebook->getUser();	
 
-	// Assign user object from session variable
-	retrieveUserObject();
-	
+	// Validate user
+	checkSessionObject();	
+
 	// Check user role
 	checkRole('m');
 

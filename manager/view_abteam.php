@@ -16,15 +16,10 @@
 	}
 	
 	// Assign user object from session variable
-	if (isset($_SESSION['userObj']))
-	{
-		$user = $_SESSION['userObj'];
-		$ctmID = $_SESSION['ctmID']; //Retrieve current team in session variable
-	}
-	else 
-	{
-		redirect_to('index.php');	
-	}
+	retrieveUserObject();
+	
+	// Check user role
+	checkRole('m');
 	
 	// Check for a $page_title value:
 	if (!isset($page_title))
@@ -33,6 +28,10 @@
 	}
 
 	$page_title = 'digoro : About Team';
+
+	// Retrieve current team ID in session
+	$ctmID = $_SESSION['ctmID'];
+
 ?>
 
 

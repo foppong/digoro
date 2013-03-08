@@ -142,7 +142,7 @@
 
 	// Delete objects
 	unset($event);
-	unset($manager);
+	unset($user);
 
 	// Close the connection:
 	$db->close();

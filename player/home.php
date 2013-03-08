@@ -12,25 +12,19 @@
 	function __autoload($class) {
 		require_once('../classes/' . $class . '.php');
 	}
-	
+
 	// See if there is a user from a cookie
 	$fbuser = $facebook->getUser();	
-	
-	// Assign user object from session variable
-	if (isset($_SESSION['userObj']))
-	{
-		$player = $_SESSION['userObj'];
-		$userID = $player->getUserID();
-	}
-	else 
-	{
-		redirect_to('index.php');
-	}
+
+	// Validate user
+	checkSessionObject();	
+
+	// Check user role
+	checkRole('p');
+
 
 	// Need the database connection:
 	require_once MYSQL2;
-
-
 
 ?>
 
@@ -55,11 +49,6 @@
 							alt="clipboard-icon" height="60" width="60"></a>	
 					</li>
 					<li><p>My Teams</p></li>
-					<li>
-						<a href="find_players.php"><img src="../css/imgs/binoculars-icon.png" 
-							alt="binoculars-icon" height="60" width="60"></a>
-					</li>
-					<li><p>Find Players</p></li>
 					<li>
 						<a href=""><img src="../css/imgs/world-icon.png" 
 							alt="world-icon" height="60" width="60"></a>

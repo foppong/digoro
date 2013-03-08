@@ -14,15 +14,10 @@
 	}
 
 	// Assign user object from session variable
-	if (isset($_SESSION['userObj']))
-	{
-		$manager = $_SESSION['userObj'];
-		$userID = $manager->getUserID();
-	}
-	else 
-	{
-		redirect_to('index.php'); // Custom function to kick user out of system
-	}
+	retrieveUserObject();
+	
+	// Check user role
+	checkRole('m');
 
 	// Need the database connection:
 	require_once MYSQL2;
@@ -58,7 +53,7 @@
 
 	// Delete objects
 	unset($team);
-	unset($manager);
+	unset($user);
 				
 	// Close the connection:
 	$db->close();

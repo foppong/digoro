@@ -14,22 +14,19 @@
 	}
 
 	// Assign user object from session variable
-	if (isset($_SESSION['userObj']))
-	{
-		$manager = $_SESSION['userObj'];
-		$userID = $manager->getUserID();
-		$ctmID = $_SESSION['ctmID']; //Retrieve current team in session variable
-	}
-	else 
-	{
-		redirect_to('index.php');
-	}
+	retrieveUserObject();
+	
+	// Check user role
+	checkRole('m');
 
 	// Establish database connection
 	require_once MYSQL2;
 
+	// Retrieve current team ID in session
+	$ctmID = $_SESSION['ctmID'];
+
 	// Assign Database Resource to object
-	$manager->setDB($db);
+	$user->setDB($db);
 		
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
@@ -104,7 +101,7 @@
 	
 	// Delete objects
 	unset($member);
-	unset($manager);
+	unset($user);
 
 	// Close the connection:
 	$db->close();

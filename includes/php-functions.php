@@ -1,13 +1,9 @@
 <?php
 
 	// Custom function to retrieve user object variable from session
-	function retrieveUserObject() {
+	function checkSessionObject() {
 		// Assign user object from session variable
-		if (isset($_SESSION['userObj'])) {
-			$user = $_SESSION['userObj'];
-			$userID = $user->getUserID();
-		}
-		else {
+		if (!isset($_SESSION['userObj'])) {
 			redirect_to('index.php');
 		}		
 	} 

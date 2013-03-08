@@ -16,14 +16,10 @@
 	}
 
 	// Assign user object from session variable
-	if (isset($_SESSION['userObj']))
-	{
-		$user = $_SESSION['userObj'];
-	}
-	else 
-	{
-		redirect_to('index.php');
-	}
+	retrieveUserObject();
+	
+	// Check user role
+	checkRole('m');
 	
 	// Check for a $page_title value:
 	if (!isset($page_title))

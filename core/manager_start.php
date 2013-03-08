@@ -11,8 +11,8 @@
 		require_once('../classes/' . $class . '.php');
 	}
 
-	// Assign user object from session variable
-	retrieveUserObject();
+	// Validate user
+	checkSessionObject();	
 	
 	// Check user role
 	checkRole('m');
@@ -30,7 +30,7 @@
 			</div>
 			
 			<div class="row">
-				<form action="../manager/add_team.php" method="post" id="FirstTeamForm" class="form-horizontal">
+				<form action="../core/add_team.php" method="post" id="FirstTeamForm" class="form-horizontal">
 					<div class="control-group">
 						<label class="control-label" for="add-team-sel-sport">We play*</label>
 						<div class="controls">
