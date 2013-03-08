@@ -22,9 +22,6 @@
 	// Check user role
 	checkRole('m');
 
-	// Need the database connection:
-	require_once MYSQL2;
-
 ?>
 
 	<div class="container" id="contentWrapper">

@@ -15,8 +15,8 @@
 		require_once('../classes/' . $class . '.php');
 	}
 
-	// Assign user object from session variable
-	retrieveUserObject();
+	// Validate user
+	checkSessionObject();	
 	
 	// Check user role
 	checkRole('m');

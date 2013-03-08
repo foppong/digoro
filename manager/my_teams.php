@@ -19,7 +19,7 @@
 	checkSessionObject();	
 
 	// Check user role
-	checkRole('p');
+	checkRole('m');
 
 	// Need the database connection:
 	require_once MYSQL2;

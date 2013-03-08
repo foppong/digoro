@@ -13,14 +13,18 @@
 		require_once('../classes/' . $class . '.php');
 	}
 
-	// Assign user object from session variable
-	retrieveUserObject();
+	// Validate user
+	checkSessionObject();	
 	
 	// Check user role
 	checkRole('m');
 
 	// Establish database connection
 	require_once MYSQL2;
+
+	// Assign user object from session variable
+	$user = $_SESSION['userObj'];
+	$userID = $user->getUserID();
 	
 	// Retrieve current team ID in session
 	$ctmID = $_SESSION['ctmID'];

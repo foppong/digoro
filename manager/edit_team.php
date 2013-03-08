@@ -13,17 +13,18 @@
 		require_once('../classes/' . $class . '.php');
 	}
 
-	// Establish database connection
-	require_once MYSQL2;
-
-	// Assign user object from session variable
-	retrieveUserObject();
+	// Validate user
+	checkSessionObject();	
 	
 	// Check user role
 	checkRole('m');
 
-	// Assign Database Resource to object
-	//$manager->setDB($db);
+	// Assign user object from session variable
+	$user = $_SESSION['userObj'];
+	$userID = $user->getUserID();
+
+	// Establish database connection
+	require_once MYSQL2;
 
 	if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['z'])) // Confirmation that form has been submitted	
 	{

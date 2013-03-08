@@ -13,11 +13,15 @@
 		require_once('../classes/' . $class . '.php');
 	}
 
-	// Assign user object from session variable
-	retrieveUserObject();
+	// Validate user
+	checkSessionObject();	
 	
 	// Check user role
 	checkRole('m');
+
+	// Assign user object from session variable
+	$user = $_SESSION['userObj'];
+	$userID = $user->getUserID();
 
 	// Need the database connection:
 	require_once MYSQL2;

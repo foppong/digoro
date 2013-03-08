@@ -14,10 +14,10 @@
 	}
 
 	// Validate user
-	checkSessionObject();	
+	checkSessionObject();		
 
 	// Check user role
-	checkRole('p');
+	checkRole('m');
 
 	// Establish database connection
 	require_once MYSQL2;

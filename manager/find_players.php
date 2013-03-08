@@ -22,9 +22,6 @@
 	// Check user role
 	checkRole('m');
 
-	// Need the database connection:
-	//require_once MYSQL2;
-
 ?>
 
 	<div class="container" id="contentWrapper">
@@ -87,13 +84,6 @@
 	<script type="text/javascript" src="../js/findplayers_pg.js"></script>
 
 <?php 
-
-	// Delete objects
-	//unset($user);
-
-	// Close the connection:
-	//$db->close();
-	//unset($db);
 
 	include '../includes/footer.html'; 
 
