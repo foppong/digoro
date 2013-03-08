@@ -1,6 +1,6 @@
 <?php 
 	// home.php
-	// home page for users
+	// home page for players
 	
 	require '../includes/config.php';
 	$page_title = 'Profile';
@@ -15,15 +15,22 @@
 	
 	// See if there is a user from a cookie
 	$fbuser = $facebook->getUser();	
-
-	// Assign user object from session variable
-	retrieveUserObject();
 	
-	// Check user role
-	checkRole('m');
+	// Assign user object from session variable
+	if (isset($_SESSION['userObj']))
+	{
+		$player = $_SESSION['userObj'];
+		$userID = $player->getUserID();
+	}
+	else 
+	{
+		redirect_to('index.php');
+	}
 
 	// Need the database connection:
 	require_once MYSQL2;
+
+
 
 ?>
 

@@ -4,6 +4,7 @@
 		
 	$page_title = 'digoro : Manager Welcome';
 	require_once '../includes/iheader.html';
+	require '../includes/php-functions.php';
 
 	// autoloading of classes
 	function __autoload($class) {
@@ -11,14 +12,10 @@
 	}
 
 	// Assign user object from session variable
-	if (isset($_SESSION['userObj']))
-	{
-		$user = $_SESSION['userObj'];
-	}
-	else 
-	{
-		redirect_to('index.php');
-	}
+	retrieveUserObject();
+	
+	// Check user role
+	checkRole('m');
 
 ?>
 
@@ -117,4 +114,4 @@
 			</div> <!-- end of main column -->
 		</div> <!-- end of main row -->
 
-<?php include '../includes/footer.html'; ?>
+<?php include '../includes/ifooter.html'; ?>

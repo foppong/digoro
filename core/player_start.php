@@ -120,4 +120,4 @@
 			</div> <!-- end of main column -->
 		</div> <!-- end of main row -->
 
-<?php include '../includes/footer.html'; ?>
+<?php include '../includes/ifooter.html'; ?>

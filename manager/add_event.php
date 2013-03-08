@@ -14,16 +14,10 @@
 	}
 
 	// Assign user object from session variable
-	if (isset($_SESSION['userObj']))
-	{
-		$manager = $_SESSION['userObj'];
-		$userID = $manager->getUserID();
-		$ctmID = $_SESSION['ctmID']; //Retrieve current team in session variable
-	}
-	else 
-	{
-		redirect_to('index.php');
-	}
+	retrieveUserObject();
+	
+	// Check user role
+	checkRole('m');
 
 	// Establish database connection
 	require_once MYSQL2;
