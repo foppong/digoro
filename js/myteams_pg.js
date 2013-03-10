@@ -665,6 +665,10 @@ $(document).ready(function() {
 	// Load teams associated with user into select menu
 	TEAM.teamMenu();	
 
+	// Load Selected Team Data
+	TEAM.pullTeamData();
+	TEAM.displayTeamInfo();
+
 	// Select team from select team form
 	$( "#selectTeam" ).on("submit", function() {
 		TEAM.selectTeam();
