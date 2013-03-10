@@ -405,6 +405,7 @@
 					}
 	
 					ob_end_clean();
+					$url = BASE_URL . 'core/welcome.php';
 					header("Location: $url");
 	
 					// Close hasher

@@ -125,4 +125,34 @@ $(document).ready(function() {
 	// Load schedule associated with team
 	SCHEDULE.loadSchedule();
 
+	// Load event dialogs
+	EVENT.loadDialog();
+
+	// Set Team Name
+	TEAM.setTeamName();
+	
+	$( "#add-event" ).on("click", function() {
+		$( "#AddEventForm" ).dialog( "open" );
+	});
+
+	// Binds click to ajax loaded edit button
+	$( "#schedule" ).on("click", ".edit_event", function() {
+		idevent = this.value;
+		SCHEDULE.pullEventData(idevent);
+		$( "#EditEventForm" ).dialog( "open" );
+	});
+
+	// Binds click to ajax loaded view button
+	$( "#schedule" ).on("click", ".view_event", function() {
+		idevent = this.value;
+		SCHEDULE.pullEventData(idevent);
+		$( "#ViewEventForm" ).dialog( "open" );
+	});
+
+	// Binds click to ajax loaded delete button
+	$( "#schedule" ).on("click", ".delete_event", function() {
+		idevent = this.value;
+		$( "#DelEventForm" ).dialog( "open" );
+	});
+
 });

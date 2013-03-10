@@ -98,7 +98,6 @@
 						<div class="page-header"><h1>My Teams</h1></div>
 					</div>
 				</div>
-
 				<div class="row"> <!-- Add Team button row -->
 					<div class="span4 offset3">
 						<h4>Add a team that you manage</h4>
@@ -107,7 +106,6 @@
 						<button type="button" id="addTeam" class="btn btn-small btn-primary">Add Team</button>
 					</div>
 				</div>
-
 				<div class="row"> <!-- Select team row -->
 					<div class="span4">
 						<form method="post" class="form-inline" id="SelectTeamForm">	
@@ -116,47 +114,26 @@
 						</form>
 					</div>
 				</div>
-
-			<div class="row"> <!-- Team Name header -->
-				<div class="span5">
-					<h3><span class="page-header teamdisplay"></span></h3> <!-- Name dynamically inserted here -->
-				</div>
-			</div>
-
 				<div class="row"> <!-- row for alerts -->
 					<div id="status"></div> 
 				</div>				
-				
-				<div class="row"> <!-- row for team menu options -->
-						<div class="row"> <!-- row 1 -->
-							<div class="span4 offset1">
-								<a href="view_abteam.php"><img src="../css/imgs/file.png" 
-									alt="world-icon" height="128" width="128"></a>
-								<p>Team Info</p>							
-							</div>
-							<div class="span4">
-								<a href="view_roster.php"><img src="../css/imgs/group.png" 
-									alt="world-icon" height="128" width="128"></a>
-								<p>Roster</p>							
-							</div>							
-						</div>	
-						<div class="row"> <!-- row 2 -->
-							<div class="span4 offset1">
-								<a href="view_sch.php"><img src="../css/imgs/list.png" 
-									alt="world-icon" height="128" width="128"></a>
-								<p>Schedule</p>							
-							</div>
-							<div class="span4">
-								<a href=""><img src="../css/imgs/mail.png" 
-									alt="world-icon" height="128" width="128"></a>
-								<p>Communications</p>							
-							</div>							
-						</div>									
+				<div class="row"> <!-- Tabs container -->		
+					<div id="tabmenu" class="ui-tabs">
+						<ul>
+							<li><a href="view_abteam.php"><span>Team Info</span></a></li>
+							<li><a href="view_roster.php"><span>Roster</span></a></li>
+						  <li><a href="view_sch.php"><span>Schedule</span></a></li>
+						</ul>
+							<div id="view_abteam.php" class="ui-tabs-hide">Team Info</div>
+							<div id="view_roster.php" class="ui-tabs-hide">Roster</div>
+							<div id="view_sch.php" class="ui-tabs-hide">Schedule</div>
+					</div>
 				</div>
-				
 			</div>
 			 
 		</div> <!-- End of main row -->
+
+
 
 	<!-- Modal Dialog Form -->
 	<div id="AddTeamForm" title="Add New Team" class="span4">		
