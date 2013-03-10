@@ -3,11 +3,10 @@
 	 * about_team
 	 * This page contains information about the team
 	 */
- 	
-	ob_start();
-	session_start();
-
+	 
 	require '../includes/config.php';
+	$page_title = 'Welcome to digoro!';
+	include '../includes/header.html';
 	include '../includes/php-functions.php';
 
 	// autoloading of classes
@@ -34,34 +33,60 @@
 
 ?>
 
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title><?php echo $page_title; ?></title>
-		<meta name="author" content="Frank" />
-		<!-- CSS Style Sheet -->
-
-		<!-- External javascript call -->
-		<script type="text/javascript" src="../js/abtm.js"></script>
-	</head>
-	<body>
-			<div class="row"> <!-- Team Name header -->
-				<div class="span5">
-					<h3><span class="page-header teamdisplay"></span> Team Info</h3> <!-- Name dynamically inserted here -->
+	<div class="container" id="contentWrapper">
+		<div class="row"> <!-- Main row - for all content except footer -->	
+			<div class="span2"> <!-- column for icons --> 
+				<div class="well">
+				<div class="side-nav">
+				<ul class="nav nav-list">
+					<li>
+						<a href="home.php"><img src="../css/imgs/home-icon.png" 
+							alt="home-icon" height="60" width="60"></a>
+					</li>
+					<li><p>Home</p></li>
+					<li>
+						<a href="profile.php"><img src="../css/imgs/user-icon.png" 
+							alt="user-icon" height="60" width="60"></a>	
+					</li>
+					<li><p>Profiles</p></li>
+					<li>
+						<a href="my_teams.php"><img src="../css/imgs/clipboard-icon.png" 
+							alt="clipboard-icon" height="60" width="60"></a>	
+					</li>
+					<li><p>My Teams</p></li>
+					<li>
+						<a href="find_players.php"><img src="../css/imgs/binoculars-icon.png" 
+							alt="binoculars-icon" height="60" width="60"></a>
+					</li>
+					<li><p>Find Players</p></li>
+					<li>
+						<a href=""><img src="../css/imgs/world-icon.png" 
+							alt="world-icon" height="60" width="60"></a>
+					</li>
+					<li><p>Find Teams</p></li>		
+				</ul>
 				</div>
-				<div class="span4">
-					<button type="button" id="edit-team" class="btn btn-small btn-primary">Edit Team</button>
-					<button type="button" id="transfer-team" class="btn btn-small btn-warning">Transfer</button>
-					<button type="button" id="delete-team" class="btn btn-small btn-danger">Delete Team</button>
-				</div>				
+				</div>
+			</div> <!-- end of column for icons --> 
+
+			<div class="span10"> <!-- column for main content --> 
+				<div class="row"> <!-- Team Name header -->
+					<div class="span5">
+						<h3><span class="page-header teamdisplay"></span> Team Info</h3> <!-- Name dynamically inserted here -->
+					</div>
+					<div class="span5">
+						<button type="button" id="edit-team" class="btn btn-small btn-primary">Edit Team</button>
+						<button type="button" id="transfer-team" class="btn btn-small btn-warning">Transfer</button>
+						<button type="button" id="delete-team" class="btn btn-small btn-danger">Delete Team</button>
+					</div>
+				</div>					
 			</div>
 			
-		
-		<!-- Load Dynamic Team Info Here -->
-		<div id="teamInfo"></div>
+			<!-- Load Dynamic Team Info Here -->
+			<div id="teamInfo"></div>
+
+			</div> <!-- End of column for main content -->
+		</div> <!-- End of main row -->
 
 	<!-- Modal Dialog Forms -->
 	<div id="EditTeamForm" title="Edit Team" class="span4">		
@@ -159,10 +184,9 @@
 	</div>
 	<!-- End of Modal Dialog Forms -->
 
-	</body>
-</html>
 
-<?php
-	ob_end_flush();
-?>		
+	<!-- External javascript call -->
+	<script type="text/javascript" src="../js/abtm.js"></script>
+	<script type="text/javascript" src="../js/myteams_pg.js"></script>
 
+<?php include '../includes/footer.html'; ?>

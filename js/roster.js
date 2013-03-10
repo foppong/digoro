@@ -116,4 +116,27 @@ $(document).ready(function() {
 	// Load roster associated with team
 	ROSTER.loadRoster();	
 
+	// Load member dialogs
+	MEMBER.loadDialog();
+
+	// Set Team Name
+	TEAM.setTeamName();
+
+	$( "#add-member" ).on("click", function() {
+		$( "#AddMemberForm" ).dialog( "open" );
+	});
+					
+	// Binds click to ajax loaded edit button
+	$( "#roster" ).on("click", ".edit_member", function() {
+		idmember = this.value;
+		ROSTER.pullMemberData( idmember );
+		$( "#EditMemberForm" ).dialog( "open" );
+	});
+
+	// Binds click to ajax loaded delete button
+	$( "#roster" ).on("click", ".delete_member", function() {
+		idmember = this.value;
+		$( "#DelMemberForm" ).dialog( "open" );
+	});
+
 });

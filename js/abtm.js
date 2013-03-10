@@ -55,5 +55,29 @@ $(document).ready(function() {
 	
 	//Load team data
 	//TEAM.pullTeamData();
+
+	// Load about team dialogs
+	TEAM.loadDialog();
+					
+	// Load Selected Team Data
+	TEAM.pullTeamData();
+	TEAM.displayTeamInfo();
+
+					
+	// Opens Edit Team Form dialog
+	$( "#edit-team" ).on("click", function() {
+		$( "#EditTeamForm" ).dialog( "open" );
+	});
+					
+	// Opens Transfer Team Form dialog
+	$( "#transfer-team" ).on("click", function() {
+		TEAM.loadTransferList();
+			$( "#TransferTeamForm" ).dialog( "open" );
+	});
+
+	// Opens Delete Team Form dialog
+	$( "#delete-team" ).on("click", function() {
+		$( "#DeleteTeamForm" ).dialog( "open" );
+	});
 	
 });

@@ -665,9 +665,6 @@ $(document).ready(function() {
 	// Load teams associated with user into select menu
 	TEAM.teamMenu();	
 
-	// Load about team dialogs
-	TEAM.loadDialog();
-
 	// Load Selected Team Data
 	TEAM.pullTeamData();
 	TEAM.displayTeamInfo();
@@ -677,6 +674,107 @@ $(document).ready(function() {
 		TEAM.selectTeam();
 	})
 	
+	// jQuery UI Tabs
+	$('#tabmenu').tabs({
+		spinner: '<img src="../css/imgs/ajax-loader.gif" />',
+		ajaxOptions: {
+			error: function( xhr, status, index, anchor ) {
+				$(anchor.hash).html(
+					"Couldn't load this tab. We'll try to fix this as soon as possible. "
+				);				
+			}
+		},
+		load: function( event, ui ) {
+			switch (ui.index) {
+				case 0:
+
+					// Load about team dialogs
+					TEAM.loadDialog();
+					
+					// Load Selected Team Data
+					TEAM.pullTeamData();
+					TEAM.displayTeamInfo();
+
+					
+					// Opens Edit Team Form dialog
+					$( "#edit-team" ).on("click", function() {
+						$( "#EditTeamForm" ).dialog( "open" );
+					});
+					
+					// Opens Transfer Team Form dialog
+					$( "#transfer-team" ).on("click", function() {
+						TEAM.loadTransferList();
+						$( "#TransferTeamForm" ).dialog( "open" );
+					});
+
+					// Opens Delete Team Form dialog
+					$( "#delete-team" ).on("click", function() {
+						$( "#DeleteTeamForm" ).dialog( "open" );
+					});
+
+					break;
+				case 1:
+
+					// Load member dialogs
+					MEMBER.loadDialog();
+
+					// Set Team Name
+					TEAM.setTeamName();
+
+					$( "#add-member" ).on("click", function() {
+						$( "#AddMemberForm" ).dialog( "open" );
+					});
+					
+					// Binds click to ajax loaded edit button
+					$( "#roster" ).on("click", ".edit_member", function() {
+						idmember = this.value;
+						ROSTER.pullMemberData( idmember );
+						$( "#EditMemberForm" ).dialog( "open" );
+					});
+
+					// Binds click to ajax loaded delete button
+					$( "#roster" ).on("click", ".delete_member", function() {
+						idmember = this.value;
+						$( "#DelMemberForm" ).dialog( "open" );
+					});
+					break;
+				case 2:
+					// Load event dialogs
+					EVENT.loadDialog();
+
+					// Set Team Name
+					TEAM.setTeamName();
+	
+					$( "#add-event" ).on("click", function() {
+						$( "#AddEventForm" ).dialog( "open" );
+					});
+
+					// Binds click to ajax loaded edit button
+					$( "#schedule" ).on("click", ".edit_event", function() {
+						idevent = this.value;
+						SCHEDULE.pullEventData(idevent);
+						$( "#EditEventForm" ).dialog( "open" );
+					});
+
+					// Binds click to ajax loaded view button
+					$( "#schedule" ).on("click", ".view_event", function() {
+						idevent = this.value;
+						SCHEDULE.pullEventData(idevent);
+						$( "#ViewEventForm" ).dialog( "open" );
+					});
+
+					// Binds click to ajax loaded delete button
+					$( "#schedule" ).on("click", ".delete_event", function() {
+						idevent = this.value;
+						$( "#DelEventForm" ).dialog( "open" );
+					});
+					break;
+				default:		
+			}
+		}
+	});
+	
+
 	// Code for triggering add team dialog
 	$( "#addTeam" ).on("click", function() {
 		// Load add Team dialog
