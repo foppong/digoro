@@ -14,12 +14,14 @@ var SCHEDULE = {
 	
 	loadSchedule: function() {
 		var _schedule = this;
+		var data_to_send = { actionvar: 'pullScheduleData' };
 
 		// AJAX call to retrieve list of events associated with team
 		$.ajax({
 	    type: "POST",
 			dataType: 'json',
 			url: "../data/schedule_data.php",
+			data: data_to_send,
 			success: function(data) {
 				_schedule.buildTable(data);
 			},

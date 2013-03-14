@@ -15,18 +15,14 @@
 		require_once('../classes/' . $class . '.php');
 	}
 	
-	// Assign user object from session variable
-	if (isset($_SESSION['userObj']))
-	{
-		$user = $_SESSION['userObj'];
-	}
-	else 
-	{
-		redirect_to('index.php');
-	}
+	// Validate user
+	checkSessionObject();
 
 	// Need the database connection:	
 	require_once MYSQL2;
+
+	// Assign user object from session variable
+	$user = $_SESSION['userObj'];
 
 	// Pulls Data for all the teams associated with the user
 	if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['actionvar'] == 'teammenu') {

@@ -15,18 +15,15 @@
 		require_once('../classes/' . $class . '.php');
 	}
 
-	// Assign user object from session variable
-	if (isset($_SESSION['userObj']))
-	{
-		$user = $_SESSION['userObj'];
-	}
-	else 
-	{
-		redirect_to('index.php');
-	}
+	// Validate user
+	checkSessionObject();
 
 	// Need the database connection:	
 	require_once MYSQL2;
+
+	// Assign user object from session variable
+	$user = $_SESSION['userObj'];
+	$userID = $user->getUserID();
 
 	// Retrieve current team ID from session variable
 	$tm = $_SESSION['ctmID'];	
