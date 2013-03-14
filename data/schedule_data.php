@@ -1,6 +1,6 @@
 <?php
 	/* schedule_data.php
-	* For managers: This script retrieves all the records from the schedule table.
+	* This script retrieves all the records from the schedule table.
 	* 
 	*/
 	
@@ -25,11 +25,13 @@
 	$user = $_SESSION['userObj'];
 	$userID = $user->getUserID();
 
-	// Retrieve current team ID from session variable
+	// Retrieve current team ID from session variable & create team object
 	$tm = $_SESSION['ctmID'];
+	$team = new Team();
+	$team->setDB($db);
 
 	// Check user's role on team
-	$isManager = isManager($userID, $tm);
+	$isManager = $team->isManager($userID, $tm);
 
 	// Pulls data of all members on a team
 	if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['actionvar'] == 'pullScheduleData') {

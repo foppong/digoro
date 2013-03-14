@@ -25,9 +25,14 @@
 	$user = $_SESSION['userObj'];
 	$userID = $user->getUserID();
 
-	// Retrieve current team ID from session variable
-	$tm = $_SESSION['ctmID'];	
+	// Retrieve current team ID from session variable & create team object
+	$tm = $_SESSION['ctmID'];
+	$team = new Team();
+	$team->setDB($db);
 
+	// Check user's role on team
+	$isManager = $team->isManager($userID, $tm);
+	
 	// Pulls data of all members on a team
 	if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['actionvar'] == 'pullRosterData') {
 		// Make the Query:
@@ -64,15 +69,28 @@
 					
 				// Translate sex data from database
 				$sex = translateSex($genOB);
+
+				// Adjust display based on user's role
+				if ($isManager == TRUE) {
 	
-				$json[] = array(
-				'Name' => $nOB,
-				'Email' => $eOB,
-				'Sex' => $sex,
-				'Position' => $posOB,
-				'Jersey' => $jnOB,
-				'Edit' => '<button type="button" class="edit_member btn btn-mini" value=' . $idOB . '>Edit</button>',
-				'Delete' => '<button type="button" class="delete_member btn btn-mini" value=' . $idOB . '>Delete</button>');
+					$json[] = array(
+					'Name' => $nOB,
+					'Email' => $eOB,
+					'Sex' => $sex,
+					'Position' => $posOB,
+					'Jersey' => $jnOB,
+					'Edit' => '<button type="button" class="edit_member btn btn-mini" value=' . $idOB . '>Edit</button>',
+					'Delete' => '<button type="button" class="delete_member btn btn-mini" value=' . $idOB . '>Delete</button>');
+				} else {
+					
+					$json[] = array(
+					'Name' => $nOB,
+					'Email' => $eOB,
+					'Sex' => $sex,
+					'Position' => $posOB,
+					'Jersey' => $jnOB);					
+				}
+
 			}	// End of WHILE loop
 		
 			// Send the JSON data:
