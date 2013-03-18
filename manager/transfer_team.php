@@ -26,8 +26,6 @@
 		redirect_to('index.php');	
 	}
 
-	// Assign Database Resource to object
-	$manager->setDB($db);
 
 	if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['z'])) // Confirmation that form has been submitted	
 	{

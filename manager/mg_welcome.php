@@ -26,9 +26,6 @@
 	// Need the database connection:
 	require_once MYSQL2;
 
-	// Assign Database Resource to object
-	$manager->setDB($db);
-
  
  /*
 	// Site access level -> Manager

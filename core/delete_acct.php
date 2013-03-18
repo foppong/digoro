@@ -25,9 +25,7 @@
 
 	// Need the database connection:
 	require_once MYSQL2;
-	
-	// Assign Database Resource to object
-	$user->setDB($db);
+
 
 	// Confirmation that form has been submitted:	
 	if ($_SERVER['REQUEST_METHOD'] == 'POST') {

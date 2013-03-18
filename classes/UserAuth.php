@@ -1,880 +1,718 @@
 <?php
-	/* This page defines the UserAuth class.
-	 * Attributes:
-	 * 	protected id_user
-	 *  protected dbc
-	 *  protected inv_case
-	 *  protected OAuth_case
-	 * 	
-	 * Methods:
-	 *  setDB()
-	 *  setUserID()
-	 *  setinvCase()
-	 *  getDB()
-	 *  getUserID()
-	 *  getinvCase()
-	 *  isEmailAvailable()
-	 * 	checkPass()
-	 * 	checkUser()
-	 *  createUser()
-	 *  deleteUser()
-	 *  login()
-	 *  logout()
-	 *  valid()
-	 *  chgPassword()
-	 */
-	
-	
-	class UserAuth {
-	 	
-		// Declare the attributes
-		protected $id_user, $dbc, $inv_case, $OAuth_case;
+    /* This page defines the UserAuth class.
+     * Attributes:
+     *  protected id_user
+     *  protected dbc
+     *  protected inv_case
+     *  protected OAuth_case
+     *     
+     * Methods:
+     *  setUserID()
+     *  setinvCase()
+     *  getDB()
+     *  getUserID()
+     *  getinvCase()
+     *  isEmailAvailable()
+     *  checkPass()
+     *  checkUser()
+     *  createUser()
+     *  deleteUser()
+     *  login()
+     *  logout()
+     *  valid()
+     *  chgPassword()
+     */
+    
+    
+    class UserAuth {
+         
+        // Declare the attributes
+        protected $id_user, $dbObject, $inv_case, $OAuth_case;
 
-		// Constructor
-		function __construct() {}
+        // Constructor
+        public function __construct($dbObject)
+        {
+            $this->dbObject = $dbObject;
+        }
 
-		// Set database connection attribute
-		function setDB($db)
-		{
-			$this->dbc = $db;
-		}
+        // Set userID attribute
+        public function setUserID($id)
+        {
+            $this->id_user = $id;
+        }
 
-		// Set userID attribute
-		function setUserID($id)
-		{
-			$this->id_user = $id;
-		}
+        // Set inv_case attribute
+        public function setinvCase($ivc)
+        {
+            $this->inv_case = $ivc;
+        }
+        
+        // Set the OAuth_case attribute
+        public function setOAuthCase($OAc)
+        {
+            $this->OAuth_case = $OAc;
+        }
 
-		// Set inv_case attribute
-		function setinvCase($ivc)
-		{
-			$this->inv_case = $ivc;
-		}
-		
-		// Set the OAuth_case attribute
-		function setOAuthCase($OAc) {
-			$this->OAuth_case = $OAc;
-		}
-
-		function getDB($db)
-		{
-			return $this->dbc;
-		}
-		
-		
-		function getUserID()
-		{
-			return $this->id_user;
-		}
+        public function getDB()
+        {
+            return $this->dbObject;
+        }
+        
+        
+        public function getUserID()
+        {
+            return $this->id_user;
+        }
 
 
-		function getinvCase()
-		{
-			return $this->inv_case;
-		}
+        public function getinvCase()
+        {
+            return $this->inv_case;
+        }
 
-		// Function to check if user email is available
-		function isEmailAvailable($e)
-		{
-			// Make the query to make sure User's new email is available	
-			$q = 'SELECT id_user,email FROM users WHERE email=? AND id_user !=? LIMIT 1';
+        // Function to check if user email is available
+        public function isEmailAvailable($e)
+        {
+            // Make the query to make sure User's new email is available    
+            $q = "SELECT id_user, email
+                  FROM users
+                  WHERE email = '{$this->dbObject->realEscapeString($e)}'
+                    AND id_user != {$this->id_user}
+                  LIMIT 1";
 
-			// Prepare the statement
-			$stmt = $this->dbc->prepare($q);
+            // Execute the query:
+            $result = $this->dbObject->getRow($q);            
 
-			// Bind the inbound variable:
-			$stmt->bind_param('si', $e, $this->id_user);
+            // User login available, i.e. query found nothing
+            return $result !== false;
+        }
 
-			// Execute the query:
-			$stmt->execute();
-			
-			// Store result
-			$stmt->store_result();
+        // Method to check user against password entered
+        public function checkPass($e, $p)
+        {
+            // Assign variable in case no matches
+            $pass = '';
 
-			// User login available, i.e. querey found nothing
-			if ($stmt->num_rows == 0) {
-				return True;
-			}
-			else {
-				return False;
-			}
-		}
+            // Make the query    
+            $q = "SELECT pass, oauth_registered
+                  FROM users
+                  WHERE email = '{$this->dbObject->realEscapeString($e)}'
+                  LIMIT 1";
 
-		// Method to check user against password entered
-		function checkPass($e, $p)
-		{
-			// Assign variable in case no matches
-			$pass = '';
+            // Execute the query and store result
+            $result = $this->dbObject->getRow($q);
 
-			// Make the query	
-			$q = "SELECT pass, oauth_registered FROM users WHERE email=? LIMIT 1";
+            if($result !== false) {
+                // Set the OAuth case
+                $this->setOAuthCase($result['oauth_registered']);
 
-			// Prepare the statement
-			$stmt = $this->dbc->prepare($q);
+                //$hasher = new PasswordHash($hash_cost_log2, $hash_portable);    
+                $hasher = new PasswordHash(8, FALSE);
 
-			// Bind the inbound variable:
-			$stmt->bind_param('s', $e);
+                if($hasher->CheckPassword($p, $result['pass'])) {
+                    return true;
+                }
+            }
 
-			// Execute the query:
-			$stmt->execute();
-			
-			// Store result
-			$stmt->store_result();
-			
-			// Bind the outbound variable:
-			$stmt->bind_result($passOB,$oaOB);
+            return false;
+        } // End of checkPass function
 
-			//Assign the outbound variables			
-			while ($stmt->fetch())
-			{
-				$pass = $passOB;
-				
-				// Set the OAuth case
-				self::setOAuthCase($oaOB);
-			}
+        // Method to check and set User registration status
+        public function checkUser($userEmail)
+        {
 
-			//$hasher = new PasswordHash($hash_cost_log2, $hash_portable);	
-			$hasher = new PasswordHash(8, FALSE);
+            // Make the query to make sure New User's email is available    
+            $q = "SELECT id_user, invited
+                  FROM users
+                  WHERE email = '{$this->dbObject->realEscapeString($userEmail)}'
+                  LIMIT 1";
 
-			if ($hasher->CheckPassword($p, $pass))
-			{
-				return True;
-			}
-			else 
-			{
-				return False;
-			}
+            // Execute the query and store result
+            $result = $this->dbObject->getRow($q);
 
-			// Close the statement:
-			$stmt->close();
-			unset($stmt);
-			
-		} // End of checkPass function
-		
-		// Method to check and set User registration status
-		function checkUser($userEmail) {
+            if($result !== false) {
+                $this->setuserID($result['id_user']);
 
-			// Make the query to make sure New User's email is available	
-			$q = 'SELECT id_user,invited FROM users WHERE email=? LIMIT 1';
+                if($result['invited'] == 1) {
+                    $this->setinvCase(2); // Manager has already entered skeleton information about new user & invited player
+                }
+            }
 
-			// Prepare the statement
-			$stmt = $this->dbc->prepare($q);
+            else {
+                $this->setinvCase(1); // User login available & not invited by manager
+            }
+        } // End of checkUser function
 
-			// Bind the inbound variable:
-			$stmt->bind_param('s', $userEmail);
+        // Function to create users
+        public function createUser($e, $p, $fn, $ln, $mstatus, $zp, $gd, $bdfrmat, $iv) 
+        {
+            // Call checkUser function    
+            $this->checkUser($e);
 
-			// Execute the query:
-			$stmt->execute();
-			
-			// Store result
-			$stmt->store_result();
-			
-			// Bind the outbound variable:
-			$stmt->bind_result($idOB, $invitedOB);
+            $hasher = new PasswordHash(8, FALSE);
 
-			//Assign the outbound variables			
-			while ($stmt->fetch()) {
-				self::setuserID($idOB);
-				$invited = $invitedOB;
-			}
+            // Encrypt the new password by making a new hash.
+            $hash = $hasher->HashPassword($p);
+            if(strlen($hash) < 20) {
+                fail('Failed to hash new password'); //Custom function
+                exit();
+            }
+            unset($hasher);
 
-			if ($stmt->num_rows == 0) {
-				self::setinvCase(1); // User login available & not invited by manager
-			}
+            // Determine registration method
+            switch ($this->inv_case) {
+                case 1: // User is new to the system & not invited by manager
 
-			if (($stmt->num_rows == 1 && $invited == 1)) {
-				self::setinvCase(2); // Manager has already entered skeleton information about new user & invited player
-			}
+                    // Create the activation code
+                    $a = md5(uniqid(rand(), TRUE));    
 
-			// Close the statement:
-			$stmt->close();
-			unset($stmt);
-							
-		} // End of checkUser function
+                    // Make the query to add new user to database
+                    $q = "INSERT INTO users
+                          (
+                            email,
+                            pass,
+                            first_name,
+                            last_name,
+                            role,
+                            zipcode,
+                            gender,
+                            activation,
+                            birth_date,
+                            invited,
+                            registration_date
+                          )
+                          VALUES
+                          ('{$this->dbObject->realEscapeString($e)}',
+                           '{$this->dbObject->realEscapeString($hash)}',
+                           '{$this->dbObject->realEscapeString($fn)}',
+                           '{$this->dbObject->realEscapeString($ln)}',
+                           '{$this->dbObject->realEscapeString($mstatus)}',
+                           '{$this->dbObject->realEscapeString($zp)}',
+                           '{$this->dbObject->realEscapeString($gd)}',
+                           '{$this->dbObject->realEscapeString($a)}',
+                           '{$this->dbObject->realEscapeString($bdfrmat)}',
+                           {$iv},
+                           NOW()
+                          )";
 
-		// Function to create users
-		function createUser($e, $p, $fn, $ln, $mstatus, $zp, $gd, $bdfrmat, $iv) 
-		{
-			// Call checkUser function	
-			self::checkUser($e);
+                    // Execute the query:
+                    $this->dbObject->query($q);
 
-			$hasher = new PasswordHash(8, FALSE);
-					
-			// Encrypt the new password by making a new hash.
-			$hash = $hasher->HashPassword($p);
-			if (strlen($hash) < 20)
-			{
-				fail('Failed to hash new password'); //Custom function
-				exit();
-			}
-			unset($hasher);
+                    if($this->dbObject->getNumRowsAffected() == 1) // It ran OK.
+                    {
+                        // Send the activation email
+                        $body = "Welcome to digoro and thank you for registering!\n\nTo activate your account, please click on this link:";
+                        $body .= "\n" . BASE_URL . 'core/activate.php?x=' . urlencode($e) . "&y=$a";
+                        mail($e, 'digoro.com - Registration Confirmation', $body);
+                        
+                        echo '<h3>Thank you for registering! A confirmation email has been sent to your address. Please
+                            click on the link in that email in order to activate your account. </h3>';
 
-			// Determine registration method
-			switch ($this->inv_case) {
-				case 1: // User is new to the system & not invited by manager
-					
-					// Create the activation code
-					$a = md5(uniqid(rand(), TRUE));	
-		
-					// Make the query to add new user to database
-					$q = 'INSERT INTO users (email, pass, first_name, last_name, role, zipcode, gender, activation, birth_date, invited, registration_date) 
-						VALUES (?,?,?,?,?,?,?,?,?,?,NOW())';
-		
-					// Prepare the statement
-					$stmt = $this->dbc->prepare($q); 
-		
-					// Bind the inbound variables:
-					$stmt->bind_param('sssssssssi', $e, $hash, $fn, $ln, $mstatus, $zp, $gd, $a, $bdfrmat, $iv);
-						
-					// Execute the query:
-					$stmt->execute();
-						
-					if ($stmt->affected_rows == 1) // It ran OK.
-					{
-						// Send the activation email
-						$body = "Welcome to digoro and thank you for registering!\n\nTo activate your account, please click on this link:";
-						$body .= "\n" . BASE_URL . 'core/activate.php?x=' . urlencode($e) . "&y=$a";
-						mail($e, 'digoro.com - Registration Confirmation', $body);
-						
-						echo '<h3>Thank you for registering! A confirmation email has been sent to your address. Please
-							click on the link in that email in order to activate your account. </h3>';
-		
-						// Close the statement:
-						$stmt->close();
-						unset($stmt);
-							
-						include '../includes/ifooter.html';
-						exit();	
-					}
-					else 
-					{	// Registration process did not run OK.
-						echo '<p class="error">You could not be registered due to a system error. We apologize
-							for any inconvenience.</p>';
-					}
-					break;
+                        include '../includes/ifooter.html';
+                        exit();    
+                    }
+                    else 
+                    {    // Registration process did not run OK.
+                        echo '<p class="error">You could not be registered due to a system error. We apologize
+                            for any inconvenience.</p>';
+                    }
+                    break;
 
-				case 2: // User invited by manager
-				
-					// Create the activation code
-					$a = md5(uniqid(rand(), TRUE));			
-				
-					// Make the query to update user in database
-					$q = 'UPDATE users SET pass=?, first_name=?, last_name=?, role=?, zipcode=?, gender=?, activation=?, birth_date=?, registration_date=NOW() 
-						WHERE id_user=? LIMIT 1';
-	
-					// Prepare the statement
-					$stmt = $this->dbc->prepare($q);
-	
-					// Bind the inbound variables:
-					$stmt->bind_param('ssssssssi', $hash, $fn, $ln, $mstatus, $zp, $gd, $a, $bdfrmat, $this->id_user);
-					
-					// Execute the query:
-					$stmt->execute();
-		
-					if ($stmt->affected_rows == 1) // It ran OK.
-					{
-						// Send the activation email
-						$body = "Welcome to digoro and thank you for registering!\n\nTo activate your account, please click on this link:";
-						$body .= "\n" . BASE_URL . 'core/activate.php?x=' . urlencode($e) . "&y=$a";
-						mail($e, 'digoro.com - Registration Confirmation', $body);
-						
-						echo '<h3>Thank you for registering! A confirmation email has been sent to your address. Please
-							click on the link in that email in order to activate your account. </h3>';
-	
-						// Close the statement:
-						$stmt->close();
-						unset($stmt);
-						
-						include '../includes/ifooter.html';
-						exit();	
-					}
-					else 
-					{	// Registration process did not run OK.
-						echo '<p class="error">You could not be registered due to a system error. We apologize
-							for any inconvenience.</p>';
-					}
-					break;
-					
-				default:
-					// The email address is not available and player was not previously invited
-					echo '<p class="error">That email address has already been registered. If you have forgotten your password,
-						use the link below to have your password sent to you.</p>';
-					break;
-					
-			} // End of switch
-		} // End of createUser function
+                case 2: // User invited by manager
+                
+                    // Create the activation code
+                    $a = md5(uniqid(rand(), TRUE));            
+                
+                    // Make the query to update user in database
+                    $q = "UPDATE users
+                          SET pass = '{$this->dbObject->realEscapeString($hash)}',
+                              first_name = '{$this->dbObject->realEscapeString($fn)}',
+                              last_name = '{$this->dbObject->realEscapeString($ln)}',
+                              role = '{$this->dbObject->realEscapeString($mstatus)}',
+                              zipcode = '{$this->dbObject->realEscapeString($zp)}',
+                              gender = '{$this->dbObject->realEscapeString($gd)}',
+                              activation = '{$this->dbObject->realEscapeString($a)}',
+                              birth_date = '{$this->dbObject->realEscapeString($bdfrmat)}',
+                              registration_date = NOW() 
+                          WHERE id_user= {$this->id_user}
+                          LIMIT 1";
 
-		// Function to delete user
-		function deleteUser($id)
-		{	
-			// Make the query	
-			$q = "DELETE FROM users WHERE id_user=? LIMIT 1";
-		
-			// Prepare the statement:
-			$stmt = $this->dbc->prepare($q);
-		
-			// Bind the in bound variable:
-			$stmt->bind_param('i', $id);
-		
-			// Execute the query:
-			$stmt->execute();
-					
-			// If the query ran ok.
-			if ($stmt->affected_rows == 1) {
-				session_unset();
-				session_destroy();
-			}
-			else {	// If the query did not run ok.
-				echo '<div class="alert alert-error">This account could not be deleted due to a system error</div>';
-			}
+                    // Execute the query:
+                    $this->dbObject->query($q);
+        
+                    if($this->dbObject->getNumRowsAffected() == 1) // It ran OK.
+                    {
+                        // Send the activation email
+                        $body = "Welcome to digoro and thank you for registering!\n\nTo activate your account, please click on this link:";
+                        $body .= "\n" . BASE_URL . 'core/activate.php?x=' . urlencode($e) . "&y=$a";
+                        mail($e, 'digoro.com - Registration Confirmation', $body);
 
-			// Close the statement
-			$stmt->close();
-			unset($stmt);
-		} // End of deleteUser function
+                        echo '<h3>Thank you for registering! A confirmation email has been sent to your address. Please
+                            click on the link in that email in order to activate your account. </h3>';
 
-		// Function to log in users
-		function login($e, $p)
-		{
-			if (self::checkPass($e, $p)) // Call checkPass function	
-			{
-				// Make the query	
-				$q = "SELECT role, id_user, login_before, default_teamID FROM users 
-					WHERE (email=? AND activation='') LIMIT 1";
+                        include '../includes/ifooter.html';
+                        exit();    
+                    }
+                    else 
+                    {    // Registration process did not run OK.
+                        echo '<p class="error">You could not be registered due to a system error. We apologize
+                            for any inconvenience.</p>';
+                    }
+                    break;
 
-				// Prepare the statement
-				$stmt = $this->dbc->prepare($q);
-	
-				// Bind the inbound variable:
-				$stmt->bind_param('s', $e);
-	
-				// Execute the query:
-				$stmt->execute();
-				
-				// Store result
-				$stmt->store_result();
-				
-				// Bind the outbound variable:
-				$stmt->bind_result($roleOB, $idOB, $logbfOB, $deftmIDOB);
-	
-				if ($stmt->num_rows == 1) // Found match in database
-				{
-					//Assign the outbound variables			
-					while ($stmt->fetch())
-					{
-						$role = $roleOB;
-						$userID = $idOB;
-						$lb = $logbfOB;
-						$deftmID = $deftmIDOB;
-					}					
+                default:
+                    // The email address is not available and player was not previously invited
+                    echo '<p class="error">That email address has already been registered. If you have forgotten your password,
+                        use the link below to have your password sent to you.</p>';
+                    break;
 
-					session_regenerate_id(True);
+            } // End of switch
+        } // End of createUser function
 
-					// Set default team to session variable
-					$_SESSION['deftmID'] = $deftmID;
-				
-					// Store the HTTP_USER_AGENT:
-					$_SESSION['agent'] = md5($_SERVER['HTTP_USER_AGENT']);			
-					
-					// If user hasn't logged in before and is a manager, take them to welcome page
-					if ($lb == FALSE && $role == 'M')
-					{
-						$user = new User($userID);						
-						$_SESSION['userObj'] = $user;
-						$url = BASE_URL . 'manager/mg_welcome.php';
-						header("Location: $url");
-						exit();
-					}
+        // Function to delete user
+        public function deleteUser($id)
+        {
+            // Make the query    
+            $q = "DELETE FROM users WHERE id_user = {$id} LIMIT 1";
 
-					if ($lb == FALSE && $role == 'P') {
-						$user = new User($userID);
-						$_SESSION['userObj'] = $user;
-						$url = BASE_URL . 'player/p_welcome.php';
-						header("Location: $url");
-						exit();
-					}
-					
-					//Redirect User
-					$user = new User($userID);
-					$_SESSION['userObj'] = $user;							
-					$url = BASE_URL . 'manager/home.php';
-	
-					ob_end_clean();
-					header("Location: $url");
-	
-					// Close hasher
-					unset($hasher);
-					
-					// Close the statement:
-					$stmt->close();
-					unset($stmt);
-						
-					exit();
-				}
-				else 
-				{
-					echo '<div class="alert alert-error">You could not be logged in. Please check that you have activated your account</div>';
-				}
-				
-				// Close the statement:
-				$stmt->close();
-				unset($stmt);
-			}
-			elseif ($this->OAuth_case == 1) {
-				echo '<div class="alert alert-error">You are registered with facebook. You must login using the Facebook login feature</div>';
-			}
-			else {
-				echo '<div class="alert alert-error">Either the email address and password entered do not match those
-					those on file or you have not yet activated your account</div>';				
-			}
+            // Execute the query:
+            $this->dbObject->query($q);
 
-		} // End of login function
-		
-		// Function to log off users
-		function logoff()
-		{
-			session_unset();
-			session_destroy();
-		}
+            // If the query ran ok.
+            if($this->dbObject->getNumRowsAffected() == 1) {
+                session_unset();
+                session_destroy();
+            }
+            else {    // If the query did not run ok.
+                echo '<div class="alert alert-error">This account could not be deleted due to a system error</div>';
+            }
+        } // End of deleteUser function
 
-		// Function to check if user is authorized for access [**Currently not really using at moment**]
-		function valid($lvl)
-		{
-			switch ($lvl)
-			{
-				case 'G': // General level
-					if (!isset($_SESSION['agent']) OR ($_SESSION['agent'] != md5($_SERVER['HTTP_USER_AGENT'])))
-					{
-						return False;
-					}
-					else 
-					{
-						return True;
-					}
-					break;
-					
-				case 'A': // Administrator level
-					if (($_SESSION['role'] != 'A') OR !isset($_SESSION['agent']) OR ($_SESSION['agent'] != md5($_SERVER['HTTP_USER_AGENT'])))
-					{
-						return False;
-					}
-					else
-					{
-						return True;
-					}
-					break;
-					
-				case 'M': // Manager level minimum
-					if (($_SESSION['role'] == 'P') OR !isset($_SESSION['agent']) OR ($_SESSION['agent'] != md5($_SERVER['HTTP_USER_AGENT'])))
-					{
-						return False;
-					}
-					else
-					{
-						return True;
-					}
-					break;
-					
-				case 'P': // Player level minimum
-					if (($_SESSION['role'] == 'M') OR !isset($_SESSION['agent']) OR ($_SESSION['agent'] != md5($_SERVER['HTTP_USER_AGENT'])))
-					{
-						return False;
-					}
-					else
-					{
-						return True;
-					}
-					break;
-					
-				default:
-					return False;
-					break;				
-			}
-		} // End of valid function
+        // Function to log in users
+        public function login($e, $p)
+        {
+            if($this->checkPass($e, $p)) // Call checkPass function    
+            {
+                // Make the query    
+                $q = "SELECT role, id_user, login_before, default_teamID
+                      FROM users
+                      WHERE email = '{$this->dbObject->realEscapeString($e)}'
+                        AND activation = ''
+                      LIMIT 1";
 
-		// Function to change password
-		function chgPassword($e, $oldp, $pass1, $pass2)
-		{
-			// Make the query	
-			$q = "SELECT pass FROM users WHERE (email=? AND activation='') LIMIT 1";
+                // Execute the query and store result
+                $result = $this->dbObject->getRow($q);
 
-			// Prepare the statement
-			$stmt = $this->dbc->prepare($q);
+                if($result !== false)
+                {
+                    session_regenerate_id(true);
 
-			// Bind the inbound variable:
-			$stmt->bind_param('s', $e);
+                    // Set default team to session variable
+                    $_SESSION['deftmID'] = $result['default_teamID'];
 
-			// Execute the query:
-			$stmt->execute();
-			
-			// Store result
-			$stmt->store_result();
-			
-			// Bind the outbound variable:
-			$stmt->bind_result($outbdp);
+                    // Store the HTTP_USER_AGENT:
+                    $_SESSION['agent'] = md5($_SERVER['HTTP_USER_AGENT']);            
 
-			//Assign the outbound variables			
-			while ($stmt->fetch())
-			{
-				$pass = $outbdp;
-			}
-			
-			$hasher = new PasswordHash(8, FALSE);					
-				
-			// Checks if old password matches current password in database. If so proceed to change password.
-			if ($hasher->CheckPassword($oldp, $pass)) {
-				
-				// Checks if new password matches confirm new password and also validates.
-				$p = FALSE;
-				if (strlen($pass1) > 5)
-				{
-					if ($pass1 == $pass2)
-					{
-						$p = $pass1;
-					}	
-					else 
-					{
-						echo '<div class="alert alert-error">Your password did not match the confirmed password!</div>';
-					}
-				}
-				else 
-				{
-					echo '<div class="alert alert-error">Please enter a valid new password!</div>';
-				}		
-		
-				// Encrypt the new password by making a new hash.
-				$hash = $hasher->HashPassword($p);				
-				if (strlen($hash) < 20)
-				{
-					fail('Failed to hash new password'); // Custom function
-					exit();
-				}
-				unset($hasher);
-				
-				// If new password is valid, proceed to update database with new password.
-				if ($p) {
-					
-					// Make the query
-					$q = "UPDATE users SET pass=? WHERE email=? LIMIT 1";
-		
-					// Prepare the statement
-					$stmt = $this->dbc->prepare($q);
-		
-					// Bind the inbound variable:
-					$stmt->bind_param('ss', $hash, $e);
-		
-					// Execute the query:
-					$stmt->execute();
-		
-					if ($stmt->affected_rows == 1) { // It ran OK.
-						$body = "Your password has been changed. If you feel you got this email in error please contact the system administrator.";
-						$body = wordwrap($body, 70);
-						mail ($e, 'digoro.com - Password Changed', $body);
-										
-						echo '<h3>Your password has been changed.</h3>';
+                    // If user hasn't logged in before and is a manager, take them to welcome page
+                    if($result['login_before'] == 0 && $result['role'] == 'M') {
+                        $user = new User($this->dbObject, $result['id_user']);                        
+                        $_SESSION['userObj'] = $user;
+                        $url = BASE_URL . 'manager/mg_welcome.php';
+                        header("Location: $url");
+                        exit();
+                    }
 
-						// Close the statement:
-						$stmt->close();
-						unset($stmt);					
-					}
-					else {
-						echo '<p class="error">Your password was not changed. Make sure your new password
-							is different than the current password. Contact the system administrator if you think
-							and error occured.</p>';
-					}
-				}
-			}
-		} // End of chgPassword function
+                    if($result['login_before'] == 0 && $result['role'] == 'P') {
+                        $user = new User($this->dbObject, $result['id_user']);
+                        $_SESSION['userObj'] = $user;
+                        $url = BASE_URL . 'player/p_welcome.php';
+                        header("Location: $url");
+                        exit();
+                    }
 
-		
-		// Function to check if user already registered with OAuth
-		function isOAuthRegistered($email) {
-		
-			// Make the query	
-			$q = "SELECT oauth_registered FROM users WHERE email=? LIMIT 1";
-			
-			// Prepare the statement
-			$stmt = $this->dbc->prepare($q);
-			
-			// Bind the inbound variables
-			$stmt->bind_param('s', $email);
-						
-			// Execute the query
-			$stmt->execute();
-			
-			// Store result
-			$stmt->store_result();
-			
-			// Bind the outbound variable
-			$stmt->bind_result($OAstatusOB);	
-						
-			if ($stmt->num_rows == 1) { // Found match in database
-				while ($stmt->fetch()) {
-					$OAstatus = $OAstatusOB;
-				}					
-				if ($OAstatus == 1) {
-					return True;
-				}
-				else {				
-					return False;
-				}	
-			}		
-		
-			// Close the statement
-			$stmt->close();
-			unset($stmt);
-			
-		} // End of isOAuthRegistered function
-		
-		
-		// Function to add OAuth Users
-		function addOAuthUser($e, $fn, $ln, $role, $gd, $bdfrmat) {
+                    //Redirect User
+                    $user = new User($this->dbObject, $result['id_user']);
+                    $_SESSION['userObj'] = $user;                            
+                    $url = BASE_URL . 'manager/home.php';
 
-			if (!self::isOAuthRegistered($e)) {
-	
-				// Define constant
-				$oauth_reg = 1;
-	
-				// Call checkUser function	
-				self::checkUser($e);
-	
-				// Determine registration method
-				switch ($this->inv_case)
-				{
-					case 1: // User is new to the system & not invited by manager		
-						$iv = 0; // Define invite constant in database to "brand new user"
-						
-						// Make the query to add new user to database
-						$q = 'INSERT INTO users (email, first_name, last_name, role, gender, birth_date, invited, oauth_registered, registration_date) 
-							VALUES (?,?,?,?,?,?,?,?,NOW())';
-			
-						// Prepare the statement
-						$stmt = $this->dbc->prepare($q); 
-			
-						// Bind the inbound variables:
-						$stmt->bind_param('ssssssii', $e, $fn, $ln, $role, $gd, $bdfrmat, $iv, $oauth_reg);
-							
-						// Execute the query:
-						$stmt->execute();
-	
-						if ($stmt->affected_rows == 1) // It ran OK.
-						{
-							$userID = $stmt->insert_id;	
-	
-							if ($role == 'M') {
-								$user = new Manager($userID);					
-								$_SESSION['userObj'] = $user;
-							}
-								
-							if ($role == 'P') {
-								$user = new Player($userID);
-								$_SESSION['userObj'] = $user;
-							}					
-						}
-						else 
-						{	// Registration process did not run OK.
-							echo '<div class="alert alert-error">You could not be registered due to a system error. We apologize
-								for any inconvenience. [Case 1]</div>';
-						}
-							
-						// Close the statement:
-						$stmt->close();
-						unset($stmt);
-		
-						break;
-	
-					case 2: // User invited by manager					
-	
-						// Make the query to select the user ID
-						$q = "SELECT id_user FROM users WHERE email=? LIMIT 1";
-						
-						// Prepare the statement
-						$stmt = $this->dbc->prepare($q);
-						
-						// Bind the inbound variable:
-						$stmt->bind_param('s', $e);
-						
-						// Execute the statement
-						$stmt->execute();
-						
-						// Store result
-						$stmt->store_result();
-						
-						// Bind the outbound variable
-						$stmt->bind_result($OAid);	
-									
-						if ($stmt->num_rows == 1) { // Found match in database
-						
-							//Assign the outbound variables	
-							while($stmt->fetch()) {
-								$userID = $OAid;
-							}
-									
-							// Make the query to update user in database
-							$q = 'UPDATE users SET first_name=?, last_name=?, role=?, gender=?, birth_date=?, registration_date=NOW(), oauth_registered=?
-								WHERE id_user=? LIMIT 1';
-			
-							// Prepare the statement
-							$stmt2 = $this->dbc->prepare($q);
-			
-							// Bind the inbound variables:
-							$stmt2->bind_param('sssssii', $fn, $ln, $role, $gd, $bdfrmat, $oauth_reg, $userID);
-							
-							// Execute the query:
-							$stmt2->execute();
-				
-							if ($stmt2->affected_rows == 1) {// It ran OK.
-		
-								if ($role == 'M') {
-									$user = new Manager($userID);						
-									$_SESSION['userObj'] = $user;
-								}
-									
-								if ($role == 'P') {
-									$user = new Player($userID);
-									$_SESSION['userObj'] = $user;
-								}
-							}
-							else {
-								//Update failed
-								echo '<div class="alert alert-error">You could not be registered due to a system error. We apologize
-									for any inconvenience. [Case 2]</div>';
-							}
-	
-							// Close the statement:
-							$stmt2->close();
-							unset($stmt2);
-	
-						}
-						else {	
-							// Registration process did not run OK.
-							echo '<div class="alert alert-error">You could not be registered due to a system error. We apologize
-								for any inconvenience.</div>';
-						}
-						
-						// Close the statement:
-						$stmt->close();
-						unset($stmt);
-						break;
-						
-					default:
-						break;
-				} // End of switch
-			}
-		} // End of addOAuthUser function
-		
+                    ob_end_clean();
+                    header("Location: $url");
 
-		//	Function to login an OAuth User
-		function OAuthlogin($e) {
+                    // Close hasher
+                    unset($hasher);
 
-			// Make the query	
-			$q = "SELECT id_user, login_before, default_teamID FROM users 
-				WHERE (email=? AND activation='') LIMIT 1";
-		
-			// Prepare the statement
-			$stmt = $this->dbc->prepare($q);
-			
-			// Bind the inbound variable:
-			$stmt->bind_param('s', $e);
-			
-			// Execute the query:
-			$stmt->execute();
-						
-			// Store result
-			$stmt->store_result();
-						
-			// Bind the outbound variable:
-			$stmt->bind_result($idOB, $logbfOB, $deftmIDOB);
-			
-			if ($stmt->num_rows == 1) // Found match in database
-			{
-				//Assign the outbound variables			
-				while ($stmt->fetch())
-				{
-					$userID = $idOB;
-					$lb = $logbfOB;
-					$deftmID = $deftmIDOB;
-				}					
-	
-				session_regenerate_id(True);
-		
-				// Set default team to session variable
-				$_SESSION['deftmID'] = $deftmID;
-						
-				// Store the HTTP_USER_AGENT:
-				$_SESSION['agent'] = md5($_SERVER['HTTP_USER_AGENT']);
-							
-				if (self::isOAuthRegistered($e) && ($lb == 1)) {
-						
-					//Redirect User
-					$user = new User($userID);
-					$_SESSION['userObj'] = $user;							
-					$url = BASE_URL . 'manager/home.php';
-	
-					ob_end_clean();
-					header("Location: $url");
-					
-					exit();
-				}
-				elseif (!self::isOAuthRegistered($e) && ($lb == 1)) { //User is not OAuth registered but has logged in before
-					// Set boolean logic to true
-					$bl = 1;
-					
-					// Update the user's info in the database
-					$q = 'UPDATE users SET oauth_registered=? WHERE id_user=? LIMIT 1';
-		
-					// Prepare the statement
-					$stmt2 = $this->dbc->prepare($q); 
-		
-					// Bind the inbound variables:
-					$stmt2->bind_param('ii', $bl, $userID);
-						
-					// Execute the query:
-					$stmt2->execute();
-						
-					if ($stmt2->affected_rows !== 1) // It didn't run ok
-					{
-						echo '<div class="alert alert-error">There was an error. Please contact the service administrator</div>';
-						exit();
-					}						
+                    exit();
+                }
+                else {
+                    echo '<div class="alert alert-error">You could not be logged in. Please check that you have activated your account</div>';
+                }
+            }
+            else if($this->OAuth_case == 1) {
+                echo '<div class="alert alert-error">You are registered with facebook. You must login using the Facebook login feature</div>';
+            }
+            else {
+                echo '<div class="alert alert-error">Either the email address and password entered do not match those
+                    those on file or you have not yet activated your account</div>';                
+            }
 
-					//Redirect User					
-					$user = new User($userID);
-					$_SESSION['userObj'] = $user;
-					$url = BASE_URL . 'manager/home.php';
-					
-					ob_end_clean();
-					header("Location: $url");
-					
-					// Close the statement:
-					$stmt2->close();
-					unset($stmt2);					
-					exit();
-				}
-				else {
-					
-					//Redirect User
-					$user = new User($userID);
-					$_SESSION['userObj'] = $user;				
-					$url = BASE_URL . 'core/oauth_welcome.php';
-					ob_end_clean();
-					header("Location: $url");
-					exit();				
-				}
-			}	
-			else {
-				//Redirect User
-				$url = BASE_URL . 'core/oauth_welcome.php';
-				ob_end_clean();
-				header("Location: $url");
-				exit();
-			}
-			
-			// Close the statement:
-			$stmt->close();
-			unset($stmt);
+        } // End of login function
 
-		} // End of OAuthlogin function
-						
-		
-	} // End of Class
+        // Function to log off users
+        public function logoff()
+        {
+            session_unset();
+            session_destroy();
+        }
+
+        // Function to check if user is authorized for access [**Currently not really using at moment**]
+        public function valid($lvl)
+        {
+            switch ($lvl)
+            {
+                case 'G': // General level
+                    if(!isset($_SESSION['agent']) || ($_SESSION['agent'] != md5($_SERVER['HTTP_USER_AGENT'])))
+                    {
+                        return False;
+                    }
+                    else 
+                    {
+                        return True;
+                    }
+                    break;
+                    
+                case 'A': // Administrator level
+                    if(($_SESSION['role'] != 'A') || !isset($_SESSION['agent']) || ($_SESSION['agent'] != md5($_SERVER['HTTP_USER_AGENT'])))
+                    {
+                        return False;
+                    }
+                    else
+                    {
+                        return True;
+                    }
+                    break;
+                    
+                case 'M': // Manager level minimum
+                    if(($_SESSION['role'] == 'P') || !isset($_SESSION['agent']) || ($_SESSION['agent'] != md5($_SERVER['HTTP_USER_AGENT'])))
+                    {
+                        return False;
+                    }
+                    else
+                    {
+                        return True;
+                    }
+                    break;
+                    
+                case 'P': // Player level minimum
+                    if(($_SESSION['role'] == 'M') || !isset($_SESSION['agent']) || ($_SESSION['agent'] != md5($_SERVER['HTTP_USER_AGENT'])))
+                    {
+                        return False;
+                    }
+                    else
+                    {
+                        return True;
+                    }
+                    break;
+                    
+                default:
+                    return False;
+                    break;                
+            }
+        } // End of valid function
+
+        // Function to change password
+        public function chgPassword($e, $oldp, $pass1, $pass2)
+        {
+            // Make the query    
+            $q = "SELECT pass
+                  FROM users
+                  WHERE email = '{$this->dbObject->realEscapeString($e)}'
+                    AND activation = ''
+                  LIMIT 1";
+
+            // Execute the query and store result
+            $pass = $this->dbObject->getOne($q);
+
+            $hasher = new PasswordHash(8, FALSE);                    
+
+            // Checks if old password matches current password in database. If so proceed to change password.
+            if($hasher->CheckPassword($oldp, $pass)) {
+
+                // Checks if new password matches confirm new password and also validates.
+                $p = FALSE;
+                if(strlen($pass1) > 5) {
+                    if($pass1 == $pass2) {
+                        $p = $pass1;
+                    }    
+                    else {
+                        echo '<div class="alert alert-error">Your password did not match the confirmed password!</div>';
+                    }
+                }
+                else {
+                    echo '<div class="alert alert-error">Please enter a valid new password!</div>';
+                }        
+
+                // Encrypt the new password by making a new hash.
+                $hash = $hasher->HashPassword($p);                
+                if(strlen($hash) < 20) {
+                    fail('Failed to hash new password'); // Custom function
+                    exit();
+                }
+                unset($hasher);
+
+                // If new password is valid, proceed to update database with new password.
+                if($p) {
+
+                    // Make the query
+                    $q = "UPDATE users
+                          SET pass = '{$this->dbObject->realEscapeString($hash)}'
+                          WHERE email = '{$this->dbObject->realEscapeString($e)}'
+                          LIMIT 1";
+
+                    // Execute the query:
+                    $this->dbObject->query($q);
+
+                    if($this->dbObject->getNumRowsAffected() == 1) { // It ran OK.
+                        $body = "Your password has been changed. If you feel you got this email in error please contact the system administrator.";
+                        $body = wordwrap($body, 70);
+                        mail($e, 'digoro.com - Password Changed', $body);
+
+                        echo '<h3>Your password has been changed.</h3>';        
+                    }
+                    else {
+                        echo '<p class="error">Your password was not changed. Make sure your new password
+                            is different than the current password. Contact the system administrator if you think
+                            and error occured.</p>';
+                    }
+                }
+            }
+        } // End of chgPassword function
+
+
+        // Function to check if user already registered with OAuth
+        public function isOAuthRegistered($email)
+        {
+
+            // Make the query    
+            $q = "SELECT oauth_registered
+                  FROM users
+                  WHERE email = '{$this->dbObject->realEscapeString($email)}'
+                  LIMIT 1";
+
+            // Execute the query and store result
+            $OAstatus = $this->dbObject->getOne($q);
+
+            return ($OAstatus == 1);
+        } // End of isOAuthRegistered function
+
+
+        // Function to add OAuth Users
+        public function addOAuthUser($e, $fn, $ln, $role, $gd, $bdfrmat)
+        {
+
+            if(!$this->isOAuthRegistered($e)) {
+
+                // Define constant
+                $oauth_reg = 1;
+
+                // Call checkUser function    
+                $this->checkUser($e);
+
+                // Determine registration method
+                switch($this->inv_case) {
+                    case 1: // User is new to the system & not invited by manager        
+                        $iv = 0; // Define invite constant in database to "brand new user"
+
+                        // Make the query to add new user to database
+                        $q = "INSERT INTO users
+                              (
+                                email,
+                                first_name,
+                                last_name,
+                                role,
+                                gender,
+                                birth_date,
+                                invited,
+                                oauth_registered,
+                                registration_date
+                              ) 
+                              VALUES
+                              (
+                                '{$this->dbObject->realEscapeString($e)}',
+                                '{$this->dbObject->realEscapeString($fn)}',
+                                '{$this->dbObject->realEscapeString($ln)}',
+                                '{$this->dbObject->realEscapeString($role)}',
+                                '{$this->dbObject->realEscapeString($gd)}',
+                                '{$this->dbObject->realEscapeString($bdfrmat)}',
+                                {$iv},
+                                {$oauth_reg},
+                                NOW()
+                              )";
+
+                        // Execute the query
+                        $this->dbObject->query($q);
+
+                        if($this->dbObject->getNumRowsAffected() == 1) { // It ran OK.
+
+                            $userID = $this->dbObject->getLastInsertId();    
+    
+                            if($role == 'M') {
+                                $user = new Manager($this->dbObject, $userID);
+                                $_SESSION['userObj'] = $user;
+                            }
+
+                            if($role == 'P') {
+                                $user = new Player($this->dbObject, $userID);
+                                $_SESSION['userObj'] = $user;
+                            }
+                        }
+                        else {
+                            // Registration process did not run OK.
+                            echo '<div class="alert alert-error">You could not be registered due to a system error. We apologize
+                                for any inconvenience. [Case 1]</div>';
+                        }
+
+                        break;
+
+                    case 2: // User invited by manager
+    
+                        // Make the query to select the user ID
+                        $q = "SELECT id_user
+                              FROM users
+                              WHERE email = '{$this->dbObject->realEscapeString($e)}'
+                              LIMIT 1";
+
+                        // Execute the statement and store result
+                        $userID = $this->dbObject->getOne($q);
+
+                        if($userID !== false) { // Found match in database
+                            
+                            // Make the query to update user in database
+                            $q = "UPDATE users
+                                  SET first_name = '{$this->dbObject->realEscapeString($fn)}',
+                                      last_name = '{$this->dbObject->realEscapeString($ln)}',
+                                      role = '{$this->dbObject->realEscapeString($role)}',
+                                      gender = '{$this->dbObject->realEscapeString($gd)}',
+                                      birth_date = '{$this->dbObject->realEscapeString($bdfrmat)}',
+                                      registration_date = NOW(),
+                                      oauth_registered = {$oauth_reg}
+                                  WHERE id_user = {$userID}
+                                  LIMIT 1";
+
+                            // Execute the query:
+                            $this->dbObject->query($q);
+
+                            if($this->dbObject->getNumRowsAffected() == 1) { // It ran OK.
+
+                                if ($role == 'M') {
+                                    $user = new Manager($this->dbObject, $userID);
+                                    $_SESSION['userObj'] = $user;
+                                }
+
+                                if ($role == 'P') {
+                                    $user = new Player($this->dbObject, $userID);
+                                    $_SESSION['userObj'] = $user;
+                                }
+                            }
+                            else {
+                                //Update failed
+                                echo '<div class="alert alert-error">You could not be registered due to a system error. We apologize
+                                    for any inconvenience. [Case 2]</div>';
+                            }
+                        }
+                        else {    
+                            // Registration process did not run OK.
+                            echo '<div class="alert alert-error">You could not be registered due to a system error. We apologize
+                                for any inconvenience.</div>';
+                        }
+
+                        break;
+                        
+                    default:
+                        break;
+                } // End of switch
+            }
+        } // End of addOAuthUser function
+        
+
+        //    Function to login an OAuth User
+        public function OAuthlogin($e) {
+
+            // Make the query    
+            $q = "SELECT id_user, login_before, default_teamID
+                  FROM users 
+                  WHERE email = '{$this->dbObject->realEscapeString($e)}'
+                    AND activation = ''
+                  LIMIT 1";
+        
+            // Execute the query and store result
+            $result = $this->dbObject->getRow($q);
+
+            if($result !== false) { // Found match in database
+
+                session_regenerate_id(true);
+        
+                // Set default team to session variable
+                $_SESSION['deftmID'] = $result['default_teamID'];
+
+                // Store the HTTP_USER_AGENT:
+                $_SESSION['agent'] = md5($_SERVER['HTTP_USER_AGENT']);
+                            
+                if($this->isOAuthRegistered($e) && ($result['login_before'] == 1)) {
+                        
+                    //Redirect User
+                    $user = new User($this->dbObject, $result['id_user']);
+                    $_SESSION['userObj'] = $user;                            
+                    $url = BASE_URL . 'manager/home.php';
+
+                    ob_end_clean();
+                    header("Location: $url");
+
+                    exit();
+                }
+                else if(!$this->isOAuthRegistered($e) && ($result['login_before'] == 1)) { //User is not OAuth registered but has logged in before
+                    // Set boolean logic to true
+                    $bl = 1;
+
+                    // Update the user's info in the database
+                    $q = "UPDATE users SET oauth_registered = {$bl} WHERE id_user = {$userID} LIMIT 1";
+        
+                    // Execute the query:
+                    $this->dbObject->query($q);
+
+                    if($this->dbObject->getNumRowsAffected() !== 1) { // It didn't run ok
+                        echo '<div class="alert alert-error">There was an error. Please contact the service administrator</div>';
+                        exit();
+                    }                        
+
+                    //Redirect User                    
+                    $user = new User($this->dbObject, $userID);
+                    $_SESSION['userObj'] = $user;
+                    $url = BASE_URL . 'manager/home.php';
+                    
+                    ob_end_clean();
+                    header("Location: $url");                  
+                    exit();
+                }
+                else {
+                    
+                    //Redirect User
+                    $user = new User($this->dbObject, $userID);
+                    $_SESSION['userObj'] = $user;                
+                    $url = BASE_URL . 'core/oauth_welcome.php';
+                    ob_end_clean();
+                    header("Location: $url");
+                    exit();                
+                }
+            }    
+            else {
+                //Redirect User
+                $url = BASE_URL . 'core/oauth_welcome.php';
+                ob_end_clean();
+                header("Location: $url");
+                exit();
+            }
+
+        } // End of OAuthlogin function
+                        
+        
+    } // End of Class

@@ -29,8 +29,6 @@
 	// Need the database connection:	
 	require_once MYSQL2;
 
-	// Assign Database Resource to object
-	$user->setDB($db);
 
 	// Page header:
 	echo '<h2>My Teams</h2>';

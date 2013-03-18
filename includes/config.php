@@ -11,7 +11,7 @@
 	define('EMAIL', 'foppong@gmail.com');	
 	
 	// Determine whether we're working on a local server or on the real server
-	if (stristr($_SERVER['HTTP_HOST'], 'local') || (substr($_SERVER['HTTP_HOST'], 0, 7) == '192.168'))
+	if (stristr($_SERVER['HTTP_HOST'], 'local') || (substr($_SERVER['HTTP_HOST'], 0, 7) == '192.168') || ($_SERVER['SERVER_ADDR'] == '127.0.0.1'))
 	{
 		$local = TRUE;
 		

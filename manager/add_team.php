@@ -27,8 +27,6 @@
 	// Need the database connection:
 	require_once MYSQL2;
 
-	// Assign Database Resource to object
-	$manager->setDB($db);
 
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{

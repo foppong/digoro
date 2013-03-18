@@ -25,9 +25,7 @@
 	// Need the database connection:
 	require MYSQL2;
 
-	// Assign Database Resource to object
-	$user->setDB($db);
-	
+
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
 		// Validate email address

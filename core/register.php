@@ -121,8 +121,7 @@
 		// Check if user entered values are valid before proceeding
 		if ($fn && $ln && $e && $p && $zp && $bd && $mstatus && $gd)
 		{
-			$user = new UserAuth();
-			$user->setDB($db);	
+			$user = new UserAuth($dbObject);
 			$user->createUser($e, $p, $fn, $ln, $mstatus, $zp, $gd, $bdfrmat, $iv);
 			unset($user);
 		}

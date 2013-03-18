@@ -28,9 +28,6 @@
 	// Need the database connection:
 	require_once MYSQL2;
 
-	// Assign Database Resource to object
-	$user->setDB($db);
-
 	// Function to pull complete user data from database and set object attributes
 	$user->pullUserData();
 

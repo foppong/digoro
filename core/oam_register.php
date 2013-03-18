@@ -42,9 +42,7 @@
 			$bdfrmat = $bd->format('Y-m-d');
 
 			// Create user object
-			$OAuser = new UserAuth();
-			$OAuser->setDB($db);
-
+			$OAuser = new UserAuth($dbObject);
 		} 
 		catch (FacebookApiException $e) {
 	    	echo '<pre>'.htmlspecialchars(print_r($e, true)).'</pre>';

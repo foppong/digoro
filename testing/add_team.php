@@ -32,8 +32,6 @@
 	// Need the database connection:
 	require_once MYSQL2;
 
-	// Assign Database Resource to object
-	$manager->setDB($db);
 
 	// Authorized Login Check
 	if (!$manager->valid($lvl))
@@ -127,12 +125,7 @@
 		// Checks if team name, userID, sport, team city, state, and league are valid before adding team to database.
 		if ($lg && $userID && $sp && $tn && $ct && $st)
 		{
-			$manager->addTeam($lg, $sp, $userID, $tn, $ct, $st, $abtm);	
-
-			// Close the connection:
-			$db->close();
-			unset($db);
-		
+			$manager->addTeam($lg, $sp, $userID, $tn, $ct, $st, $abtm);
 			include '../includes/footer.html';
 			exit();			
 		}

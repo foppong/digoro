@@ -65,8 +65,7 @@
 		// Check if email and password entered are valid before proceeding to login procedure.
 		if ($e && $p)
 		{ 
-			$user = new UserAuth();
-			$user->setDB($db);	
+			$user = new UserAuth($dbObject);
 			$user->login($e, $p);
 			unset($user);
 		}

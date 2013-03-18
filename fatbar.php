@@ -27,8 +27,7 @@
 			$uemail = $user_profile['email'];
 
 			// Create user object & login user
-			$OAuser = new UserAuth();
-			$OAuser->setDB($db);
+			$OAuser = new UserAuth($dbObject);
 			$OAuser->OAuthlogin($uemail);
 			unset($OAuser);					
 		} 
@@ -69,8 +68,7 @@
 		// Check if email and password entered are valid before proceeding to login procedure.
 		if ($e && $p) {
 			// Create user object & login user 
-			$user = new UserAuth();
-			$user->setDB($db);	
+			$user = new UserAuth($dbObject);
 			$user->login($e, $p);
 			unset($user);
 		}
