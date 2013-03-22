@@ -112,8 +112,7 @@
 	
 		// Check if user entered information is valid before registering user
 		if ($fname && $lname && $e && $p && $sex && $bdfrmat) {
-			$user = new UserAuth();
-			$user->setDB($db);				
+			$user = new UserAuth($dbObject);			
 			$user->createUser($fname, $lname, $e, $p, $sex, $bdfrmat);
 		}
 		else {	// Errors in the user entered information

@@ -46,8 +46,7 @@
 		// Check if email and password entered are valid before proceeding to login procedure.
 		if ($e && $p) {
 			// Create user object & login user 
-			$reuser = new UserAuth();
-			$reuser->setDB($db);	
+			$reuser = new UserAuth($dbObject);
 			$reuser->login($e, $p);
 		}
 	}
