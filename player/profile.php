@@ -1,6 +1,6 @@
 <?php 
 	// profile.php
-	// page for users' profiles
+	// page for players' profiles
 	
 	require '../includes/config.php';
 	$page_title = 'Profile';
@@ -16,11 +16,16 @@
 	// See if there is a user from a cookie
 	$fbuser = $facebook->getUser();	
 	
-	// Validate user
-	checkSessionObject();	
+	// Assign user object from session variable
+	retrieveUserObject();
 	
 	// Check user role
-	checkRole('m');
+	checkRole('p');
+
+	// Need the database connection:
+	require_once MYSQL2;
+
+
 
 ?>
 
@@ -28,7 +33,30 @@
 		<div class="row"> <!-- Main row - for all content except footer -->	
 			<div class="span2"> <!-- column for icons --> 
 				<div class="well">
-<?php require_once('../includes/side_nav.html'); ?>
+				<div class="side-nav">
+				<ul class="nav nav-list">
+					<li>
+						<a href="home.php"><img src="../css/imgs/home-icon.png" 
+							alt="home-icon" height="60" width="60"></a>
+					</li>
+					<li><p>Home</p></li>
+					<li>
+						<a href="profile.php"><img src="../css/imgs/user-icon.png" 
+							alt="user-icon" height="60" width="60"></a>	
+					</li>
+					<li><p>Profiles</p></li>
+					<li>
+						<a href="my_teams.php"><img src="../css/imgs/clipboard-icon.png" 
+							alt="clipboard-icon" height="60" width="60"></a>	
+					</li>
+					<li><p>My Teams</p></li>
+					<li>
+						<a href=""><img src="../css/imgs/world-icon.png" 
+							alt="world-icon" height="60" width="60"></a>
+					</li>
+					<li><p>Find Teams</p></li>		
+				</ul>
+				</div>
 				</div>
 			</div> <!-- end of column for icons --> 
 					

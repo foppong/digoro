@@ -1,6 +1,6 @@
 <?php 
 	// home.php
-	// home page for users
+	// home page for players
 	
 	require '../includes/config.php';
 	$page_title = 'Profile';
@@ -12,7 +12,7 @@
 	function __autoload($class) {
 		require_once('../classes/' . $class . '.php');
 	}
-	
+
 	// See if there is a user from a cookie
 	$fbuser = $facebook->getUser();	
 
@@ -20,7 +20,7 @@
 	checkSessionObject();	
 
 	// Check user role
-	checkRole('m');
+	checkRole('p');
 
 ?>
 
@@ -28,7 +28,30 @@
 		<div class="row"> <!-- Main row - for all content except footer -->	
 			<div class="span2"> <!-- column for icons --> 
 				<div class="well">
-<?php require_once('../includes/side_nav.html'); ?>
+				<div class="side-nav">
+				<ul class="nav nav-list">
+					<li>
+						<a href="home.php"><img src="../css/imgs/home-icon.png" 
+							alt="home-icon" height="60" width="60"></a>
+					</li>
+					<li><p>Home</p></li>
+					<li>
+						<a href="profile.php"><img src="../css/imgs/user-icon.png" 
+							alt="user-icon" height="60" width="60"></a>	
+					</li>
+					<li><p>Profiles</p></li>
+					<li>
+						<a href="my_teams.php"><img src="../css/imgs/clipboard-icon.png" 
+							alt="clipboard-icon" height="60" width="60"></a>	
+					</li>
+					<li><p>My Teams</p></li>
+					<li>
+						<a href=""><img src="../css/imgs/world-icon.png" 
+							alt="world-icon" height="60" width="60"></a>
+					</li>
+					<li><p>Find Teams</p></li>		
+				</ul>
+				</div>
 				</div>
 			</div>
 					

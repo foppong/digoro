@@ -30,7 +30,7 @@
 	if ($local) {
 		
 		// Always debug when running locally:
-		//$debug = TRUE;
+		$debug = TRUE;
 		
 		// Define the constants
 		define ('BASE_URI', 'C:/xampp/htdocs/');

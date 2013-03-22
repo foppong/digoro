@@ -144,7 +144,7 @@
         } // End of checkUser function
 
         // Function to create users
-        public function createUser($e, $p, $fn, $ln, $mstatus, $zp, $gd, $bdfrmat, $iv) 
+        public function createUser($fn, $ln, $e, $p, $sex, $bdfrmat)
         {
             // Call checkUser function    
             $this->checkUser($e);
@@ -169,29 +169,25 @@
                     // Make the query to add new user to database
                     $q = "INSERT INTO users
                           (
-                            email,
-                            pass,
                             first_name,
                             last_name,
-                            role,
-                            zipcode,
-                            gender,
+                            email,
+                            pass,
+                            sex,
                             activation,
                             birth_date,
                             invited,
                             registration_date
                           )
                           VALUES
-                          ('{$this->dbObject->realEscapeString($e)}',
-                           '{$this->dbObject->realEscapeString($hash)}',
-                           '{$this->dbObject->realEscapeString($fn)}',
+                          ('{$this->dbObject->realEscapeString($fn)}',
                            '{$this->dbObject->realEscapeString($ln)}',
-                           '{$this->dbObject->realEscapeString($mstatus)}',
-                           '{$this->dbObject->realEscapeString($zp)}',
-                           '{$this->dbObject->realEscapeString($gd)}',
+                           '{$this->dbObject->realEscapeString($e)}',
+                           '{$this->dbObject->realEscapeString($hash)}',
+                           '{$this->dbObject->realEscapeString($sex)}',
                            '{$this->dbObject->realEscapeString($a)}',
                            '{$this->dbObject->realEscapeString($bdfrmat)}',
-                           {$iv},
+                           {$this->inv_case},
                            NOW()
                           )";
 
@@ -228,9 +224,7 @@
                           SET pass = '{$this->dbObject->realEscapeString($hash)}',
                               first_name = '{$this->dbObject->realEscapeString($fn)}',
                               last_name = '{$this->dbObject->realEscapeString($ln)}',
-                              role = '{$this->dbObject->realEscapeString($mstatus)}',
-                              zipcode = '{$this->dbObject->realEscapeString($zp)}',
-                              gender = '{$this->dbObject->realEscapeString($gd)}',
+                              sex = '{$this->dbObject->realEscapeString($sex)}',
                               activation = '{$this->dbObject->realEscapeString($a)}',
                               birth_date = '{$this->dbObject->realEscapeString($bdfrmat)}',
                               registration_date = NOW() 
@@ -313,27 +307,34 @@
                     // Store the HTTP_USER_AGENT:
                     $_SESSION['agent'] = md5($_SERVER['HTTP_USER_AGENT']);            
 
-                    // If user hasn't logged in before and is a manager, take them to welcome page
-                    if($result['login_before'] == 0 && $result['role'] == 'M') {
-                        $user = new User($this->dbObject, $result['id_user']);                        
-                        $_SESSION['userObj'] = $user;
-                        $url = BASE_URL . 'manager/mg_welcome.php';
-                        header("Location: $url");
-                        exit();
-                    }
-
-                    if($result['login_before'] == 0 && $result['role'] == 'P') {
+                    // Redirect if user hasn't logged in before take them to welcome page 
+                    if($result['login_before'] == false) {
                         $user = new User($this->dbObject, $result['id_user']);
                         $_SESSION['userObj'] = $user;
-                        $url = BASE_URL . 'player/p_welcome.php';
+                        $url = BASE_URL . 'core/welcome.php';
                         header("Location: $url");
                         exit();
                     }
 
-                    //Redirect User
-                    $user = new User($this->dbObject, $result['id_user']);
-                    $_SESSION['userObj'] = $user;                            
-                    $url = BASE_URL . 'manager/home.php';
+                    // Redirect if user is a registered manager
+                    if($result['login_before'] == true && $result['role'] == 'm') {
+                        $user = new User($this->dbObject, $result['id_user']);
+                        $_SESSION['userObj'] = $user;
+                        $_SESSION['role'] = $result['role'];
+                        $url = BASE_URL . 'manager/home.php';
+                        header("Location: $url");
+                        exit();
+                    }
+
+                    // Redirect if user is a registered player
+                    if($result['login_before'] == true && $result['role'] == 'p') {
+                        $user = new User($this->dbObject, $result['id_user']);
+                        $_SESSION['userObj'] = $user;
+                        $_SESSION['role'] = $result['role'];
+                        $url = BASE_URL . 'player/home.php';
+                        header("Location: $url");
+                        exit();
+                    }
 
                     ob_end_clean();
                     header("Location: $url");

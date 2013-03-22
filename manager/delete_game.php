@@ -13,16 +13,15 @@
 		require_once('../classes/' . $class . '.php');
 	}
 
+	// Validate user
+	checkSessionObject();	
+	
+	// Check user role
+	checkRole('m');
+
 	// Assign user object from session variable
-	if (isset($_SESSION['userObj']))
-	{
-		$manager = $_SESSION['userObj'];
-		$userID = $manager->getUserID();
-	}
-	else 
-	{
-		redirect_to('index.php');
-	}
+	$user = $_SESSION['userObj'];
+	$userID = $user->getUserID();
 
 	// Need the database connection:
 	require_once MYSQL2;
@@ -55,7 +54,7 @@
 
 	// Delete objects
 	unset($game);
-	unset($manager);
+	unset($user);
 			
 	// Close the connection:
 	$db->close();

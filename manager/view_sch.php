@@ -15,15 +15,11 @@
 		require_once('../classes/' . $class . '.php');
 	}
 
-	// Assign user object from session variable
-	if (isset($_SESSION['userObj']))
-	{
-		$user = $_SESSION['userObj'];
-	}
-	else 
-	{
-		redirect_to('index.php');
-	}
+	// Validate user
+	checkSessionObject();	
+	
+	// Check user role
+	checkRole('m');
 	
 	// Check for a $page_title value:
 	if (!isset($page_title))

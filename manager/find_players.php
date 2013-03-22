@@ -15,22 +15,12 @@
 	
 	// See if there is a user from a cookie
 	$fbuser = $facebook->getUser();	
+
+	// Validate user
+	checkSessionObject();	
 	
-	// Assign user object from session variable
-	if (isset($_SESSION['userObj']))
-	{
-		$manager = $_SESSION['userObj'];
-		$userID = $manager->getUserID();
-	}
-	else 
-	{
-		redirect_to('index.php');
-	}
-
-	// Need the database connection:
-	require_once MYSQL2;
-
-
+	// Check user role
+	checkRole('m');
 
 ?>
 
@@ -65,4 +55,8 @@
 	<!-- External javascript call -->
 	<script type="text/javascript" src="../js/findplayers_pg.js"></script>
 
-<?php include '../includes/footer.html'; ?>
+<?php 
+
+	include '../includes/footer.html'; 
+
+?>

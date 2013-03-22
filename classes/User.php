@@ -32,6 +32,8 @@
      *  pullUserData()
      *  pullSpecificData()
      *  updateUserAcct()
+     *  updateLoginBefore()
+     *  updateUserRole() 
      */
 
     class User extends UserAuth {
@@ -189,7 +191,7 @@
         } // End of pullSpecificData function
 
 
-        // Function to update user informatin in database
+        // Function to update user information in database
         public function updateUserAcct($e, $fn, $ln, $cty, $st, $zp, $gd, $bdfrmat, $pnumb) {
             // Update the user's info in the database
             $q = "UPDATE users
@@ -216,5 +218,48 @@
                 echo '<div class="alert">No changes were made.</div>';
             }
         } // End of updateUserAcct function
+
+
+        // Function to update the loginbefore variable in the database
+        public function updateLoginBefore() {
+            // Variable for us to update the database with
+            $setTrue = 1;
+
+            // Update the user's info in the database
+            $q = "UPDATE users SET login_before = {$setTrue} WHERE id_user = {$this->id_user} LIMIT 1";
+
+            // Execute the query:
+            $this->dbObject->query($q);
+
+            if($this->dbObject->getNumRowsAffected() == 1) {// And update to the database was made
+                echo '<div class="alert alert-success">The users account has been updated.</div>';
+            }
+            else { 
+                // Either did not run ok or no updates were made
+                echo '<div class="alert">No changes were made.</div>';
+            }
+        } // End of updateLoginBefore function      
+
+     
+        // Function to update the user role in the database
+        public function updateUserRole($role) {
+
+            // Update the user's info in the database
+            $q = "UPDATE users
+                  SET role = '{$this->dbObject->realEscapeString($role)}'
+                  WHERE id_user = {$this->id_user}
+                  LIMIT 1";
+
+            // Execute the query:
+            $this->dbObject->query($q);
+
+            if($this->dbObject->getNumRowsAffected() == 1) {// And update to the database was made
+                echo '<div class="alert alert-success">The users account has been updated.</div>';
+            }
+            else { 
+                // Either did not run ok or no updates were made
+                echo '<div class="alert">No changes were made.</div>';
+            }
+        } // End of updateUserRole function
 
     } // End of Class

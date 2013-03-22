@@ -3,8 +3,6 @@
  * This is a library of Frank's JavaScript Functions used for the index page.
  */
 
-
-
 // jQuery Code for when page is loaded
 $(document).ready(function()
 {
@@ -41,6 +39,7 @@ $(document).ready(function()
 			label.text('Ok!').addClass('valid');
 		}
 	});
+
 
 	$('#ForgotPassForm').validate( {
 		rules: {

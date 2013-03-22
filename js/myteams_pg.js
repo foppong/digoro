@@ -383,7 +383,7 @@ var TEAM = {
 		var form_data = $( '#AddTeamForm form' ).serialize();
 		$.ajax({
 			type: "POST",
-			url: "../manager/add_team.php",
+			url: "../core/add_team.php",
 			data: form_data, // Data that I'm sending
 			error: function() {
 				$( '#status' ).append( '<div class="alert alert-error">Add failed</div>' ).slideDown( 'slow' );

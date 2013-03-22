@@ -14,19 +14,13 @@
 	}
 
 	// Assign user object from session variable
-	if (isset($_SESSION['userObj']))
-	{
-		$manager = $_SESSION['userObj'];
-		$userID = $manager->getUserID();
-	}
-	else 
-	{
-		redirect_to('index.php');
-	}
+	retrieveUserObject();
 
 	// Need the database connection:
 	require_once MYSQL2;
 
+	// Assign Database Resource to object
+	//$manager->setDB($db);
 
 	if ($_SERVER['REQUEST_METHOD'] == 'POST')
 	{
@@ -107,7 +101,23 @@
 		else {									
 			echo 'Please try again.';
 			exit();
-		}	
+		}
+
+		// Perform following actions if first time user is successful in creating team
+		if ($_POST['newUser'] = '1') {
+			// Create user object & update user information
+			$user = new User($userID);
+			$user->setDB($db);
+			$user->updateLoginBefore(); // *BUG Function displays "no changes made" regardless
+
+			$role = 'm';
+			$user->updateUserRole($role);
+			
+			$url = BASE_URL . 'manager/home.php';
+			header("Location: $url");
+			exit();		
+		}
+
 	}
 	else {
 		// Accessed without posting to form
@@ -115,8 +125,8 @@
 		exit();		
 	}
 	// Delete objects
+	unset($user);
 	unset($team);
-	unset($manager);
 
 	// Close the connection:
 	$db->close();

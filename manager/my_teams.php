@@ -15,25 +15,24 @@
 	// See if there is a user from a cookie
 	$fbuser = $facebook->getUser();	
 	
-	// Assign user object from session variable
-	if (isset($_SESSION['userObj']))
-	{
-		$manager = $_SESSION['userObj'];
-	}
-	else 
-	{
-		redirect_to('index.php');
-	}
+	// Validate user
+	checkSessionObject();	
+
+	// Check user role
+	checkRole('m');
 
 	// Need the database connection:
 	require_once MYSQL2;
 
+	// Assign user object from session variable
+	$user = $_SESSION['userObj'];
+	$userID = $user->getUserID();
 	
 	// Pull current user data from database and set object attributes
-	$manager->pullUserData();
+	$user->pullUserData();
 	
 	// Get user's default team ID
-	$dftmID = $manager->getUserAttribute('dftmID');
+	$dftmID = $user->getUserAttribute('dftmID');
 
 	// Update team object session variable as user selects different teams
 	if ( (isset($_POST['y'])) && (is_numeric($_POST['y'])) ) {
@@ -46,7 +45,7 @@
 	}
 
 	// Delete objects
-	unset($manager);
+	unset($user);
 		
 	// Close the connection:
 	$db->close();
@@ -60,7 +59,7 @@
 				<div class="well">
 <?php require_once('../includes/side_nav.html'); ?>
 				</div>
-			</div>		
+			</div> <!-- end of column for icons --> 
 
 			<div class="span10"> <!-- column for main content --> 
 				<div class="row"> <!-- My Teams header -->
