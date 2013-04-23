@@ -10,20 +10,20 @@
 	// autoloading of classes
 	function __autoload($class) {
 		require_once('../classes/' . $class . '.php');
-	} 
+	}
+
 
 	// Assign user object from session variable
-	if (isset($_SESSION['userObj']))
-	{
+	if(isset($_SESSION['userObj'])) {
 		$user = $_SESSION['userObj'];
 	}
-	else 
-	{
+	else {
 		redirect_to('index.php');
 	}
 
 	// Need the database connection:
 	require_once MYSQL2;
+    $dbObject = MySQLiDbObject::getInstance();
 
 	$user->pullUserData();
 	$userID = $user->getUserID();
@@ -31,62 +31,61 @@
 	// Grab users database birthday
 	$bdOB = $user->getUserAttribute('bday');
 
-	if ($_SERVER['REQUEST_METHOD'] == 'POST') // Confirmation that form has been submitted	
-	{
+	if($_SERVER['REQUEST_METHOD'] == 'POST') { // Confirmation that form has been submitted
 
-		if ($_POST['edit-user-fname']) {
+		if($_POST['edit-user-fname']) {
 			$fname = $_POST['edit-user-fname'];
 		}
 		else {
 			echo 'Please enter a valid first name';
 			exit();
-		}		
-		
-		if ($_POST['edit-user-lname']) {
+		}
+
+		if($_POST['edit-user-lname']) {
 			$lname = $_POST['edit-user-lname'];
 		}
 		else {
 			echo 'Please enter a valid last name';
 			exit();
-		}		
-		
-		if ($_POST['edit-user-city']) {
+		}
+
+		if($_POST['edit-user-city']) {
 			$city = $_POST['edit-user-city'];
 		}
 		else {
 			$city = '';
-		}				
+		}
 		
-		if ($_POST['edit-user-state']) {
+		if($_POST['edit-user-state']) {
 			$state = $_POST['edit-user-state'];
 		}
 		else {
 			$state = '';
 		}				
 
-		if ($_POST['edit-user-zip']) {
+		if($_POST['edit-user-zip']) {
 			$zip = $_POST['edit-user-zip'];
 		}
 		else {
 			$zip = '';
 		}		
 
-		if ($_POST['edit-user-sel-sex']) {
+		if($_POST['edit-user-sel-sex']) {
 			$sex = $_POST['edit-user-sel-sex'];
 		}
 		else {
 			echo 'Please select your sex';
 			exit();
-		}	
+		}
 
-		if ($_POST['edit-user-phone']) {
+		if($_POST['edit-user-phone']) {
 			$phone = $_POST['edit-user-phone'];
 		}
 		else {
 			$phone = '';
 		}
 
-		if ($_POST['DateOfBirth_Day']) {
+		if($_POST['DateOfBirth_Day']) {
 			$bdday = $_POST['DateOfBirth_Day'];
 		}
 		else {
@@ -94,7 +93,7 @@
 			exit();
 		}
 
-		if ($_POST['DateOfBirth_Month']) {
+		if($_POST['DateOfBirth_Month']) {
 			$bdmnth = $_POST['DateOfBirth_Month'];
 		}
 		else {
@@ -102,7 +101,7 @@
 			exit();
 		}
 
-		if ($_POST['DateOfBirth_Year']) {
+		if($_POST['DateOfBirth_Year']) {
 			$bdyr = $_POST['DateOfBirth_Year'];
 		}
 		else {
@@ -113,19 +112,17 @@
 		$bdarray = array($bdyr, $bdmnth, $bdday);
 
 		// Validate if date entered is actually a date
-		if (checkdate($bdmnth, $bdday, $bdyr))
-		{
+		if(checkdate($bdmnth, $bdday, $bdyr)) {
 			$bdstring = implode("-", $bdarray);
 			$bd = new DateTime($bdstring);
 			$bdfrmat = $bd->format('Y-m-d');
 		}
-		else 
-		{
+		else {
 			echo '<p class="error">Please enter a valid birthdate.</p>';
 		}		
-	
+
 		// Check if user entered information is valid before continuing to edit event
-		if ($bdfrmat && $fname && $lname && $sex) {
+		if($bdfrmat && $fname && $lname && $sex) {
 			$user->editAccount($fname, $lname, $city, $state, $zip, $sex, $phone, $bdfrmat);
 		}
 		else {	// Errors in the user entered information
@@ -136,13 +133,7 @@
 
 	// Delete objects
 	unset($user);
-			
-	// Close the connection:
-	$db->close();
-	unset($db);
-
 ?>
-
 	<div class="container" id="contentWrapper">
 		<div class="row"> <!-- Main row - for all content except footer -->	
 			<div class="span2"> <!-- column for icons --> 
@@ -178,7 +169,7 @@
 				</div>
 				</div>
 			</div> <!-- end of column for icons --> 
-					
+
 			<div class="span10"> <!-- column for main content --> 
 				<div class="row"> <!-- Header row -->
 					<div class="span10">
@@ -186,22 +177,22 @@
 					</div>
 
 				<!-- Edit Account Form -->
-				<div id="EditAccountForm" title="Edit Account">	
+				<div id="EditAccountForm" title="Edit Account">
 					<form method="post" class="form-horizontal">
-						<div class="control-group">			
+						<div class="control-group">
 							<label class="control-label" for="edit-user-fname">First name:</label>
 							<div class="controls">
 								<input type="text" name="edit-user-fname" id="edit-user-fname" size="20" maxlength="20" />
 							</div>
 						</div>
-			
+
 						<div class="control-group">			
 							<label class="control-label" for="edit-user-lname">Last name:</label>
 							<div class="controls">
 									<input type="text" name="edit-user-lname" id="edit-user-lname" size="20" maxlength="40" />
 							</div>
 						</div>
-			
+
 						<div class="control-group">			
 							<label class="control-label" for="edit-user-city">City:</label>
 							<div class="controls">
@@ -222,7 +213,7 @@
 								<input type="text" name="edit-user-zip" id="edit-user-zip" size="5" maxlength="5" />
 							</div>
 						</div>
-			
+
 						<div class="control-group">	
 							<label class="control-label" for="edit-user-sel-sex">Sex:</label>
 							<div class="controls">
@@ -233,7 +224,7 @@
 								</select>
 							</div>
 						</div>
-						
+
 						<div class="control-group">	
 							<label class="control-label" for="edit-user-phone">Phone:</label>
 							<div class="controls">
@@ -344,7 +335,7 @@
 					<p><a href="delete_acct.php">Delete Account</a></p>
 
 				</div> <!-- End of main row -->
-				
+
 	<!-- External javascript call -->
 	<script type="text/javascript" src="../js/account.js"></script>
 

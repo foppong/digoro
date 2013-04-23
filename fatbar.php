@@ -1,4 +1,4 @@
-<?php 
+<?php
 
 	require 'includes/config.php';
 	include 'includes/iheader.html';
@@ -13,18 +13,14 @@
 	require MYSQL1;
 
 	// Authorized Login Check
-	// If session value is present, redirect the user. Also validate the HTTP_USER_AGENT	
-	if (isset($_SESSION['agent']) AND ($_SESSION['agent'] = md5($_SERVER['HTTP_USER_AGENT']))) {
-	
+	// If session value is present, redirect the user. Also validate the HTTP_USER_AGENT
+	if(isset($_SESSION['agent']) AND ($_SESSION['agent'] = md5($_SERVER['HTTP_USER_AGENT']))) {
+
 		$url = BASE_URL . 'manager/home.php';
 		header("Location: $url");
-		exit();			
+		exit();
 	}
-
-	$db->close();
-	unset($db);
 ?>
-
 	<div class="container" id="contentWrapper">
 		<div class="row"> <!-- page row - except footer -->
 			<div class="span12">	
@@ -54,14 +50,14 @@
 					</div>
 				</div> <!-- end of header row -->
 				<hr>
-				
+
 				<div class="row"> <!-- tagline row -->
 					<div class="span12">
 						<h2>The virtual agent for amateur sports players and teams.</h2>
 						<div id="no-script"><h2>You must have JavaScript enabled!</h2></div> <!-- Only shows if javascript is disabled -->
 					</div>
 				</div> <!-- end of tagline row -->
-				
+
 				<div class="row"> <!-- content row -->
 					<div class="span5 well"> <!-- discover info column -->
 						<!-- Digoro video and testimonials -->
@@ -85,14 +81,14 @@
 						</div>					
 					</div>
 					<div class="span6 well"> <!-- signup info column -->
-		
-		
+
+
 
 		<!-- Register New Users -->
 		<div id="registerBlock" title="Register User">
 			<h3>Start playing today - it's free!</h3>
 			<h4>Registration takes less than 2 minutes</h4></br>
-			
+
 		<form method="post" action="../core/register_user.php" class="form-horizontal">
 				<div class="control-group">			
 					<label class="control-label" for="add-user-fname">First name:</label>
@@ -242,7 +238,6 @@
 					
 				</div> <!-- end of content row -->
 
-		
+
 		</div> <!-- End of page row -->
-		
 <?php include 'includes/ifooter.html'; ?>

@@ -1,15 +1,12 @@
 <?php
     /* This page defines the UserAuth class.
      * Attributes:
-     *  protected id_user
-     *  protected dbc
      *  protected inv_case
      *  protected OAuth_case
      *     
      * Methods:
      *  setUserID()
      *  setinvCase()
-     *  getDB()
      *  getUserID()
      *  getinvCase()
      *  isEmailAvailable()
@@ -22,23 +19,17 @@
      *  valid()
      *  chgPassword()
      */
-    
-    
-    class UserAuth {
-         
-        // Declare the attributes
-        protected $id_user, $dbObject, $inv_case, $OAuth_case;
 
-        // Constructor
-        public function __construct($dbObject)
-        {
-            $this->dbObject = $dbObject;
-        }
+
+    class UserAuth extends DigoroObject {
+
+        // Declare the attributes
+        protected $inv_case, $OAuth_case;
 
         // Set userID attribute
         public function setUserID($id)
         {
-            $this->id_user = $id;
+            $this->_id = $id;
         }
 
         // Set inv_case attribute
@@ -53,15 +44,10 @@
             $this->OAuth_case = $OAc;
         }
 
-        public function getDB()
-        {
-            return $this->dbObject;
-        }
-        
-        
+
         public function getUserID()
         {
-            return $this->id_user;
+            return $this->_id;
         }
 
 
@@ -76,12 +62,12 @@
             // Make the query to make sure User's new email is available    
             $q = "SELECT id_user, email
                   FROM users
-                  WHERE email = '{$this->dbObject->realEscapeString($e)}'
-                    AND id_user != {$this->id_user}
+                  WHERE email = '{$this->_dbObject->realEscapeString($e)}'
+                    AND id_user != {$this->_id}
                   LIMIT 1";
 
             // Execute the query:
-            $result = $this->dbObject->getRow($q);            
+            $result = $this->_dbObject->getRow($q);            
 
             // User login available, i.e. query found nothing
             return $result !== false;
@@ -96,11 +82,11 @@
             // Make the query    
             $q = "SELECT pass, oauth_registered
                   FROM users
-                  WHERE email = '{$this->dbObject->realEscapeString($e)}'
+                  WHERE email = '{$this->_dbObject->realEscapeString($e)}'
                   LIMIT 1";
 
             // Execute the query and store result
-            $result = $this->dbObject->getRow($q);
+            $result = $this->_dbObject->getRow($q);
 
             if($result !== false) {
                 // Set the OAuth case
@@ -124,11 +110,11 @@
             // Make the query to make sure New User's email is available    
             $q = "SELECT id_user, invited
                   FROM users
-                  WHERE email = '{$this->dbObject->realEscapeString($userEmail)}'
+                  WHERE email = '{$this->_dbObject->realEscapeString($userEmail)}'
                   LIMIT 1";
 
             // Execute the query and store result
-            $result = $this->dbObject->getRow($q);
+            $result = $this->_dbObject->getRow($q);
 
             if($result !== false) {
                 $this->setuserID($result['id_user']);
@@ -180,21 +166,21 @@
                             registration_date
                           )
                           VALUES
-                          ('{$this->dbObject->realEscapeString($fn)}',
-                           '{$this->dbObject->realEscapeString($ln)}',
-                           '{$this->dbObject->realEscapeString($e)}',
-                           '{$this->dbObject->realEscapeString($hash)}',
-                           '{$this->dbObject->realEscapeString($sex)}',
-                           '{$this->dbObject->realEscapeString($a)}',
-                           '{$this->dbObject->realEscapeString($bdfrmat)}',
+                          ('{$this->_dbObject->realEscapeString($fn)}',
+                           '{$this->_dbObject->realEscapeString($ln)}',
+                           '{$this->_dbObject->realEscapeString($e)}',
+                           '{$this->_dbObject->realEscapeString($hash)}',
+                           '{$this->_dbObject->realEscapeString($sex)}',
+                           '{$this->_dbObject->realEscapeString($a)}',
+                           '{$this->_dbObject->realEscapeString($bdfrmat)}',
                            {$this->inv_case},
                            NOW()
                           )";
 
                     // Execute the query:
-                    $this->dbObject->query($q);
+                    $this->_dbObject->query($q);
 
-                    if($this->dbObject->getNumRowsAffected() == 1) // It ran OK.
+                    if($this->_dbObject->getNumRowsAffected() == 1) // It ran OK.
                     {
                         // Send the activation email
                         $body = "Welcome to digoro and thank you for registering!\n\nTo activate your account, please click on this link:";
@@ -221,20 +207,20 @@
                 
                     // Make the query to update user in database
                     $q = "UPDATE users
-                          SET pass = '{$this->dbObject->realEscapeString($hash)}',
-                              first_name = '{$this->dbObject->realEscapeString($fn)}',
-                              last_name = '{$this->dbObject->realEscapeString($ln)}',
-                              sex = '{$this->dbObject->realEscapeString($sex)}',
-                              activation = '{$this->dbObject->realEscapeString($a)}',
-                              birth_date = '{$this->dbObject->realEscapeString($bdfrmat)}',
+                          SET pass = '{$this->_dbObject->realEscapeString($hash)}',
+                              first_name = '{$this->_dbObject->realEscapeString($fn)}',
+                              last_name = '{$this->_dbObject->realEscapeString($ln)}',
+                              sex = '{$this->_dbObject->realEscapeString($sex)}',
+                              activation = '{$this->_dbObject->realEscapeString($a)}',
+                              birth_date = '{$this->_dbObject->realEscapeString($bdfrmat)}',
                               registration_date = NOW() 
-                          WHERE id_user= {$this->id_user}
+                          WHERE id_user= {$this->_id}
                           LIMIT 1";
 
                     // Execute the query:
-                    $this->dbObject->query($q);
+                    $this->_dbObject->query($q);
         
-                    if($this->dbObject->getNumRowsAffected() == 1) // It ran OK.
+                    if($this->_dbObject->getNumRowsAffected() == 1) // It ran OK.
                     {
                         // Send the activation email
                         $body = "Welcome to digoro and thank you for registering!\n\nTo activate your account, please click on this link:";
@@ -270,10 +256,10 @@
             $q = "DELETE FROM users WHERE id_user = {$id} LIMIT 1";
 
             // Execute the query:
-            $this->dbObject->query($q);
+            $this->_dbObject->query($q);
 
             // If the query ran ok.
-            if($this->dbObject->getNumRowsAffected() == 1) {
+            if($this->_dbObject->getNumRowsAffected() == 1) {
                 session_unset();
                 session_destroy();
             }
@@ -290,12 +276,12 @@
                 // Make the query    
                 $q = "SELECT role, id_user, login_before, default_teamID
                       FROM users
-                      WHERE email = '{$this->dbObject->realEscapeString($e)}'
+                      WHERE email = '{$this->_dbObject->realEscapeString($e)}'
                         AND activation = ''
                       LIMIT 1";
 
                 // Execute the query and store result
-                $result = $this->dbObject->getRow($q);
+                $result = $this->_dbObject->getRow($q);
 
                 if($result !== false)
                 {
@@ -309,7 +295,7 @@
 
                     // Redirect if user hasn't logged in before take them to welcome page 
                     if($result['login_before'] == false) {
-                        $user = new User($this->dbObject, $result['id_user']);
+                        $user = new User($result['id_user']);
                         $_SESSION['userObj'] = $user;
                         $url = BASE_URL . 'core/welcome.php';
                         header("Location: $url");
@@ -318,7 +304,7 @@
 
                     // Redirect if user is a registered manager
                     if($result['login_before'] == true && $result['role'] == 'm') {
-                        $user = new User($this->dbObject, $result['id_user']);
+                        $user = new User($result['id_user']);
                         $_SESSION['userObj'] = $user;
                         $_SESSION['role'] = $result['role'];
                         $url = BASE_URL . 'manager/home.php';
@@ -328,7 +314,7 @@
 
                     // Redirect if user is a registered player
                     if($result['login_before'] == true && $result['role'] == 'p') {
-                        $user = new User($this->dbObject, $result['id_user']);
+                        $user = new User($result['id_user']);
                         $_SESSION['userObj'] = $user;
                         $_SESSION['role'] = $result['role'];
                         $url = BASE_URL . 'player/home.php';
@@ -426,12 +412,12 @@
             // Make the query    
             $q = "SELECT pass
                   FROM users
-                  WHERE email = '{$this->dbObject->realEscapeString($e)}'
+                  WHERE email = '{$this->_dbObject->realEscapeString($e)}'
                     AND activation = ''
                   LIMIT 1";
 
             // Execute the query and store result
-            $pass = $this->dbObject->getOne($q);
+            $pass = $this->_dbObject->getOne($q);
 
             $hasher = new PasswordHash(8, FALSE);                    
 
@@ -465,14 +451,14 @@
 
                     // Make the query
                     $q = "UPDATE users
-                          SET pass = '{$this->dbObject->realEscapeString($hash)}'
-                          WHERE email = '{$this->dbObject->realEscapeString($e)}'
+                          SET pass = '{$this->_dbObject->realEscapeString($hash)}'
+                          WHERE email = '{$this->_dbObject->realEscapeString($e)}'
                           LIMIT 1";
 
                     // Execute the query:
-                    $this->dbObject->query($q);
+                    $this->_dbObject->query($q);
 
-                    if($this->dbObject->getNumRowsAffected() == 1) { // It ran OK.
+                    if($this->_dbObject->getNumRowsAffected() == 1) { // It ran OK.
                         $body = "Your password has been changed. If you feel you got this email in error please contact the system administrator.";
                         $body = wordwrap($body, 70);
                         mail($e, 'digoro.com - Password Changed', $body);
@@ -488,7 +474,6 @@
             }
         } // End of chgPassword function
 
-
         // Function to check if user already registered with OAuth
         public function isOAuthRegistered($email)
         {
@@ -496,15 +481,14 @@
             // Make the query    
             $q = "SELECT oauth_registered
                   FROM users
-                  WHERE email = '{$this->dbObject->realEscapeString($email)}'
+                  WHERE email = '{$this->_dbObject->realEscapeString($email)}'
                   LIMIT 1";
 
             // Execute the query and store result
-            $OAstatus = $this->dbObject->getOne($q);
+            $OAstatus = $this->_dbObject->getOne($q);
 
             return ($OAstatus == 1);
         } // End of isOAuthRegistered function
-
 
         // Function to add OAuth Users
         public function addOAuthUser($e, $fn, $ln, $role, $gd, $bdfrmat)
@@ -538,31 +522,31 @@
                               ) 
                               VALUES
                               (
-                                '{$this->dbObject->realEscapeString($e)}',
-                                '{$this->dbObject->realEscapeString($fn)}',
-                                '{$this->dbObject->realEscapeString($ln)}',
-                                '{$this->dbObject->realEscapeString($role)}',
-                                '{$this->dbObject->realEscapeString($gd)}',
-                                '{$this->dbObject->realEscapeString($bdfrmat)}',
+                                '{$this->_dbObject->realEscapeString($e)}',
+                                '{$this->_dbObject->realEscapeString($fn)}',
+                                '{$this->_dbObject->realEscapeString($ln)}',
+                                '{$this->_dbObject->realEscapeString($role)}',
+                                '{$this->_dbObject->realEscapeString($gd)}',
+                                '{$this->_dbObject->realEscapeString($bdfrmat)}',
                                 {$iv},
                                 {$oauth_reg},
                                 NOW()
                               )";
 
                         // Execute the query
-                        $this->dbObject->query($q);
+                        $this->_dbObject->query($q);
 
-                        if($this->dbObject->getNumRowsAffected() == 1) { // It ran OK.
+                        if($this->_dbObject->getNumRowsAffected() == 1) { // It ran OK.
 
-                            $userID = $this->dbObject->getLastInsertId();    
-    
+                            $userID = $this->_dbObject->getLastInsertId();
+
                             if($role == 'M') {
-                                $user = new Manager($this->dbObject, $userID);
+                                $user = new Manager($userID);
                                 $_SESSION['userObj'] = $user;
                             }
 
                             if($role == 'P') {
-                                $user = new Player($this->dbObject, $userID);
+                                $user = new Player($userID);
                                 $_SESSION['userObj'] = $user;
                             }
                         }
@@ -579,38 +563,38 @@
                         // Make the query to select the user ID
                         $q = "SELECT id_user
                               FROM users
-                              WHERE email = '{$this->dbObject->realEscapeString($e)}'
+                              WHERE email = '{$this->_dbObject->realEscapeString($e)}'
                               LIMIT 1";
 
                         // Execute the statement and store result
-                        $userID = $this->dbObject->getOne($q);
+                        $userID = $this->_dbObject->getOne($q);
 
                         if($userID !== false) { // Found match in database
                             
                             // Make the query to update user in database
                             $q = "UPDATE users
-                                  SET first_name = '{$this->dbObject->realEscapeString($fn)}',
-                                      last_name = '{$this->dbObject->realEscapeString($ln)}',
-                                      role = '{$this->dbObject->realEscapeString($role)}',
-                                      gender = '{$this->dbObject->realEscapeString($gd)}',
-                                      birth_date = '{$this->dbObject->realEscapeString($bdfrmat)}',
+                                  SET first_name = '{$this->_dbObject->realEscapeString($fn)}',
+                                      last_name = '{$this->_dbObject->realEscapeString($ln)}',
+                                      role = '{$this->_dbObject->realEscapeString($role)}',
+                                      gender = '{$this->_dbObject->realEscapeString($gd)}',
+                                      birth_date = '{$this->_dbObject->realEscapeString($bdfrmat)}',
                                       registration_date = NOW(),
                                       oauth_registered = {$oauth_reg}
                                   WHERE id_user = {$userID}
                                   LIMIT 1";
 
                             // Execute the query:
-                            $this->dbObject->query($q);
+                            $this->_dbObject->query($q);
 
-                            if($this->dbObject->getNumRowsAffected() == 1) { // It ran OK.
+                            if($this->_dbObject->getNumRowsAffected() == 1) { // It ran OK.
 
                                 if ($role == 'M') {
-                                    $user = new Manager($this->dbObject, $userID);
+                                    $user = new Manager($userID);
                                     $_SESSION['userObj'] = $user;
                                 }
 
                                 if ($role == 'P') {
-                                    $user = new Player($this->dbObject, $userID);
+                                    $user = new Player($userID);
                                     $_SESSION['userObj'] = $user;
                                 }
                             }
@@ -633,7 +617,6 @@
                 } // End of switch
             }
         } // End of addOAuthUser function
-        
 
         //    Function to login an OAuth User
         public function OAuthlogin($e) {
@@ -641,12 +624,12 @@
             // Make the query    
             $q = "SELECT id_user, login_before, default_teamID
                   FROM users 
-                  WHERE email = '{$this->dbObject->realEscapeString($e)}'
+                  WHERE email = '{$this->_dbObject->realEscapeString($e)}'
                     AND activation = ''
                   LIMIT 1";
         
             // Execute the query and store result
-            $result = $this->dbObject->getRow($q);
+            $result = $this->_dbObject->getRow($q);
 
             if($result !== false) { // Found match in database
 
@@ -661,7 +644,7 @@
                 if($this->isOAuthRegistered($e) && ($result['login_before'] == 1)) {
                         
                     //Redirect User
-                    $user = new User($this->dbObject, $result['id_user']);
+                    $user = new User($result['id_user']);
                     $_SESSION['userObj'] = $user;                            
                     $url = BASE_URL . 'manager/home.php';
 
@@ -678,15 +661,15 @@
                     $q = "UPDATE users SET oauth_registered = {$bl} WHERE id_user = {$userID} LIMIT 1";
         
                     // Execute the query:
-                    $this->dbObject->query($q);
+                    $this->_dbObject->query($q);
 
-                    if($this->dbObject->getNumRowsAffected() !== 1) { // It didn't run ok
+                    if($this->_dbObject->getNumRowsAffected() !== 1) { // It didn't run ok
                         echo '<div class="alert alert-error">There was an error. Please contact the service administrator</div>';
                         exit();
                     }                        
 
                     //Redirect User                    
-                    $user = new User($this->dbObject, $userID);
+                    $user = new User($userID);
                     $_SESSION['userObj'] = $user;
                     $url = BASE_URL . 'manager/home.php';
                     
@@ -697,7 +680,7 @@
                 else {
                     
                     //Redirect User
-                    $user = new User($this->dbObject, $userID);
+                    $user = new User($userID);
                     $_SESSION['userObj'] = $user;                
                     $url = BASE_URL . 'core/oauth_welcome.php';
                     ob_end_clean();
@@ -714,6 +697,4 @@
             }
 
         } // End of OAuthlogin function
-                        
-        
     } // End of Class

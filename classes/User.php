@@ -8,7 +8,7 @@
      *  protected state
      *  protected zp (zip code)
      *  protected gd (sex)
-     *     protected email
+     *  protected email
      *  protected pass
      *  protected rdate (registration date)
      *  protected bday (birthday)
@@ -43,9 +43,9 @@
             $pass, $rdate, $bday, $pnum, $digscore, $invited, $dftmID, $lb;
 
         // Constructor
-        public function __construct($dbObject, $userID) 
+        public function __construct($userID) 
         {
-            parent::__construct($dbObject);
+            parent::__construct();
             $this->setUserID($userID);
             //$this->pullUserData(); // Pull current database information and set attributes
         }
@@ -90,10 +90,10 @@
         public function countTeams()
         {
             // Make query to count the number of teams associated with user
-            $q = "SELECT COUNT(id_team) FROM members WHERE id_user = {$this->id_user}";
+            $q = "SELECT COUNT(id_team) FROM members WHERE id_user = {$this->_id}";
             
             //return the value
-            return $this->dbObject->getOne($q);
+            return $this->_dbObject->getOne($q);
         }
 
 
@@ -103,13 +103,13 @@
             // Update the user's info in the database
             $q = "UPDATE users
                   SET default_teamID = {$teamID}
-                  WHERE id_user = {$this->id_user}
+                  WHERE id_user = {$this->_id}
                   LIMIT 1";
          
             // Execute the query:
-            $this->dbObject->query($q);
+            $this->_dbObject->query($q);
 
-            if($this->dbObject->getNumRowsAffected() == 1) { // It ran ok
+            if($this->_dbObject->getNumRowsAffected() == 1) { // It ran ok
                 echo '<div class="alert alert-success">Default team successfully changed!</div>';
                 $this->pullUserData(); // Update object attributes
             }
@@ -134,9 +134,30 @@
 
 
         // Function to edit account settings
-        public function editAccount()
+        public function editAccount($fname, $lname, $city, $state, $zip, $sex, $phone, $bdfrmat)
         {
+            // Make query
+            $q = "UPDATE users
+                  SET first_name = '{$this->_dbObject->realEscapeString($fname)}',
+                      last_name = '{$this->_dbObject->realEscapeString($lname)}',
+                      city = '{$this->_dbObject->realEscapeString($city)}',
+                      state = '{$this->_dbObject->realEscapeString($state)}',
+                      zipcode = {$zip},
+                      sex = {$sex},
+                      phone_num = '{$this->_dbObject->realEscapeString($phone)}',
+                      birth_date = '{$this->_dbObject->realEscapeString($bdfrmat)}'
+                  WHERE id_user = {$this->_id}
+                  LIMIT 1";
 
+            // Execute the query:
+            $this->_dbObject->query($q);
+
+            if($this->_dbObject->getNumRowsAffected() == 1) { // An update to the database was made
+                echo '<div class="alert alert-success">This account has been edited</div>';
+            }
+            else { // Either did not run ok or no updates were made
+                echo '<div class="alert">No changes were made</div>';
+            }
         }
 
 
@@ -156,15 +177,15 @@
                          phone_num, digoro_score, invited, default_teamID,
                          login_before
                   FROM users
-                  WHERE id_user = {$this->id_user}
+                  WHERE id_user = {$this->_id}
                   LIMIT 1";
  
             // Execute the query and store the result
-            $result = $this->dbObject->getRow($q);
+            $result = $this->_dbObject->getRow($q);
 
             // Found result
             if($result !== false) {
-                $this->setuserAttributes($result['first_name'], $result['last_name'],
+                $this->setUserAttributes($result['first_name'], $result['last_name'],
                                          $result['role'], $result['city'],
                                          $result['state'], $result['zipcode'],
                                          $result['sex'], $result['email'], $result['pass'],
@@ -183,11 +204,11 @@
             // Make the query
             $q = "SELECT {$datacolumn}
                   FROM users
-                  WHERE id_user = {$this->id_user}
+                  WHERE id_user = {$this->_id}
                   LIMIT 1";
 
             // Prepare the statement
-            return $this->dbObject->getOne($q);
+            return $this->_dbObject->getOne($q);
         } // End of pullSpecificData function
 
 
@@ -195,22 +216,22 @@
         public function updateUserAcct($e, $fn, $ln, $cty, $st, $zp, $gd, $bdfrmat, $pnumb) {
             // Update the user's info in the database
             $q = "UPDATE users
-                  SET email = '{$this->dbObject->realEscapeString($e)}',
-                      first_name = '{$this->dbObject->realEscapeString($fn)}',
-                      last_name = '{$this->dbObject->realEscapeString($ln)}',
-                      city = '{$this->dbObject->realEscapeString($cty)}',
-                      state = '{$this->dbObject->realEscapeString($st)}',
+                  SET email = '{$this->_dbObject->realEscapeString($e)}',
+                      first_name = '{$this->_dbObject->realEscapeString($fn)}',
+                      last_name = '{$this->_dbObject->realEscapeString($ln)}',
+                      city = '{$this->_dbObject->realEscapeString($cty)}',
+                      state = '{$this->_dbObject->realEscapeString($st)}',
                       zipcode = {$zp},
-                      sex = '{$this->dbObject->realEscapeString($gd)}',
-                      birth_date = '{$this->dbObject->realEscapeString($bdfrmat)}',
+                      sex = '{$this->_dbObject->realEscapeString($gd)}',
+                      birth_date = '{$this->_dbObject->realEscapeString($bdfrmat)}',
                       phone_num = {$pnumb}
-                WHERE id_user = {$this->id_user}
+                WHERE id_user = {$this->_id}
                 LIMIT 1";
 
             // Execute the query:
-            $this->dbObject->query($q);
+            $this->_dbObject->query($q);
 
-            if($this->dbObject->getNumRowsAffected() == 1) { // And update to the database was made      
+            if($this->_dbObject->getNumRowsAffected() == 1) { // And update to the database was made      
                 echo '<div class="alert alert-success">The users account has been edited.</div>';
                 $this->pullUserData(); // Update object attributes
             }
@@ -226,12 +247,12 @@
             $setTrue = 1;
 
             // Update the user's info in the database
-            $q = "UPDATE users SET login_before = {$setTrue} WHERE id_user = {$this->id_user} LIMIT 1";
+            $q = "UPDATE users SET login_before = {$setTrue} WHERE id_user = {$this->_id} LIMIT 1";
 
             // Execute the query:
-            $this->dbObject->query($q);
+            $this->_dbObject->query($q);
 
-            if($this->dbObject->getNumRowsAffected() == 1) {// And update to the database was made
+            if($this->_dbObject->getNumRowsAffected() == 1) {// And update to the database was made
                 echo '<div class="alert alert-success">The users account has been updated.</div>';
             }
             else { 
@@ -246,14 +267,14 @@
 
             // Update the user's info in the database
             $q = "UPDATE users
-                  SET role = '{$this->dbObject->realEscapeString($role)}'
-                  WHERE id_user = {$this->id_user}
+                  SET role = '{$this->_dbObject->realEscapeString($role)}'
+                  WHERE id_user = {$this->_id}
                   LIMIT 1";
 
             // Execute the query:
-            $this->dbObject->query($q);
+            $this->_dbObject->query($q);
 
-            if($this->dbObject->getNumRowsAffected() == 1) {// And update to the database was made
+            if($this->_dbObject->getNumRowsAffected() == 1) {// And update to the database was made
                 echo '<div class="alert alert-success">The users account has been updated.</div>';
             }
             else { 
