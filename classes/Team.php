@@ -1,414 +1,287 @@
 <?php
-	/* This page defines the Team class.
-	 * Attributes:
-	 * 	protected tmname
-	 *  protected about
-	 *  protected id_team
-	 *  protected id_sport
-	 *  protected id_user
-	 *  protected level
-	 *  protected id_region
-	 *  protected team_sex
-	 *  protected team_email
-	 *  protected dbc
-	 * 
-	 * Methods:
-	 *  setDB()
-	 *  setTeamID()
-	 *  setTeamNM()
-	 * 	setTeamABT()
-	 *  setTeamAttributes()
-	 *  getTeamAttribute()
-	 *  pullTeamData()
-	 *  pullSpecificData()
-	 *  createTeam()
-	 *  editTeam()
-	 *  transferTeam()
-	 *  deleteTeam()
-	 *  isManager()
-	 *  removeMember()
-	 */
-	
-	class Team {
-	 	
-		// Declare the attributes
-		protected $tmname, $about, $id_team, $id_sport, $id_user, $level, 
-			$id_region, $team_sex, $team_email, $dbc;
+    /* This page defines the Team class.
+     * Attributes:
+     *  protected tmname
+     *  protected about
+     *  protected id_sport
+     *  protected id_user
+     *  protected level
+     *  protected id_region
+     *  protected team_sex
+     *  protected team_email
+     * 
+     * Methods:
+     *  setTeamID()
+     *  setTeamNM()
+     *  setTeamABT()
+     *  setTeamAttributes()
+     *  getTeamAttribute()
+     *  pullTeamData()
+     *  pullSpecificData()
+     *  createTeam()
+     *  editTeam()
+     *  transferTeam()
+     *  deleteTeam()
+     *  isManager()
+     *  removeMember()
+     */
+    
+    class Team extends DigoroObject {
 
-		// Constructor
-		function __construct() {}
+        // Declare the attributes
+        protected $tmname, $about, $id_sport, $id_user, $level, 
+            $id_region, $team_sex, $team_email;
 
-		// Set database connection attribute
-		function setDB($db)
-		{
-			$this->dbc = $db;
-		}
+        protected $_mainTable = 'teams';
+        protected $_mainTablePrimaryKey = 'id_team';
 
-		// Function to set team ID attribute
-		function setTeamID($teamID)
-		{
-			$this->id_team = $teamID;
-		}
+        // Function to set team ID attribute
+        public function setTeamID($teamID)
+        {
+            $this->_id = $teamID;
+        }
+
+
 /*
-		// Function to set team name
-		function setTeamNM($attribute)
-		{
-			$this->tmname = $attribute;
-		}
+        // Function to set team name
+        public function setTeamNM($attribute)
+        {
+            $this->tmname = $attribute;
+        }
 
-		// Function to set team about me
-		function setTeamABT($attribute)
-		{
-			$this->about = $attribute;
-		}
-*/		
-		// Function to set Team attributes
-		function setTeamAttributes($sprtID = 0, $manID = 0, $tmname ='', 
-			$abtm = '', $lvl = '', $sex = '', $reg = 0, $tmemail = '')
-		{
-			$this->id_sport = $sprtID;
-			$this->id_user = $manID;						
-			$this->tmname = $tmname;
-			$this->about = $abtm;
-			$this->level = $lvl;
-			$this->team_sex = $sex;
-			$this->id_region = $reg;
-			$this->team_email = $tmemail;
-		}
+        // Function to set team about me
+        public function setTeamABT($attribute)
+        {
+            $this->about = $attribute;
+        }
+*/
 
-		// Function to get specific class attribute
-		function getTeamAttribute($attribute)
-		{
-			return $this->$attribute;
-		}
 
-		// Function to pull complete team data from database and set attributes
-		function pullTeamData()
-		{
-			// Make the query
-			$q = 'SELECT id_sport,id_user,team_name,about,level_of_play,id_region,team_sex,team_email
-				FROM teams WHERE id_team=? LIMIT 1';
-				
-			// Prepare the statement
-			$stmt = $this->dbc->prepare($q);
-			
-			// Bind the inbound variables
-			$stmt->bind_param('i', $this->id_team);
-			
-			// Execute the query
-			$stmt->execute();
-			
-			// Store result
-			$stmt->store_result();
-			
-			// Bind the outbound variables
-			$stmt->bind_result($sprtIDOB, $manIDOB, $tmnameOB, $abtmOB, $lvlOB, $regOB, $sexOB, $tmemailOB);
+        // Function to set Team attributes
+        public function setTeamAttributes($sprtID = 0, $manID = 0, $tmname ='', 
+            $abtm = '', $lvl = '', $sex = '', $reg = 0, $tmemail = '')
+        {
+            $this->id_sport = $sprtID;
+            $this->id_user = $manID;                        
+            $this->tmname = $tmname;
+            $this->about = $abtm;
+            $this->level = $lvl;
+            $this->team_sex = $sex;
+            $this->id_region = $reg;
+            $this->team_email = $tmemail;
+        }
 
-			// Found result
-			if ($stmt->num_rows == 1)
-			{	
-				while ($stmt->fetch())
-				{				
-					self::setTeamAttributes($sprtIDOB, $manIDOB, $tmnameOB, $abtmOB, 
-						$lvlOB, $sexOB, $regOB, $tmemailOB);
-				}
-			}			
-		
-			// Close the statement
-			$stmt->close();
-			unset($stmt);
-			
-		} // End of pullTeamData function
 
-		// Function to pull specific user data from database
-		function pullSpecificData($datacolumn)
-		{
-			// Make the query
-			$q = "SELECT $datacolumn FROM teams WHERE id_team=? LIMIT 1";
-					
-			// Prepare the statement
-			$stmt = $this->dbc->prepare($q);
-			
-			// Bind the inbound variable:
-			$stmt->bind_param('i', $this->id_team);
-			
-			// Execute the query:
-			$stmt->execute();
-			
-			// Store result
-			$stmt->store_result();
-			
-			// Bind the outbound variable:
-			$stmt->bind_result($OB);	
+        // Function to get specific class attribute
+        public function getTeamAttribute($attribute)
+        {
+            return $this->$attribute;
+        }
 
-			// Valid user ID
-			if ($stmt->num_rows == 1)
-			{
-				while ($stmt->fetch())
-				{				
-					return $OB;
-				}
-				
-			}
-			
-			// Close the statement:
-			$stmt->close();
-			unset($stmt);	
-					
-		} // End of pullSpecificData function		
 
-		
-		// Function to create team
-		function createTeam($sprtID, $manID, $tmname, $abtm, $lvl, $reg, $sex, $tmemail)
-		{
-			// Make the query:
-			$q = 'INSERT INTO teams (id_sport, id_user, team_name, about, 
-				level_of_play, id_region, team_sex, team_email) 
-				VALUES (?,?,?,?,?,?,?,?)';
+        // Function to pull complete team data from database and set attributes
+        public function pullTeamData()
+        {
+            // Make the query
+            $q = "SELECT id_sport, id_user, team_name, about, level_of_play,
+                         id_region, team_sex, team_email
+                  FROM teams
+                  WHERE id_team = {$this->_id}
+                  LIMIT 1";
 
-			// Prepare the statement
-			$stmt = $this->dbc->prepare($q);
-			
-			// Bind the variables
-			$stmt->bind_param('iissiiis', $sprtID, $manID, $tmname, $abtm, $lvl, $reg, $sex, $tmemail);
-			
-			// Execute the query:
-			$stmt->execute();
-			
-			// Successfully added team
-			if ($stmt->affected_rows == 1)
-			{
-				// Assign id_team with setTeamID function
-				self::setTeamID($stmt->insert_id);
+            // Execute the query & Store result
+            $result = $this->_dbObject->getRow($q);
 
-				// Set the default team ID
-				$_SESSION['deftmID'] = $this->id_team;
-				$tmID = $_SESSION['deftmID'];
+            // Found result
+            if($result !== false) {
+                $this->setTeamAttributes($result['id_sport'], $result['id_user'], $result['team_name'],
+                                            $result['about'], $result['level_of_play'], $result['id_region'],
+                                            $result['team_sex'], $result['team_email']);
+            }
+        } // End of pullTeamData function
 
-				// Make the new query to add manager to player table:
-				$q = 'INSERT INTO members (id_user, id_team) VALUES (?,?)';
-					
-				// Prepare the statement:
-				$stmt2 = $this->dbc->prepare($q);
-						
-				// Bind the inbound variables:
-				$stmt2->bind_param('ii', $manID, $tmID);
-					
-				// Execute the query:
-				$stmt2->execute();
-						
-				if ($stmt2->affected_rows !== 1) // It didn't run ok
-				{
-					echo '<div class="alert alert-error">Oh Snap! Manager was not added to roster. Please contact the service administrator.</div>';
-					exit();
-				}
-			
-				// Close the statement:
-				$stmt2->close();
-				unset($stmt2);				
-				
-				// Set boolean logic to true
-				$bl = 1;
-				
-				// Update the user's info in the database
-				// This is wher the LOGIC of "logged in before" is set
-				// NOTE: When develop player portion, will need to have a different trigger
-				$q = 'UPDATE users SET default_teamID=?, login_before=? WHERE id_user=? LIMIT 1';
-	
-				// Prepare the statement
-				$stmt2 = $this->dbc->prepare($q); 
-	
-				// Bind the inbound variables:
-				$stmt2->bind_param('iii', $tmID, $bl, $manID);
-					
-				// Execute the query:
-				$stmt2->execute();
-					
-				if ($stmt2->affected_rows !== 1) // It didn't run ok
-				{
-					echo '<div class="alert alert-error">Oh Snap! Team was not added. Please contact the service administrator.</div>';
-					exit();
-				}
 
-				echo '<div class="alert alert-success">Team was added successfully!</div>';
-					
-				// Close the statement:
-				$stmt2->close();
-				unset($stmt2);
-			}
-			else
-			{
-				echo '<div class="alert alert-error">Oh Snap! Team was not added. Please contact the service administrator.</div>';
-				exit();
-			}
+        // Function to pull specific user data from database
+        public function pullSpecificData($datacolumn)
+        {
+            // Make the query
+            $q = "SELECT {$datacolumn} FROM teams WHERE id_team = {$this->_id} LIMIT 1";
 
-			// Close the statement:
-			$stmt->close();
-			unset($stmt);
+            // Execute the query & Store result
+            return $this->_dbObject->getOne($q);
+        } // End of pullSpecificData function        
 
-		} // End of createTeam function
 
-		
-		// Function to edit team
-		function editTeam($sprtID, $tmname, $abtm, $lvl, $reg, $sex, $tmemail, $teamid)
-		{
-			// Update the user's info in the members' table in database
-			$q = 'UPDATE teams SET id_sport=?, team_name=?, about=?, level_of_play=?, id_region=?,
-				team_sex=?, team_email=?
-				WHERE id_team=? LIMIT 1';
-				
-			// Prepare the statement
-			$stmt = $this->dbc->prepare($q); 
-			
-			// Bind the inbound variables:
-			$stmt->bind_param('issiiisi', $sprtID, $tmname, $abtm, $lvl, $reg, $sex, $tmemail, $teamid);
-				
-			// Execute the query:
-			$stmt->execute();
+        // Function to create team
+        public function createTeam($sprtID, $manID, $tmname, $abtm, $lvl, $reg, $sex, $tmemail)
+        {
+            // Make the query:
+            $q = "INSERT INTO teams
+                  (
+                    id_sport,
+                    id_user,
+                    team_name,
+                    about,
+                    level_of_play,
+                    id_region,
+                    team_sex,
+                    team_email
+                  ) 
+                  VALUES
+                  (
+                    {$sprtID},
+                    {$manID},
+                    '{$this->_dbObject->realEscapeString($tmname)}',
+                    '{$this->_dbObject->realEscapeString($abtm)}',
+                    {$lvl},
+                    {$reg},
+                    {$sex},
+                    '{$this->_dbObject->realEscapeString($tmemail)}'
+                  )";
 
-			// Print a message based upon result:
-			if ($stmt->affected_rows == 1)
-			{
-				echo '<div class="alert alert-success">Team was edited succesfully.</div>';
-			}
-			else
-			{
-				echo '<div class="alert">No changes made.</div>';
-			}
+            // Execute the query:
+            $this->_dbObject->query($q);
 
-		} // End of editTeam function
+            // Successfully added team
+            if($this->_dbObject->getNumRowsAffected() == 1) {
 
-		
-		// Function to transfer Manager role
-		function transferTeam($memberUserID, $teamid) {
-			// Make the query to update the team record with another manager ID
-			$q = 'UPDATE teams SET id_user=? WHERE id_team=? LIMIT 1';
-					
-			// Prepare the statement
-			$stmt = $this->dbc->prepare($q);
-					
-			// Bind the inbound variables:
-			$stmt->bind_param('ii', $memberUserID, $teamid);
-					
-			// Execute the query:
-			$stmt->execute();
-					
-			if ($stmt->affected_rows == 1) { // Update to database was made
-				echo '<div class="alert alert-success">The team has been transferred.</div>';
-						
-				// ADD CODE HERE TO SEND EMAIL TO RECEIPIENT
-						
-			}
-			else {	
-				echo '<div class="alert alert-error">The team could not be transferred due to a system error.</div>';
-				exit();
-			}
+                // Assign id_team with setTeamID function
+                $this->setTeamID($this->_dbObject->getLastInsertId());
 
-			// Close the statement:
-			$stmt->close();
-			unset($stmt);
-		}
+                // Set the default team ID
+                $_SESSION['deftmID'] = $this->_id;
 
-		// Functon to delete team from database
-		function deleteTeam($teamid)
-		{
-			// Make the query	
-			$q = "DELETE FROM teams WHERE id_team=? LIMIT 1";
+                // Make the new query to add manager to player table:
+                $q = "INSERT INTO members (id_user, id_team) VALUES ({$manID}, {$this->_id})";
 
-			// Prepare the statement:
-			$stmt = $this->dbc->prepare($q);
+                // Execute the query:
+                $this->_dbObject->query($q);
 
-			// Bind the inbound variable:
-			$stmt->bind_param('i', $teamid);
+                if($this->_dbObject->getNumRowsAffected() !== 1) { // It didn't run ok
+                    echo '<div class="alert alert-error">Oh Snap! Manager was not added to roster. Please contact the service administrator.</div>';
+                    exit();
+                }           
 
-			// Execute the query:
-			$stmt->execute();
-			
-			// If the query ran ok.
-			if ($stmt->affected_rows == 1) 
-			{	// Print a message
-				echo '<div class="alert alert-success">This team has been deleted successfully</div>';
-			}
-			else 
-			{	// If the query did not run ok.
-				echo '<div class="alert alert-error">The team could not be deleted due to a system error</div>';
-				exit();
-			}
+                // Set boolean logic to true
+                $bl = 1;
 
-			// Close the statement:
-			$stmt->close();
-			unset($stmt);
-		} // End of deleteTeam function	
-		
-		// Function to check if user is the manager
-		function isManager($userID, $teamid)
-		{
-			// Make the query to retreive manager id associated with team:		
-			$q = "SELECT id_user FROM teams
-				WHERE id_team=? LIMIT 1";
-				
-			// Prepare the statement
-			$stmt = $this->dbc->prepare($q);
-			
-			// Bind the inbound variables:
-			$stmt->bind_param('i', $teamid);
-			
-			// Exeecute the query
-			$stmt->execute();
-			
-			// Store results:
-			$stmt->store_result();
-			
-			// Bind the outbound variables:
-			$stmt->bind_result($manIDOB);
-			
-			// user ID found
-			if ($stmt->num_rows == 1)
-			{
-				while ($stmt->fetch())
-				{				
-					if ($manIDOB == $userID) 
-					{
-						return True; // User is the manager
-					}
-					else 
-					{
-						return False; // User is not the manager
-					}
-				}
-			}
-			else 
-			{
-				return False; // User was not found
-			}
-			// Close the statement:
-			$stmt->close();
-			unset($stmt);
-		} // End of isManager function
+                // Update the user's info in the database
+                // This is wher the LOGIC of "logged in before" is set
+                // NOTE: When develop player portion, will need to have a different trigger
+                $q = "UPDATE users
+                      SET default_teamID = {$this->_id},
+                          login_before = {$bl}
+                      WHERE id_user = {$manID}
+                      LIMIT 1";
 
-		// Function to remove player from team if not manager
-		function removeMember($userID) {
-			// Make the query	
-			$q = 'DELETE FROM members WHERE id_user=? LIMIT 1';
-				
-			// Prepare the statement
-			$stmt = $this->dbc->prepare($q);
-			
-			// Bind the inbound variables:
-			$stmt->bind_param('i', $userID);
-			
-			// Execute the query
-			$stmt->execute();
-		
-			if ($stmt->affected_rows == 1) {
-				echo '<div class="alert alert-success">You have successfully removed yourself from the team</div>';
-			}
-			else {
-				echo '<div class="alert alert-error">The removal did not work. Pleaes contact the system admistrator</div>';
-				exit();
-			}
-				
-		} // End of removePlayer function
-		
-		
-	} // End of Class
+                // Execute the query:
+                $this->_dbObject->query($q);
+                    
+                if($this->_dbObject->getNumRowsAffected() !== 1) // It didn't run ok
+                {
+                    echo '<div class="alert alert-error">Oh Snap! Team was not added. Please contact the service administrator.</div>';
+                    exit();
+                }
+
+                echo '<div class="alert alert-success">Team was added successfully!</div>';
+            }
+            else {
+                echo '<div class="alert alert-error">Oh Snap! Team was not added. Please contact the service administrator.</div>';
+                exit();
+            }
+        } // End of createTeam function
+
+        
+        // Function to edit team
+        public function editTeam($sprtID, $tmname, $abtm, $lvl, $reg, $sex, $tmemail, $teamid)
+        {
+            // Update the user's info in the members' table in database
+            $q = "UPDATE teams
+                  SET id_sport = {$sprtID},
+                      team_name = '{$this->_dbObject->realEscapeString($tmname)}',
+                      about = '{$this->_dbObject->realEscapeString($abtm)}',
+                      level_of_play = {$lvl},
+                      id_region = {$reg},
+                      team_sex = {$sex},
+                      team_email = '{$this->_dbObject->realEscapeString($tmemail)}'
+                WHERE id_team = {$teamid}
+                LIMIT 1";
+
+            // Execute the query:
+            $this->_dbObject->query($q);
+
+            // Print a message based upon result:
+            if($this->_dbObject->getNumRowsAffected() == 1) {
+                echo '<div class="alert alert-success">Team was edited succesfully.</div>';
+            }
+            else {
+                echo '<div class="alert">No changes made.</div>';
+            }
+        } // End of editTeam function
+
+
+        // Function to transfer Manager role
+        public function transferTeam($memberUserID, $teamid)
+        {
+            // Make the query to update the team record with another manager ID
+            $q = "UPDATE teams
+                  SET id_user = {$memberUserID}
+                  WHERE id_team = {$teamid}
+                  LIMIT 1";
+
+            // Execute the query:
+            $this->_dbObject->query($q);
+                    
+            if($this->_dbObject->getNumRowsAffected() == 1) { // Update to database was made
+                echo '<div class="alert alert-success">The team has been transferred.</div>';
+
+                // ADD CODE HERE TO SEND EMAIL TO RECEIPIENT
+
+            }
+            else {    
+                echo '<div class="alert alert-error">The team could not be transferred due to a system error.</div>';
+                exit();
+            }
+        }
+
+
+        // Functon to delete team from database
+        public function deleteTeam($teamid)
+        {
+            // Make the query    
+            $q = "DELETE FROM teams WHERE id_team = {$teamid} LIMIT 1";
+
+            // Execute the query:
+            $this->_dbObject->query($q);
+
+            // If the query ran ok.
+            if($this->_dbObject->getNumRowsAffected() == 1) {
+                // Print a message
+                echo '<div class="alert alert-success">This team has been deleted successfully</div>';
+            }
+            else {
+            // If the query did not run ok.
+                echo '<div class="alert alert-error">The team could not be deleted due to a system error</div>';
+                exit();
+            }
+        } // End of deleteTeam function    
+
+
+        // Function to remove player from team if not manager
+        public function removeMember($userID)
+        {
+            // Make the query
+            $q = "DELETE FROM members WHERE id_user = {$userID} LIMIT 1";
+
+            // Execute the query
+            $this->_dbObject->query($q);
+
+            if($this->_dbObject->getNumRowsAffected() == 1) {
+                echo '<div class="alert alert-success">You have successfully removed yourself from the team</div>';
+            }
+            else {
+                echo '<div class="alert alert-error">The removal did not work. Pleaes contact the system admistrator</div>';
+                exit();
+            }
+        } // End of removePlayer function
+    } // End of Class

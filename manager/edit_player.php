@@ -1,90 +1,82 @@
 <?php
-	// This page is for editing a player
-	// This page is accessed through view_roster.php
+    // This page is for editing a player
+    // This page is accessed through view_roster.php
 
-	ob_start();
-	session_start();	
-		
-	require '../includes/config.php';
-	include '../includes/php-functions.php';
+    ob_start();
+    session_start();
 
-	// autoloading of classes
-	function __autoload($class) {
-		require_once('../classes/' . $class . '.php');
-	}
+    require '../includes/config.php';
+    include '../includes/php-functions.php';
 
-	// Validate user
-	checkSessionObject();	
-	
-	// Check user role
-	checkRole('m');
+    // autoloading of classes
+    function __autoload($class) {
+        require_once('../classes/' . $class . '.php');
+    }
 
-	// Assign user object from session variable
-	$user = $_SESSION['userObj'];
-	$userID = $user->getUserID();
+    // Validate user
+    checkSessionObject();    
 
-	// Establish database connection
-	require_once MYSQL2;
+    // Check user role
+    checkRole('m');
 
-	if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z']))
-	{
-		$memberid = $_POST['z'];		
+    // Assign user object from session variable
+    $user = $_SESSION['userObj'];
+    $userID = $user->getUserID();
 
-		// Create member object for use & pull latest data from database & initially set attributes
-		$member = new Member();
-		$member->setDB($db);
-		$member->setMembID($memberid);
-		$member->pullMemberData();
+    // Establish database connection
+    require_once MYSQL2;
 
-		// Check if user is authroized to make edit
-		if (!$member->isManager($userID)) {
-			echo 'You have to be the manager to edit a member.';
-			exit();
-		}
+    if($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['z'])) {
+        $memberid = $_POST['z'];        
 
-		$oldpos = $member->getMemberAttribute('position');
-		$oldjnumb = $member->getMemberAttribute('jersey_numb');
+        // Create member object for use & pull latest data from database & initially set attributes
+        $member = new Member();
+        $member->setMembID($memberid);
+        $member->pullMemberData();
 
-		// Trim all the incoming data:
-		$trimmed = array_map('trim', $_POST);
+        // Check if user is authroized to make edit
+        if(!$member->isManager($userID)) {
+            echo 'You have to be the manager to edit a member.';
+            exit();
+        }
 
-		// Validate position input
-		if (is_string($trimmed['position']) && !empty($trimmed['position'])) {
-			$pos = $trimmed['position'];
-		}
-		else {
-			$pos = $oldpos;
-		}
-		
-		// Validate jersey number input
-		if (filter_var($_POST['jersey_num'], FILTER_VALIDATE_INT)) {
-			$jnumb = $_POST['jersey_num'];
-		}
-		else {
-			$jnumb = $oldjnumb;
-		}
+        $oldpos = $member->getMemberAttribute('position');
+        $oldjnumb = $member->getMemberAttribute('jersey_numb');
 
-		if ($pos && $jnumb) {
-			// Update database
-			$member->editMember($pos, $jnumb);			
-		}
-		else { // Errors in the user entered information
-			echo 'Please try again';
-			exit();	
-		}
-	}
-	else {
-		// No valid ID, kill the script.
-		echo '<p class="error">This page has been accessed in error.</p>';
-		exit();		
-	}
-		
-	// Delete objects
-	unset($member);
-	unset($user);
-			
-	// Close the connection:
-	$db->close();
-	unset($db);
-					
-?>
+        // Trim all the incoming data:
+        $trimmed = array_map('trim', $_POST);
+
+        // Validate position input
+        if(is_string($trimmed['position']) && !empty($trimmed['position'])) {
+            $pos = $trimmed['position'];
+        }
+        else {
+            $pos = $oldpos;
+        }
+
+        // Validate jersey number input
+        if(filter_var($_POST['jersey_num'], FILTER_VALIDATE_INT)) {
+            $jnumb = $_POST['jersey_num'];
+        }
+        else {
+            $jnumb = $oldjnumb;
+        }
+
+        if($pos && $jnumb) {
+            // Update database
+            $member->editMember($pos, $jnumb);
+        }
+        else { // Errors in the user entered information
+            echo 'Please try again';
+            exit();
+        }
+    }
+    else {
+        // No valid ID, kill the script.
+        echo '<p class="error">This page has been accessed in error.</p>';
+        exit();
+    }
+
+    // Delete objects
+    unset($member);
+    unset($user);

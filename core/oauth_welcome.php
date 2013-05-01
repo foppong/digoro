@@ -1,13 +1,13 @@
 <?php
 	// mg_welcome.php
 	// Landing page for a new OAuth User
-		
+
 	require '../includes/config.php';
 	require '../includes/facebook.php';
 	$page_title = 'digoro : Welcome';
 	require_once '../includes/iheader.html';
 	include '../includes/php-functions.php';
-	
+
 	// autoloading of classes
 	function __autoload($class) {
 		require_once('../classes/' . $class . '.php');
@@ -20,19 +20,14 @@
 	  'appId'  => '413593075351071',
 	  'secret' => 'c91c70487679528d6d6b22547db88ea9',
 	));
-	
+
 	// See if there is a user from a cookie
 	$fbuser = $facebook->getUser();
 
-	if (!isset($fbuser)) {
+	if(!isset($fbuser)) {
 		redirect_to('fatbar.php');
 	}
-
-	// Close the connection:
-	$db->close();
-	unset($db);	
 ?>
-
 <h1>Welcome to Digoro!</h1>
 
 <div id="roleQuestion">

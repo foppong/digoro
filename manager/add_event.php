@@ -1,155 +1,129 @@
 <?php
-	// add_event.php
-	// This page allows a logged-in user to add a event to the schedule
+    // add_event.php
+    // This page allows a logged-in user to add a event to the schedule
 
-	ob_start();
-	session_start();	
-			
-	require '../includes/config.php';
-	include '../includes/php-functions.php';
+    ob_start();
+    session_start();
 
-	// autoloading of classes
-	function __autoload($class) {
-		require_once('../classes/' . $class . '.php');
-	}
+    require '../includes/config.php';
+    include '../includes/php-functions.php';
 
-	// Validate user
-	checkSessionObject();	
-	
-	// Check user role
-	checkRole('m');
+    // autoloading of classes
+    function __autoload($class) {
+        require_once('../classes/' . $class . '.php');
+    }
 
-	// Establish database connection
-	require_once MYSQL2;
+    // Validate user
+    checkSessionObject();    
 
-	// Assign user object from session variable
-	$user = $_SESSION['userObj'];
-	$userID = $user->getUserID();
-	
-	// Retrieve current team ID in session
-	$ctmID = $_SESSION['ctmID'];
+    // Check user role
+    checkRole('m');
 
-	if ($_SERVER['REQUEST_METHOD'] == 'POST')
-	{
+    // Establish database connection
+    require_once MYSQL2;
 
-		// Create team object for use & pull latest data from database & initially set attributes - used to add event
-		$team = new Team();
-		$team->setDB($db);
-		$team->setTeamID($ctmID);
-		$team->pullTeamData();
+    // Assign user object from session variable
+    $user = $_SESSION['userObj'];
+    $userID = $user->getUserID();
 
-		// Check if user is authroized to make edit
-		if (!$team->isManager($userID, $ctmID)) {
-			echo 'You have to be the manager to add a member.';
-			exit();
-		}
-		
-		// Assume invalid values:
-		$typ = $gdfrmat = $evtm = $ven = $venadd = FALSE;
+    // Retrieve current team ID in session
+    $ctmID = $_SESSION['ctmID'];
 
-		// Validate event type is selected
-		if ($_POST['add-event-sel-type'])
-		{
-			$typ = $_POST['add-event-sel-type'];
-		}
-		else 
-		{
-			echo 'Please select event type';
-			exit();
-		}
+    if($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-		// Validate event date
-		if ($_POST['add-event-sel-date'])
-		{
-			$bd = new DateTime($_POST['add-event-sel-date']); // Convert js datepicker entry into format database accepts
-			$gdfrmat = $bd->format('Y-m-d');
-		}
-		else 
-		{
-			echo 'Please enter a date';
-			exit();
-		}		
-		
-		// Validate event time
-		if ($_POST['add-event-time'])
-		{
-			$evtm = $_POST['add-event-time'];
-		}
-		else 
-		{
-			echo 'Please enter a time';
-			exit();
-		}
-	
-		// Validate opponent is entered
-		if ($_POST['add-event-opname'])
-		{
-			$opp = $_POST['add-event-opname'];
-		}
-		else 
-		{
-			$opp = '';
-		}
+        // Create team object for use & pull latest data from database & initially set attributes - used to add event
+        $team = new Team();
+        $team->setTeamID($ctmID);
+        $team->pullTeamData();
 
-		// Validate a venue is entered
-		if ($_POST['add-event-vname'])
-		{
-			$ven = $_POST['add-event-vname'];
-		}
-		else 
-		{
-			echo 'Please enter a venue name';
-			exit();
-		}
+        // Check if user is authroized to make edit
+        if(!$team->isManager($userID, $ctmID)) {
+            echo 'You have to be the manager to add a member.';
+            exit();
+        }
 
-		// Validate venue address is enetered
-		if ($_POST['add-event-vadd'])
-		{
-			$venadd = $_POST['add-event-vadd'];
-		}
-		else 
-		{
-			echo 'Please enter a venue address';
-			exit();
-		}
+        // Assume invalid values:
+        $typ = $gdfrmat = $evtm = $ven = $venadd = FALSE;
 
-		// Validate note
-		if ($_POST['add-event-note'])
-		{
-			$note = $_POST['add-event-note'];
-		}
-		else 
-		{
-			$note = ''; 
-		}
+        // Validate event type is selected
+        if($_POST['add-event-sel-type']) {
+            $typ = $_POST['add-event-sel-type'];
+        }
+        else {
+            echo 'Please select event type';
+            exit();
+        }
 
-		// Checks if team is selected and date format and entered time are valid before adding event to team.
-		if ($ctmID && $gdfrmat && $typ && $evtm && $ven && $venadd)
-		{
-			// Create event object for use & push event to database for specified team
-			$event = new Event();
-			$event->setDB($db);
-			$event->createEvent($ctmID, $gdfrmat, $evtm, $opp, $ven, $venadd, $note, $typ);		
-		}
-		else 
-		{									
-			echo 'Please try again';
-			exit();
-		}
-	}
-	else 
-	{
-		// Accsessed without posting to form
-		echo '<p class="error">This page has been accessed in error.</p>';
-		exit();		
-	}
+        // Validate event date
+        if($_POST['add-event-sel-date']) {
+            $bd = new DateTime($_POST['add-event-sel-date']); // Convert js datepicker entry into format database accepts
+            $gdfrmat = $bd->format('Y-m-d');
+        }
+        else {
+            echo 'Please enter a date';
+            exit();
+        }
 
-	// Delete objects
-	unset($event);
-	unset($user);
+        // Validate event time
+        if($_POST['add-event-time']) {
+            $evtm = $_POST['add-event-time'];
+        }
+        else {
+            echo 'Please enter a time';
+            exit();
+        }
+    
+        // Validate opponent is entered
+        if($_POST['add-event-opname']) {
+            $opp = $_POST['add-event-opname'];
+        }
+        else {
+            $opp = '';
+        }
 
-	// Close the connection:
-	$db->close();
-	unset($db);		
+        // Validate a venue is entered
+        if($_POST['add-event-vname']) {
+            $ven = $_POST['add-event-vname'];
+        }
+        else {
+            echo 'Please enter a venue name';
+            exit();
+        }
 
-?>
+        // Validate venue address is enetered
+        if($_POST['add-event-vadd']) {
+            $venadd = $_POST['add-event-vadd'];
+        }
+        else {
+            echo 'Please enter a venue address';
+            exit();
+        }
+
+        // Validate note
+        if($_POST['add-event-note']) {
+            $note = $_POST['add-event-note'];
+        }
+        else {
+            $note = ''; 
+        }
+
+        // Checks if team is selected and date format and entered time are valid before adding event to team.
+        if($ctmID && $gdfrmat && $typ && $evtm && $ven && $venadd) {
+            // Create event object for use & push event to database for specified team
+            $event = new Event();
+            $event->createEvent($ctmID, $gdfrmat, $evtm, $opp, $ven, $venadd, $note, $typ);
+        }
+        else {
+            echo 'Please try again';
+            exit();
+        }
+    }
+    else {
+        // Accsessed without posting to form
+        echo '<p class="error">This page has been accessed in error.</p>';
+        exit();        
+    }
+
+    // Delete objects
+    unset($event);
+    unset($user);
