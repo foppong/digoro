@@ -100,7 +100,7 @@
     $q = "SELECT first_name, last_name, DATE_FORMAT(registration_date, '%M %d, %Y') AS dr, id_user
           FROM users
           ORDER BY {$order_by}
-          LIMIT {$start), {$display}";
+          LIMIT {$start}, {$display}";
 
     // Execute the query & store result
     $results = $dbObject->getAll($q);
