@@ -302,6 +302,7 @@ var EVENT = {
 	      	cache: false
     	});
     }
+
 } 
 
 var TEAMMENU = {
@@ -403,6 +404,51 @@ var TEAMMENU = {
 		
 		menu.append(tmp);
 	},
+
+	pullTeamData: function( data ) {
+  	var _team = this;
+		var data_to_send = { actionvar: 'pullTeamData' };
+
+	  $.ajax({
+	  	type: "POST",
+	    dataType: 'json',
+	    url: "../data/team_data.php",
+	    data: data_to_send, 
+	    error: function() {
+	      alert('Error: Pull Team Data failed');
+	   	},
+	    success: function( data ) { 
+				_team.setTeamInfoPageVars( data );
+				ABOUTTM.make_Edit_Team_Form_sticky( data ); // Call to abtm.js
+	    },
+	    cache: false
+   	});
+	},
+	
+	setTeamInfoPageVars: function( data ) {
+		$('.teamdisplay').html(""); // clear out any prior info
+
+		var teamInfo_array = new Array(); // set up array to store data pulled from database
+	  $(data).each(function(key, val) {
+			var i = 0;
+	  	for (var propertyName in val) {
+	    	teamInfo_array[i] = val[propertyName];
+	    	i++;
+	    }
+	  });
+	  
+	  SelectedTeamName = teamInfo_array[2];  // Assign team name to global variable
+	  SelectedTeamID = teamInfo_array[8]; // Assign team id to global variable
+		$( '.teamdisplay' ).append( SelectedTeamName ); // Set team name for Team Info Tab	  	
+		
+	},
+	
+	
+	setTeamName: function() {
+		$( '.teamdisplay' ).append( SelectedTeamName );
+	},
+
+
 	
 }
 
@@ -414,6 +460,8 @@ $(document).ready(function() {
 
 	// Load about team dialogs
 	TEAMMENU.loadDialog();
+
+	TEAMMENU.displayTeamInfo();
 
 	// Select team from select team form
 	$( "#selectTeam" ).on("submit", function() {
