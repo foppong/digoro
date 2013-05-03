@@ -1,99 +1,75 @@
 <?php
-	/** user_data.php
-	* 
-	*/
-	
-	ob_start();
-	session_start();
-			
-	require '../includes/config.php';
-	include '../includes/php-functions.php';
+    /** user_data.php
+    * 
+    */
 
-	// autoloading of classes
-	function __autoload($class) {
-		require_once('../classes/' . $class . '.php');
-	}
+    ob_start();
+    session_start();
 
-	// Assign user object from session variable
-	if (isset($_SESSION['userObj']))
-	{
-		$user = $_SESSION['userObj'];
-	}
-	else 
-	{
-		redirect_to('index.php');
-	}
+    require '../includes/config.php';
+    include '../includes/php-functions.php';
 
-	// Need the database connection:	
-	require_once MYSQL2;
+    // autoloading of classes
+    function __autoload($class) {
+        require_once('../classes/' . $class . '.php');
+    }
 
-	// Get user ID
-	$userID = $user->getUserID();
+    // Assign user object from session variable
+    if(isset($_SESSION['userObj'])) {
+        $user = $_SESSION['userObj'];
+    }
+    else {
+        redirect_to('index.php');
+    }
 
-	// Request is coming from profile view to query all profiles associated with user
-	if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['actionvar'] == 'pullUserData') {
-		
-		// Make the Query
-		$q = "SELECT first_name, last_name, city, state,
-				zipcode, sex, birth_date, phone_num
-			FROM users			
-			WHERE id_user=?";
+    // Need the database connection:    
+    require_once MYSQL2;
+    $dbObject = MySQLiDbObject::getInstance();
 
-		// Prepare the statement:
-		$stmt = $db->prepare($q);
-			
-		// Bind the inbound variable:
-		$stmt->bind_param('i', $userID);
+    // Get user ID
+    $userID = $user->getUserID();
 
-		// Execute the query:
-		$stmt->execute();		
-						
-		// Store results:
-		$stmt->store_result();
-					
-		// Bind the outbound variable:
-		$stmt->bind_result($fnameOB, $lnameOB, $cityOB, $stateOB, 
-			$zipOB, $sexOB, $bdOB, $phoneOB);
-		
-		// If there are results to show.
-		if ($stmt->num_rows > 0) {
-			// Initialize an array:
-			$json = array();
-					
-			// Fetch and put results in the JSON array...
-			while ($stmt->fetch()) {
+    // Request is coming from profile view to query all profiles associated with user
+    if($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['actionvar'] == 'pullUserData') {
 
-				// Set up for sticky birthday form, opted to break apart here and not in js
-				$bdarrayOB = explode("-", $bdOB);
-				$bdyrOB = $bdarrayOB[0];
-				$bdmnthOB = $bdarrayOB[1];
-				$bddayOB = $bdarrayOB[2];	
+        // Make the Query
+        $q = "SELECT first_name, last_name, city, state,
+                zipcode, sex, birth_date, phone_num
+              FROM users
+              WHERE id_user = {$userID}";
 
-				$json[] = array(
-				'First Name' => $fnameOB,
-				'Last Name' => $lnameOB,
-				'City' => $cityOB,
-				'State' => $stateOB,
-				'Zipcode' => $zipOB,
-				'Sex' => $sexOB,
-				'Phone' => $phoneOB,
-				'Byear' => $bdyrOB,
-				'Bmon' => $bdmnthOB,
-				'Bday' => $bddayOB);						
-			}	// End of WHILE loop
-		
-			// Send the JSON data:
-			echo json_encode($json);
-					
-			// Close the statement:
-			$stmt->close();
-			unset($stmt);			
-		}
-		
-	}
+        // Execute the query and store results 
+        $results = $dbObject->getAll($q);
 
-	// Close the connection:
-	$db->close();
-	unset($db);
+        // If there are results to show.
+        if(count($results) > 0) {
+            // Initialize an array:
+            $json = array();
 
-?>
+            // Fetch and put results in the JSON array...
+            foreach($results as $result) {
+
+                // Set up for sticky birthday form, opted to break apart here and not in js
+                $bdarray = explode("-", $result['birth_date']);
+                $bdyr = $bdarray[0];
+                $bdmnth = $bdarray[1];
+                $bdday = $bdarray[2];    
+
+                $json[] = array(
+                                'First Name' => $result['first_name'],
+                                'Last Name' => $result['last_name'],
+                                'City' => $result['city'],
+                                'State' => $result['state'],
+                                'Zipcode' => $result['zipcode'],
+                                'Sex' => $result['sex'],
+                                'Phone' => $result['phone_num'],
+                                'Byear' => $bdyr,
+                                'Bmon' => $bdmnth,
+                                'Bday' => $bdday
+                             );
+            }// End of FOR loop
+
+            // Send the JSON data:
+            echo json_encode($json);
+        }
+    }

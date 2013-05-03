@@ -1,79 +1,68 @@
 <?php
-	// respond_subresponse.php
-	// This page allows a manager to respond a subresponse
-		
-	ob_start();
-	session_start();
-		
-	require '../includes/config.php';
-	include '../includes/php-functions.php';
+    // respond_subresponse.php
+    // This page allows a manager to respond a subresponse
 
-	// autoloading of classes
-	function __autoload($class) {
-		require_once('../classes/' . $class . '.php');
-	}
+    ob_start();
+    session_start();
 
-	// Validate user
-	checkSessionObject();	
-	
-	// Check user role
-	checkRole('m');
+    require '../includes/config.php';
+    include '../includes/php-functions.php';
 
-	// Need the database connection:
-	require_once MYSQL2;
+    // autoloading of classes
+    function __autoload($class) {
+        require_once('../classes/' . $class . '.php');
+    }
 
-	if ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['SR-response'] == 'confirm' && !empty($_POST['z'])) {
+    // Validate user
+    checkSessionObject();
 
-		$subResponseID = $_POST['z'];
-		$response = $_POST['SR-response'];
-		
-		// Validate comment
-		if ($_POST['respond-SRR-comment']) {
-			$comments = $_POST['respond-SRR-comment'];
-		}
-		else {
-			$comments = '';
-		}
+    // Check user role
+    checkRole('m');
 
-		$subResponse = new SubResponse();
-		$subResponse->setSRRespID($subResponseID);
-		$subResponse->setDB($db);
-		$subResponse->confirmSubReqResp($subResponseID, $comments);	
-		
-			
-	}
-	
-	elseif ($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['SR-response'] == 'decline' && !empty($_POST['z'])) {
+    // Need the database connection:
+    require_once MYSQL2;
 
-		$subResponseID = $_POST['z'];
-		$response = $_POST['SR-response'];
-		
-		// Validate comment
-		if ($_POST['respond-SRR-comment']) {
-			$comments = $_POST['respond-SRR-comment'];
-		}
-		else {
-			$comments = '';
-		}
+    if($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['SR-response'] == 'confirm' && !empty($_POST['z'])) {
 
-		$subResponse = new SubResponse();
-		$subResponse->setSubReqID($subResponseID);
-		$subResponse->setDB($db);
-		$subResponse->declineSubReqResp($subResponseID, $comments);	
+        $subResponseID = $_POST['z'];
+        $response = $_POST['SR-response'];
 
-	}
-	else {
-		// Accsessed without posting to form
-		echo '<p class="error">This page has been accessed in error.</p>';
-		exit();		
-	}
+        // Validate comment
+        if($_POST['respond-SRR-comment']) {
+            $comments = $_POST['respond-SRR-comment'];
+        }
+        else {
+            $comments = '';
+        }
 
-	// Delete objects
-	unset($team);
-	unset($user);
-	
-	// Close the connection:
-	$db->close();
-	unset($db);	
-?>
+        $subResponse = new SubResponse();
+        $subResponse->setSRRespID($subResponseID);
+        $subResponse->confirmSubReqResp($subResponseID, $comments);
+    }
 
+    else if($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['SR-response'] == 'decline' && !empty($_POST['z'])) {
+
+        $subResponseID = $_POST['z'];
+        $response = $_POST['SR-response'];
+
+        // Validate comment
+        if($_POST['respond-SRR-comment']) {
+            $comments = $_POST['respond-SRR-comment'];
+        }
+        else {
+            $comments = '';
+        }
+
+        $subResponse = new SubResponse();
+        $subResponse->setSubReqID($subResponseID);
+        $subResponse->declineSubReqResp($subResponseID, $comments);
+    }
+    else {
+        // Accsessed without posting to form
+        echo '<p class="error">This page has been accessed in error.</p>';
+        exit();
+    }
+
+    // Delete objects
+    unset($team);
+    unset($user);

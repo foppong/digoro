@@ -1,151 +1,107 @@
 <?php
-	/** single_subreq_data.php
-	* This page queries a database, returnnig a single subrequest
-	* 
-	*/
-	
-	ob_start();
-	session_start();
-			
-	require '../includes/config.php';
-	include '../includes/php-functions.php';
-	
-	// autoloading of classes
-	function __autoload($class) {
-		require_once('../classes/' . $class . '.php');
-	}
-	
-	// Assign user object from session variable
-	if (isset($_SESSION['userObj']))
-	{
-		$user = $_SESSION['userObj'];
-	}
-	else 
-	{
-		redirect_to('index.php');
-	}
+    /** single_subreq_data.php
+    * This page queries a database, returnnig a single subrequest
+    * 
+    */
 
-	// Need the database connection:	
-	require_once MYSQL2;
+    ob_start();
+    session_start();
 
-	// Get user ID
-	$userID = $user->getUserID();
+    require '../includes/config.php';
+    include '../includes/php-functions.php';
 
-	// If request is coming from the View SubRequest from the Profile page
-	if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['idSubReq'])) {
+    // autoloading of classes
+    function __autoload($class) {
+        require_once('../classes/' . $class . '.php');
+    }
 
-		$subReqID = $_POST['idSubReq'];
+    // Assign user object from session variable
+    if(isset($_SESSION['userObj'])) {
+        $user = $_SESSION['userObj'];
+    }
+    else {
+        redirect_to('index.php');
+    }
 
-		// Make the Query to find subrequest, event, and team info 
-		$q = "SELECT tm.team_name, tm.level_of_play, e.venue_name, e.venue_address
-			FROM subrequests AS s 
-			INNER JOIN teams AS tm USING (id_team)		
-			INNER JOIN events AS e USING (id_event)
-			WHERE s.id_subrequest=? LIMIT 1";
-		
-		// Prepare the statement:
-		$stmt = $db->prepare($q);
-		
-		// Bind the inbound variable:
-		$stmt->bind_param('i', $subReqID);
-				
-		// Execute the query:
-		$stmt->execute();		
-					
-		// Store results:
-		$stmt->store_result();
-				
-		// Bind the outbound variable:
-		$stmt->bind_result($tmnameOB, $tmlvlOB, $venOB, $venaddOB);
-				
-		// If there are results to show.
-		if ($stmt->num_rows == 1)
-		{
-			// Initialize an array:
-			$json = array();
-					
-			// Fetch and put results in the JSON array...
-			while ($stmt->fetch())
-			{
-				
-				// Translate level of play
-				$tmlevel = translateLevelofPlay($tmlvlOB);
-								
-				$json[] = array(
-				'Team Name' => $tmnameOB,
-				'Team Level' => $tmlevel,
-				'Venue Name' => $venOB,
-				'Venue Addr' => $venaddOB);
-			}	// End of WHILE loop
-		
-			// Send the JSON data:
-			echo json_encode($json);
-					
-			// Close the statement:
-			$stmt->close();
-			unset($stmt);			
-		
-			// Close the connection:
-			$db->close();
-			unset($db);
-		}
-	}
+    // Need the database connection:    
+    require_once MYSQL2;
+    $dbObject = MySQLiDbObject::getInstance();
 
-	// Request is coming from the edit SubRequest on the manager Find Subs page
-	if ($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['subRequestID'])) {
+    // Get user ID
+    $userID = $user->getUserID();
 
-		$subReqID = $_POST['subRequestID'];
+    // If request is coming from the View SubRequest from the Profile page
+    if($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['idSubReq'])) {
 
-		// Make the Query
-		$q = "SELECT id_team, id_event, sex_needed, experience_needed, id_region
-			FROM subrequests 
-			WHERE id_subrequest=? LIMIT 1";
-		
-		// Prepare the statement:
-		$stmt = $db->prepare($q);
-		
-		// Bind the inbound variable:
-		$stmt->bind_param('i', $subReqID);
-				
-		// Execute the query:
-		$stmt->execute();		
-					
-		// Store results:
-		$stmt->store_result();
-				
-		// Bind the outbound variable:
-		$stmt->bind_result($tmidOB, $eventidOB, $sexOB, $expOB, $regOB);
-				
-		// If there are results to show.
-		if ($stmt->num_rows == 1)
-		{
-			// Initialize an array:
-			$json = array();
-					
-			// Fetch and put results in the JSON array...
-			while ($stmt->fetch())
-			{
-						
-				$json[] = array(
-				'Team ID' => $tmidOB,
-				'Event ID' => $eventidOB,
-				'Sex' => $sexOB,
-				'Experience' => $expOB,
-				'Region' => $regOB);
-			}	// End of WHILE loop
-		
-			// Send the JSON data:
-			echo json_encode($json);
-					
-			// Close the statement:
-			$stmt->close();
-			unset($stmt);			
-		
-			// Close the connection:
-			$db->close();
-			unset($db);
-		}
-	}
+        $subReqID = $_POST['idSubReq'];
 
+        // Make the Query to find subrequest, event, and team info 
+        $q = "SELECT tm.team_name, tm.level_of_play, e.venue_name, e.venue_address
+              FROM subrequests AS s
+                  INNER JOIN teams AS tm USING (id_team)        
+                  INNER JOIN events AS e USING (id_event)
+              WHERE s.id_subrequest = {$subReqID}
+              LIMIT 1";
 
-?>
+        // Execute the query & store results
+        $results = $dbObject->getAll($q);
+
+        // If there are results to show.
+        if(count($results) > 0) {
+            // Initialize an array:
+            $json = array();
+
+            // Fetch and put results in the JSON array...
+            foreach($results as $result) {
+                
+                // Translate level of play
+                $tmlevel = translateLevelofPlay($result['level_of_play']);
+
+                $json[] = array(
+                                'Team Name' => $result['team_name'],
+                                'Team Level' => $tmlevel,
+                                'Venue Name' => $result['venue_name'],
+                                'Venue Addr' => $result['venue_address']
+                            );
+            } // End of FOR loop
+
+            // Send the JSON data:
+            echo json_encode($json);
+        }
+    }
+
+    // Request is coming from the edit SubRequest on the manager Find Subs page
+    if($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['subRequestID'])) {
+
+        $subReqID = $_POST['subRequestID'];
+
+        // Make the Query
+        $q = "SELECT id_team, id_event, sex_needed, experience_needed, id_region
+              FROM subrequests
+              WHERE id_subrequest = {$subReqID}
+              LIMIT 1";
+
+        // Execute the query:
+        $results = $dbObject->getAll($q);    
+
+        // If there are results to show.
+        if(count($results) > 0) {
+            // Initialize an array:
+            $json = array();
+
+            // Fetch and put results in the JSON array...
+            foreach($results as $result) {
+
+                $json[] = array(
+                                'Team ID' => $result['id_team'],
+                                'Event ID' => $result['id_event'],
+                                'Sex' => $result['sex_needed'],
+                                'Experience' => $result['experience_needed'],
+                                'Region' => $result['id_region']
+                            );
+            } // End of FOR loop
+
+            // Send the JSON data:
+            echo json_encode($json);
+        }
+    }
