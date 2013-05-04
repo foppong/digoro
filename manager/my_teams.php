@@ -55,10 +55,30 @@
                 </div>
             </div> <!-- end of column for icons --> 
 
+			<div class="span10"> <!-- column for main content --> 
+				<div class="row"> <!-- My Teams header -->
+					<div class="span3">
+						<div class="page-header"><h1>My Teams</h1></div>
+					</div>
+				</div>
 
+				<div class="row"> <!-- Add Team button row -->
+					<div class="span4 offset3">
+						<h4>Add a team that you manage</h4>
+					</div>
+					<div class="span2">
+						<button type="button" id="addTeam" class="btn btn-small btn-primary">Add Team</button>
+					</div>
+				</div>
 
-
-
+				<div class="row"> <!-- Select team row -->
+					<div class="span4">
+						<form method="post" class="form-inline" id="SelectTeamForm">	
+							<select class="span2" name="y" id="y"></select>		
+							<button type="submit" id="selectTeam" class="btn">Select</button>
+						</form>
+					</div>
+				</div>
 
 			<div class="row"> <!-- Team Name header -->
 				<div class="span5">
@@ -100,63 +120,6 @@
 			</div>
 			 
 		</div> <!-- End of main row -->
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            <div class="span10"> <!-- column for main content --> 
-                <div class="row"> <!-- My Teams header -->
-                    <div class="span3">
-                        <div class="page-header"><h1>My Teams</h1></div>
-                    </div>
-                </div>
-                <div class="row"> <!-- Add Team button row -->
-                    <div class="span4 offset3">
-                        <h4>Add a team that you manage</h4>
-                    </div>
-                    <div class="span2">
-                        <button type="button" id="addTeam" class="btn btn-small btn-primary">Add Team</button>
-                    </div>
-                </div>
-                <div class="row"> <!-- Select team row -->
-                    <div class="span4">
-                        <form method="post" class="form-inline" id="SelectTeamForm">    
-                            <select class="span2" name="y" id="y"></select>        
-                            <button type="submit" id="selectTeam" class="btn">Select</button>
-                        </form>
-                    </div>
-                </div>
-                <div class="row"> <!-- row for alerts -->
-                    <div id="status"></div> 
-                </div>                
-                <div class="row"> <!-- Tabs container -->        
-                    <div id="tabmenu" class="ui-tabs">
-                        <ul>
-                            <li><a href="view_abteam.php"><span>Team Info</span></a></li>
-                            <li><a href="view_roster.php"><span>Roster</span></a></li>
-                          <li><a href="view_sch.php"><span>Schedule</span></a></li>
-                        </ul>
-                            <div id="view_abteam.php" class="ui-tabs-hide">Team Info</div>
-                            <div id="view_roster.php" class="ui-tabs-hide">Roster</div>
-                            <div id="view_sch.php" class="ui-tabs-hide">Schedule</div>
-                    </div>
-                </div>
-            </div>
-
-        </div> <!-- End of main row -->
 
 
 
