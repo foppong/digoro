@@ -55,6 +55,68 @@
                 </div>
             </div> <!-- end of column for icons --> 
 
+
+
+
+
+
+			<div class="row"> <!-- Team Name header -->
+				<div class="span5">
+					<h3><span class="page-header teamdisplay"></span></h3> <!-- Name dynamically inserted here -->
+				</div>
+			</div>
+
+				<div class="row"> <!-- row for alerts -->
+					<div id="status"></div> 
+				</div>				
+				
+				<div class="row"> <!-- row for team menu options -->
+						<div class="row"> <!-- row 1 -->
+							<div class="span4 offset1">
+								<a href="view_abteam.php"><img src="../css/imgs/file.png" 
+									alt="world-icon" height="128" width="128"></a>
+								<p>Team Info</p>							
+							</div>
+							<div class="span4">
+								<a href="view_roster.php"><img src="../css/imgs/group.png" 
+									alt="world-icon" height="128" width="128"></a>
+								<p>Roster</p>							
+							</div>							
+						</div>	
+						<div class="row"> <!-- row 2 -->
+							<div class="span4 offset1">
+								<a href="view_sch.php"><img src="../css/imgs/list.png" 
+									alt="world-icon" height="128" width="128"></a>
+								<p>Schedule</p>							
+							</div>
+							<div class="span4">
+								<a href=""><img src="../css/imgs/mail.png" 
+									alt="world-icon" height="128" width="128"></a>
+								<p>Communications</p>							
+							</div>							
+						</div>									
+				</div>
+				
+			</div>
+			 
+		</div> <!-- End of main row -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
             <div class="span10"> <!-- column for main content --> 
                 <div class="row"> <!-- My Teams header -->
                     <div class="span3">
