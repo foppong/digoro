@@ -446,7 +446,7 @@ var TEAMMENU = {
 	
 	setTeamName: function() {
 		$( '.teamdisplay' ).append( SelectedTeamName );
-	},
+	}
 
 
 	
@@ -461,6 +461,8 @@ $(document).ready(function() {
 	// Load about team dialogs
 	TEAMMENU.loadDialog();
 
+	// Load Selected Team Data
+	TEAMMENU.pullTeamData();
 	TEAMMENU.displayTeamInfo();
 
 	// Select team from select team form
