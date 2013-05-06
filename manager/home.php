@@ -28,7 +28,7 @@
 		<div class="row"> <!-- Main row - for all content except footer -->	
 			<div class="span2"> <!-- column for icons --> 
 				<div class="well">
-<?php require_once('../includes/side_nav.html'); ?>
+<?php require_once('../includes/side_nav_manager.html'); ?>
 				</div>
 			</div>
 					

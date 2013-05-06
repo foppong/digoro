@@ -28,9 +28,9 @@
 		<div class="row"> <!-- Main row - for all content except footer -->	
 			<div class="span2"> <!-- column for icons --> 
 				<div class="well">
-<?php require_once('../includes/side_nav.html'); ?>
+<?php require_once('../includes/side_nav_player.html'); ?>
 				</div>
-			</div>
+			</div> <!-- end of column for icons --> 
 					
 			<div class="span10"> <!-- column for main content --> 
 				<div class="row"> <!-- Header row -->
