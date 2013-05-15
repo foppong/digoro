@@ -187,6 +187,5 @@
 
 	<!-- External javascript call -->
 	<script type="text/javascript" src="../js/abtm.js"></script>
-	<script type="text/javascript" src="../js/myteams_pg.js"></script>
 
 <?php include '../includes/footer.html'; ?>
