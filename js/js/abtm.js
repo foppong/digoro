@@ -150,6 +150,33 @@ var EDITTEAM = {
 			}
 		});	
  	},		
+		
+
+	// add team to database
+	add: function() {
+		var _team = this;
+		var form_data = $( '#AddTeamForm form' ).serialize();
+		$.ajax({
+			type: "POST",
+			url: "../core/add_team.php",
+			data: form_data, // Data that I'm sending
+			error: function() {
+				$( '#status' ).append( '<div class="alert alert-error">Add failed</div>' ).slideDown( 'slow' );
+			},
+			success: function( data ) {
+				_team.teamMenu(); // Refresh the team selection menu
+				$( '#status' ).append( data ).slideDown( 'slow' );
+				MISCFUNCTIONS.clearForm( '#AddTeamForm' );
+			},
+			complete: function() {
+				setTimeout(function() {
+					$( '#status' ).slideUp( 'slow' );
+	        $( '#status .alert' ).remove();					
+				}, 2000);
+			},
+			cache: false
+		});
+	},
 
 	// edit team information to database from dialog form
   edit: function() { 
@@ -287,8 +314,8 @@ $(document).ready(function() {
 					
 	// Opens Transfer Team Form dialog
 	$( "#transfer-team" ).on("click", function() {
-		EDITTEAM.loadTransferList();
-		$( "#TransferTeamForm" ).dialog( "open" );
+		TEAM.loadTransferList();
+			$( "#TransferTeamForm" ).dialog( "open" );
 	});
 
 	// Opens Delete Team Form dialog

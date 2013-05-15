@@ -423,7 +423,8 @@ $(document).ready(function() {
 
 	// Load Selected Team Data
 	TEAMDATA.pullTeamData(); // Global function call from projectlbackstar.js
-	
+	//TEAM.displayTeamInfo();
+
 	// Select team from select team form
 	$( "#selectTeam" ).on("submit", function() {
 		TEAM.selectTeam();
