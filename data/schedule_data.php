@@ -1,98 +1,73 @@
 <?php
-	/* schedule_data.php
-	* For managers: This script retrieves all the records from the schedule table.
-	* 
-	*/
-	
-	ob_start();
-	session_start();
-			
-	require '../includes/config.php';
-	include '../includes/php-functions.php';
+    /* schedule_data.php
+    * For managers: This script retrieves all the records from the schedule table.
+    * 
+    */
 
-	// autoloading of classes
-	function __autoload($class) {
-		require_once('../classes/' . $class . '.php');
-	}
+    ob_start();
+    session_start();
 
-	// Assign user object from session variable
-	if (isset($_SESSION['userObj']))
-	{
-		$user = $_SESSION['userObj'];
-	}
-	else 
-	{
-		redirect_to('index.php');
-	}
+    require '../includes/config.php';
+    include '../includes/php-functions.php';
 
-	// Need the database connection:	
-	require_once MYSQL2;
+    // autoloading of classes
+    function __autoload($class) {
+        require_once('../classes/' . $class . '.php');
+    }
 
-	// Retrieve current team ID from session variable
-	$tm = $_SESSION['ctmID'];
+    // Assign user object from session variable
+    if(isset($_SESSION['userObj'])) {
+        $user = $_SESSION['userObj'];
+    }
+    else {
+        redirect_to('index.php');
+    }
 
-	// Make the Query:
-	$q = "SELECT id_event, DATE_FORMAT(date, '%a: %b %e, %Y'), time, opponent, venue_name, result, type
-		FROM events
-		WHERE id_team=?
-		ORDER BY date ASC";
-		
-	// Prepare the statement:
-	$stmt = $db->prepare($q);
-	
-	// Bind the inbound variable:
-	$stmt->bind_param('i', $tm);
-		
-	// Execute the query:
-	$stmt->execute();		
-			
-	// Store results:
-	$stmt->store_result();
-		
-	// Bind the outbound variable:
-	$stmt->bind_result($idOB, $dateOB, $timeOB, $oppOB, $venOB, $resOB, $typeOB);
-		
-	// If there are results to show.
-	if ($stmt->num_rows > 0)
-	{		
-		// Fetch and print all records...
-		while ($stmt->fetch())
-		{		
+    // Need the database connection:
+    require_once MYSQL2;
+    $dbObject = MySQLiDbObject::getInstance();
 
-			// Translate event type data from database
-			$type = translateEventType($typeOB);
+    // Retrieve current team ID from session variable
+    $tm = $_SESSION['ctmID'];
 
-			$json[] = array(
-			'Type' => $type,
-			'Date' => $dateOB,
-			'Time' => $timeOB,
-			'Opponent' => stripslashes($oppOB),
-			'Venue' => stripslashes($venOB),
-			'Result' => $resOB,
-			'Details' => '<button type="button" class="view_event btn btn-mini" value=' . $idOB . '>View</button>',
-			'Edit' => '<button type="button" class="edit_event btn btn-mini" value=' . $idOB . '>Edit</button>',
-			'Delete' => '<button type="button" class="delete_event btn btn-mini" value=' . $idOB . '>Delete</button>');
-		}	// End of WHILE loop
-			
-		// Send the JSON data:
-		echo json_encode($json);
+    // Make the Query:
+    $q = "SELECT id_event, DATE_FORMAT(date, '%a: %b %e, %Y') AS date_string, time, 
+                 opponent, venue_name, result, type
+          FROM events
+          WHERE id_team = {$tm}
+          ORDER BY date ASC";
 
-	}
-	else 
-	{	// No events or events scheduled
-		
-		$json[] = array('<p class="error">You have no events scheduled. Click the add event button to add a event.');
-			
-		// Send the JSON data:
-		echo json_encode($json);
-	}	
+    // Execute the query & store results
+    $results = $dbObject->getAll($q);
 
-	// Close the statement:
-	$stmt->close();
-	unset($stmt);			
+    // If there are results to show.
+    if(count($results) > 0) {
+        // Fetch and print all records...
+        foreach($results as $result) {
 
-	// Close the connection:
-	$db->close();
-	unset($db);
+            // Translate event type data from database
+            $type = translateEventType($result['type']);
 
-?>
+            $json[] = array(
+                            'Type' => $type,
+                            'Date' => $result['date_string'],
+                            'Time' => $result['time'],
+                            'Opponent' => stripslashes($result['opponent']),
+                            'Venue' => stripslashes($result['opponent']),
+                            'Result' => $result['result'],
+                            'Details' => '<button type="button" class="view_event btn btn-mini" value=' . $result['id_event'] . '>View</button>',
+                            'Edit' => '<button type="button" class="edit_event btn btn-mini" value=' . $result['id_event'] . '>Edit</button>',
+                            'Delete' => '<button type="button" class="delete_event btn btn-mini" value=' . $result['id_event'] . '>Delete</button>'
+                        );
+        } // End of FOR loop
+
+        // Send the JSON data:
+        echo json_encode($json);
+    }
+    else { // No events or events scheduled
+
+        $json[] = array('<p class="error">You have no events scheduled. Click the add event button to add a event.');
+
+        // Send the JSON data:
+        echo json_encode($json);
+    }

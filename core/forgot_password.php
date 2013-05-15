@@ -10,134 +10,93 @@
 	function __autoload($class) {
 		require_once('../classes/' . $class . '.php');
 	}
-		
-	if ($_SERVER['REQUEST_METHOD'] == 'POST')
-	{
+
+	if($_SERVER['REQUEST_METHOD'] == 'POST') {
 		require MYSQL2;
-		
+        $dbObject = MySQLiDbObject::getInstance();
+
 		$e = $e2 = '';
-		
+
 		// Assume nothing:
 		$ue = FALSE;
 
 		// Validate email address
-		if (filter_var($_POST['email'], FILTER_VALIDATE_EMAIL))
-		{
+		if(filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
 			$e = $_POST['email'];
 		}
-		else 
-		{
+		else {
 			$e = FALSE;
 			echo '<p class="error"> Please enter valid email address!</p>';
 		}
 
 		// Validate confirm email address
-		if (filter_var($_POST['email2'], FILTER_VALIDATE_EMAIL))
-		{
+		if(filter_var($_POST['email2'], FILTER_VALIDATE_EMAIL)) {
 			$e2 = $_POST['email2'];
 		}
-		else 
-		{
-
+		else {
 			echo '<p class="error"> Please enter valid email address!</p>';
 		}
 
 		// Check if both emails entered are the same, then set the final user email variable
-		if ($_POST['email'] == $_POST['email2'])
-		{
+		if($_POST['email'] == $_POST['email2']) {
 			$ue = $_POST['email'];
-		}	
-		else 
-		{
+		}
+		else {
 			echo '<p class="error">Your email did not match the confirmed email!</p>';
 		}
-	
 
-		
+
+
 		// If email entered is valid, proceed to verify the email address in database
-		if ($ue)
-		{
-			// Make the query	
-			$q = 'SELECT id_user FROM users WHERE email=? LIMIT 1';
+		if($ue) {
+			// Make the query
+			$q = "SELECT id_user FROM users WHERE email = '{$dbObject->realEscapeString($ue)}' LIMIT 1";
 
-			// Prepare the statement
-			$stmt = $db->prepare($q);
-
-			// Bind the inbound variable:
-			$stmt->bind_param('s', $ue);
-
-			// Execute the query:
-			$stmt->execute();
-			
-			// Store result:
-			$stmt->store_result();
-
-			// Bind the outbound variable:
-			$stmt->bind_result($id_fetch);
-
-			// Assign the outbound variables			
-			while ($stmt->fetch())
-			{
-				$id_user = $id_fetch;
-			}
+			// Execute the query & store result:
+			$id_user = $dbObject->getOne($q);
 
 			$hasher = new PasswordHash($hash_cost_log2, $hash_portable);
 
 			// Email was not found in database
-			if ($stmt->num_rows == 0)
-			{
+			if($id_user === false) {
 				echo '<p class="error"> The submitted email address does not match those on file!</p>';
 			}
-			else 
-			{	// Email was found in database
-				
+			else { // Email was found in database
+
 				// Create a new, random password:
 				$p = substr(md5(uniqid(rand(), true)), 3, 10);
-		
+
 				$hash = $hasher->HashPassword($p);
-				if (strlen($hash) < 20)
-				{
+				if(strlen($hash) < 20) {
 					fail('Failed to hash new password');
 				}
 				unset($hasher);
-				
-				// Make the query
-				$q = "UPDATE users SET pass=? WHERE id_user=? LIMIT 1";
-	
-				// Prepare the statement
-				$stmt = $db->prepare($q);
-	
-				// Bind the inbound variable:
-				$stmt->bind_param('si', $hash, $id_user);
-	
-				// Execute the query:
-				$stmt->execute();
 
-				if ($stmt->affected_rows == 1) // It ran OK.
-				{
+				// Make the query
+				$q = "UPDATE users
+                      SET pass = '{$dbObject->realEscapeString($hash)}'
+                      WHERE id_user = {$id_user}
+                      LIMIT 1";
+
+				// Prepare the statement
+				$dbObject->query($q);
+
+				if($dbObject->getNumRowsAffected() == 1) { // It ran OK.
+
 					// Send an email:
 					$body = "Your password to log into digoro has been temporarily changed to: \n\n$p\n\nPlease log in using this password and your email address. Then you may change your password once into the system.";
 					$body = wordwrap($body, 70);
-					mail ($ue, 'digoro.com - Your temporary password.', $body);
-					
+					mail($ue, 'digoro.com - Your temporary password.', $body);
+
 					// Print message on screen
 					echo '<h2>Your password has been changed. You will receive the new, temporary password at the
 						email address with which you registered. Once you have logged in with this password,
 						you may change it by clicking on the "Change Password" link.</h2>';
-						
-					// Close the statement:
-					$stmt->close();
-					unset($stmt);
-					
-					// Close the connection:
-					$db->close();
-					unset($db);
 
 					include '../includes/ifooter.html';
-					exit();	
+					exit();
 				}
-				else 
-				{
+				else {
 					echo '<p class="error">Your password could not be changed due to a system error. We apologize
 						for any inconvenience.</p>';
 				}
@@ -145,18 +104,11 @@
 			// Close hasher
 			unset($hasher);
 		}
-		else
-		{
+		else {
 			echo '<p class="error">Please try again.</p>';
 		}
-		
-		$db->close();
-		unset($db);
 	}
 ?>
-
-
-
 </head>
 <body>
 	<div id="Header">
@@ -180,7 +132,4 @@
 		<input type="submit" name="submit" id="submit" value="Reset My Password" />
 		</fieldset>
 	</form>
-
 <?php include '../includes/ifooter.html'; ?>
-
-

@@ -1,91 +1,67 @@
 <?php
-	/* upcoming_events_data.php
-	* 
-	* 
-	*/
-	
-	ob_start();
-	session_start();
-			
-	require '../includes/config.php';
-	include '../includes/php-functions.php';
+    /* upcoming_events_data.php
+    * 
+    * 
+    */
 
-	// autoloading of classes
-	function __autoload($class) {
-		require_once('../classes/' . $class . '.php');
-	}
+    ob_start();
+    session_start();
 
-	// Assign user object from session variable
-	if (isset($_SESSION['userObj']))
-	{
-		$user = $_SESSION['userObj'];
-	}
-	else 
-	{
-		redirect_to('index.php');
-	}
+    require '../includes/config.php';
+    include '../includes/php-functions.php';
 
-	// Need the database connection:	
-	require_once MYSQL2;
+    // autoloading of classes
+    function __autoload($class) {
+        require_once('../classes/' . $class . '.php');
+    }
 
-	// Get user ID
-	$userID = $user->getUserID();
+    // Assign user object from session variable
+    if(isset($_SESSION['userObj'])) {
+        $user = $_SESSION['userObj'];
+    }
+    else {
+        redirect_to('index.php');
+    }
 
-	// Make the Query:
-	$q = "SELECT DATE_FORMAT(e.date, '%W: %M %e, %Y'), e.time, e.venue_name, tm.team_name
-		FROM members AS mb
-		INNER JOIN events AS e USING (id_team)
-		INNER JOIN teams AS tm USING (id_team) 
-		WHERE mb.id_user=? && e.date >= CURDATE()
-		ORDER BY e.date ASC LIMIT 5";
-		
-	// Prepare the statement:
-	$stmt = $db->prepare($q);
-	
-	// Bind the inbound variable:
-	$stmt->bind_param('i', $userID);
-		
-	// Execute the query:
-	$stmt->execute();		
-			
-	// Store results:
-	$stmt->store_result();
-		
-	// Bind the outbound variable:
-	$stmt->bind_result($dateOB, $timeOB, $venOB, $teamOB);
-		
-	// If there are results to show.
-	if ($stmt->num_rows > 0)
-	{		
-		// Fetch and print all records...
-		while ($stmt->fetch())
-		{		
-			$json[] = array(
-			'Edate' => $dateOB,
-			'Etime' => $timeOB,
-			'Venue' => $venOB,
-			'TName' => $teamOB);
-		}	// End of WHILE loop
-			
-		// Send the JSON data:
-		echo json_encode($json);
+    // Need the database connection:    
+    require_once MYSQL2;
+    $dbObject = MySQLiDbObject::getInstance();
 
-	}
-	else 
-	{	// No events or events scheduled
-		
-		$json[] = array('<p class="error">You have no events scheduled.');
-			
-		// Send the JSON data:
-		echo json_encode($json);
-	}	
+    // Get user ID
+    $userID = $user->getUserID();
 
-	// Close the statement:
-	$stmt->close();
-	unset($stmt);			
+    // Make the Query:
+    $q = "SELECT DATE_FORMAT(e.date, '%W: %M %e, %Y') AS date_string, e.time,
+                 e.venue_name, tm.team_name
+          FROM members AS mb
+              INNER JOIN events AS e USING (id_team)
+              INNER JOIN teams AS tm USING (id_team)
+          WHERE mb.id_user = {$userID} && e.date >= CURDATE()
+          ORDER BY e.date ASC
+          LIMIT 5";
 
-	// Close the connection:
-	$db->close();
-	unset($db);
+    // Execute the query and store results
+    $results = $dbObject->getAll($q);
 
-?>
+    // If there are results to show.
+    if(count($results) > 0) {
+        // Fetch and print all records...
+        foreach($results as $result) {
+            $json[] = array(
+                            'Edate' => $result['date_string'],
+                            'Etime' => $result['time'],
+                            'Venue' => $result['venue_name'],
+                            'TName' => $result['team_name']
+                        );
+        } // End of FOR loop
+
+        // Send the JSON data:
+        echo json_encode($json);
+    }
+    else { // No events or events scheduled
+
+        $json[] = array('<p class="error">You have no events scheduled.');
+
+        // Send the JSON data:
+        echo json_encode($json);
+    }
