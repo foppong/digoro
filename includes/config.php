@@ -34,7 +34,7 @@
 		
 		// Define the constants
 		define ('BASE_URI', 'C:/xampp/htdocs/');
-		define ('BASE_URL', 'https://localhost/');
+		define ('BASE_URL', 'http://digoro/');
 		define ('MYSQL1', 'nonWeb/mysqli_connect_dev.php');
 		define ('MYSQL2', '../nonWeb/mysqli_connect_dev.php');
 
