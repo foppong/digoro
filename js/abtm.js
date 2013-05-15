@@ -9,27 +9,96 @@ $.ajaxSetup({"error":function(XMLHttpRequest,textStatus, errorThrown) {
       alert(XMLHttpRequest.responseText);
   }});
 
+var ABOUTTM = {
 
-var TEAM = {
+	displayTeamInfo: function() { // Function to display the basic team information
+  	var _team = this;
+		var data_to_send = { actionvar: 'pullDisplayTeamData' };
+
+	  $.ajax({
+	  	type: "POST",
+	    dataType: 'json',
+	    url: "../data/team_data.php",
+	    data: data_to_send, 
+	    error: function() {
+	      alert('Error: displayTeamInfo failed');
+	   	},
+	    success: function( data ) { 
+				_team.buildTeamDisplay( data );
+	    },
+	    cache: false
+   	});		
+	},
+	
+	buildTeamDisplay: function( data ) { // Function to dynamically build the team html information
+		$('#teamInfo').html(""); // clear out any prior info
+	  $( 'form #z' ).remove(); // clear out any prior info
+
+		var teamInfo_array = new Array(); // set up array to store data pulled from database
+	  $(data).each(function(key, val) {
+			var i = 0;
+	  	for (var propertyName in val) {
+	    	teamInfo_array[i] = val[propertyName];
+	    	i++;
+	    }
+	  });
+	  
+		$( '#teamInfo' )
+			.append( '<p>Sport: ' + teamInfo_array[3] + '</p>' )
+			.append( '<p>Team Email: ' + teamInfo_array[4] + '</p>')
+			.append( '<p>Team Gender: ' + teamInfo_array[5] + '</p>')
+			.append( '<p>Level of Play: ' + teamInfo_array[6] + '</p>')
+			.append( '<p>Manager Info:</p>')
+			.append( '<p>Name: ' + teamInfo_array[0] + '</p>')
+			.append( '<p>Email: ' + teamInfo_array[1] + '</p>')
+			.append( '<p>Location: ' + teamInfo_array[7] + '</p>')
+			.append( '<p>Other info: ' + teamInfo_array[8] + '</p>')	  
+	},
+
+
+
+	
+	displayinfo: function ( data ) {
+
+		var teamInfo_array = new Array(); // set up array to store data pulled from database
+	  $(data).each(function(key, val) {
+			var i = 0;
+	  	for (var propertyName in val) {
+	    	teamInfo_array[i] = val[propertyName];
+	    	i++;
+	    }
+	  });	
+		
+		$( '#page-header' ).append( '<h3>' + teamInfo_array[2] + ' Team Info</h3>' );
+	},
+	
+  make_Edit_Team_Form_sticky: function( data ) {
+
+		var teamInfo_array = new Array(); // set up array to store data pulled from database
+	  $(data).each(function(key, val) {
+			var i = 0;
+	  	for (var propertyName in val) {
+	    	teamInfo_array[i] = val[propertyName];
+	    	i++;
+	    }
+	  });	
+  	
+		$( '#edit-team-sel-sport' ).val( teamInfo_array[0] );
+		$( '#edit-team-name' ).val( teamInfo_array[2] );
+		$( '#edit-team-sel-sex' ).val( teamInfo_array[6] );
+		$( '#edit-team-sel-region' ).val( teamInfo_array[5] );
+		$( '#edit-team-sel-level-play' ).val( teamInfo_array[4] );
+		$( '#edit-team-email' ).val( teamInfo_array[7] );
+		$( '#edit-team-abouttm' ).val( teamInfo_array[3] );
+		
+  }
+
+}
+
+
+var EDITTEAM = {
  
  	loadDialog: function() { 
-		$("#AddTeamForm").dialog({
-			autoOpen: false,
-			height: 'auto',
-			width: 'auto',
-			modal: true,
-			buttons: {
-				"Add Team": function(){
-					TEAM.add();
-					$( this ).dialog( "close" );
-				},
-				Cancel: function() {
-					$( this ).dialog( "close" );
-					MISCFUNCTIONS.clearForm( '#AddTeamForm form' );
-				}
-			}
-		});
-
 		$( "#EditTeamForm" ).dialog({
 			autoOpen: false,
 			height: 'auto',
@@ -81,6 +150,33 @@ var TEAM = {
 			}
 		});	
  	},		
+		
+
+	// add team to database
+	add: function() {
+		var _team = this;
+		var form_data = $( '#AddTeamForm form' ).serialize();
+		$.ajax({
+			type: "POST",
+			url: "../core/add_team.php",
+			data: form_data, // Data that I'm sending
+			error: function() {
+				$( '#status' ).append( '<div class="alert alert-error">Add failed</div>' ).slideDown( 'slow' );
+			},
+			success: function( data ) {
+				_team.teamMenu(); // Refresh the team selection menu
+				$( '#status' ).append( data ).slideDown( 'slow' );
+				MISCFUNCTIONS.clearForm( '#AddTeamForm' );
+			},
+			complete: function() {
+				setTimeout(function() {
+					$( '#status' ).slideUp( 'slow' );
+	        $( '#status .alert' ).remove();					
+				}, 2000);
+			},
+			cache: false
+		});
+	},
 
 	// edit team information to database from dialog form
   edit: function() { 
@@ -159,184 +255,28 @@ var TEAM = {
 	    cache: false		
 		});
 		
-	},
-	
-
-	
-	pullTeamData: function( data ) {
-  	var _team = this;
-		var data_to_send = { actionvar: 'pullTeamData' };
-
-	  $.ajax({
-	  	type: "POST",
-	    dataType: 'json',
-	    url: "../data/team_data.php",
-	    data: data_to_send, 
-	    error: function() {
-	      alert('Error: Pull Team Data failed');
-	   	},
-	    success: function( data ) { 
-				_team.setTeamInfoPageVars( data );
-				ABOUTTM.make_Edit_Team_Form_sticky( data ); // Call to abtm.js
-	    },
-	    cache: false
-   	});
-	},
-	
-	setTeamInfoPageVars: function( data ) {
-		$('.teamdisplay').html(""); // clear out any prior info
-
-		var teamInfo_array = new Array(); // set up array to store data pulled from database
-	  $(data).each(function(key, val) {
-			var i = 0;
-	  	for (var propertyName in val) {
-	    	teamInfo_array[i] = val[propertyName];
-	    	i++;
-	    }
-	  });
-	  
-	  SelectedTeamName = teamInfo_array[2];  // Assign team name to global variable
-	  SelectedTeamID = teamInfo_array[8]; // Assign team id to global variable
-		$( '.teamdisplay' ).append( SelectedTeamName ); // Set team name for Team Info Tab	  	
-		
-	},
-	
-	
-	setTeamName: function() {
-		$( '.teamdisplay' ).append( SelectedTeamName );
-	},
-
-
-	displayTeamInfo: function() {
-  	var _team = this;
-		var data_to_send = { actionvar: 'pullDisplayTeamData' };
-
-	  $.ajax({
-	  	type: "POST",
-	    dataType: 'json',
-	    url: "../data/team_data.php",
-	    data: data_to_send, 
-	    error: function() {
-	      alert('Error: displayTeamInfo failed');
-	   	},
-	    success: function( data ) { 
-				_team.buildTeamDisplay( data );
-	    },
-	    cache: false
-   	});		
-	},
-	
-	buildTeamDisplay: function( data ) {
-		$('#teamInfo').html(""); // clear out any prior info
-	  $( 'form #z' ).remove(); // clear out any prior info
-
-		var teamInfo_array = new Array(); // set up array to store data pulled from database
-	  $(data).each(function(key, val) {
-			var i = 0;
-	  	for (var propertyName in val) {
-	    	teamInfo_array[i] = val[propertyName];
-	    	i++;
-	    }
-	  });
-	  
-		$( '#teamInfo' )
-			.append( '<p>Sport: ' + teamInfo_array[3] + '</p>' )
-			.append( '<p>Team Email: ' + teamInfo_array[4] + '</p>')
-			.append( '<p>Team Gender: ' + teamInfo_array[5] + '</p>')
-			.append( '<p>Level of Play: ' + teamInfo_array[6] + '</p>')
-			.append( '<p>Manager Info:</p>')
-			.append( '<p>Name: ' + teamInfo_array[0] + '</p>')
-			.append( '<p>Email: ' + teamInfo_array[1] + '</p>')
-			.append( '<p>Location: ' + teamInfo_array[7] + '</p>')
-			.append( '<p>Other info: ' + teamInfo_array[8] + '</p>')	  
-	},
-	
-	loadTransferList: function() {
-  	var _team = this;
-		var data_to_send = { actionvar: 'pullTransferListData' };
-  			
-		// Ajax call to retrieve list of users on team	
-		$.ajax({
-			type: "POST",
-			dataType: 'json',
-			url: "../data/roster_data.php",
-			data: data_to_send,
-			success: function( data ) {
-				_team.buildTransferSelect( data );
-			},
-			error: function() {
-				alert('load transfer list: error occured!');
-			}
-		});			
-	},
-	
-	buildTransferSelect: function( data ) {    
-		var tmp = '';
-		var menu = $( "#transferlist" );
-		menu.html(""); // clear out slection menu if it was previously populated
-		menu.append("<option value=''>-Select Member-</options>");
-	
-		$(data).each(function(key, val) {
-			tmp += "<option value=" + val.MemberUserID + ">" + val.MemberName + "</options>";
-		});
-		
-		menu.append(tmp);	
 	}
-}
-
-var ABOUTTM = {
-	
-	displayinfo: function ( data ) {
-
-		var teamInfo_array = new Array(); // set up array to store data pulled from database
-	  $(data).each(function(key, val) {
-			var i = 0;
-	  	for (var propertyName in val) {
-	    	teamInfo_array[i] = val[propertyName];
-	    	i++;
-	    }
-	  });	
-		
-		$( '#page-header' ).append( '<h3>' + teamInfo_array[2] + ' Team Info</h3>' );
-	},
-	
-  make_Edit_Team_Form_sticky: function( data ) {
-
-		var teamInfo_array = new Array(); // set up array to store data pulled from database
-	  $(data).each(function(key, val) {
-			var i = 0;
-	  	for (var propertyName in val) {
-	    	teamInfo_array[i] = val[propertyName];
-	    	i++;
-	    }
-	  });	
-  	
-		$( '#edit-team-sel-sport' ).val( teamInfo_array[0] );
-		$( '#edit-team-name' ).val( teamInfo_array[2] );
-		$( '#edit-team-sel-sex' ).val( teamInfo_array[6] );
-		$( '#edit-team-sel-region' ).val( teamInfo_array[5] );
-		$( '#edit-team-sel-level-play' ).val( teamInfo_array[4] );
-		$( '#edit-team-email' ).val( teamInfo_array[7] );
-		$( '#edit-team-abouttm' ).val( teamInfo_array[3] );
-		
-  }
-
-
 	
 }
+
+
+
 
 
 $(document).ready(function() {
 	
-	//Load team data
-	//TEAM.pullTeamData();
 
 	// Load about team dialogs
-	TEAM.loadDialog();
+	EDITTEAM.loadDialog();
 					
 	// Load Selected Team Data
 	TEAM.pullTeamData();
-	TEAM.displayTeamInfo();
+	//TEAM.displayTeamInfo();
+
+	// Load Selected Team Data
+	TEAMDATA.pullTeamData(); // Global function call from projectlbackstar.js
+	ABOUTTM.displayTeamInfo();
+
 
 					
 	// Opens Edit Team Form dialog

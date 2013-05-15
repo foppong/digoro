@@ -302,11 +302,10 @@ var EVENT = {
 	      	cache: false
     	});
     }
-
 } 
 
-var TEAMMENU = {
-
+var TEAM = {
+ 
  	loadDialog: function() { 
 		$("#AddTeamForm").dialog({
 			autoOpen: false,
@@ -324,29 +323,9 @@ var TEAMMENU = {
 				}
 			}
 		});
-	},
+ 	},		
+		
 
-	selectTeam: function () {
-    	var form_data = $( '#SelectTeamForm' ).serialize();
-	    $.ajax({
-	      	type: "POST",
-	      	url: "../manager/manager_home.php",
-	      	data: form_data, // Data that I'm sending
-	      	error: function(jqXHR, textStatus, errorThrown) {
-	        	$( '#status' ).append( '<div class="alert alert-error">Selection failed</div>' ).slideDown( 'slow' );
-	     	},
-	      	success: function( data ) {   
-	        	MISCFUNCTIONS.clearForm( '#SelectTeamForm' );
-	      	},
-	      	complete: function() {
-	        	setTimeout(function() {
-	          		$( '#status' ).slideUp( 'slow' );
-	        	}, 2000);
-	      	},
-	      	cache: false
-    	});			
-	},
-	
 	// add team to database
 	add: function() {
 		var _team = this;
@@ -404,10 +383,15 @@ var TEAMMENU = {
 		
 		menu.append(tmp);
 	},
+	
+	setTeamName: function() {
+		$( '.teamdisplay' ).append( SelectedTeamName );
+	},
 
-	pullTeamData: function( data ) {
+
+	displayTeamInfo: function() { // Function to display the basic team information
   	var _team = this;
-		var data_to_send = { actionvar: 'pullTeamData' };
+		var data_to_send = { actionvar: 'pullDisplayTeamData' };
 
 	  $.ajax({
 	  	type: "POST",
@@ -415,18 +399,18 @@ var TEAMMENU = {
 	    url: "../data/team_data.php",
 	    data: data_to_send, 
 	    error: function() {
-	      alert('Error: Pull Team Data failed');
+	      alert('Error: displayTeamInfo failed');
 	   	},
 	    success: function( data ) { 
-				_team.setTeamInfoPageVars( data );
-				ABOUTTM.make_Edit_Team_Form_sticky( data ); // Call to abtm.js
+				_team.buildTeamDisplay( data );
 	    },
 	    cache: false
-   	});
+   	});		
 	},
 	
-	setTeamInfoPageVars: function( data ) {
-		$('.teamdisplay').html(""); // clear out any prior info
+	buildTeamDisplay: function( data ) { // Function to dynamically build the team html information
+		$('#teamInfo').html(""); // clear out any prior info
+	  $( 'form #z' ).remove(); // clear out any prior info
 
 		var teamInfo_array = new Array(); // set up array to store data pulled from database
 	  $(data).each(function(key, val) {
@@ -437,17 +421,70 @@ var TEAMMENU = {
 	    }
 	  });
 	  
-	  SelectedTeamName = teamInfo_array[2];  // Assign team name to global variable
-	  SelectedTeamID = teamInfo_array[8]; // Assign team id to global variable
-		$( '.teamdisplay' ).append( SelectedTeamName ); // Set team name for Team Info Tab	  	
-		
+		$( '#teamInfo' )
+			.append( '<p>Sport: ' + teamInfo_array[3] + '</p>' )
+			.append( '<p>Team Email: ' + teamInfo_array[4] + '</p>')
+			.append( '<p>Team Gender: ' + teamInfo_array[5] + '</p>')
+			.append( '<p>Level of Play: ' + teamInfo_array[6] + '</p>')
+			.append( '<p>Manager Info:</p>')
+			.append( '<p>Name: ' + teamInfo_array[0] + '</p>')
+			.append( '<p>Email: ' + teamInfo_array[1] + '</p>')
+			.append( '<p>Location: ' + teamInfo_array[7] + '</p>')
+			.append( '<p>Other info: ' + teamInfo_array[8] + '</p>')	  
 	},
 	
+	loadTransferList: function() {
+  	var _team = this;
+		var data_to_send = { actionvar: 'pullTransferListData' };
+  			
+		// Ajax call to retrieve list of users on team	
+		$.ajax({
+			type: "POST",
+			dataType: 'json',
+			url: "../data/roster_data.php",
+			data: data_to_send,
+			success: function( data ) {
+				_team.buildTransferSelect( data );
+			},
+			error: function() {
+				alert('load transfer list: error occured!');
+			}
+		});			
+	},
 	
-	setTeamName: function() {
-		$( '.teamdisplay' ).append( SelectedTeamName );
+	buildTransferSelect: function( data ) {    
+		var tmp = '';
+		var menu = $( "#transferlist" );
+		menu.html(""); // clear out slection menu if it was previously populated
+		menu.append("<option value=''>-Select Member-</options>");
+	
+		$(data).each(function(key, val) {
+			tmp += "<option value=" + val.MemberUserID + ">" + val.MemberName + "</options>";
+		});
+		
+		menu.append(tmp);	
 	},
 
+	selectTeam: function () {
+    	var form_data = $( '#SelectTeamForm' ).serialize();
+	    $.ajax({
+	      	type: "POST",
+	      	url: "../manager/manager_home.php",
+	      	data: form_data, // Data that I'm sending
+	      	error: function(jqXHR, textStatus, errorThrown) {
+	        	$( '#status' ).append( '<div class="alert alert-error">Selection failed</div>' ).slideDown( 'slow' );
+	     	},
+	      	success: function( data ) {   
+	        	MISCFUNCTIONS.clearForm( '#SelectTeamForm' );
+	      	},
+	      	complete: function() {
+	        	setTimeout(function() {
+	          		$( '#status' ).slideUp( 'slow' );
+	        	}, 2000);
+	      	},
+	      	cache: false
+    	});			
+	}
 
 	
 }
@@ -456,22 +493,25 @@ var TEAMMENU = {
 $(document).ready(function() {
 
 	// Load teams associated with user into select menu
-	TEAMMENU.teamMenu();	
+	TEAM.teamMenu();	
 
 	// Load about team dialogs
-	TEAMMENU.loadDialog();
+	TEAM.loadDialog();
 
-	TEAMMENU.displayTeamInfo();
+	// Load Selected Team Data
+	TEAMDATA.pullTeamData(); // Global function call from projectlbackstar.js
+	TEAM.displayTeamInfo();
 
 	// Select team from select team form
 	$( "#selectTeam" ).on("submit", function() {
-		TEAMMENU.selectTeam();
+		TEAM.selectTeam();
 	})
 	
 	// Code for triggering add team dialog
 	$( "#addTeam" ).on("click", function() {
 		// Load add Team dialog
-		TEAMMENU.loadDialog();
+		TEAM.loadDialog();
+
 		$( "#AddTeamForm" ).dialog( "open" );
 	});
 
