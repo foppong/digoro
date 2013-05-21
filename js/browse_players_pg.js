@@ -53,7 +53,7 @@ var FINDPLAYER = {
 $(document).ready(function() {
 
 
-	// Code for triggering account edit
+	// Code for player search
 	$( "#searchforplayers" ).on("click", function() {
 		// Load subrequests that match user
 		FINDPLAYER.loadMatched_Players();

@@ -118,7 +118,7 @@
 	function translateTmSex($sex) {
 		switch ($sex) {
 			case 1: //  Female
-				$sex = 'Coed';
+				$sex = 'COED';
 				return $sex;
 				break;
 				
