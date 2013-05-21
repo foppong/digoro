@@ -34,13 +34,13 @@
 				$reg = $_POST['search-PL-sel-reg'];
 
         // Make the Query
-        $q = "SELECT p.id_profile, p.id_user, p.team_sex_preference, p.id_region
-        						 p.id_sport, p.sport_experience, p.primary_position, p.secondary_position,
+        $q = "SELECT p.id_profile, p.id_user, p.team_sex_preference, p.id_region,
+        						 p.id_sport, p.sport_experience,
         						 CONCAT(p.primary_position, ', ',p.secondary_position) AS pos,
-        						 CONCAT(u.first_name, ' ', u.last_name) AS name
+        						 CONCAT(u.first_name, ' ', u.last_name) AS name, u.sex
               FROM profiles AS p
                   INNER JOIN users AS u USING (id_user)
-              WHERE p.team_sex_preference = {$sex} AND p.id_sport = {$sport} AND
+              WHERE u.sex = {$sex} AND p.id_sport = {$sport} AND
               			p.sport_experience = {$exp} AND p.id_region = {$reg}
               ORDER BY name";
 
@@ -64,11 +64,12 @@
                 // Translate region
                 $plrreg = translateRegion($result['id_region']);
 
-                // Translate team sex
-                $teamsex = translateTmSex($result['team_sex_preference']);
+                // Translate player sex
+                $plrsex = translateSex($result['sex']);
 
                 $json[] = array(
                                 'Player Name' => $result['name'],
+                                'Sex' => $plrsex,
                                 'Sport' => $teamsprt,
                                 'Experience' => $plrlvl,
                                 'Position' => $result['pos'],

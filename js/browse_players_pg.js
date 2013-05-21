@@ -14,7 +14,7 @@ var FINDPLAYER = {
 		$.ajax({
 			type: "POST",
 			dataType: 'json',
-			data: data_to_send, // Data that I'm sending
+			data: form_data, // Data that I'm sending
 			url: "../data/browse_player_matches_data.php",
 			success: function(data) {
 				_findplayers.buildMatchesPLTable(data);
@@ -52,10 +52,13 @@ var FINDPLAYER = {
 
 $(document).ready(function() {
 
-
 	// Code for player search
 	$( "#searchforplayers" ).on("click", function() {
 		// Load subrequests that match user
+		FINDPLAYER.loadMatched_Players();
+	});
+
+	$( "#search-PL-sel-sex").on("select", function() {
 		FINDPLAYER.loadMatched_Players();
 	});
 

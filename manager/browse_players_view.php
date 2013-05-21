@@ -59,9 +59,8 @@
 					<label class="control-label" for="search-PL-sel-sex">Select Sex</label>
 					<div class="controls">
 						<select class="span3" name="search-PL-sel-sex" id="search-PL-sel-sex">
-							<option value="Both">Females and Males</option>
-							<option value="Females">Females Only</option>
-							<option value="Males">Males Only</option>
+							<option value="1">Females</option>
+							<option value="2">Males</option>
 						</select>
 					</div>
 				</div>
@@ -69,8 +68,8 @@
         <div class="control-group">
           <label class="control-label" for="search-PL-sel-sport">Select Sport</label>
            <div class="controls">
-             <select class="input-large" name="asearch-PL-sel-sport" id="search-PL-sel-sport">
-              <option value="">-Select Sport-</option>
+             <select class="input-large" name="search-PL-sel-sport" id="search-PL-sel-sport">
+           <!--   <option value="">-Select Sport-</option> -->
               <option value="1">Soccer</option>
   	          <option value="2">Flag Football</option>
               <option value="3">Hockey</option>
@@ -88,13 +87,12 @@
 					<label class="control-label" for="search-PL-sel-exp">Minimum Experience?</label>
 					<div class="controls">
 						<select class="span3" name="search-PL-sel-exp" id="search-PL-sel-exp">
-							<option value="1">Any</option>
-			<!--		<option value="2">Beginner</option>
+							<option value="2">Beginner</option>
 							<option value="3">Youth League</option>
 							<option value="4">High School - Varsity/ Club</option>
 							<option value="5">College - Varsity/ Club</option>
 							<option value="6">Adult League/ Pick-up</option>
-							<option value="7">Pro/ Semi-pro</option> -->
+							<option value="7">Pro/ Semi-pro</option>
 						</select>
 					</div>
 				</div>
