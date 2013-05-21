@@ -264,24 +264,7 @@ $(document).ready(function() {
 
 					break;
 				case 1:
-					// Load player dialog
-					PLAYER.loadDialog();
 	
-					$( "#add-player" ).on("click", function() {
-						$( "#AddPlayerForm" ).dialog( "open" );
-					});
-					
-					// Binds click to ajax loaded edit button
-					$( "#roster" ).on("click", ".edit_player", function() {
-						idmember = this.value;
-						$( "#EditPlayerForm" ).dialog( "open" );
-					});
-
-					// Binds click to ajax loaded delete button
-					$( "#roster" ).on("click", ".delete_player", function() {
-						idmember = this.value;
-						$( "#DelMemberForm" ).dialog( "open" );
-					});
 					break;
 				default:		
 			}
