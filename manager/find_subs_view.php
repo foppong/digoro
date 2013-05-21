@@ -44,7 +44,7 @@
 
 
 		<div id="Header">
-			<h2>Find Subs</h2>
+			<h3>Find Subs</h3>
 		</div><br />	
 
 				<div class="row"> <!-- Add Team button row -->

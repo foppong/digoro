@@ -35,17 +35,17 @@
 			<div class="span10"> <!-- column for main content --> 
 				<div class="row"> <!-- Find Players header -->
 					<div class="span3">
-						<div class="page-header"><h1>Find Players</h1></div>
+						<div class="page-header"><h2>Find Players</h2></div>
 					</div>
 				</div>
 				<div class="row"> <!-- Tabs container -->		
 					<div id="find-players-tabs" class="ui-tabs">
 						<ul>
 							<li><a href="find_subs_view.php"><span>Find Subs</span></a></li>
-							<li><a href=""><span>Browse Players</span></a></li>
+							<li><a href="browse_players_view.php"><span>Browse Players</span></a></li>
 						</ul>
 							<div id="find_subs_view.php" class="ui-tabs-hide">Find Subs</div>
-							<div id="" class="ui-tabs-hide">Browse Players</div>
+							<div id="browse_players_view.php" class="ui-tabs-hide">Browse Players</div>
 					</div>
 				</div>
 			</div>

@@ -234,7 +234,6 @@
 
 	<!-- External javascript call-->			
 	<script type="text/javascript" src="../js/schedule.js"></script>
-	<script type="text/javascript" src="../js/myteams_pg.js"></script>
 		
 	</body>
 </html>

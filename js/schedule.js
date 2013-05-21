@@ -118,9 +118,167 @@ var SCHEDULE = {
 			.append( '<p>Results: ' + eventInfo_array[7] + '</p>')
 		
   }
-
-
 }
+
+
+var EVENT = {
+		
+	loadDialog: function() {
+		$( ".pickdate" ).each( function() {
+			$( this ).datepicker({
+				showOn: "button", //Could select both if I separate out the edit and add button b/c that date is triggering when loaded
+				buttonImage: "../css/imgs/calendar.gif",
+				buttonImageOnly: true
+			});
+		});
+		
+		$( "#AddEventForm" ).dialog({
+			autoOpen: false,
+			height: 'auto',
+			width: 'auto',
+			modal: true,
+			buttons: {
+				"Add": function() {
+					// Add event to database
+					EVENT.add();					
+					$( this ).dialog( "close" );
+				},
+				"Save and Add Another": function() {
+					// Add event to database
+					EVENT.add();					
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+	       	MISCFUNCTIONS.clearForm( '#AddEventForm form' );
+				}
+			}
+		});		
+
+		$( "#EditEventForm" ).dialog({
+			autoOpen: false,
+			height: 'auto',
+			width: 'auto',
+			modal: true,
+			buttons: {
+				"Edit Event": function() {
+					EVENT.edit();	// Edit event in database
+					$( this ).dialog( "close" );
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+	       	MISCFUNCTIONS.clearForm( '#EditEventForm form' );					
+				}
+			}
+		});	
+
+		$( "#ViewEventForm" ).dialog({
+			autoOpen: false,
+			height: 'auto',
+			width: 'auto',
+			modal: true,
+			buttons: {
+				"Close": function() {
+					$( this ).dialog( "close" );
+				}
+			}
+		});	
+		
+		$( "#DelEventForm" ).dialog({
+			autoOpen: false,
+			height: 'auto',
+			width: 'auto',
+			modal: true,
+			buttons: {
+				"Delete Event": function() {
+					// Delete member from database
+					EVENT.del();					
+					$( this ).dialog( "close" );
+				},
+				Cancel: function() {
+					$( this ).dialog( "close" );
+				}
+			}			
+		});	
+	},
+
+	// add event information to database from dialog form
+  	add: function() { 
+    	var form_data = $( '#AddEventForm form' ).serialize();
+	    $.ajax({
+	      	type: "POST",
+	      	url: "../manager/add_event.php",
+	      	data: form_data, // Data that I'm sending
+	      	error: function() {
+	        	$( '#status' ).append( '<div class="alert alert-error">Add Event failed</div>' ).slideDown( 'slow' );
+	     	},
+	      	success: function( data ) {   
+	        	SCHEDULE.loadSchedule(); //Call to schedule.js
+	        	$( '#status' ).append( data ).slideDown( 'slow' );		
+	        	MISCFUNCTIONS.clearForm( '#AddEventForm form' );
+	      	},
+	      	complete: function() {
+	        	setTimeout(function() {
+	          		$( '#status' ).slideUp( 'slow' );
+	          		$( '#status .alert' ).remove();
+	        	}, 2000);
+	      	},
+	      	cache: false
+    	});
+    },
+    
+	// edit event information to database from dialog form
+  	edit: function() { 
+		$( '#EditEventForm form' ).append( '<input type="hidden" id="z" name="z" value="' + idevent + '"/>' );
+    	var form_data = $( '#EditEventForm form' ).serialize();
+	    $.ajax({
+	      	type: "POST",
+	      	url: "../manager/edit_event.php",
+	      	data: form_data, // Data that I'm sending
+	      	error: function() {
+	        	$( '#status' ).append( '<div class="alert alert-error">Edit failed</div>' ).slideDown( 'slow' );
+	     	},
+	      	success: function( data ) { 
+	        	SCHEDULE.loadSchedule(); //Call to schedule.js to refresh table
+	        	$( '#status' ).append( data ).slideDown( 'slow' );
+	        	$( '#EditEventForm form #z' ).remove();	        	
+	        	MISCFUNCTIONS.clearForm( '#EditEventForm form' );   	
+	      	},
+	      	complete: function() {
+	        	setTimeout(function() {
+	          		$( '#status' ).slideUp( 'slow' );
+	          		$( '#status .alert' ).remove();	          		
+	        	}, 2000);
+	      	},
+	      	cache: false
+    	});
+    },
+    
+	// delete event information in database from dialog form
+  	del: function() { 
+		$( '#DelEventForm form' ).append( '<input type="hidden" id="z" name="z" value="' + idevent + '"/>' );
+    	var form_data = $( '#DelEventForm form' ).serialize();
+	    $.ajax({
+	      	type: "POST",
+	      	url: "../manager/delete_event.php",
+	      	data: form_data, // Data that I'm sending
+	      	error: function() {
+	        	$( '#status' ).append( '<div class="alert alert-error"><div class="alert alert-error">Delete failed</div>' ).slideDown( 'slow' );
+	     	},
+	      	success: function( data ) {   
+	        	SCHEDULE.loadSchedule(); //Call to schedule.js
+	        	$( '#status' ).append( data ).slideDown( 'slow' );	    
+	      	},
+	      	complete: function() {
+	        	setTimeout(function() {
+	          		$( '#status' ).slideUp( 'slow' );
+	          		$( '#status .alert' ).remove();	          		
+	        	}, 2000);
+	      	},
+	      	cache: false
+    	});
+    }
+}
+
 
 $(document).ready(function() {
 
@@ -130,8 +288,8 @@ $(document).ready(function() {
 	// Load event dialogs
 	EVENT.loadDialog();
 
-	// Set Team Name
-	TEAM.setTeamName();
+	// Load Selected Team Data
+	TEAMDATA.pullTeamData(); // Global function call from projectlbackstar.js
 	
 	$( "#add-event" ).on("click", function() {
 		$( "#AddEventForm" ).dialog( "open" );

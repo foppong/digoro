@@ -58,7 +58,6 @@ var TEAMDATA = {
 	   	},
 	    success: function( data ) { 
 				_team.setTeamInfoPageVars( data );
-				ABOUTTM.make_Edit_Team_Form_sticky( data ); // Call to abtm.js
 	    },
 	    cache: false
    	});	
