@@ -3,16 +3,8 @@
     * 
     */
 
-    ob_start();
-    session_start();
-
-    require '../includes/config.php';
-    require '../includes/php-functions.php';
-
-    // autoloading of classes
-    function __autoload($class) {
-        require_once('../classes/' . $class . '.php');
-    }
+    require_once('../includes/bootstrap.php');
+    require_once('../includes/php-functions.php');
 
     // Validate user
     checkSessionObject();    
@@ -20,10 +12,6 @@
     // Assign user object from session variable
     $user = $_SESSION['userObj'];
     $userID = $user->getUserID();
-
-    // Need the database connection:
-    require_once MYSQL2;
-    $dbObject = MySQLiDbObject::getInstance();
 
     // Request is coming from profile view to query all subresponses associated with user
     if($_SERVER['REQUEST_METHOD'] == 'POST' && $_POST['actionvar'] == 'loadmySRResponses') {
@@ -35,7 +23,7 @@
               FROM subreq_responses AS subr
                   INNER JOIN events AS e USING (id_event)
                   INNER JOIN teams AS tm USING (id_team)
-              WHERE subr.id_user = {$userID}
+              WHERE subr.id_user = {$dbObject->cleanInteger($userID)}
               ORDER BY e.date";
 
         // Execute the query:
@@ -75,7 +63,7 @@
         $q = "SELECT CONCAT(u.first_name, ' ', u.last_name) AS name, subr.comments
               FROM subreq_responses AS subr
                   INNER JOIN users AS u USING (id_user)
-              WHERE subr.id_sr_response = {$idSubResponse}
+              WHERE subr.id_sr_response = {$dbObject->cleanInteger($idSubResponse)}
               LIMIT 1";
 
         // Execute the query:
@@ -84,7 +72,7 @@
         // If there are results to show.
         if(count($results) > 0) {
             // Initialize an array:
-            $json = array();    
+            $json = array();
 
             // Fetch and put results in the JSON array...
             foreach($results as $result) {
@@ -109,7 +97,7 @@
               FROM subreq_responses AS subr
                   INNER JOIN events AS e USING (id_event)
                   INNER JOIN teams AS tm USING (id_team)
-              WHERE subr.id_sr_response = {$idSubResponse}
+              WHERE subr.id_sr_response = {$dbObject->cleanInteger($idSubResponse)}
               LIMIT 1";
 
         // Execute the query & store results

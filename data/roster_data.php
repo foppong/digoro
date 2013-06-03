@@ -1,19 +1,11 @@
 <?php
     /** roster_data.php
-    * This page queries a database, returnnig a list
-    * of players on a roster
-    */
+     * This page queries a database, returnnig a list
+     * of players on a roster
+     */
 
-    ob_start();
-    session_start();
-
-    require '../includes/config.php';
-    include '../includes/php-functions.php';
-
-    // autoloading of classes
-    function __autoload($class) {
-        require_once('../classes/' . $class . '.php');
-    }
+    require_once('../includes/bootstrap.php');
+    require_once('../includes/php-functions.php');
 
     // Assign user object from session variable
     if(isset($_SESSION['userObj'])) {
@@ -22,10 +14,6 @@
     else {
         redirect_to('index.php');
     }
-
-    // Need the database connection:    
-    require_once MYSQL2;
-    $dbObject = MySQLiDbObject::getInstance();
 
     // Retrieve current team ID from session variable
     $tm = $_SESSION['ctmID'];    
@@ -39,7 +27,7 @@
                      p.jersey_number
               FROM members AS p
                   INNER JOIN users AS u USING (id_user)
-              WHERE p.id_team = {$tm}";
+              WHERE p.id_team = {$dbObject->cleanInteger($tm)}";
 
         // Execute the query & store results:
         $results = $dbObject->getAll($q);
@@ -66,7 +54,7 @@
             } // End of FOR loop
 
             // Send the JSON data:
-            echo json_encode($json);        
+            echo json_encode($json);
         }
         else { // No registered users
             $json[] = array(
@@ -83,7 +71,7 @@
         $q = "SELECT CONCAT(u.first_name, ' ', u.last_name) AS name, u.id_user, u.registration_date
               FROM members AS m
                 INNER JOIN users AS u USING (id_user)
-              WHERE m.id_team = {$tm}";
+              WHERE m.id_team = {$dbObject->cleanInteger($tm)}";
 
         // Execute the query & store results:
         $results = $dbObject->getAll($q);

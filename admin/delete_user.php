@@ -2,15 +2,9 @@
     // This page is for deleting a user record
     // This page is accessed through view_users.php
 
-    require '../includes/config.php';
+    require_once('../includes/bootstrap.php');
     $page_title = 'digoro : Delete User';
-    include '../includes/header.html';
-
-    // autoloading of classes
-    function __autoload($class) {
-        require_once('../classes/' . $class . '.php');
-    }
-
+    require_once('../includes/header.html');
 
     // Site access level -> Administrator
     $lvl = 'A'; 
@@ -54,12 +48,9 @@
     else {
         // No valid ID, kill the script.
         echo '<p class="error">This page has been accessed in error.</p>';
-        include '../includes/footer.html';
+        require_once('../includes/footer.html');
         exit();
     }
-
-    require_once MYSQL2;
-    $dbObject = MySQLiDbObject::getInstance();
 
     // Confirmation that form has been submitted:
     if($_SERVER['REQUEST_METHOD'] == 'POST') { // Point D in Code Flow
@@ -67,7 +58,7 @@
         if($_POST['sure'] == 'Yes') { // If form submitted is yes, delete the record
 
             // Make the query
-            $q = "DELETE FROM users WHERE id_user = {$id} LIMIT 1";
+            $q = "DELETE FROM users WHERE id_user = {$dbObject->cleanInteger($id)} LIMIT 1";
 
             // Execute the query:
             $dbObject->query($q);
@@ -90,7 +81,7 @@
         // Make the Query to retrieve the user's information:
         $q = "SELECT CONCAT(last_name, ', ', first_name) AS name
               FROM users
-              WHERE id_user = {$id}
+              WHERE id_user = {$dbObject->cleanInteger($id)}
               LIMIT 1";
 
         // Execute the query & store result:
@@ -103,7 +94,7 @@
 
             // Create the form:
             echo '<form action ="delete_user.php" method="post" id="DelUserForm">
-                <input type="hidden" name="id" value="' . $id . '" />
+                <input type="hidden" name="id" value="' . $dbObject->cleanInteger($id) . '" />
                 <input type="radio" name="sure" value="Yes" />Yes<br />
                 <input type="radio" name="sure" value="No" checked="checked" />No<br />
                 <input type="submit" name="submit" value="Delete" />
@@ -115,4 +106,4 @@
         }
     } // End of the main submission conditional.
 
-    include '../includes/footer.html';
+    require_once('../includes/footer.html');

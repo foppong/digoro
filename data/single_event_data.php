@@ -4,16 +4,8 @@
     *
     */
 
-    ob_start();
-    session_start();
-
-    require '../includes/config.php';
-    include '../includes/php-functions.php';
-
-    // autoloading of classes
-    function __autoload($class) {
-        require_once('../classes/' . $class . '.php');
-    }
+    require_once('../includes/bootstrap.php');
+    require_once('../includes/php-functions.php');
 
     // Assign user object from session variable
     if(isset($_SESSION['userObj'])) {
@@ -22,10 +14,6 @@
     else {
         redirect_to('index.php');
     }
-
-    // Need the database connection:
-    require_once MYSQL2;
-    $dbObject = MySQLiDbObject::getInstance();
 
     // Get user ID
     $userID = $user->getUserID();
@@ -38,7 +26,7 @@
         $q = "SELECT DATE_FORMAT(date, '%m/%d/%Y') AS date_string, time, opponent, venue_name,
                      venue_address, result, note, type
               FROM events
-              WHERE id_event = {$eventID}
+              WHERE id_event = {$dbObject->cleanInteger($eventID)}
               LIMIT 1";
 
         // Execute the query & store results:

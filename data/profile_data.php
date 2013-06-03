@@ -3,16 +3,8 @@
     * 
     */
 
-    ob_start();
-    session_start();
-
-    require '../includes/config.php';
-    include '../includes/php-functions.php';
-
-    // autoloading of classes
-    function __autoload($class) {
-        require_once('../classes/' . $class . '.php');
-    }
+    require_once('../includes/bootstrap.php');
+    require_once('../includes/php-functions.php');
 
     // Assign user object from session variable
     if(isset($_SESSION['userObj'])) {
@@ -21,10 +13,6 @@
     else {
         redirect_to('index.php');
     }
-
-    // Need the database connection:
-    require_once MYSQL2;
-    $dbObject = MySQLiDbObject::getInstance();
 
     // Get user ID
     $userID = $user->getUserID();
@@ -36,7 +24,7 @@
         $q = "SELECT id_profile, team_sex_preference, id_region, id_sport,
                      sport_experience, primary_position, secondary_position, comments
               FROM profiles
-              WHERE id_user = {$userID}
+              WHERE id_user = {$dbObject->cleanInteger($userID)}
               ORDER BY id_sport ASC";
 
         // Execute the query & store results
@@ -87,7 +75,7 @@
         $q = "SELECT team_sex_preference, id_region, id_sport, sport_experience,
                      primary_position, secondary_position, comments
               FROM profiles
-              WHERE id_profile = {$profileID}
+              WHERE id_profile = {$dbObject->cleanInteger($profileID)}
               LIMIT 1";
 
         // Execute the query & store result
@@ -126,7 +114,7 @@
         $q = "SELECT id_profile, team_sex_preference, id_region, id_sport, sport_experience,
                      primary_position, secondary_position, comments
               FROM profiles
-              WHERE id_user = {$userID}
+              WHERE id_user = {$dbObject->cleanInteger($userID)}
               ORDER BY id_sport ASC";
 
         // Execute the query & store results

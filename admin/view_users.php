@@ -2,14 +2,9 @@
     // view_users.php
     // This script retrieves all the records from the users table.
 
-    require '../includes/config.php';
+    require_once('../includes/bootstrap.php');
     $page_title = 'digoro : View Current Users';
-    include '../includes/header.html';
-
-    // autoloading of classes
-    function __autoload($class) {
-        require_once('../classes/' . $class . '.php');
-    }
+    require_once('../includes/header.html');
 
     // Site access level -> Administrator
     $lvl = 'A'; 
@@ -39,10 +34,6 @@
 
     // Page header:
     echo '<h1>Registered Users</h1>';
-
-    // Need the database connection:
-    require_once MYSQL2;
-    $dbObject = MySQLiDbObject::getInstance();
     
     // Number of records to show per page:
     $display = 3;
@@ -172,4 +163,4 @@
         echo '</p><br />'; // Close the paragraph
     } // End of links secton.    
 
-    include '../includes/footer.html';
+    require_once('../includes/footer.html');

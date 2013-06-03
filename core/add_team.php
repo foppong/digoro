@@ -2,24 +2,11 @@
     // add_team.php
     // This page allows a logged-in user to add a team
 
-    ob_start();
-    session_start();
-
-    require '../includes/config.php';
-    include '../includes/php-functions.php';
-
-    // autoloading of classes
-    function __autoload($class) {
-        require_once('../classes/' . $class . '.php');
-    }
+    require_once('../includes/bootstrap.php');
+    require_once('../includes/php-functions.php');
 
     // Assign user object from session variable
     retrieveUserObject();
-
-    // Need the database connection:
-    require_once MYSQL2;
-
-    // Assign Database Resource to object
 
     if($_SERVER['REQUEST_METHOD'] == 'POST') {
         // IN FUTURE CAN ADD LOGIC HERE FOR PAYING CUSTOMERS TO ADD TEAM - similar to checks 

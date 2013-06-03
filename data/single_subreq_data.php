@@ -4,16 +4,8 @@
     * 
     */
 
-    ob_start();
-    session_start();
-
-    require '../includes/config.php';
-    include '../includes/php-functions.php';
-
-    // autoloading of classes
-    function __autoload($class) {
-        require_once('../classes/' . $class . '.php');
-    }
+    require_once('../includes/bootstrap.php');
+    require_once('../includes/php-functions.php');
 
     // Assign user object from session variable
     if(isset($_SESSION['userObj'])) {
@@ -22,10 +14,6 @@
     else {
         redirect_to('index.php');
     }
-
-    // Need the database connection:    
-    require_once MYSQL2;
-    $dbObject = MySQLiDbObject::getInstance();
 
     // Get user ID
     $userID = $user->getUserID();
@@ -40,7 +28,7 @@
               FROM subrequests AS s
                   INNER JOIN teams AS tm USING (id_team)        
                   INNER JOIN events AS e USING (id_event)
-              WHERE s.id_subrequest = {$subReqID}
+              WHERE s.id_subrequest = {$dbObject->cleanInteger($subReqID)}
               LIMIT 1";
 
         // Execute the query & store results
@@ -78,7 +66,7 @@
         // Make the Query
         $q = "SELECT id_team, id_event, sex_needed, experience_needed, id_region
               FROM subrequests
-              WHERE id_subrequest = {$subReqID}
+              WHERE id_subrequest = {$dbObject->cleanInteger($subReqID)}
               LIMIT 1";
 
         // Execute the query:

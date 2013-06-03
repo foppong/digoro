@@ -2,25 +2,14 @@
     // add_player.php
     // This page allows a logged-in user to add a player to a team
 
-    ob_start();
-    session_start();
-
-    require '../includes/config.php';
-    include '../includes/php-functions.php';
-
-    // autoloading of classes
-    function __autoload($class) {
-        require_once('../classes/' . $class . '.php');
-    }
+    require_once('../includes/bootstrap.php');
+    require_once('../includes/php-functions.php');
 
     // Validate user
     checkSessionObject();    
 
     // Check user role
     checkRole('m');
-
-    // Establish database connection
-    require_once MYSQL2;
 
     // Assign user object from session variable
     $user = $_SESSION['userObj'];
@@ -115,7 +104,7 @@
         }
 
         // Checks if name, email, and league are valid before proceeding.
-        if ($ctmID && $fn && $ln && $sex && $e && $ppos) {
+        if($ctmID && $fn && $ln && $sex && $e && $ppos) {
             $member = new Member();
             $member->createMember($e, $ctmID, $fn, $ln, $sex, $ppos, $spos, $jnumb, $invite);
         }

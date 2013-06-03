@@ -1,12 +1,7 @@
 <?php 
 
-    require 'includes/config.php';
-    include 'includes/iheader.html';
-
-    // autoloading of classes
-    function __autoload($class) {
-        require_once('classes/' . $class . '.php');
-    }
+    require_once('includes/bootstrap.php');
+    require_once('includes/iheader.html');
 
     // Authorized Login Check
     // If session value is present, redirect the user. Also validate the HTTP_USER_AGENT    
@@ -34,8 +29,6 @@
     }
 
     if($_SERVER['REQUEST_METHOD'] == 'POST') {
-        // Need the database connection:
-        require MYSQL1;
 
         // Validate email address
         if(filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)) {
@@ -89,4 +82,4 @@
 
     <p>Click <a href="core/register.php">here</a> to create an account.</p>
     <p><a href="core/forgot_password.php">Forgot your password?</a></p>
-<?php include '../includes/ifooter.html'; ?>
+<?php require_once('../includes/ifooter.html'); ?>

@@ -4,16 +4,8 @@
     * of teams
     */
 
-    ob_start();
-    session_start();
-
-    require '../includes/config.php';
-    include '../includes/php-functions.php';
-
-    // autoloading of classes
-    function __autoload($class) {
-        require_once('../classes/' . $class . '.php');
-    }
+    require_once('../includes/bootstrap.php');
+    require_once('../includes/php-functions.php');
 
     // Assign user object from session variable
     if(isset($_SESSION['userObj'])) {
@@ -23,10 +15,6 @@
         redirect_to('index.php');
     }
 
-    // Need the database connection:
-    require_once MYSQL2;
-    $dbObject = MySQLiDbObject::getInstance();
-
     // Get user ID
     $userID = $user->getUserID();
 
@@ -34,7 +22,7 @@
     $q = "SELECT p.id_team, t.team_name, t.city, t.state
           FROM members AS p
             INNER JOIN teams AS t USING (id_team)
-          WHERE p.id_user = {$userID}";
+          WHERE p.id_user = {$dbObject->cleanInteger($userID)}";
 
     // Execute the query & store results
     $results = $dbObject->getAll($q);

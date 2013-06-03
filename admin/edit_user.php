@@ -2,15 +2,9 @@
 	// This page is for editing a user record
 	// This page is accessed through view_users.php
 
-	require '../includes/config.php';
+	require_once('../includes/bootstrap.php');
 	$page_title = 'digoro : Edit User';
-	include '../includes/header.html';
-
-	// autoloading of classes
-	function __autoload($class) {
-		require_once('../classes/' . $class . '.php');
-	}
-
+	require_once('../includes/header.html');
 
 	// Site access level -> Administrator
 	$lvl = 'A';
@@ -54,13 +48,9 @@
 	else {
 		// No valid ID, kill the script.
 		echo '<p class="error">This page has been accessed in error.</p>';
-		include '../includes/footer.html';
+		require_once('../includes/footer.html');
 		exit();
 	}
-
-	// Establish database connection
-	require_once MYSQL2;
-    $dbObject = MySQLiDbObject::getInstance();
 
 	// Confirmation that form has been submitted:	
 	if($_SERVER['REQUEST_METHOD'] == 'POST') { // Point D in Code Flow
@@ -116,7 +106,8 @@
 			// Make the query to make sure User's new email is available
 			$q = "SELECT id_user, email
                   FROM users
-                  WHERE email = '{$dbObject->realEscapeString($e)}' AND id_user != {$id}
+                  WHERE email = '{$dbObject->realEscapeString($e)}'
+                    AND id_user != {$dbObject->cleanInteger($id)}
                   LIMIT 1";
 
 			// Execute the query & store result
@@ -131,7 +122,7 @@
                           last_name = '{$dbObject->realEscapeString($ln)}',
                           zipcode = '{$dbObject->realEscapeString($zp)}',
                           gender = '{$dbObject->realEscapeString($gd)}'
-                      WHERE id_user = {$id}
+                      WHERE id_user = {$dbObject->cleanInteger($id)}
                       LIMIT 1";
 
 				// Execute the query:
@@ -159,7 +150,7 @@
 	// Make the query to retreive user information:
 	$q = "SELECT email, first_name, last_name, zipcode, gender
           FROM users
-          WHERE id_user = {$id}
+          WHERE id_user = {$dbObject->cleanInteger($id)}
           LIMIT 1";		
 
 	// Execute the query & store results
@@ -180,7 +171,7 @@
 
         // Create the form:
         echo '<form action ="edit_user.php" method="post" id="EditUserForm">
-            <input type="hidden" name="id" value="' . $id . '" />
+            <input type="hidden" name="id" value="' . $dbObject->cleanInteger($id) . '" />
 
             <p id="first_nameP"><b>First Name:</b><input type="text" name="first_name" id="first_name" 
             size="20" maxlength="20" value="' . $result['first_name'] . '" /></p>
@@ -207,8 +198,8 @@
 	}
 	else { //Not a valid user ID, kill the script
 		echo '<p class="error">This page has been accessed in error.</p>';
-		include '../includes/footer.html';
+		require_once('../includes/footer.html');
 		exit();
 	}
 
-	include '../includes/footer.html';
+	require_once('../includes/footer.html');

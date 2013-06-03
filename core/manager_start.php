@@ -1,25 +1,17 @@
 <?php
 	// manager_start.php
 	// Landing page for a new manager
-		
+    require_once('../includes/bootstrap.php');
 	$page_title = 'digoro : Manager Welcome';
-	require_once '../includes/iheader.html';
-	require '../includes/php-functions.php';
-
-	// autoloading of classes
-	function __autoload($class) {
-		require_once('../classes/' . $class . '.php');
-	}
+	require_once('../includes/iheader.html');
+	require_once('../includes/php-functions.php');
 
 	// Validate user
 	checkSessionObject();	
-	
+
 	// Check user role
 	checkRole('m');
-
 ?>
-
-
 <div class="container" id="contentWrapper">
 	<div class="row"> <!-- Main row - for all content except footer -->
 		<div class="span12"> <!-- Main column -->
@@ -113,5 +105,4 @@
 
 			</div> <!-- end of main column -->
 		</div> <!-- end of main row -->
-
-<?php include '../includes/ifooter.html'; ?>
+<?php require_once('../includes/ifooter.html'); ?>

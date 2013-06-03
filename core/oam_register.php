@@ -2,18 +2,10 @@
     // mg_welcome.php
     // Landing page for a new OAuth User
 
-    require '../includes/config.php';
+    require_once('../includes/bootstrap.php');
     $page_title = 'digoro : Welcome';
-    require_once '../includes/header.html';
-    include '../includes/php-functions.php';
-
-    // autoloading of classes
-    function __autoload($class) {
-        require_once('../classes/' . $class . '.php');
-    }
-
-    // Need the database connection:
-    require MYSQL2;
+    require_once('../includes/header.html');
+    require_once('../includes/php-functions.php');
 
     // See if there is a user from a cookie
     $fbuser = $facebook->getUser();
@@ -199,5 +191,4 @@
         <small>Enter something cool about your team.</small>
     <div align="left"><input type="submit" name="submit" value="Add Team" /></div>
 </form>
-
-<?php include '../includes/footer.html'; ?>
+<?php require_once('../includes/footer.html'); ?>

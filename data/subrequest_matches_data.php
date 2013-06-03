@@ -4,16 +4,8 @@
     * of subrequests that match
     */
 
-    ob_start();
-    session_start();
-
-    require '../includes/config.php';
-    include '../includes/php-functions.php';
-
-    // autoloading of classes
-    function __autoload($class) {
-        require_once('../classes/' . $class . '.php');
-    }
+    require_once('../includes/bootstrap.php');
+    require_once('../includes/php-functions.php');
 
     // Assign user object from session variable
     if(isset($_SESSION['userObj'])) {
@@ -23,10 +15,6 @@
         redirect_to('index.php');
     }
 
-    // Need the database connection:    
-    require_once MYSQL2;
-    $dbObject = MySQLiDbObject::getInstance();
-
     // Get user ID
     $userID = $user->getUserID();
     $userSex = $user->getUserAttribute('gd'); // Can utilize this value in logic later in queries
@@ -34,7 +22,7 @@
     // Make the Query to find all subrequests associated with user
     $q = "SELECT id_region, id_sport
           FROM profiles
-          WHERE id_user = {$userID}";
+          WHERE id_user = {$dbObject->cleanInteger($userID)}";
 
     // Execute the query & store results
     $results = $dbObject->getAll($q);
@@ -52,7 +40,8 @@
                   FROM subrequests AS sr
                       INNER JOIN teams AS tm USING (id_team)
                       INNER JOIN events AS e USING (id_event)
-                  WHERE sr.id_region = {$result['id_region']} AND tm.id_sport = {$result['id_sport']}
+                  WHERE sr.id_region = {$dbObject->cleanInteger($result['id_region'])}
+                    AND tm.id_sport = {$dbObject->cleanInteger($result['id_sport'])}
                   ORDER BY e.date";
 
             // Execute the query & store results

@@ -63,7 +63,7 @@
             $q = "SELECT id_user, email
                   FROM users
                   WHERE email = '{$this->_dbObject->realEscapeString($e)}'
-                    AND id_user != {$this->_id}
+                    AND id_user != {$this->_dbObject->cleanInteger($this->_id)}
                   LIMIT 1";
 
             // Execute the query:
@@ -173,15 +173,14 @@
                            '{$this->_dbObject->realEscapeString($sex)}',
                            '{$this->_dbObject->realEscapeString($a)}',
                            '{$this->_dbObject->realEscapeString($bdfrmat)}',
-                           {$this->inv_case},
+                           {$this->_dbObject->cleanInteger($this->inv_case)},
                            NOW()
                           )";
 
                     // Execute the query:
                     $this->_dbObject->query($q);
 
-                    if($this->_dbObject->getNumRowsAffected() == 1) // It ran OK.
-                    {
+                    if($this->_dbObject->getNumRowsAffected() == 1) { // It ran OK.
                         // Send the activation email
                         $body = "Welcome to digoro and thank you for registering!\n\nTo activate your account, please click on this link:";
                         $body .= "\n" . BASE_URL . 'core/activate.php?x=' . urlencode($e) . "&y=$a";
@@ -190,11 +189,10 @@
                         echo '<h3>Thank you for registering! A confirmation email has been sent to your address. Please
                             click on the link in that email in order to activate your account. </h3>';
 
-                        include '../includes/ifooter.html';
+                        require_once('../includes/ifooter.html');
                         exit();    
                     }
-                    else 
-                    {    // Registration process did not run OK.
+                    else { // Registration process did not run OK.
                         echo '<p class="error">You could not be registered due to a system error. We apologize
                             for any inconvenience.</p>';
                     }
@@ -214,14 +212,13 @@
                               activation = '{$this->_dbObject->realEscapeString($a)}',
                               birth_date = '{$this->_dbObject->realEscapeString($bdfrmat)}',
                               registration_date = NOW() 
-                          WHERE id_user= {$this->_id}
+                          WHERE id_user= {$this->_dbObject->cleanInteger($this->_id)}
                           LIMIT 1";
 
                     // Execute the query:
                     $this->_dbObject->query($q);
         
-                    if($this->_dbObject->getNumRowsAffected() == 1) // It ran OK.
-                    {
+                    if($this->_dbObject->getNumRowsAffected() == 1) { // It ran OK.
                         // Send the activation email
                         $body = "Welcome to digoro and thank you for registering!\n\nTo activate your account, please click on this link:";
                         $body .= "\n" . BASE_URL . 'core/activate.php?x=' . urlencode($e) . "&y=$a";
@@ -230,11 +227,10 @@
                         echo '<h3>Thank you for registering! A confirmation email has been sent to your address. Please
                             click on the link in that email in order to activate your account. </h3>';
 
-                        include '../includes/ifooter.html';
+                        require_once('../includes/ifooter.html');
                         exit();    
                     }
-                    else 
-                    {    // Registration process did not run OK.
+                    else { // Registration process did not run OK.
                         echo '<p class="error">You could not be registered due to a system error. We apologize
                             for any inconvenience.</p>';
                     }
@@ -253,7 +249,7 @@
         public function deleteUser($id)
         {
             // Make the query    
-            $q = "DELETE FROM users WHERE id_user = {$id} LIMIT 1";
+            $q = "DELETE FROM users WHERE id_user = {$this->_dbObject->cleanInteger($id)} LIMIT 1";
 
             // Execute the query:
             $this->_dbObject->query($q);
@@ -283,8 +279,7 @@
                 // Execute the query and store result
                 $result = $this->_dbObject->getRow($q);
 
-                if($result !== false)
-                {
+                if($result !== false) {
                     session_regenerate_id(true);
 
                     // Set default team to session variable
@@ -528,8 +523,8 @@
                                 '{$this->_dbObject->realEscapeString($role)}',
                                 '{$this->_dbObject->realEscapeString($gd)}',
                                 '{$this->_dbObject->realEscapeString($bdfrmat)}',
-                                {$iv},
-                                {$oauth_reg},
+                                {$this->_dbObject->cleanInteger($iv)},
+                                {$this->_dbObject->cleanInteger($oauth_reg)},
                                 NOW()
                               )";
 
@@ -579,8 +574,8 @@
                                       gender = '{$this->_dbObject->realEscapeString($gd)}',
                                       birth_date = '{$this->_dbObject->realEscapeString($bdfrmat)}',
                                       registration_date = NOW(),
-                                      oauth_registered = {$oauth_reg}
-                                  WHERE id_user = {$userID}
+                                      oauth_registered = {$this->_dbObject->cleanInteger($oauth_reg)}
+                                  WHERE id_user = {$this->_dbObject->cleanInteger($userID)}
                                   LIMIT 1";
 
                             // Execute the query:
@@ -658,7 +653,7 @@
                     $bl = 1;
 
                     // Update the user's info in the database
-                    $q = "UPDATE users SET oauth_registered = {$bl} WHERE id_user = {$userID} LIMIT 1";
+                    $q = "UPDATE users SET oauth_registered = {$this->_dbObject->cleanInteger($bl)} WHERE id_user = {$this->_dbObject->cleanInteger($userID)} LIMIT 1";
         
                     // Execute the query:
                     $this->_dbObject->query($q);

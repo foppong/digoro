@@ -4,16 +4,8 @@
     * of subrequest
     */
 
-    ob_start();
-    session_start();
-
-    require '../includes/config.php';
-    include '../includes/php-functions.php';
-
-    // autoloading of classes
-    function __autoload($class) {
-        require_once('../classes/' . $class . '.php');
-    }
+    require_once('../includes/bootstrap.php');
+    require_once('../includes/php-functions.php');
 
     // Assign user object from session variable
     if(isset($_SESSION['userObj'])) {
@@ -22,10 +14,6 @@
     else {
         redirect_to('index.php');
     }
-
-    // Need the database connection:    
-    require_once MYSQL2;
-    $dbObject = MySQLiDbObject::getInstance();
 
     // Get user ID
     $userID = $user->getUserID();
@@ -39,7 +27,7 @@
               FROM subrequests AS s
                   INNER JOIN teams AS tm USING (id_team)        
                     INNER JOIN events AS e USING (id_event)
-              WHERE s.id_user = {$userID}
+              WHERE s.id_user = {$dbObject->cleanInteger($userID)}
               ORDER BY e.date ASC";
 
         // Execute the query & store results
@@ -86,7 +74,7 @@
                   INNER JOIN events AS e USING (id_event)
                   INNER JOIN teams AS tm USING (id_team)
                   INNER JOIN subrequests AS subr USING (id_subrequest)
-              WHERE subr.id_user= {$userID}";
+              WHERE subr.id_user= {$dbObject->cleanInteger($userID)}";
 
         // Execute the query & store results:
         $results = $dbObject->getAll($q);
@@ -101,7 +89,7 @@
                 // Make the query
                 $q = "SELECT sex, CONCAT(first_name, ' ', last_name) AS name
                       FROM users
-                      WHERE id_user = {$result['id_user']}";
+                      WHERE id_user = {$dbObject->cleanInteger($result['id_user'])}";
 
                 // Execute the query & store results
                 $subResults = $dbObject->getAll($q);

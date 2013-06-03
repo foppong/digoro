@@ -4,16 +4,8 @@
     * 
     */
 
-    ob_start();
-    session_start();
-
-    require '../includes/config.php';
-    include '../includes/php-functions.php';
-
-    // autoloading of classes
-    function __autoload($class) {
-        require_once('../classes/' . $class . '.php');
-    }
+    require_once('../includes/bootstrap.php');
+    require_once('../includes/php-functions.php');
 
     // Assign user object from session variable
     if(isset($_SESSION['userObj'])) {
@@ -23,10 +15,6 @@
         redirect_to('index.php');
     }
 
-    // Need the database connection:
-    require_once MYSQL2;
-    $dbObject = MySQLiDbObject::getInstance();
-
     // Retrieve current team ID from session variable
     $tm = $_SESSION['ctmID'];
 
@@ -34,7 +22,7 @@
     $q = "SELECT id_event, DATE_FORMAT(date, '%a: %b %e, %Y') AS date_string, time, 
                  opponent, venue_name, result, type
           FROM events
-          WHERE id_team = {$tm}
+          WHERE id_team = {$dbObject->cleanInteger($tm)}
           ORDER BY date ASC";
 
     // Execute the query & store results

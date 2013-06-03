@@ -47,6 +47,20 @@ abstract class AbstractDbObject
         $this->_dbObjectInstance = null;
     }
 
+    public function cleanInteger($integer)
+    {
+        //return an integer or decimal-truncated number an integer (or 0 if not numeric)
+        return preg_match('/^(\-)?[0-9]+$/', $integer)
+                    ? (int)$integer
+                    : (int)$this->cleanNumber($integer);
+    }
+
+    public function cleanNumber($number)
+    {
+        return preg_match('/^(\-)?[0-9]+(\.[0-9]*)?$/', $number)
+                    ? $number . (substr($number, -1) == '.' ? '0' : '')
+                    : '0';
+    }
 
     abstract protected function _connect();
     abstract public function getOne($query);

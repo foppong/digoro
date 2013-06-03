@@ -2,15 +2,9 @@
     // add_player.php
     // This page allows a logged-in user to add a player to a team
 
-    require '../includes/config.php';
+    require_once('../includes/bootstrap.php');
     $page_title = 'digoro : Add Player';
-    include '../includes/header.html';
-
-    // autoloading of classes
-    function __autoload($class) {
-        require_once('../classes/' . $class . '.php');
-    }
-
+    require_once('../includes/header.html');
 
     // Site access level -> Manager
     $lvl = 'M'; 
@@ -42,8 +36,6 @@
     $tm = $_SESSION['deftmID'];
 
     if($_SERVER['REQUEST_METHOD'] == 'POST') {
-        require MYSQL2;
-        $dbObject = MySQLiDbObject::getInstance();
 
         // Trim all the incoming data:
         $trimmed = array_map('trim', $_POST);
@@ -92,7 +84,7 @@
             // If player exists in user table, add player to sport_player table
             if($id_user !== false) {
                 // Make the query:
-                $q = "INSERT INTO players (id_user, id_team) VALUES ({$id_user}, {$tm})";
+                $q = "INSERT INTO players (id_user, id_team) VALUES ({$dbObject->cleanInteger($id_user)}, {$dbObject->cleanInteger($tm)})";
 
                 // Execute the query:
                 $dbObject->query($q);
@@ -104,7 +96,7 @@
                     echo '<p class="error">Player ' . $fn . ' ' . $ln . ' was not added. Please contact the service administrator.</p>';
                 }
 
-                include '../includes/footer.html';
+                require_once('../includes/footer.html');
                 exit();
             }
             else {
@@ -123,7 +115,7 @@
 
                 if($dbObject->getNumRowsAffected() == 1) { // It ran OK.
                     // Make the query:
-                    $q = "INSERT INTO players (id_user, id_team) VALUES ({$newID}, {$tm})";
+                    $q = "INSERT INTO players (id_user, id_team) VALUES ({$dbObject->cleanInteger($newID)}, {$dbObject->cleanInteger($tm)})";
 
                     // Execute the query:
                     $dbObject->query($q);
@@ -144,7 +136,7 @@
 
                     echo '<h3>Invitation successfully sent.</h3>';
 
-                    include 'includes/footer.html';
+                    require_once('../includes/footer.html');
                     exit();
                 }
                 else { // Registration process did not run OK.
@@ -182,4 +174,4 @@
     <div align="center"><input type="submit" name="submit" value="Add Player" />
 </form>
 
-<?php include '../includes/footer.html'; ?>
+<?php require_once('../includes/footer.html'); ?>

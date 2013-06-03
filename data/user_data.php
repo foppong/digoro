@@ -3,16 +3,8 @@
     * 
     */
 
-    ob_start();
-    session_start();
-
-    require '../includes/config.php';
-    include '../includes/php-functions.php';
-
-    // autoloading of classes
-    function __autoload($class) {
-        require_once('../classes/' . $class . '.php');
-    }
+    require_once('../includes/bootstrap.php');
+    require_once('../includes/php-functions.php');
 
     // Assign user object from session variable
     if(isset($_SESSION['userObj'])) {
@@ -21,10 +13,6 @@
     else {
         redirect_to('index.php');
     }
-
-    // Need the database connection:    
-    require_once MYSQL2;
-    $dbObject = MySQLiDbObject::getInstance();
 
     // Get user ID
     $userID = $user->getUserID();
@@ -36,7 +24,7 @@
         $q = "SELECT first_name, last_name, city, state,
                 zipcode, sex, birth_date, phone_num
               FROM users
-              WHERE id_user = {$userID}";
+              WHERE id_user = {$dbObject->cleanInteger($userID)}";
 
         // Execute the query and store results 
         $results = $dbObject->getAll($q);

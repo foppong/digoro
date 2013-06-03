@@ -1,16 +1,11 @@
 <?php
     // my_teams.php
     //
-    require '../includes/config.php';
+    require_once('../includes/bootstrap.php');
     $page_title = 'Welcome to digoro!';
-    include '../includes/header.html';
-    include '../includes/php-functions.php';
+    require_once('../includes/header.html');
+    require_once('../includes/php-functions.php');
     //include '../includes/facebook.php';
-
-    // autoloading of classes
-    function __autoload($class) {
-        require_once('../classes/' . $class . '.php');
-    }
 
     // See if there is a user from a cookie
     $fbuser = $facebook->getUser();
@@ -20,9 +15,6 @@
 
     // Check user role
     checkRole('m');
-
-    // Need the database connection:
-    require_once MYSQL2;
 
     // Assign user object from session variable
     $user = $_SESSION['userObj'];
@@ -80,48 +72,44 @@
 					</div>
 				</div>
 
-			<div class="row"> <!-- Team Name header -->
-				<div class="span5">
-					<h3><span class="page-header teamdisplay"></span></h3> <!-- Name dynamically inserted here -->
-				</div>
-			</div>
+                <div class="row"> <!-- Team Name header -->
+                    <div class="span5">
+                        <h3><span class="page-header teamdisplay"></span></h3> <!-- Name dynamically inserted here -->
+                    </div>
+                </div>
 
 				<div class="row"> <!-- row for alerts -->
 					<div id="status"></div> 
 				</div>				
-				
+
 				<div class="row"> <!-- row for team menu options -->
-						<div class="row"> <!-- row 1 -->
-							<div class="span4 offset1">
-								<a href="view_abteam.php"><img src="../css/imgs/file.png" 
-									alt="world-icon" height="128" width="128"></a>
-								<p>Team Info</p>							
-							</div>
-							<div class="span4">
-								<a href="view_roster.php"><img src="../css/imgs/group.png" 
-									alt="world-icon" height="128" width="128"></a>
-								<p>Roster</p>							
-							</div>							
-						</div>	
-						<div class="row"> <!-- row 2 -->
-							<div class="span4 offset1">
-								<a href="view_sch.php"><img src="../css/imgs/list.png" 
-									alt="world-icon" height="128" width="128"></a>
-								<p>Schedule</p>							
-							</div>
-							<div class="span4">
-								<a href=""><img src="../css/imgs/mail.png" 
-									alt="world-icon" height="128" width="128"></a>
-								<p>Communications</p>							
-							</div>							
-						</div>									
+                    <div class="row"> <!-- row 1 -->
+                        <div class="span4 offset1">
+                            <a href="view_abteam.php"><img src="../css/imgs/file.png" 
+                                alt="world-icon" height="128" width="128"></a>
+                            <p>Team Info</p>							
+                        </div>
+                        <div class="span4">
+                            <a href="view_roster.php"><img src="../css/imgs/group.png" 
+                                alt="world-icon" height="128" width="128"></a>
+                            <p>Roster</p>							
+                        </div>							
+                    </div>	
+                    <div class="row"> <!-- row 2 -->
+                        <div class="span4 offset1">
+                            <a href="view_sch.php"><img src="../css/imgs/list.png" 
+                                alt="world-icon" height="128" width="128"></a>
+                            <p>Schedule</p>							
+                        </div>
+                        <div class="span4">
+                            <a href=""><img src="../css/imgs/mail.png" 
+                                alt="world-icon" height="128" width="128"></a>
+                            <p>Communications</p>							
+                        </div>							
+                    </div>									
 				</div>
-				
 			</div>
-			 
 		</div> <!-- End of main row -->
-
-
 
     <!-- Modal Dialog Form -->
     <div id="AddTeamForm" title="Add New Team" class="span4">        
@@ -205,5 +193,4 @@
 
     <!-- External javascript call -->
     <script type="text/javascript" src="../js/myteams_pg.js"></script>
-
-<?php include '../includes/footer.html'; ?>
+<?php require_once('../includes/footer.html'); ?>

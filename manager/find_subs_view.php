@@ -1,39 +1,26 @@
 <?php 
-	/*
-	 * find_subs_view.php
-	 * This page allows a user to find substitutes.
-	 */
-	
-	ob_start();
-	session_start();
+    /*
+     * find_subs_view.php
+     * This page allows a user to find substitutes.
+     */
 
-	require '../includes/config.php';
-	include '../includes/php-functions.php';
+    require_once('../includes/bootstrap.php');
+    require_once('../includes/php-functions.php');
 
-	// autoloading of classes
-	function __autoload($class) {
-		require_once('../classes/' . $class . '.php');
-	}
+    // Validate user
+    checkSessionObject();    
+    
+    // Check user role
+    checkRole('m');
 
-	// Validate user
-	checkSessionObject();	
-	
-	// Check user role
-	checkRole('m');
-	
-	// Check for a $page_title value:
-	if (!isset($page_title))
-	{
-		$page_title = 'digoro';
-	}
+    // Check for a $page_title value:
+    if(!isset($page_title)) {
+        $page_title = 'digoro';
+    }
 
-	$page_title = 'digoro : Find Subs';
-
+    $page_title = 'digoro : Find Subs';
 ?>
-
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -41,8 +28,6 @@
 		<meta name="author" content="Frank" />
 	</head>
 	<body>
-
-
 		<div id="Header">
 			<h3>Find Subs</h3>
 		</div><br />	
@@ -58,7 +43,7 @@
 				<div class="row"> <!-- row for alerts -->
 					<div id="status"></div> 
 				</div>	
-		<hr>
+		<hr />
 
 		<!-- Modal Dialog Form -->
 		<div id="Create-SubRequest-Form" title="Create SubRequest">	
@@ -71,14 +56,14 @@
 							onfocus="SUBREQUEST.showEvents(this.value)" onchange="SUBREQUEST.showEvents(this.value)"></select>	
 					</div>
 				</div>
-				
+
 				<div class="control-group">
 					<label class="control-label" for="create-SR-sel-events">Which event?</label>
 					<div class="controls">
 						<select class="span3 SR-teamevents-menu" name="create-SR-sel-events" id="create-SR-sel-events"></select>
 					</div>
 				</div>
-		
+
 				<div class="control-group">
 					<label class="control-label" for="create-SR-sel-sex">Select Sex?</label>
 					<div class="controls">
@@ -104,7 +89,7 @@
 						</select>
 					</div>
 				</div>
-				
+
 				<div class="control-group">
 					<label class="control-label" for="create-SR-sel-reg">Region?</label>
 					<div class="controls">								
@@ -118,7 +103,7 @@
 
 		<div id="Edit-SubRequest-Form" title="Edit SubRequest" class="span4">	
 			<form method="post" class="form-horizontal">
-				
+
 				<div class="control-group">
 					<label class="control-label" for="edit-SR-sel-teams">Which team?</label>
 					<div class="controls">						
@@ -196,14 +181,10 @@
 		</br>
 		<!-- Load ajax subrequest responses data here -->
 		<table class="table table-striped table-bordered table-condensed" id="subrequests-responses" width="100%">
-				
-				
+
+
 		<!-- External javascript call-->		
 		<script type="text/javascript" src="../js/subrequest.js"></script>				
 	</body>
 </html>
-
-<?php
-	ob_end_flush();
-?>		
-
+<?php ob_end_flush(); ?>

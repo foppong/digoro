@@ -2,13 +2,8 @@
     // This page is for registering a user
     // This page is accessed through the login page
 
-    require '../includes/config.php';
-    include '../includes/iheader.html';
-
-    // autoloading of classes
-    function __autoload($class) {
-        require_once('../classes/' . $class . '.php');
-    }
+    require_once('../includes/bootstrap.php');
+    require_once('../includes/iheader.html');
 
     // If session value is present, redirect the user. Also validate the HTTP_USER_AGENT    
     if(isset($_SESSION['agent']) AND ($_SESSION['agent'] = md5($_SERVER['HTTP_USER_AGENT']))) {
@@ -17,9 +12,6 @@
         header("Location: $url");
         exit();
     }
-
-    // Establish database connection
-    require_once MYSQL2;
 
     if($_SERVER['REQUEST_METHOD'] == 'POST') { // Confirmation that form has been submitted
 

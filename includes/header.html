@@ -1,73 +1,66 @@
 <?php 
-	/*
-	 * header.html
-	 * This page begins the HTML header for the site.
-	 */
-	
-	ob_start();
-	session_start();
-	
-	// Check for a $page_title value:
-	if (!isset($page_title))
-	{
-		$page_title = 'digoro';
-	}
+    /*
+     * header.html
+     * This page begins the HTML header for the site.
+     */
+    
+    // Check for a $page_title value:
+    if(!isset($page_title)) {
+        $page_title = 'digoro';
+    }
 
-	include '../includes/facebook.php';
+    require_once('../includes/facebook.php');
 
-	$facebook = new Facebook(array(
-	  'appId'  => '413593075351071',
-	  'secret' => 'c91c70487679528d6d6b22547db88ea9',
-	));
+    $facebook = new Facebook(array(
+      'appId'  => '413593075351071',
+      'secret' => 'c91c70487679528d6d6b22547db88ea9',
+    ));
 
 ?>
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en"
-	xmlns:fb="https://www.facebook.com/2008/fbml">
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<title><?php echo $page_title; ?></title>
-		<meta name="author" content="Frank" />
+    xmlns:fb="https://www.facebook.com/2008/fbml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title><?php echo $page_title; ?></title>
+        <meta name="author" content="Frank" />
 
-		<!-- CSS Style Sheet -->
-		<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
-		<!-- <link rel="stylesheet" type="text/css" href="../css/base.css" /> -->
-		<link rel="stylesheet" type="text/css" href="../css/bootstrap.css" />
-		<link rel="stylesheet" type="text/css" href="../css/layout.css" />
+        <!-- CSS Style Sheet -->
+        <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/base/jquery-ui.css" rel="stylesheet" type="text/css"/>
+        <!-- <link rel="stylesheet" type="text/css" href="../css/base.css" /> -->
+        <link rel="stylesheet" type="text/css" href="../css/bootstrap.css" />
+        <link rel="stylesheet" type="text/css" href="../css/layout.css" />
 
-		<!-- External javascript call -->
-		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.js" charset="utf-8"></script>
-		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.js" charset="utf-8"></script>
-		<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js" charset="utf-8"></script>
-		<script type="text/javascript" src="../js/projectblackstar.js"></script>
-		<!-- <script type="text/javascript" src="../js/formvalidate.js"></script> -->
-		<script type="text/javascript" src="../js/bootstrap.min.js"></script>
-		<script type="text/javascript">
-		
-		  	var _gaq = _gaq || [];
-		  	_gaq.push(['_setAccount', 'UA-32896382-1']);
-		  	_gaq.push(['_trackPageview']);
-		
-		  	(function() {
-		    	var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-		    	ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-		    	var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-		  	})();
+        <!-- External javascript call -->
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.js" charset="utf-8"></script>
+        <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.js" charset="utf-8"></script>
+        <script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js" charset="utf-8"></script>
+        <script type="text/javascript" src="../js/projectblackstar.js"></script>
+        <!-- <script type="text/javascript" src="../js/formvalidate.js"></script> -->
+        <script type="text/javascript" src="../js/bootstrap.min.js"></script>
+        <script type="text/javascript">
 
-		</script>
-	</head>
-	<body>
+              var _gaq = _gaq || [];
+              _gaq.push(['_setAccount', 'UA-32896382-1']);
+              _gaq.push(['_trackPageview']);
+        
+              (function() {
+                var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+                ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+                var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+              })();
 
-		<div class="navbar navbar-fixed-top">
-			<div class="navbar-inner">
-				<div class="container">
-					<a class="brand" href="../fatbar.php"> digoro </a>
+        </script>
+    </head>
+    <body>
+        <div class="navbar navbar-fixed-top">
+            <div class="navbar-inner">
+                <div class="container">
+                    <a class="brand" href="../fatbar.php"> digoro </a>
 
-					<div class="btn-group pull-right">
-          	<a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-            	<i class="icon-user"></i> Username
+                    <div class="btn-group pull-right">
+              <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
+                <i class="icon-user"></i> Username
               <span class="caret"></span>
             </a>
             <ul class="dropdown-menu">
@@ -76,9 +69,6 @@
               <li><a href="../core/logout.php">Sign Out</a></li>
             </ul>
           </div>
-				</div> 
-			</div>
-		</div> <!-- End of Navbar div -->
-	
-		
-
+                </div> 
+            </div>
+        </div> <!-- End of Navbar div -->

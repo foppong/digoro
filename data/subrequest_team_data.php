@@ -4,16 +4,8 @@
     * of teams
     */
 
-    ob_start();
-    session_start();
-
-    require '../includes/config.php';
-    include '../includes/php-functions.php';
-
-    // autoloading of classes
-    function __autoload($class) {
-        require_once('../classes/' . $class . '.php');
-    }
+    require_once('../includes/bootstrap.php');
+    require_once('../includes/php-functions.php');
 
     // Assign user object from session variable
     if(isset($_SESSION['userObj'])) {
@@ -23,15 +15,11 @@
         redirect_to('index.php');
     }
 
-    // Need the database connection:    
-    require_once MYSQL2;
-    $dbObject = MySQLiDbObject::getInstance();
-
     // Get user ID
     $userID = $user->getUserID();
 
     // Make the Query to find all teams associated with user via a union of the members and teams table:
-    $q = "SELECT id_team, team_name FROM teams WHERE id_user = {$userID}";
+    $q = "SELECT id_team, team_name FROM teams WHERE id_user = {$dbObject->cleanInteger($userID)}";
 
     // Execute the query and store results
     $results = $dbObject->getAll($q);        

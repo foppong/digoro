@@ -68,12 +68,12 @@
                   )
                   VALUES
                   (
-                    {$manID},
-                    {$tmID},
-                    {$evntID},
+                    {$this->_dbObject->cleanInteger($manID)},
+                    {$this->_dbObject->cleanInteger($tmID)},
+                    {$this->_dbObject->cleanInteger($evntID)},
                     '{$this->_dbObject->realEscapeString($sex)}',
-                    {$exp},
-                    {$reg}
+                    {$this->_dbObject->cleanInteger($exp)},
+                    {$this->_dbObject->cleanInteger($reg)}
                   )";
 
             // Execute the query
@@ -94,12 +94,12 @@
         {
             // Make the query:
             $q = "UPDATE subrequests
-                  SET id_team = {$tmID},
-                      id_event = {$evntID},
+                  SET id_team = {$this->_dbObject->cleanInteger($tmID)},
+                      id_event = {$this->_dbObject->cleanInteger($evntID)},
                       sex_needed = '{$this->_dbObject->realEscapeString($sex)}',
-                      experience_needed = {$exp},
-                      id_region = {$reg}
-                  WHERE id_subrequest = {$subReqid}
+                      experience_needed = {$this->_dbObject->cleanInteger($exp)},
+                      id_region = {$this->_dbObject->cleanInteger($reg)}
+                  WHERE id_subrequest = {$this->_dbObject->cleanInteger($subReqid)}
                   LIMIT 1";
 
             // Execute the query
@@ -120,7 +120,7 @@
         public function deleteSubReq($subReqid)
         {
             // Make the query    
-            $q = "DELETE FROM subrequests WHERE id_subrequest = {$subReqid} LIMIT 1";
+            $q = "DELETE FROM subrequests WHERE id_subrequest = {$this->_dbObject->cleanInteger($subReqid)} LIMIT 1";
 
             // Execute the query:
             $this->_dbObject->query($q);
@@ -142,7 +142,7 @@
             // Make the query to retreive manager id associated with team:
             $q = "SELECT id_user
                   FROM teams
-                  WHERE id_team = {$this->id_team}
+                  WHERE id_team = {$this->_dbObject->cleanInteger($this->id_team)}
                   LIMIT 1";
 
             // Exeecute the query
@@ -159,7 +159,7 @@
             $q = "SELECT id_user, id_team, id_event, sex_needed,
                          experience_needed, id_region
                   FROM subrequests
-                  WHERE id_subrequest = {$this->id_subrequest}
+                  WHERE id_subrequest = {$this->_dbObject->cleanInteger($this->id_subrequest)}
                   LIMIT 1";
 
             // Execute the query & store result

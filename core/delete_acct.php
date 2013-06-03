@@ -2,15 +2,10 @@
     // delete_acct.php
     // This page deletes a user's account
 
-    require '../includes/config.php';
+    require_once('../includes/bootstrap.php');
     $page_title = 'digoro : Delete Account';
-    include '../includes/iheader.html';
-    include '../includes/php-functions.php';
-
-    // autoloading of classes
-    function __autoload($class) {
-        require_once('../classes/' . $class . '.php');
-    }
+    require_once('../includes/iheader.html');
+    require_once('../includes/php-functions.php');
 
     // Assign user object from session variable
     if(isset($_SESSION['userObj'])) {
@@ -20,10 +15,6 @@
     else {
         redirect_to('index.php');
     }
-
-    // Need the database connection:
-    require_once MYSQL2;
-
 
     // Confirmation that form has been submitted:
     if($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -51,4 +42,4 @@
     // Delete objects
     unset($user);
 
-    include '../includes/footer.html';
+    require_once('../includes/footer.html');

@@ -1,16 +1,8 @@
 <?php
 
-	require 'includes/config.php';
-	include 'includes/iheader.html';
+	require_once('includes/bootstrap.php');
+	require_once('includes/iheader.html');
 	//require 'includes/facebook.php';
-
-	// autoloading of classes
-	function __autoload($class) {
-		require_once('classes/' . $class . '.php');
-	}
-
-	// Need the database connection:
-	require MYSQL1;
 
 	// Authorized Login Check
 	// If session value is present, redirect the user. Also validate the HTTP_USER_AGENT
@@ -240,4 +232,4 @@
 
 
 		</div> <!-- End of page row -->
-<?php include 'includes/ifooter.html'; ?>
+<?php require_once('includes/ifooter.html'); ?>

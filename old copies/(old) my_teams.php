@@ -1,44 +1,33 @@
 <?php 
 	// my_teams.php
 	// 
-	require '../includes/config.php';
+	require_once('../includes/bootstrap.php');
 	$page_title = 'Welcome to digoro!';
-	include '../includes/header.html';
-	include '../includes/php-functions.php';
+	require_once('../includes/header.html');
+	require_once('../includes/php-functions.php');
 	//include '../includes/facebook.php';
 
-	// autoloading of classes
-	function __autoload($class) {
-		require_once('../classes/' . $class . '.php');
-	}
-	
 	// See if there is a user from a cookie
 	$fbuser = $facebook->getUser();	
-	
+
 	// Validate user
 	checkSessionObject();	
 
 	// Check user role
 	checkRole('m');
 
-	// Need the database connection:
-	require_once MYSQL2;
-
 	// Assign user object from session variable
 	$user = $_SESSION['userObj'];
 	$userID = $user->getUserID();
 
-	// Assign Database Resource to object.
-	$user->setDB($db);
-	
 	// Pull current user data from database and set object attributes
 	$user->pullUserData();
-	
+
 	// Get user's default team ID
 	$dftmID = $user->getUserAttribute('dftmID');
 
 	// Update team object session variable as user selects different teams
-	if ( (isset($_POST['y'])) && (is_numeric($_POST['y'])) ) {
+	if((isset($_POST['y'])) && (is_numeric($_POST['y']))) {
 		$_SESSION['ctmID'] = $_POST['y'];
 		$ctmID = $_SESSION['ctmID'];
 	}
@@ -49,13 +38,7 @@
 
 	// Delete objects
 	unset($user);
-		
-	// Close the connection:
-	$db->close();
-	unset($db);	
-
 ?>
-
 	<div class="container" id="contentWrapper">
 		<div class="row"> <!-- Main row - for all content except footer -->	
 			<div class="span2"> <!-- column for icons --> 
@@ -130,10 +113,7 @@
 					</div>
 				</div>
 			</div>
-			 
 		</div> <!-- End of main row -->
-
-
 
 	<!-- Modal Dialog Form -->
 	<div id="AddTeamForm" title="Add New Team" class="span4">		
@@ -155,7 +135,7 @@
 					</select>
 				</div>
 			</div>
-			
+
 			<div class="control-group">
 				<label class="control-label" for="add-team-name">Our team name is*</label>
 				<div class="controls">
@@ -196,14 +176,14 @@
 					</select>
 				</div>
 			</div>
-				
+
 			<div class="control-group">
 				<label class="control-label" for="add-team-email">Our team email is</label>
 				<div class="controls">
 					<input type="text" class="input-large" name="add-team-email" id="add-team-email" />
 				</div>
 			</div>
-		
+
 			<div class="control-group">
 				<label class="control-label" for="add-team-abouttm">Other team information to share</label>
 				<div class="controls">
@@ -217,5 +197,4 @@
 
 	<!-- External javascript call -->
 	<script type="text/javascript" src="../js/myteams_pg.js"></script>
-
-<?php include '../includes/footer.html'; ?>
+<?php require_once('../includes/footer.html'); ?>

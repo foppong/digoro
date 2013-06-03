@@ -18,7 +18,7 @@ abstract class DigoroObject {
         // Make the query to retreive manager id associated with team:
         $q = "SELECT {$this->_userIdColumn}
               FROM {$this->_mainTable}
-              WHERE {$this->_mainTablePrimaryKey} = " . (!empty($lookupID) ? (int)$lookupID : (int)$this->_id) . "
+              WHERE {$this->_mainTablePrimaryKey} = {$this->_dbObject->cleanInteger(!empty($lookupID) ? $lookupID : $this->_id)}
               LIMIT 1";
 
         // Execute the query
