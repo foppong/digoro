@@ -19,7 +19,7 @@
     $userID = $user->getUserID();
 
     // Make the Query to find all teams associated with user via a union of the members and teams table:
-    $q = "SELECT id_team, team_name FROM teams WHERE id_user = {$userID}";
+    $q = "SELECT id_team, team_name FROM teams WHERE id_user = {$dbObject->cleanInteger($userID)}";
 
     // Execute the query and store results
     $results = $dbObject->getAll($q);        

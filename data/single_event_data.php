@@ -26,7 +26,7 @@
         $q = "SELECT DATE_FORMAT(date, '%m/%d/%Y') AS date_string, time, opponent, venue_name,
                      venue_address, result, note, type
               FROM events
-              WHERE id_event = {$eventID}
+              WHERE id_event = {$dbObject->cleanInteger($eventID)}
               LIMIT 1";
 
         // Execute the query & store results:

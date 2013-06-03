@@ -48,7 +48,7 @@
     else {
         // No valid ID, kill the script.
         echo '<p class="error">This page has been accessed in error.</p>';
-        include '../includes/footer.html';
+        require_once('../includes/footer.html');
         exit();
     }
 
@@ -58,7 +58,7 @@
         if($_POST['sure'] == 'Yes') { // If form submitted is yes, delete the record
 
             // Make the query
-            $q = "DELETE FROM users WHERE id_user = {$id} LIMIT 1";
+            $q = "DELETE FROM users WHERE id_user = {$dbObject->cleanInteger($id)} LIMIT 1";
 
             // Execute the query:
             $dbObject->query($q);
@@ -81,7 +81,7 @@
         // Make the Query to retrieve the user's information:
         $q = "SELECT CONCAT(last_name, ', ', first_name) AS name
               FROM users
-              WHERE id_user = {$id}
+              WHERE id_user = {$dbObject->cleanInteger($id)}
               LIMIT 1";
 
         // Execute the query & store result:
@@ -94,7 +94,7 @@
 
             // Create the form:
             echo '<form action ="delete_user.php" method="post" id="DelUserForm">
-                <input type="hidden" name="id" value="' . $id . '" />
+                <input type="hidden" name="id" value="' . $dbObject->cleanInteger($id) . '" />
                 <input type="radio" name="sure" value="Yes" />Yes<br />
                 <input type="radio" name="sure" value="No" checked="checked" />No<br />
                 <input type="submit" name="submit" value="Delete" />

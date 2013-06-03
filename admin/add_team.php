@@ -104,7 +104,7 @@
         if($lg && $userID && $sp && $tn && $ct && $st) {
             $user->addTeam($lg, $userID, $sp, $tn, $ct, $st, $abtm);
         
-            include '../includes/footer.html';
+            require_once('../includes/footer.html');
             exit();            
         }
         else {                                    

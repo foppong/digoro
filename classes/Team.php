@@ -86,7 +86,7 @@
             $q = "SELECT id_sport, id_user, team_name, about, level_of_play,
                          id_region, team_sex, team_email
                   FROM teams
-                  WHERE id_team = {$this->_id}
+                  WHERE id_team = {$this->_dbObject->cleanInteger($this->_id)}
                   LIMIT 1";
 
             // Execute the query & Store result
@@ -105,7 +105,7 @@
         public function pullSpecificData($datacolumn)
         {
             // Make the query
-            $q = "SELECT {$datacolumn} FROM teams WHERE id_team = {$this->_id} LIMIT 1";
+            $q = "SELECT {$datacolumn} FROM teams WHERE id_team = {$this->_dbObject->cleanInteger($this->_id)} LIMIT 1";
 
             // Execute the query & Store result
             return $this->_dbObject->getOne($q);
@@ -129,13 +129,13 @@
                   ) 
                   VALUES
                   (
-                    {$sprtID},
-                    {$manID},
+                    {$this->_dbObject->cleanInteger($sprtID)},
+                    {$this->_dbObject->cleanInteger($manID)},
                     '{$this->_dbObject->realEscapeString($tmname)}',
                     '{$this->_dbObject->realEscapeString($abtm)}',
-                    {$lvl},
-                    {$reg},
-                    {$sex},
+                    {$this->_dbObject->cleanInteger($lvl)},
+                    {$this->_dbObject->cleanInteger($reg)},
+                    {$this->_dbObject->cleanInteger($sex)},
                     '{$this->_dbObject->realEscapeString($tmemail)}'
                   )";
 
@@ -152,7 +152,7 @@
                 $_SESSION['deftmID'] = $this->_id;
 
                 // Make the new query to add manager to player table:
-                $q = "INSERT INTO members (id_user, id_team) VALUES ({$manID}, {$this->_id})";
+                $q = "INSERT INTO members (id_user, id_team) VALUES ({$this->_dbObject->cleanInteger($manID)}, {$this->_dbObject->cleanInteger($this->_id)})";
 
                 // Execute the query:
                 $this->_dbObject->query($q);
@@ -169,16 +169,15 @@
                 // This is wher the LOGIC of "logged in before" is set
                 // NOTE: When develop player portion, will need to have a different trigger
                 $q = "UPDATE users
-                      SET default_teamID = {$this->_id},
-                          login_before = {$bl}
-                      WHERE id_user = {$manID}
+                      SET default_teamID = {$this->_dbObject->cleanInteger($this->_id)},
+                          login_before = {$this->_dbObject->cleanInteger($bl)}
+                      WHERE id_user = {$this->_dbObject->cleanInteger($manID)}
                       LIMIT 1";
 
                 // Execute the query:
                 $this->_dbObject->query($q);
-                    
-                if($this->_dbObject->getNumRowsAffected() !== 1) // It didn't run ok
-                {
+
+                if($this->_dbObject->getNumRowsAffected() !== 1) { // It didn't run ok
                     echo '<div class="alert alert-error">Oh Snap! Team was not added. Please contact the service administrator.</div>';
                     exit();
                 }
@@ -197,14 +196,14 @@
         {
             // Update the user's info in the members' table in database
             $q = "UPDATE teams
-                  SET id_sport = {$sprtID},
+                  SET id_sport = {$this->_dbObject->cleanInteger($sprtID)},
                       team_name = '{$this->_dbObject->realEscapeString($tmname)}',
                       about = '{$this->_dbObject->realEscapeString($abtm)}',
-                      level_of_play = {$lvl},
-                      id_region = {$reg},
-                      team_sex = {$sex},
+                      level_of_play = {$this->_dbObject->cleanInteger($lvl)},
+                      id_region = {$this->_dbObject->cleanInteger($reg)},
+                      team_sex = {$this->_dbObject->cleanInteger($sex)},
                       team_email = '{$this->_dbObject->realEscapeString($tmemail)}'
-                WHERE id_team = {$teamid}
+                WHERE id_team = {$this->_dbObject->cleanInteger($teamid)}
                 LIMIT 1";
 
             // Execute the query:
@@ -225,8 +224,8 @@
         {
             // Make the query to update the team record with another manager ID
             $q = "UPDATE teams
-                  SET id_user = {$memberUserID}
-                  WHERE id_team = {$teamid}
+                  SET id_user = {$this->_dbObject->cleanInteger($memberUserID)}
+                  WHERE id_team = {$this->_dbObject->cleanInteger($teamid)}
                   LIMIT 1";
 
             // Execute the query:
@@ -249,7 +248,7 @@
         public function deleteTeam($teamid)
         {
             // Make the query    
-            $q = "DELETE FROM teams WHERE id_team = {$teamid} LIMIT 1";
+            $q = "DELETE FROM teams WHERE id_team = {$this->_dbObject->cleanInteger($teamid)} LIMIT 1";
 
             // Execute the query:
             $this->_dbObject->query($q);
@@ -271,7 +270,7 @@
         public function removeMember($userID)
         {
             // Make the query
-            $q = "DELETE FROM members WHERE id_user = {$userID} LIMIT 1";
+            $q = "DELETE FROM members WHERE id_user = {$this->_dbObject->cleanInteger($userID)} LIMIT 1";
 
             // Execute the query
             $this->_dbObject->query($q);

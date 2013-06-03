@@ -58,7 +58,7 @@
                          secondary_position,
                          jersey_number
                   FROM members
-                  WHERE id_member = {$this->_id}
+                  WHERE id_member = {$this->_dbObject->cleanInteger($this->_id)}
                   LIMIT 1";
 
             // Execute the query and store result
@@ -82,7 +82,7 @@
                 $q = "INSERT INTO members
                       (id_user, id_team, primary_position, secondary_position, jersey_number)
                       VALUES
-                      ({$this->id_user}, {$teamID}, '{$this->_dbObject->realEscapeString($ppos)}', '{$this->_dbObject->realEscapeString($spos)}', {$jnumb})";
+                      ({$this->_dbObject->cleanInteger($this->id_user)}, {$this->_dbObject->cleanInteger($teamID)}, '{$this->_dbObject->realEscapeString($ppos)}', '{$this->_dbObject->realEscapeString($spos)}', {$this->_dbObject->cleanInteger($jnumb)})";
 
                 // Execute the query:
                 $this->_dbObject->query($q);
@@ -114,8 +114,8 @@
                         '{$this->_dbObject->realEscapeString($fn)}',
                         '{$this->_dbObject->realEscapeString($ln)}',
                         '{$this->_dbObject->realEscapeString($userEmail)}',
-                        {$sex},
-                        {$iv}
+                        {$this->_dbObject->cleanInteger($sex)},
+                        {$this->_dbObject->cleanInteger($iv)}
                       )";
 
                 // Execute the query:
@@ -136,11 +136,11 @@
                           )
                           VALUES
                           (
-                            {$newuserID},
-                            {$teamID},
+                            {$this->_dbObject->cleanInteger($newuserID)},
+                            {$this->_dbObject->cleanInteger($teamID)},
                             '{$this->_dbObject->realEscapeString($ppos)}',
                             '{$this->_dbObject->realEscapeString($spos)}',
-                            {$jnumb}
+                            {$this->_dbObject->cleanInteger($jnumb)}
                           )";
 
                     // Execute the query:
@@ -184,8 +184,8 @@
             $q = "UPDATE members
                   SET primary_position = '{$this->_dbObject->realEscapeString($ppos)}',
                       secondary_position = '{$this->_dbObject->realEscapeString($spos)}',
-                      jersey_number = {$jnumb}
-                  WHERE id_member = {$memberid}
+                      jersey_number = {$this->_dbObject->cleanInteger($jnumb)}
+                  WHERE id_member = {$this->_dbObject->cleanInteger($memberid)}
                   LIMIT 1";
 
             // Execute the query:
@@ -204,8 +204,8 @@
                 $q = "UPDATE users
                       SET first_name = '{$this->_dbObject->realEscapeString($fn)}',
                           last_name = '{$this->_dbObject->realEscapeString($ln)}',
-                          sex = {$sex}
-                      WHERE id_user = {$this->id_user}
+                          sex = {$this->_dbObject->cleanInteger($sex)}
+                      WHERE id_user = {$this->_dbObject->cleanInteger($this->id_user)}
                       LIMIT 1";
 
                 // Execute the statement
@@ -218,7 +218,7 @@
         public function deleteMember($memberid)
         {
             // Make the query    
-            $q = "DELETE FROM members WHERE id_member = {$memberid} LIMIT 1";
+            $q = "DELETE FROM members WHERE id_member = {$this->_dbObject->cleanInteger($memberid)} LIMIT 1";
 
             // Execute the query:
             $this->_dbObject->query($q);
@@ -241,7 +241,7 @@
             $q = "SELECT tm.{$this->_userIdColumn}
                   FROM teams AS tm
                     INNER JOIN members AS p USING (id_team)
-                  WHERE p.id_member = " . (int)$lookupID . "
+                  WHERE p.id_member = {$this->_dbObject->cleanInteger($lookupID)}
                   LIMIT 1";
 
             // Execute the query and store result
@@ -277,7 +277,7 @@
         public function isRegistered($memberID)
         {
             // Make the query
-            $q = "SELECT login_before FROM users WHERE id_user = {$memberID} LIMIT 1";
+            $q = "SELECT login_before FROM users WHERE id_user = {$this->_dbObject->cleanInteger($memberID)} LIMIT 1";
 
             // Execute the query and store result
             $result = $this->_dbObject->getOne($q);

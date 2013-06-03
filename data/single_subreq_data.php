@@ -28,7 +28,7 @@
               FROM subrequests AS s
                   INNER JOIN teams AS tm USING (id_team)        
                   INNER JOIN events AS e USING (id_event)
-              WHERE s.id_subrequest = {$subReqID}
+              WHERE s.id_subrequest = {$dbObject->cleanInteger($subReqID)}
               LIMIT 1";
 
         // Execute the query & store results
@@ -66,7 +66,7 @@
         // Make the Query
         $q = "SELECT id_team, id_event, sex_needed, experience_needed, id_region
               FROM subrequests
-              WHERE id_subrequest = {$subReqID}
+              WHERE id_subrequest = {$dbObject->cleanInteger($subReqID)}
               LIMIT 1";
 
         // Execute the query:

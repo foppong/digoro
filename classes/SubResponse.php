@@ -55,7 +55,7 @@
             $q = "INSERT INTO subreq_responses
                   (id_user, id_subrequest, id_event, comments)
                   VALUES
-                  ({$userID}, {$this->id_subrequest}, {$evntID}, '{$this->_dbObject->realEscapeString($com)}')";
+                  ({$this->_dbObject->cleanInteger($userID)}, {$this->_dbObject->cleanInteger($this->id_subrequest)}, {$this->_dbObject->cleanInteger($evntID)}, '{$this->_dbObject->realEscapeString($com)}')";
 
             // Execute the query
             $this->_dbObject->query($q);
@@ -77,9 +77,9 @@
 
             // Make the query
             $q = "UPDATE subreq_responses
-                  SET manager_respond = {$didrespond},
+                  SET manager_respond = {$this->_dbObject->cleanInteger($didrespond)},
                       manager_response = '{$this->_dbObject->realEscapeString($man_comments)}'
-                  WHERE id_sr_response= {$subresponseID}";
+                  WHERE id_sr_response= {$this->_dbObject->cleanInteger($subresponseID)}";
 
             // Execute the query
             $this->_dbObject->query($q);
@@ -104,9 +104,9 @@
 
             // Make the query
             $q = "UPDATE subreq_responses
-                  SET manager_respond = {$didrespond},
+                  SET manager_respond = {$this->_dbObject->cleanInteger($didrespond)},
                       manager_response = '{$this->_dbObject->realEscapeString($man_comments)}'
-                  WHERE id_sr_response = {$subresponseID}";
+                  WHERE id_sr_response = {$this->_dbObject->cleanInteger($subresponseID)}";
 
             // Execute the query
             $this->_dbObject->query($q);
@@ -128,7 +128,7 @@
         public function cancelSubResponse($subresponseID, $user_comments)
         {
             // Make the query    
-            $q = "DELETE FROM subreq_responses WHERE id_sr_response = {$subresponseID} LIMIT 1";
+            $q = "DELETE FROM subreq_responses WHERE id_sr_response = {$this->_dbObject->cleanInteger($subresponseID)} LIMIT 1";
 
             // Execute the query:
             $this->_dbObject->query($q);

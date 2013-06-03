@@ -62,7 +62,7 @@
             // Make the query to retreive game information from games table in database:        
             $q = "SELECT id_team, date, time, opponent, venue, result, note
                   FROM games
-                  WHERE id_game = {$this->id_game}
+                  WHERE id_game = {$this->_dbObject->cleanInteger($this->id_game)}
                   LIMIT 1";
 
             // Execute the query & store result
@@ -93,7 +93,7 @@
                   )
                   VALUES
                   (
-                    {$teamID},
+                    {$this->_dbObject->cleanInteger($teamID)},
                     '{$this->dbObject->realEscapeString($gmdate)}',
                     '{$this->dbObject->realEscapeString($gtime)}',
                     '{$this->dbObject->realEscapeString($opponent)}',
@@ -126,7 +126,7 @@
                       venue = '{$this->dbObject->realEscapeString($venue)}',
                       result = '{$this->dbObject->realEscapeString($result)}',
                       note = '{$this->dbObject->realEscapeString($note)}'
-                  WHERE id_game = {$this->id_game}
+                  WHERE id_game = {$this->_dbObject->cleanInteger($this->id_game)}
                   LIMIT 1";
 
             // Execute the query:
@@ -148,7 +148,7 @@
         public function deleteGame($userID)
         {
             // Make the query    
-            $q = "DELETE FROM games WHERE id_game = {$this->id_game} LIMIT 1";
+            $q = "DELETE FROM games WHERE id_game = {$this->_dbObject->cleanInteger($this->id_game)} LIMIT 1";
 
             // Execute the query:
             $this->dbObject->query($q);
@@ -171,7 +171,7 @@
             $q = "SELECT tm.id_manager
                   FROM teams AS tm
                     INNER JOIN games AS g USING (id_team)
-                  WHERE g.id_game = {$this->id_game}
+                  WHERE g.id_game = {$this->_dbObject->cleanInteger($this->id_game)}
                   LIMIT 1";
 
             // Execute the query & store result

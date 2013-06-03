@@ -25,7 +25,7 @@
         $q = "SELECT m.id_team, t.team_name
               FROM members AS m INNER JOIN teams AS t
                   USING (id_team)
-              WHERE m.id_user = {$userID}";
+              WHERE m.id_user = {$dbObject->cleanInteger($userID)}";
 
         // Execute the query and store results
         $results = $dbObject->getAll($q);    
@@ -66,7 +66,7 @@
         $q = "SELECT id_sport, id_user, team_name, about, level_of_play,
                      id_region, team_sex, team_email
               FROM teams
-              WHERE id_team = {$tm}
+              WHERE id_team = {$dbObject->cleanInteger($tm)}
               LIMIT 1";
 
         // Execute the query and store results
@@ -106,7 +106,7 @@
                      t.about
               FROM teams AS t
                   INNER JOIN users AS u USING (id_user)
-              WHERE t.id_team = {$tm}
+              WHERE t.id_team = {$dbObject->cleanInteger($tm)}
               LIMIT 1";
 
         // Execute the query and store results

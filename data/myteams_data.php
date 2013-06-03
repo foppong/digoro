@@ -22,7 +22,7 @@
     $q = "SELECT p.id_team, t.team_name, t.city, t.state
           FROM members AS p
             INNER JOIN teams AS t USING (id_team)
-          WHERE p.id_user = {$userID}";
+          WHERE p.id_user = {$dbObject->cleanInteger($userID)}";
 
     // Execute the query & store results
     $results = $dbObject->getAll($q);

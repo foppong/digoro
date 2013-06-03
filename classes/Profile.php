@@ -58,11 +58,11 @@
                   )
                   VALUES
                   (
-                    {$userID},
-                    {$tmSexPref},
-                    {$regID},
-                    {$sprtID},
-                    {$sprtexp},
+                    {$this->_dbObject->cleanInteger($userID)},
+                    {$this->_dbObject->cleanInteger($tmSexPref)},
+                    {$this->_dbObject->cleanInteger($regID)},
+                    {$this->_dbObject->cleanInteger($sprtID)},
+                    {$this->_dbObject->cleanInteger($sprtexp)},
                     '{$this->_dbObject->realEscapeString($ppos)}',
                     '{$this->_dbObject->realEscapeString($spos)}',
                     '{$this->_dbObject->realEscapeString($comm)}'
@@ -86,11 +86,11 @@
         {
             // Make the query:
             $q = "UPDATE profiles
-                  SET id_user = {$userID},
-                      team_sex_preference = {$tmSexPref},
-                      id_region = {$regID},
-                      id_sport = {$sprtID},
-                      sport_experience = {$sprtexp},
+                  SET id_user = {$this->_dbObject->cleanInteger($userID)},
+                      team_sex_preference = {$this->_dbObject->cleanInteger($tmSexPref)},
+                      id_region = {$this->_dbObject->cleanInteger($regID)},
+                      id_sport = {$this->_dbObject->cleanInteger($sprtID)},
+                      sport_experience = {$this->_dbObject->cleanInteger($sprtexp)},
                       primary_position = '{$this->_dbObject->realEscapeString($ppos)}',
                       secondary_position = '{$this->_dbObject->realEscapeString($spos)}',
                       comments = '{$this->_dbObject->realEscapeString($comm)}'
@@ -114,7 +114,7 @@
         public function deleteProfile($profileID)
         {
             // Make the query    
-            $q = "DELETE FROM profiles WHERE id_profile = {$profileID} LIMIT 1";
+            $q = "DELETE FROM profiles WHERE id_profile = {$this->_dbObject->cleanInteger($profileID)} LIMIT 1";
 
             // Execute the query:
             $this->_dbObject->query($q);

@@ -27,7 +27,7 @@
         // Make the Query:
         $q = "SELECT id_event, DATE_FORMAT(date, '%a: %b %e, %Y') AS date_string
               FROM events
-              WHERE id_team = {$tm}
+              WHERE id_team = {$dbObject->cleanInteger($tm)}
               ORDER BY date ASC";
 
         // Execute the query & store results:
@@ -48,7 +48,7 @@
         }
         else { // No events or events scheduled
 
-            $json[] = array('<p class="error">You have no events scheduled.');
+            $json[] = array('<p class="error">You have no events scheduled.</p>');
 
             // Send the JSON data:
             echo json_encode($json);

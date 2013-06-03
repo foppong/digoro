@@ -90,7 +90,7 @@
         public function countTeams()
         {
             // Make query to count the number of teams associated with user
-            $q = "SELECT COUNT(id_team) FROM members WHERE id_user = {$this->_id}";
+            $q = "SELECT COUNT(id_team) FROM members WHERE id_user = {$this->_dbObject->cleanInteger($this->_id)}";
             
             //return the value
             return $this->_dbObject->getOne($q);
@@ -102,8 +102,8 @@
         {
             // Update the user's info in the database
             $q = "UPDATE users
-                  SET default_teamID = {$teamID}
-                  WHERE id_user = {$this->_id}
+                  SET default_teamID = {$this->_dbObject->cleanInteger($teamID)}
+                  WHERE id_user = {$this->_dbObject->cleanInteger($this->_id)}
                   LIMIT 1";
          
             // Execute the query:
@@ -142,11 +142,11 @@
                       last_name = '{$this->_dbObject->realEscapeString($lname)}',
                       city = '{$this->_dbObject->realEscapeString($city)}',
                       state = '{$this->_dbObject->realEscapeString($state)}',
-                      zipcode = {$zip},
-                      sex = {$sex},
+                      zipcode = {$this->_dbObject->cleanInteger($zip)},
+                      sex = {$this->_dbObject->cleanInteger($sex)},
                       phone_num = '{$this->_dbObject->realEscapeString($phone)}',
                       birth_date = '{$this->_dbObject->realEscapeString($bdfrmat)}'
-                  WHERE id_user = {$this->_id}
+                  WHERE id_user = {$this->_dbObject->cleanInteger($this->_id)}
                   LIMIT 1";
 
             // Execute the query:
@@ -177,7 +177,7 @@
                          phone_num, digoro_score, invited, default_teamID,
                          login_before
                   FROM users
-                  WHERE id_user = {$this->_id}
+                  WHERE id_user = {$this->_dbObject->cleanInteger($this->_id)}
                   LIMIT 1";
  
             // Execute the query and store the result
@@ -204,7 +204,7 @@
             // Make the query
             $q = "SELECT {$datacolumn}
                   FROM users
-                  WHERE id_user = {$this->_id}
+                  WHERE id_user = {$this->_dbObject->cleanInteger($this->_id)}
                   LIMIT 1";
 
             // Prepare the statement
@@ -221,11 +221,11 @@
                       last_name = '{$this->_dbObject->realEscapeString($ln)}',
                       city = '{$this->_dbObject->realEscapeString($cty)}',
                       state = '{$this->_dbObject->realEscapeString($st)}',
-                      zipcode = {$zp},
+                      zipcode = {$this->_dbObject->cleanInteger($zp)},
                       sex = '{$this->_dbObject->realEscapeString($gd)}',
                       birth_date = '{$this->_dbObject->realEscapeString($bdfrmat)}',
-                      phone_num = {$pnumb}
-                WHERE id_user = {$this->_id}
+                      phone_num = {$this->_dbObject->cleanInteger($pnumb)}
+                WHERE id_user = {$this->_dbObject->cleanInteger($this->_id)}
                 LIMIT 1";
 
             // Execute the query:
@@ -247,7 +247,7 @@
             $setTrue = 1;
 
             // Update the user's info in the database
-            $q = "UPDATE users SET login_before = {$setTrue} WHERE id_user = {$this->_id} LIMIT 1";
+            $q = "UPDATE users SET login_before = {$this->_dbObject->cleanInteger($setTrue)} WHERE id_user = {$this->_dbObject->cleanInteger($this->_id)} LIMIT 1";
 
             // Execute the query:
             $this->_dbObject->query($q);
@@ -268,7 +268,7 @@
             // Update the user's info in the database
             $q = "UPDATE users
                   SET role = '{$this->_dbObject->realEscapeString($role)}'
-                  WHERE id_user = {$this->_id}
+                  WHERE id_user = {$this->_dbObject->cleanInteger($this->_id)}
                   LIMIT 1";
 
             // Execute the query:

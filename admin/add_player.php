@@ -84,7 +84,7 @@
             // If player exists in user table, add player to sport_player table
             if($id_user !== false) {
                 // Make the query:
-                $q = "INSERT INTO players (id_user, id_team) VALUES ({$id_user}, {$tm})";
+                $q = "INSERT INTO players (id_user, id_team) VALUES ({$dbObject->cleanInteger($id_user)}, {$dbObject->cleanInteger($tm)})";
 
                 // Execute the query:
                 $dbObject->query($q);
@@ -96,7 +96,7 @@
                     echo '<p class="error">Player ' . $fn . ' ' . $ln . ' was not added. Please contact the service administrator.</p>';
                 }
 
-                include '../includes/footer.html';
+                require_once('../includes/footer.html');
                 exit();
             }
             else {
@@ -115,7 +115,7 @@
 
                 if($dbObject->getNumRowsAffected() == 1) { // It ran OK.
                     // Make the query:
-                    $q = "INSERT INTO players (id_user, id_team) VALUES ({$newID}, {$tm})";
+                    $q = "INSERT INTO players (id_user, id_team) VALUES ({$dbObject->cleanInteger($newID)}, {$dbObject->cleanInteger($tm)})";
 
                     // Execute the query:
                     $dbObject->query($q);
@@ -136,7 +136,7 @@
 
                     echo '<h3>Invitation successfully sent.</h3>';
 
-                    include 'includes/footer.html';
+                    require_once('../includes/footer.html');
                     exit();
                 }
                 else { // Registration process did not run OK.

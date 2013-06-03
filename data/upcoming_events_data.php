@@ -24,7 +24,7 @@
           FROM members AS mb
               INNER JOIN events AS e USING (id_team)
               INNER JOIN teams AS tm USING (id_team)
-          WHERE mb.id_user = {$userID} && e.date >= CURDATE()
+          WHERE mb.id_user = {$dbObject->cleanInteger($userID)} && e.date >= CURDATE()
           ORDER BY e.date ASC
           LIMIT 5";
 

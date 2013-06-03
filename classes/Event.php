@@ -68,7 +68,7 @@
             $q = "SELECT id_team, date, time, opponent, venue_name,
                          venue_address, result, note, type
                   FROM events
-                  WHERE id_event = {$this->_id}
+                  WHERE id_event = {$this->_dbObject->cleanInteger($this->_id)}
                   LIMIT 1";
 
             // Execute the query & store the result
@@ -101,14 +101,14 @@
                   )
                   VALUES
                   (
-                    {$teamID},
+                    {$this->_dbObject->cleanInteger($teamID)},
                     '{$this->_dbObject->realEscapeString($gmdate)}',
                     '{$this->_dbObject->realEscapeString($gtime)}',
                     '{$this->_dbObject->realEscapeString($opponent)}',
                     '{$this->_dbObject->realEscapeString($ven)}',
                     '{$this->_dbObject->realEscapeString($venad)}',
                     '{$this->_dbObject->realEscapeString($note)}',
-                    {$type}
+                    {$this->_dbObject->cleanInteger($type)}
                   )";
 
             // Execute the query:
@@ -136,8 +136,8 @@
                       venue_address = '{$this->_dbObject->realEscapeString($venad)}',
                       result = '{$this->_dbObject->realEscapeString($result)}',
                       note = '{$this->_dbObject->realEscapeString($note)}',
-                      type = {$type}
-                  WHERE id_event = {$this->_id}
+                      type = {$this->_dbObject->cleanInteger($type)}
+                  WHERE id_event = {$this->_dbObject->cleanInteger($this->_id)}
                   LIMIT 1";
 
             // Execute the query:
@@ -156,7 +156,7 @@
         public function deleteEvent($eventid)
         {
             // Make the query    
-            $q = "DELETE FROM events WHERE id_event = {$eventid} LIMIT 1";
+            $q = "DELETE FROM events WHERE id_event = {$this->_dbObject->cleanInteger($eventid)} LIMIT 1";
 
             //Execute the query
             $this->_dbObject->query($q);
@@ -179,7 +179,7 @@
             $q = "SELECT tm.id_user
                   FROM teams AS tm
                     INNER JOIN events AS g USING (id_team)
-                  WHERE g.id_event = " . (int)$lookupID . "
+                  WHERE g.id_event = {$this->_dbObject->cleanInteger($lookupID)}
                   LIMIT 1";
 
             // Exeecute the query & store result:

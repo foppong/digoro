@@ -24,7 +24,7 @@
         $q = "SELECT first_name, last_name, city, state,
                 zipcode, sex, birth_date, phone_num
               FROM users
-              WHERE id_user = {$userID}";
+              WHERE id_user = {$dbObject->cleanInteger($userID)}";
 
         // Execute the query and store results 
         $results = $dbObject->getAll($q);

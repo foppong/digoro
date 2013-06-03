@@ -27,7 +27,7 @@
                      p.secondary_position, p.jersey_number
               FROM members AS p
                   INNER JOIN users AS u USING (id_user)
-              WHERE p.id_member = {$memberID}
+              WHERE p.id_member = {$dbObject->cleanInteger($memberID)}
               LIMIT 1";
 
         // Execute the query & store results:

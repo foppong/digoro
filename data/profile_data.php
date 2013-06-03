@@ -24,7 +24,7 @@
         $q = "SELECT id_profile, team_sex_preference, id_region, id_sport,
                      sport_experience, primary_position, secondary_position, comments
               FROM profiles
-              WHERE id_user = {$userID}
+              WHERE id_user = {$dbObject->cleanInteger($userID)}
               ORDER BY id_sport ASC";
 
         // Execute the query & store results
@@ -75,7 +75,7 @@
         $q = "SELECT team_sex_preference, id_region, id_sport, sport_experience,
                      primary_position, secondary_position, comments
               FROM profiles
-              WHERE id_profile = {$profileID}
+              WHERE id_profile = {$dbObject->cleanInteger($profileID)}
               LIMIT 1";
 
         // Execute the query & store result
@@ -114,7 +114,7 @@
         $q = "SELECT id_profile, team_sex_preference, id_region, id_sport, sport_experience,
                      primary_position, secondary_position, comments
               FROM profiles
-              WHERE id_user = {$userID}
+              WHERE id_user = {$dbObject->cleanInteger($userID)}
               ORDER BY id_sport ASC";
 
         // Execute the query & store results

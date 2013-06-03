@@ -66,7 +66,7 @@
 				// Make the query
 				$q = "UPDATE users
                       SET pass = '{$dbObject->realEscapeString($hash)}'
-                      WHERE id_user = {$id_user}
+                      WHERE id_user = {$dbObject->cleanInteger($id_user)}
                       LIMIT 1";
 
 				// Prepare the statement
@@ -84,7 +84,7 @@
 						email address with which you registered. Once you have logged in with this password,
 						you may change it by clicking on the "Change Password" link.</h2>';
 
-					include '../includes/ifooter.html';
+					require_once('../includes/ifooter.html');
 					exit();
 				}
 				else {

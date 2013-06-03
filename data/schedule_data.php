@@ -22,7 +22,7 @@
     $q = "SELECT id_event, DATE_FORMAT(date, '%a: %b %e, %Y') AS date_string, time, 
                  opponent, venue_name, result, type
           FROM events
-          WHERE id_team = {$tm}
+          WHERE id_team = {$dbObject->cleanInteger($tm)}
           ORDER BY date ASC";
 
     // Execute the query & store results
