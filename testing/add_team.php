@@ -2,14 +2,9 @@
     // add_team.php
     // This page allows a logged-in user to add a team
 
-    require '../includes/config.php';
+    require_once('../includes/bootstrap.php');
     $page_title = 'digoro : Add Team';
-    include '../includes/header.html';
-
-    // autoloading of classes
-    function __autoload($class) {
-        require_once('../classes/' . $class . '.php');
-    }
+    require_once('../includes/header.html');
 
     // Site access level -> Manager
     $lvl = 'M';
@@ -26,10 +21,6 @@
         header("Location: $url");
         exit();
     }
-
-    // Need the database connection:
-    require_once MYSQL2;
-
 
     // Authorized Login Check
     if(!$manager->valid($lvl)) {
@@ -195,5 +186,4 @@
     </fieldset>    
     <div align="left"><input type="submit" name="submit" value="Add Team" /></div>
 </form>
-
-<?php include '../includes/footer.html'; ?>
+<?php require_once('../includes/footer.html'); ?>

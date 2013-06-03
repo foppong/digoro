@@ -1,16 +1,8 @@
 <?php
     // This page is for transferring team ownership
 
-    ob_start();
-    session_start();
-
-    require '../includes/config.php';
-    include '../includes/php-functions.php';
-
-    // autoloading of classes
-    function __autoload($class) {
-        require_once('../classes/' . $class . '.php');
-    }
+    require_once('../includes/bootstrap.php');
+    require_once('../includes/php-functions.php');
 
     // Validate user
     checkSessionObject();
@@ -21,9 +13,6 @@
 
     // Check user role
     checkRole('m');
-
-    // Establish database connection
-    require_once MYSQL2;
 
     if($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['z'])) { // Confirmation that form has been submitted
         $teamid = $_POST['z'];

@@ -1,25 +1,18 @@
 <?php 
 	// manager_homepage.php
 	// This is the Manager Homepage
-	require '../includes/config.php';
+	require_once('../includes/bootstrap.php');
 	$page_title = 'Admin Page';
-	include '../includes/header.html';
-
-	// autoloading of classes
-	function __autoload($class) {
-		require_once('../classes/' . $class . '.php');
-	}
+	require_once('../includes/header.html');
 
 	// Site access level -> Administrator
 	$lvl = 'A'; 
 
 	// Assign user object from session variable
-	if (isset($_SESSION['userObj']))
-	{
+	if(isset($_SESSION['userObj'])) {
 		$user = $_SESSION['userObj'];
 	}
-	else 
-	{
+	else {
 		session_unset();
 		session_destroy();
 		$url = BASE_URL . 'index.php';
@@ -29,8 +22,7 @@
 	}
 
 	// Authorized Login Check
-	if (!$user->valid($lvl))
-	{
+	if(!$user->valid($lvl)) {
 		session_unset();
 		session_destroy();
 		$url = BASE_URL . 'index.php';
@@ -69,4 +61,4 @@
 <a href="add_team.php">Add Team</a><br />
 <a href="view_users.php">View Registered Users</a><br />
 
-<?php include '../includes/footer.html'; ?>
+<?php require_once('../includes/footer.html'); ?>

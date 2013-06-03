@@ -2,15 +2,10 @@
     // change_password.php
     // This page allows a logged-in user to change their password
 
-    require '../includes/config.php';
+    require_once('../includes/bootstrap.php');
     $page_title = 'digoro : Change Your Password';
-    include '../includes/header.html';
-    include '../includes/php-functions.php';
-
-    // autoloading of classes
-    function __autoload($class) {
-        require_once('../classes/' . $class . '.php');
-    }
+    require_once('../includes/header.html');
+    require_once('../includes/php-functions.php');
 
     // Assign user object from session variable
     if(isset($_SESSION['userObj'])) {
@@ -19,10 +14,6 @@
     else {
         redirect_to('index.php');
     }
-
-    // Need the database connection:
-    require MYSQL2;
-
 
     if($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Validate email address

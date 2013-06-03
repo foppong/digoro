@@ -1,34 +1,22 @@
 <?php 
 	// profile.php
 	// page for players' profiles
-	
-	require '../includes/config.php';
+
+	require_once('../includes/bootstrap.php');
 	$page_title = 'Profile';
-	include '../includes/header.html';
-	include '../includes/php-functions.php';
+	require_once('../includes/header.html');
+	require_once('../includes/php-functions.php');
 	//include '../includes/facebook.php';
 
-	// autoloading of classes
-	function __autoload($class) {
-		require_once('../classes/' . $class . '.php');
-	}
-	
 	// See if there is a user from a cookie
 	$fbuser = $facebook->getUser();	
-	
+
 	// Assign user object from session variable
 	retrieveUserObject();
-	
+
 	// Check user role
 	checkRole('p');
-
-	// Need the database connection:
-	require_once MYSQL2;
-
-
-
 ?>
-
 	<div class="container" id="contentWrapper">
 		<div class="row"> <!-- Main row - for all content except footer -->	
 			<div class="span2"> <!-- column for icons --> 
@@ -36,7 +24,7 @@
 <?php require_once('../includes/side_nav_player.html'); ?>
 				</div>
 			</div> <!-- end of column for icons --> 
-					
+
 			<div class="span10"> <!-- column for main content --> 
 				<div class="row"> <!-- Header row -->
 					<div class="span10">
@@ -139,7 +127,7 @@
 							placeholder="ex. goalkeeper" />	
 					</div>
 				</div>
-				
+
 				<div class="control-group">		
 					<label class="control-label" for="add-profile-comments">Other information to share</label>
 					<div class="controls">
@@ -224,7 +212,7 @@
 							placeholder="ex. goalkeeper" />	
 					</div>
 				</div>
-				
+
 				<div class="control-group">		
 					<label class="control-label" for="edit-profile-comments">Other information to share</label>
 					<div class="controls">
@@ -243,5 +231,4 @@
 
 	<!-- External javascript call -->
 	<script type="text/javascript" src="../js/profile_pg.js"></script>
-
-<?php include '../includes/footer.html'; ?>
+<?php require_once('../includes/footer.html'); ?>

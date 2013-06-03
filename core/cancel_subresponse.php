@@ -1,17 +1,9 @@
 <?php
     // create_subresponse.php
     // This page allows a user to respond to a subrequest
-        
-    ob_start();
-    session_start();
-        
-    require '../includes/config.php';
-    include '../includes/php-functions.php';
 
-    // autoloading of classes
-    function __autoload($class) {
-        require_once('../classes/' . $class . '.php');
-    }
+    require_once('../includes/bootstrap.php');
+    require_once('../includes/php-functions.php');
 
     // Assign user object from session variable
     if(isset($_SESSION['userObj'])) {
@@ -21,9 +13,6 @@
     else {
         redirect_to('index.php');
     }
-
-    // Need the database connection:
-    require_once MYSQL2;
 
     if($_SERVER['REQUEST_METHOD'] == 'POST') {
 

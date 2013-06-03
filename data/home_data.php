@@ -1,5 +1,7 @@
 <?php
 
+require_once('../includes/bootstrap.php');
+
 // Array indexes are 0-based, jCarousel positions are 1-based.
 $first = max(0, intval($_GET['first']) - 1);
 $last  = max($first + 1, intval($_GET['last']) - 1);
@@ -39,7 +41,4 @@ foreach ($selected as $img) {
 }
 
 echo '</data>';
-
-
-
 ?>

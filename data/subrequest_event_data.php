@@ -4,16 +4,8 @@
     * 
     */
 
-    ob_start();
-    session_start();
-
-    require '../includes/config.php';
-    require '../includes/php-functions.php';
-
-    // autoloading of classes
-    function __autoload($class) {
-        require_once('../classes/' . $class . '.php');
-    }
+    require_once('../includes/bootstrap.php');
+    require_once('../includes/php-functions.php');
 
     // Validate user
     checkSessionObject();    
@@ -21,10 +13,6 @@
     // Assign user object from session variable
     $user = $_SESSION['userObj'];
     $userID = $user->getUserID();
-
-    // Need the database connection:    
-    require_once MYSQL2;
-    $dbObject = MySQLiDbObject::getInstance();
 
     // Assume invalid values:
     $tm = FALSE;

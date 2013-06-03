@@ -2,15 +2,9 @@
 	// This page is for editing a user record
 	// This page is accessed through view_users.php
 
-	require '../includes/config.php';
+	require_once('../includes/bootstrap.php');
 	$page_title = 'digoro : Edit User';
-	include '../includes/header.html';
-
-	// autoloading of classes
-	function __autoload($class) {
-		require_once('../classes/' . $class . '.php');
-	}
-
+	require_once('../includes/header.html');
 
 	// Site access level -> Administrator
 	$lvl = 'A';
@@ -54,13 +48,9 @@
 	else {
 		// No valid ID, kill the script.
 		echo '<p class="error">This page has been accessed in error.</p>';
-		include '../includes/footer.html';
+		require_once('../includes/footer.html');
 		exit();
 	}
-
-	// Establish database connection
-	require_once MYSQL2;
-    $dbObject = MySQLiDbObject::getInstance();
 
 	// Confirmation that form has been submitted:	
 	if($_SERVER['REQUEST_METHOD'] == 'POST') { // Point D in Code Flow
@@ -207,8 +197,8 @@
 	}
 	else { //Not a valid user ID, kill the script
 		echo '<p class="error">This page has been accessed in error.</p>';
-		include '../includes/footer.html';
+		require_once('../includes/footer.html');
 		exit();
 	}
 
-	include '../includes/footer.html';
+	require_once('../includes/footer.html');

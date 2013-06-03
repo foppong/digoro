@@ -2,19 +2,11 @@
 	// mg_welcome.php
 	// Landing page for a new OAuth User
 
-	require '../includes/config.php';
-	require '../includes/facebook.php';
+	require_once('../includes/bootstrap.php');
+	require_once('../includes/facebook.php');
 	$page_title = 'digoro : Welcome';
-	require_once '../includes/iheader.html';
-	include '../includes/php-functions.php';
-
-	// autoloading of classes
-	function __autoload($class) {
-		require_once('../classes/' . $class . '.php');
-	}
-
-	// Need the database connection:
-	require MYSQL2;
+	require_once('../includes/iheader.html');
+	require_once('../includes/php-functions.php');
 
 	$facebook = new Facebook(array(
 	  'appId'  => '413593075351071',
@@ -42,6 +34,4 @@
 <div id="managerbox">
 	<a href="oam_register.php">I'm a manager!</a>
 </div>
-
-
-<?php include '../includes/ifooter.html'; ?>
+<?php require_once('../includes/ifooter.html'); ?>

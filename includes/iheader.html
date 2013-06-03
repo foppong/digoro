@@ -4,35 +4,27 @@
 	 * This page begins the HTML header for index page.
 	 */
 	
-	ob_start();
-	session_start();
-	
 	// Check for a $page_title value:
-	if (!isset($page_title))
-	{
+	if(!isset($page_title)) {
 		$page_title = 'digoro';
 	}
-	
 ?>
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" 
-	"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 	<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<meta name="author" content="Frank" />
 		<title><?php echo $page_title; ?></title>
-		
+
 		<!-- CSS Style Sheet -->
 		<!-- <link rel="stylesheet" type="text/css" href="../css/base.css" /> -->
 		<link rel="stylesheet" type="text/css" href="../css/bootstrap.css" />
 		<link rel="stylesheet" type="text/css" href="../css/layout.css" />
-			
+
 		<!-- External javascript call -->
 		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" charset="utf-8"></script>
 		<script type="text/javascript" src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.9/jquery.validate.min.js" charset="utf-8"></script>
 		<script type="text/javascript" src="../js/bootstrap.min.js"></script>
 		<script type="text/javascript" src="../js/indexjq.js"></script>
-	
 	</head>
 	<body>

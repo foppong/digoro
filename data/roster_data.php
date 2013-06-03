@@ -1,19 +1,11 @@
 <?php
     /** roster_data.php
-    * This page queries a database, returnnig a list
-    * of players on a roster
-    */
+     * This page queries a database, returnnig a list
+     * of players on a roster
+     */
 
-    ob_start();
-    session_start();
-
-    require '../includes/config.php';
-    include '../includes/php-functions.php';
-
-    // autoloading of classes
-    function __autoload($class) {
-        require_once('../classes/' . $class . '.php');
-    }
+    require_once('../includes/bootstrap.php');
+    require_once('../includes/php-functions.php');
 
     // Assign user object from session variable
     if(isset($_SESSION['userObj'])) {
@@ -22,10 +14,6 @@
     else {
         redirect_to('index.php');
     }
-
-    // Need the database connection:    
-    require_once MYSQL2;
-    $dbObject = MySQLiDbObject::getInstance();
 
     // Retrieve current team ID from session variable
     $tm = $_SESSION['ctmID'];    

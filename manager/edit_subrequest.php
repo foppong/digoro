@@ -2,16 +2,8 @@
     // This page is for editing a subrequest
     // This page is accessed through find_subs_view.php
 
-    ob_start();
-    session_start();
-
-    require '../includes/config.php';
-    include '../includes/php-functions.php';
-
-    // autoloading of classes
-    function __autoload($class) {
-        require_once('../classes/' . $class . '.php');
-    }
+    require_once('../includes/bootstrap.php');
+    require_once('../includes/php-functions.php');
 
     // Validate user
     checkSessionObject();    
@@ -22,9 +14,6 @@
     // Assign user object from session variable
     $user = $_SESSION['userObj'];
     $userID = $user->getUserID();
-
-    // Establish database connection
-    require_once MYSQL2;
 
     if($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['z'])) { // Confirmation that form has been submitted
         $subReqid = $_POST['z'];

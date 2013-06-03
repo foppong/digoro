@@ -2,15 +2,12 @@
     // activate.php
     // This page activates the user's account
 
-    require '../includes/config.php';
+    require_once('../includes/bootstrap.php');
     $page_title = 'Activate Your Account';
-    include '../includes/iheader.html';
+    require_once('../includes/iheader.html');
 
     // If $x and $y don't exist or aren't of the proper format, redirect the user
     if(isset($_GET['x'], $_GET['y']) && filter_var($_GET['x'], FILTER_VALIDATE_EMAIL) && (strlen($_GET['y']) == 32)) {
-        // Update the database
-        require MYSQL2;
-        $dbObject = MySQLiDbObject::getInstance();
 
         // Update database with the activation code.
         $q = "UPDATE users
@@ -38,4 +35,4 @@
         header("Location: $url");
         exit();
     }
-    include '../includes/ifooter.html';
+    require_once('../includes/ifooter.html');

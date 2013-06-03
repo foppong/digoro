@@ -2,18 +2,11 @@
 	// forgot_password.php
 	// This page allows a user to reset their password if forgotten.
 
-	require '../includes/config.php';
+	require_once('../includes/bootstrap.php');
 	$page_title = 'digoro : Password Reset';
-	include '../includes/iheader.html';
-
-	// autoloading of classes
-	function __autoload($class) {
-		require_once('../classes/' . $class . '.php');
-	}
+	require_once('../includes/iheader.html');
 
 	if($_SERVER['REQUEST_METHOD'] == 'POST') {
-		require MYSQL2;
-        $dbObject = MySQLiDbObject::getInstance();
 
 		$e = $e2 = '';
 
@@ -44,8 +37,6 @@
 		else {
 			echo '<p class="error">Your email did not match the confirmed email!</p>';
 		}
-
-
 
 		// If email entered is valid, proceed to verify the email address in database
 		if($ue) {
@@ -132,4 +123,4 @@
 		<input type="submit" name="submit" id="submit" value="Reset My Password" />
 		</fieldset>
 	</form>
-<?php include '../includes/ifooter.html'; ?>
+<?php require_once('../includes/ifooter.html'); ?>

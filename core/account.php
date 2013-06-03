@@ -2,16 +2,10 @@
 	// account.php
 	// This page is for users to change their account settings.
 	
-	require '../includes/config.php';
+	require_once('../includes/bootstrap.php');
 	$page_title = 'digoro : My Account';
-	include '../includes/header.html';
-	include '../includes/php-functions.php';
-
-	// autoloading of classes
-	function __autoload($class) {
-		require_once('../classes/' . $class . '.php');
-	}
-
+	require_once('../includes/header.html');
+	require_once('../includes/php-functions.php');
 
 	// Assign user object from session variable
 	if(isset($_SESSION['userObj'])) {
@@ -20,10 +14,6 @@
 	else {
 		redirect_to('index.php');
 	}
-
-	// Need the database connection:
-	require_once MYSQL2;
-    $dbObject = MySQLiDbObject::getInstance();
 
 	$user->pullUserData();
 	$userID = $user->getUserID();
@@ -339,4 +329,4 @@
 	<!-- External javascript call -->
 	<script type="text/javascript" src="../js/account.js"></script>
 
-<?php include '../includes/footer.html'; ?>
+<?php require_once('../includes/footer.html'); ?>

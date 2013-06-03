@@ -2,15 +2,9 @@
     // add_player.php
     // This page allows a logged-in user to add a player to a team
 
-    require '../includes/config.php';
+    require_once('../includes/bootstrap.php');
     $page_title = 'digoro : Add Player';
-    include '../includes/header.html';
-
-    // autoloading of classes
-    function __autoload($class) {
-        require_once('../classes/' . $class . '.php');
-    }
-
+    require_once('../includes/header.html');
 
     // Site access level -> Manager
     $lvl = 'M'; 
@@ -42,8 +36,6 @@
     $tm = $_SESSION['deftmID'];
 
     if($_SERVER['REQUEST_METHOD'] == 'POST') {
-        require MYSQL2;
-        $dbObject = MySQLiDbObject::getInstance();
 
         // Trim all the incoming data:
         $trimmed = array_map('trim', $_POST);
@@ -182,4 +174,4 @@
     <div align="center"><input type="submit" name="submit" value="Add Player" />
 </form>
 
-<?php include '../includes/footer.html'; ?>
+<?php require_once('../includes/footer.html'); ?>

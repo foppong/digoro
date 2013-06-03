@@ -2,19 +2,12 @@
     // register.php
     // This page is used to create new users to the site.
 
-    require_once '../includes/config.php';
+    require_once('../includes/bootstrap.php');
     $page_title = 'digoro : Register';
-    include '../includes/iheader.html';
-
-    // autoloading of classes
-    function __autoload($class) {
-        require_once('../classes/' . $class . '.php');
-    }
+    require_once('../includes/iheader.html');
 
     // Code to create a new user
     if($_SERVER['REQUEST_METHOD'] == 'POST') {
-        // Need the database connection:    
-        require MYSQL2;
 
         // Assume invalid values:
         $fn = $ln = $e = $p = $zp = $bd = $mstatus = $gd = FALSE;
@@ -270,5 +263,4 @@
     </form>
 
     <p><a href="forgot_password.php">Forgot your password?</a></p>
-
-<?php include '../includes/ifooter.html'; ?>
+<?php require_once('../includes/ifooter.html'); ?>

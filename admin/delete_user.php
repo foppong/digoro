@@ -2,15 +2,9 @@
     // This page is for deleting a user record
     // This page is accessed through view_users.php
 
-    require '../includes/config.php';
+    require_once('../includes/bootstrap.php');
     $page_title = 'digoro : Delete User';
-    include '../includes/header.html';
-
-    // autoloading of classes
-    function __autoload($class) {
-        require_once('../classes/' . $class . '.php');
-    }
-
+    require_once('../includes/header.html');
 
     // Site access level -> Administrator
     $lvl = 'A'; 
@@ -57,9 +51,6 @@
         include '../includes/footer.html';
         exit();
     }
-
-    require_once MYSQL2;
-    $dbObject = MySQLiDbObject::getInstance();
 
     // Confirmation that form has been submitted:
     if($_SERVER['REQUEST_METHOD'] == 'POST') { // Point D in Code Flow
@@ -115,4 +106,4 @@
         }
     } // End of the main submission conditional.
 
-    include '../includes/footer.html';
+    require_once('../includes/footer.html');
