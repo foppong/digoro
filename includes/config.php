@@ -34,7 +34,7 @@
         // Define the constants
         define('BASE_URI', 'C:/xampp/htdocs/');
         define('BASE_URL', 'https://localhost/');
-        define('MYSQL', dirname(__FILE__) . '/../nonWeb/mysqli_connect_dev.php');
+        define('MYSQL', dirname(__FILE__) . '/../../nonWeb/mysqli_connect_dev.php');
 
         // Adjust the time zone
         date_default_timezone_set('America/Los_Angeles');
@@ -45,7 +45,7 @@
         define('BASE_URL', 'http://www.digoro.com/');
         
         // Relative location of the MySQL connection script:
-        define('MYSQL', dirname(__FILE__) . '/../nonWeb/mysqli_connect.php');
+        define('MYSQL', dirname(__FILE__) . '/../../nonWeb/mysqli_connect.php');
         
         // Adjust the time zone
         date_default_timezone_set('America/Los_Angeles');        
