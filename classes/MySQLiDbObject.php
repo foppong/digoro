@@ -148,9 +148,11 @@ class MySQLiDbObject extends AbstractDbObject
         $result = $this->query($query);
         if(!is_bool($result)) {
             $data = array();
-            while($row = $result->fetch_row() !== null) {
+            $row = $result->fetch_row();
+            while($row !== null) {
                 if($count($row) == 1) {
                     $data[] = $row[0];
+                    $row = $result->fetch_row();
                 }
                 else {
                     $this->_error("Query resultset contains more than one column.\nQuery: {$query}");
